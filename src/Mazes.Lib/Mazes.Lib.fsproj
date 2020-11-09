@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Extensions.fs" />
+        <Compile Include="SimpleTypes.fs" />
+        <Compile Include="Grid.fs" />
+        <Compile Include="Maze.fs" />
+        <Compile Include="Algo\BinaryTree.fs" />
+        <Compile Include="Algo\Sidewinder.fs" />
+    </ItemGroup>
+
+</Project>
