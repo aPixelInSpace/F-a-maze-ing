@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #333;
+        }
+        .h1-name {
+              color: whitesmoke;
+              letter-spacing: 3px;
+        
+              font-family: 'Raleway', sans-serif;
+              margin: 2rem 4rem;
+            }
+        .f-a-maze-ing-section {
+            /* https://dejavu-fonts.github.io/ */
+            color: white;
+            font-family: 'DejaVu Sans Mono', monospace;
+            font-size: x-large;            
+            
+            margin: 4rem;
+            
+            position: relative;
+        }
+        .column-axis {
+            margin: 0;
+            color: burlywood;
+        }
+        .row-axis {
+            margin: 0;
+            color: yellowgreen;
+            transform: translateY(10px);
+            display: inline-block;
+        }
+        .map-line {
+            position: absolute;
+            color: deepskyblue;
+        }
+        .maze {
+            margin: 0;
+        }
+        .maze-line {
+            margin: 0;
+            display: inline-block;
+        }
+    </style>
+    
+    <title>{{Name}}</title>
+</head>
+<body>
+    <h1 class="h1-name">{{Name}}</h1>
+    <section class="f-a-maze-ing-section">
+        {{ColumnsAxis}}
+        <div>
+            {{Maze}}
+        </div>        
+    </section>
+</body>
+</html>

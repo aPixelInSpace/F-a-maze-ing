@@ -1,1 +1,6 @@
-﻿module Mazes.Lib.Maze
+﻿namespace Mazes.Lib
+
+type Maze = {
+    Name : string
+    Grid : Grid
+}

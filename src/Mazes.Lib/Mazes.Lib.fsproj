@@ -6,11 +6,11 @@
 
     <ItemGroup>
         <Compile Include="Extensions.fs" />
-        <Compile Include="SimpleTypes.fs" />
+        <Compile Include="Cell.fs" />
         <Compile Include="Grid.fs" />
         <Compile Include="Maze.fs" />
-        <Compile Include="Algo\BinaryTree.fs" />
-        <Compile Include="Algo\Sidewinder.fs" />
+        <Compile Include="Algo.Generate\BinaryTree.fs" />
+        <Compile Include="Algo.Generate\Sidewinder.fs" />
     </ItemGroup>
 
 </Project>

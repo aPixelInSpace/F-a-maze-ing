@@ -1,9 +1,9 @@
-﻿module Mazes.Lib.Algo.Sidewinder
+﻿module Mazes.Lib.Algo.Generate.Sidewinder
 
 open System
 open Mazes.Lib
 open Mazes.Lib.Extensions
-open Mazes.Lib.SimpleTypes
+open Mazes.Lib.Cell
 open Mazes.Lib.Grid.Wall
 
 let private carveRow (rng : Random) grid rowIndex row =
@@ -39,8 +39,7 @@ let private carveRow (rng : Random) grid rowIndex row =
 
     ()
 
-let transformIntoMaze seed grid =
-    let rng = Random(seed)
+let transformIntoMaze rng grid =    
     
     grid.Cells
     |> Array2D.extractRows

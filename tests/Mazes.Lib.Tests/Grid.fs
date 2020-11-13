@@ -3,7 +3,7 @@ module Mazes.Lib.Tests.Grid
 open FsUnit
 open Xunit
 open Mazes.Lib
-open Mazes.Lib.SimpleTypes
+open Mazes.Lib.Cell
 open Mazes.Lib.Grid.Wall
 
 [<Fact>]

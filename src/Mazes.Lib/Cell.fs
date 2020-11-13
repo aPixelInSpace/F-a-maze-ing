@@ -1,4 +1,4 @@
-﻿namespace Mazes.Lib.SimpleTypes
+﻿namespace Mazes.Lib.Cell
 
 type WallType =
     | Normal
@@ -11,7 +11,6 @@ type WallPosition =
     | Bottom
     | Left
 
-/// CellWall
 type Wall = {
     WallType : WallType
     WallPosition : WallPosition
@@ -21,7 +20,6 @@ type CellType =
     | PartOfMaze
     | NotPartOfMaze
 
-/// CellQuadrilateral
 type Cell = {
     CellType : CellType
     WallTop : Wall

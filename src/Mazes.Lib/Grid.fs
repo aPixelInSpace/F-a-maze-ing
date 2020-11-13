@@ -1,14 +1,15 @@
 ﻿namespace Mazes.Lib
 
-open Mazes.Lib.SimpleTypes
+open Mazes.Lib.Cell
 
-/// SimpleGrid
 type Grid = {
     Cells : Cell[,]
     NumberOfRows : int
     NumberOfColumns : int
 }
-module Grid =    
+
+module Grid =
+
     let private getConstructorCell rowsLength columnLength rowIndex columnIndex =
         let wallTop =
             match rowIndex with
@@ -37,18 +38,21 @@ module Grid =
             WallBottom = WallBottom
             WallLeft = WallLeft
         }
+
     let private getRow numberOfRows numberOfColumns rowIndex =
         [| for i in 0 .. numberOfColumns - 1 -> getConstructorCell numberOfRows numberOfColumns rowIndex i |]
+
     let create numberOfRows numberOfColumns =
         let cells = array2D [ for i in 0 .. numberOfRows - 1 -> (getRow numberOfRows numberOfColumns i) ]
                 
         { Cells = cells; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }
-    
+
     let getCell rowIndex columnIndex grid =
         grid.Cells.[rowIndex, columnIndex]
 
     let hasCells grid =
         grid.Cells.Length > 0
+
     let minRowIndex =
         0
 
@@ -57,16 +61,16 @@ module Grid =
 
     let minColumnIndex =
         0
-    
+
     let maxColumnIndex grid =
         grid.NumberOfColumns - 1
-    
+
     let existAt rowIndex columnIndex grid =
         minRowIndex <= rowIndex &&
         rowIndex <= (maxRowIndex grid) &&
         minColumnIndex <= columnIndex &&
         columnIndex <= (maxColumnIndex grid)
-        
+
     module Wall =
         let updateWallAtPosition wallPosition wallType rowIndex columnIndex grid =
             match wallPosition with

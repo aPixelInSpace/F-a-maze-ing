@@ -1,9 +1,10 @@
 module Mazes.Render.Tests.Text.Sidewinder
 
+open System
 open FsUnit
 open Xunit
 open Mazes.Lib
-open Mazes.Lib.Algo
+open Mazes.Lib.Algo.Generate
 open Mazes.Render
 
 [<Fact>]
@@ -11,7 +12,7 @@ let ``Rendering a 3 by 3 maze generated with the sidewinder algorithm (and a rng
     // arrange
     let maze =
         (Grid.create 3 3)
-        |> Sidewinder.transformIntoMaze 1
+        |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -30,7 +31,7 @@ let ``Rendering a 5 by 5 maze generated with the sidewinder algorithm (and a rng
     // arrange
     let maze =
         (Grid.create 5 5)
-        |> Sidewinder.transformIntoMaze 1
+        |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -51,7 +52,7 @@ let ``Rendering a 5 by 10 maze generated with the sidewinder algorithm (and a rn
     // arrange
     let maze =
         (Grid.create 5 10)
-        |> Sidewinder.transformIntoMaze 1
+        |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
     let renderedMaze = maze |> Text.printGrid

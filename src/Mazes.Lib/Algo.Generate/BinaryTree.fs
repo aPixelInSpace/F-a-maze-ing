@@ -1,8 +1,8 @@
-﻿module Mazes.Lib.Algo.BinaryTree
+﻿module Mazes.Lib.Algo.Generate.BinaryTree
 
 open System
 open Mazes.Lib
-open Mazes.Lib.SimpleTypes
+open Mazes.Lib.Cell
 open Mazes.Lib.Grid.Wall
 
 let private removeOneWall (rng : Random) grid rowIndex columnIndex cell =
@@ -27,8 +27,7 @@ let private removeOneWall (rng : Random) grid rowIndex columnIndex cell =
         updateWallAtPosition Right Empty rowIndex columnIndex grid
     | _ -> raise(Exception("Random number generation problem"))
     
-let transformIntoMaze seed grid =
-    let rng = Random(seed)
+let transformIntoMaze rng grid =    
     grid.Cells |> Array2D.iteri(removeOneWall rng grid)
     
     grid

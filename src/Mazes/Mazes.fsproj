@@ -6,12 +6,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="CLSimpleTypes.fs" />
+        <Compile Include="CLGenerate.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Mazes.Lib\Mazes.Lib.fsproj" />
+      <ProjectReference Include="..\Mazes.Output\Mazes.Output.fsproj" />
       <ProjectReference Include="..\Mazes.Render\Mazes.Render.fsproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CommandLineParser.FSharp" Version="2.8.0" />
     </ItemGroup>
 
 </Project>
