@@ -1,7 +1,7 @@
 # F-a-maze-ing
 A simple maze generator made with F#
 
-Currently only a text output is supported. See an example [here](/docs/index.html).
+Currently only a text output is supported. See an example [here](https://apixelinspace.github.io/F-a-maze-ing/).
 
 ## Usage
 ```
