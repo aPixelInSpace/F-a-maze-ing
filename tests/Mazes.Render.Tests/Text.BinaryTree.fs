@@ -39,8 +39,8 @@ let ``Rendering a 5 by 5 maze generated with the binary tree algorithm (and a rn
     // assert
     let expectedRenderedMaze =
         "┏━━━━━━━━━┓\n" +
-        "┃ ┬ ┬ ╭─  ┃\n" +
-        "┠─╯ │ ├─  ┃\n" +
+        "┃ ┬ ┬ ╭─╴ ┃\n" +
+        "┠─╯ │ ├─╴ ┃\n" +
         "┃ ╭─╯ │ ┬ ┃\n" +
         "┃ ├───┴─╯ ┃\n" +
         "┗━┷━━━━━━━┛"
@@ -60,10 +60,10 @@ let ``Rendering a 5 by 10 maze generated with the binary tree algorithm (and a r
     // assert
     let expectedRenderedMaze =
         "┏━━━━━━━━━━━━━━━━━━━┓\n" +
-        "┃ ┬ ┬ ╭───  ┬ ╭─  ┬ ┃\n" +
+        "┃ ┬ ┬ ╭───╴ ┬ ╭─╴ ┬ ┃\n" +
         "┠─╯ │ │ ╭───┴─╯ ╭─╯ ┃\n" +
-        "┠───┴─╯ │ ┬ ╭─  ├─  ┃\n" +
-        "┃ ╭─────┴─┴─╯ ╭─┴─  ┃\n" +
+        "┠───┴─╯ │ ┬ ╭─╴ ├─╴ ┃\n" +
+        "┃ ╭─────┴─┴─╯ ╭─┴─╴ ┃\n" +
         "┗━┷━━━━━━━━━━━┷━━━━━┛"
         
     renderedMaze |> should equal expectedRenderedMaze

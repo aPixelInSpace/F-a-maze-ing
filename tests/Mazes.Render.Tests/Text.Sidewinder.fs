@@ -20,8 +20,8 @@ let ``Rendering a 3 by 3 maze generated with the sidewinder algorithm (and a rng
     // assert
     let expectedRenderedMaze =
         "┏━━━━━┓\n" +
-        "┠─   ─┨\n" +
-        "┃ ┬  ─┨\n" +
+        "┠─╴ ╶─┨\n" +
+        "┃ ┬ ╶─┨\n" +
         "┗━┷━━━┛"
         
     renderedMaze |> should equal expectedRenderedMaze
@@ -39,8 +39,8 @@ let ``Rendering a 5 by 5 maze generated with the sidewinder algorithm (and a rng
     // assert
     let expectedRenderedMaze =
         "┏━━━━━━━━━┓\n" +
-        "┠───   ─╮ ┃\n" +
-        "┃  ─╮ ┬ ╰─┨\n" +
+        "┠───╴ ╶─╮ ┃\n" +
+        "┃ ╶─╮ ┬ ╰─┨\n" +
         "┃ ┬ │ │ ┬ ┃\n" +
         "┃ ╰─┴─┤ │ ┃\n" +
         "┗━━━━━┷━┷━┛"
@@ -60,9 +60,9 @@ let ``Rendering a 5 by 10 maze generated with the sidewinder algorithm (and a rn
     // assert
     let expectedRenderedMaze =
         "┏━━━━━━━━━━━━━━━━━━━┓\n" +
-        "┠───   ─╮  ───╮ ┬  ─┨\n" +
-        "┃ ┬ ┬ ┬ │  ───┴─┤ ┬ ┃\n" +
-        "┃ │ ├─╯ │ ┬ ╭─  │ ╰─┨\n" +
+        "┠───╴ ╶─╮ ╶───╮ ┬ ╶─┨\n" +
+        "┃ ┬ ┬ ┬ │ ╶───┴─┤ ┬ ┃\n" +
+        "┃ │ ├─╯ │ ┬ ╭─╴ │ ╰─┨\n" +
         "┃ │ ╰───┴─┤ ╰─╮ ╰─╮ ┃\n" +
         "┗━┷━━━━━━━┷━━━┷━━━┷━┛"
         

@@ -22,22 +22,18 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
     | Normal, Empty, Normal, Normal -> '┬'
     | Normal, Normal, Normal, Empty -> '┴'
     
-    //| Empty, Empty, Normal, Normal -> '┌'
-    | Empty, Empty, Normal, Normal -> '╭'
-    //| Empty, Normal, Normal, Empty -> '└'
-    | Empty, Normal, Normal, Empty -> '╰'
-    //| Normal, Empty, Empty, Normal -> '┐'
-    | Normal, Empty, Empty, Normal -> '╮'
-    //| Normal, Normal, Empty, Empty -> '┘'
-    | Normal, Normal, Empty, Empty -> '╯'
+    | Empty, Empty, Normal, Normal -> '╭' // or '┌'
+    | Empty, Normal, Normal, Empty -> '╰' // or '└'
+    | Normal, Empty, Empty, Normal -> '╮' // or '┐'
+    | Normal, Normal, Empty, Empty -> '╯' // or '┘' 
     
     | Empty, Normal, Empty, Normal -> '│'
     | Normal, Empty, Normal, Empty -> '─'
     
-    | Normal, Empty, Empty, Empty -> ' '
-    | Empty, Normal, Empty, Empty -> '┴'
-    | Empty, Empty, Normal, Empty -> ' '
-    | Empty, Empty, Empty, Normal -> '┬'
+    | Normal, Empty, Empty, Empty -> '╴'
+    | Empty, Normal, Empty, Empty -> '┴' // or '╵'
+    | Empty, Empty, Normal, Empty -> '╶'
+    | Empty, Empty, Empty, Normal -> '┬' // or '╷'
     
     // Border    
     | Border, Border, Border, Border -> '╋'
@@ -116,7 +112,7 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
     | Empty, Border, Normal, Border -> '┠'
     | Normal, Border, Empty, Border -> '┨'
     
-    // Normal (2) - Empty - Border
+    // Normal - Empty (2) - Border
     | Empty, Empty, Normal, Border -> '┎'
     | Empty, Empty, Border, Normal -> '┍'
     
@@ -138,18 +134,18 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
 let private append (sBuilder : StringBuilder) (grid : Grid) rowIndex columnIndex =
 
     let startWallLeft =
-        match existAt rowIndex (columnIndex - 1) grid with
-        | true -> (getCell rowIndex (columnIndex - 1) grid).WallTop.WallType
+        match Cell.existAt rowIndex (columnIndex - 1) grid with
+        | true -> (Cell.getCell rowIndex (columnIndex - 1) grid).WallTop.WallType
         | false -> Empty
 
     let startWallTop =
-        match existAt (rowIndex - 1) columnIndex grid with
-        | true -> (getCell (rowIndex - 1) columnIndex grid).WallLeft.WallType
+        match Cell.existAt (rowIndex - 1) columnIndex grid with
+        | true -> (Cell.getCell (rowIndex - 1) columnIndex grid).WallLeft.WallType
         | false -> Empty
 
-    let startWallRight = (getCell rowIndex columnIndex grid).WallTop.WallType
+    let startWallRight = (Cell.getCell rowIndex columnIndex grid).WallTop.WallType
 
-    let startWallBottom = (getCell rowIndex columnIndex grid).WallLeft.WallType
+    let startWallBottom = (Cell.getCell rowIndex columnIndex grid).WallLeft.WallType
 
     // starting part
     sBuilder.Append(getPieceOfWall
@@ -161,24 +157,24 @@ let private append (sBuilder : StringBuilder) (grid : Grid) rowIndex columnIndex
     // middle part
     [1 .. repetitionsMiddlePart ] |> List.iter(fun _ ->
         sBuilder.Append(getPieceOfWall
-                            (getCell rowIndex columnIndex grid).WallTop.WallType
+                            (Cell.getCell rowIndex columnIndex grid).WallTop.WallType
                             Empty
-                            (getCell rowIndex columnIndex grid).WallTop.WallType
+                            (Cell.getCell rowIndex columnIndex grid).WallTop.WallType
                             Empty) |> ignore)
 
     // last part only on the last column
     if (columnIndex = (maxColumnIndex grid)) then
 
-        let endWallLeft = (getCell rowIndex columnIndex grid).WallTop.WallType
+        let endWallLeft = (Cell.getCell rowIndex columnIndex grid).WallTop.WallType
 
         let endWallTop =
-            match existAt (rowIndex - 1) columnIndex grid with
-            | true -> (getCell (rowIndex - 1) columnIndex grid).WallRight.WallType
+            match Cell.existAt (rowIndex - 1) columnIndex grid with
+            | true -> (Cell.getCell (rowIndex - 1) columnIndex grid).WallRight.WallType
             | false -> Empty
 
         let endWallRight = Empty
 
-        let endWallBottom = (getCell rowIndex columnIndex grid).WallRight.WallType
+        let endWallBottom = (Cell.getCell rowIndex columnIndex grid).WallRight.WallType
 
         sBuilder.Append(getPieceOfWall
                             endWallLeft
@@ -191,12 +187,12 @@ let private append (sBuilder : StringBuilder) (grid : Grid) rowIndex columnIndex
 let private appendForLastRow (sBuilder : StringBuilder) (grid : Grid) rowIndex columnIndex =
 
     let startWallLeft =
-        match existAt rowIndex (columnIndex - 1) grid with
-        | true -> (getCell rowIndex (columnIndex - 1) grid).WallBottom.WallType
+        match Cell.existAt rowIndex (columnIndex - 1) grid with
+        | true -> (Cell.getCell rowIndex (columnIndex - 1) grid).WallBottom.WallType
         | false -> Empty
 
-    let startWallTop = (getCell rowIndex columnIndex grid).WallLeft.WallType
-    let startWallRight = (getCell rowIndex columnIndex grid).WallBottom.WallType
+    let startWallTop = (Cell.getCell rowIndex columnIndex grid).WallLeft.WallType
+    let startWallRight = (Cell.getCell rowIndex columnIndex grid).WallBottom.WallType
     let startWallBottom = Empty
     
     // starting part
@@ -209,16 +205,16 @@ let private appendForLastRow (sBuilder : StringBuilder) (grid : Grid) rowIndex c
     // middle part
     [1 .. repetitionsMiddlePart ] |> List.iter(fun _ ->
         sBuilder.Append(getPieceOfWall
-                            (getCell rowIndex columnIndex grid).WallBottom.WallType
+                            (Cell.getCell rowIndex columnIndex grid).WallBottom.WallType
                             Empty
-                            (getCell rowIndex columnIndex grid).WallBottom.WallType
+                            (Cell.getCell rowIndex columnIndex grid).WallBottom.WallType
                             Empty) |> ignore)
 
     // last part only on the last column
     if (columnIndex = (maxColumnIndex grid)) then
-        let endWallLeft = (getCell rowIndex columnIndex grid).WallBottom.WallType
+        let endWallLeft = (Cell.getCell rowIndex columnIndex grid).WallBottom.WallType
 
-        let endWallTop = (getCell rowIndex columnIndex grid).WallRight.WallType
+        let endWallTop = (Cell.getCell rowIndex columnIndex grid).WallRight.WallType
 
         let endWallRight = Empty
 

@@ -27,4 +27,3 @@ type Cell = {
     WallBottom : Wall
     WallLeft : Wall
 }
-// Todo : add some helper functions for a cell

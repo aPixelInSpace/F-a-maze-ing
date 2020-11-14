@@ -4,17 +4,14 @@ open System.IO
 open System.Text
 open Mazes.Lib
 
-let private numberWhiteSpacesPrefixForRow numberOfRows rowNumber =
-    numberOfRows.ToString().Length - rowNumber.ToString().Length
-
-let private numberWhiteSpacesPrefixForColumns numberOfRows =
+let private columnsAxis (columnsAxisHtml : string) numberOfRows numberOfColumns =
+    let numberWhiteSpacesPrefixForColumns numberOfRows =
         numberOfRows
             .ToString()
             // 1 white space for the space between the number of the row and the maze
             // 1 white space because the maze always start with an intersection and not directly a column 
             .Length + 2
-            
-let private columnsAxis (columnsAxisHtml : string) numberOfRows numberOfColumns =    
+    
     let totalOfDigitsForColumns = numberOfColumns.ToString().Length
 
     let sbColumnsRow = [| for _ in 1 .. totalOfDigitsForColumns -> StringBuilder()  |]
@@ -25,13 +22,14 @@ let private columnsAxis (columnsAxisHtml : string) numberOfRows numberOfColumns 
     for column in 1 .. numberOfColumns do
         let columnString = column.ToString()
         let digitLength = columnString.Length
+        let offset = totalOfDigitsForColumns - digitLength
         
         for sbIndex in 0 .. sbColumnsRow.Length - 1 do
             match sbIndex with
             | sbIndex when (totalOfDigitsForColumns - sbIndex) > digitLength -> sbColumnsRow.[sbIndex].Append("  ") |> ignore
             | sbIndex ->
                 sbColumnsRow.[sbIndex]
-                    .Append(columnString.[sbIndex - (totalOfDigitsForColumns - digitLength)])
+                    .Append(columnString.[sbIndex - offset])
                     .Append(" ")
                     |> ignore
 
@@ -42,6 +40,8 @@ let private columnsAxis (columnsAxisHtml : string) numberOfRows numberOfColumns 
     sbColumns.ToString()
 
 let private rowNumber numberOfRows rowIndex =
+    let numberWhiteSpacesPrefixForRow numberOfRows rowNumber = numberOfRows.ToString().Length - rowNumber.ToString().Length
+    
     if rowIndex < numberOfRows then  
         String.replicate (numberWhiteSpacesPrefixForRow numberOfRows (rowIndex + 1)) " "
         + (rowIndex + 1).ToString()
