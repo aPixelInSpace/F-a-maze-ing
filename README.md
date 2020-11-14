@@ -1,7 +1,7 @@
 # F-a-maze-ing
 A simple maze generator made with F#
 
-Currently only a text output is supported. See an example [here](/examples/The mysterious labyrinth.html).
+Currently only a text output is supported. See an example [here](/docs/index.html).
 
 ## Usage
 ```
