@@ -1,7 +1,9 @@
+![build](https://github.com/apixelinspace/F-a-maze-ing/workflows/build/badge.svg)
+
 # F-a-maze-ing
 A simple maze generator made with F#
 
-Currently only a text output is supported. See examples with [Rectangular](https://apixelinspace.github.io/F-a-maze-ing/RectangularMaze.html) and [Triangular](https://apixelinspace.github.io/F-a-maze-ing/TriangularMaze.html).
+Currently only a text output is supported. See examples with a [Rectangular](https://apixelinspace.github.io/F-a-maze-ing/RectangularMaze.html) and a [Triangular](https://apixelinspace.github.io/F-a-maze-ing/TriangularMaze.html) mazes.
 
 ## Usage
 ```
