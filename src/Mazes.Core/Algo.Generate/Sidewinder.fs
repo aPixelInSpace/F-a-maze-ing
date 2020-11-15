@@ -1,15 +1,27 @@
-﻿module Mazes.Lib.Algo.Generate.Sidewinder
+﻿module Mazes.Core.Algo.Generate.Sidewinder
 
 open System
-open Mazes.Lib
-open Mazes.Lib.Extensions
-open Mazes.Lib.Cell
-open Mazes.Lib.Grid.Grid
-open Mazes.Lib.Grid.Grid.Wall
+open Mazes.Core
+open Mazes.Core.Extensions
+open Mazes.Core.Cell
+open Mazes.Core.Grid.Grid
+open Mazes.Core.Grid.Grid.Wall
+
+let removeRandomTopWallFromRange startColumnIndex endColumnIndex (rng : Random) grid rowIndex =
+    let eligibleCellsWithRemovableTopWall = ResizeArray<int>()
+    for i in startColumnIndex .. endColumnIndex do
+        if not (Cell.isTopALimit rowIndex i grid) then
+            eligibleCellsWithRemovableTopWall.Add(i)
+
+    if eligibleCellsWithRemovableTopWall.Count > 0 then
+        updateWallAtPosition Top Empty rowIndex (eligibleCellsWithRemovableTopWall.[rng.Next(0, eligibleCellsWithRemovableTopWall.Count - 1)]) grid
+        true
+    else
+        false
 
 let private carveRow (rng : Random) grid rowIndex row =
     let mutable runStartIndex = 0
-    let mutable lastColumnIndexWithLeftWall = 0
+    let mutable lastColumnIndexWithLeftWall = 0    
     
     row
     |> Array.iteri(
@@ -24,20 +36,17 @@ let private carveRow (rng : Random) grid rowIndex row =
     
             // if we are in a top right corner, we check which of the previous cells have a wall at the top that can be removed            
             if isTopALimit && isRightALimit then
-                let eligibleCellsWithRemovableTopWall = ResizeArray<int>()
-                for i in runStartIndex .. (columnIndex - 1) do
-                    if not (Cell.isTopALimit rowIndex i grid) then
-                        eligibleCellsWithRemovableTopWall.Add(i)
 
-                // if there is something
-                if eligibleCellsWithRemovableTopWall.Count > 0 then
-                    // randomly remove the top wall of one
-                    updateWallAtPosition Top Empty rowIndex (eligibleCellsWithRemovableTopWall.[rng.Next(0, eligibleCellsWithRemovableTopWall.Count - 1)]) grid
-                else
-                    // we absolutely have to ensure that the last wall on the left is empty if possible
+                let couldRemoveATopWall = removeRandomTopWallFromRange runStartIndex (columnIndex - 1) rng grid rowIndex
+                
+                if not couldRemoveATopWall then                
+                    // we absolutely have to ensure that the last wall on the left is empty if possible                    
                     let isLastLeftWallALimit = (Cell.isLeftALimit rowIndex lastColumnIndexWithLeftWall grid)
                     if not isLastLeftWallALimit then
                         updateWallAtPosition Left Empty rowIndex lastColumnIndexWithLeftWall grid
+                    else
+                        // one last ditch of effort, we try to remove one of the top from the last column just after we removed top (and thus has a left wall)
+                        removeRandomTopWallFromRange lastColumnIndexWithLeftWall (columnIndex - 1) rng grid rowIndex |> ignore
             else
 
             // if the top is a limit then we always choose remove right

@@ -5,11 +5,12 @@ open System.IO
 open System.Text
 open CommandLine
 open CLSimpleTypes
-open Mazes.Lib
-open Mazes.Lib.Grid
-open Mazes.Lib.Algo.Generate
+open Mazes.Core
+open Mazes.Core.Grid
+open Mazes.Core.Algo.Generate
 open Mazes.Render.Text
 open Mazes.Output.Html
+open Mazes.Output.RawForTest
 
 let private defaultNameOfFile = "The F Amazing Maze"
 
@@ -43,8 +44,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
 
-    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns)
-    //let grid = (Shape.TriangleIsosceles.create 100 Shape.TriangleIsosceles.BaseAt.Bottom 1)
+    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns)
+    let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 5 1)
 
     let rng =
         match options.Value.seed with
@@ -66,8 +67,10 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
           Grid = transformedGrid }
 
     let htmlOutput = outputHtml maze (printGrid transformedGrid)
-
     File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
+    
+    let rawTestOutput = outputRawForTest maze (printGrid transformedGrid)
+    File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
     printfn "Mazes creation finished !"
     printfn "File location is %s" filePath

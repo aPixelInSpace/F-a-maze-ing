@@ -2,7 +2,7 @@
 
 open System.IO
 open System.Text
-open Mazes.Lib
+open Mazes.Core
 
 let private columnsAxis (columnsAxisHtml : string) numberOfRows numberOfColumns =
     let numberWhiteSpacesPrefixForColumns numberOfRows =

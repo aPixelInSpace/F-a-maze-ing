@@ -9,7 +9,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Mazes.Lib\Mazes.Lib.fsproj" />
+      <ProjectReference Include="..\Mazes.Core\Mazes.Core.fsproj" />
     </ItemGroup>
 
 </Project>

@@ -1,11 +1,11 @@
-﻿module Mazes.Lib.Algo.Generate.BinaryTree
+﻿module Mazes.Core.Algo.Generate.BinaryTree
 
 open System
-open Mazes.Lib
-open Mazes.Lib.Extensions
-open Mazes.Lib.Cell
-open Mazes.Lib.Grid.Grid
-open Mazes.Lib.Grid.Grid.Wall
+open Mazes.Core
+open Mazes.Core.Extensions
+open Mazes.Core.Cell
+open Mazes.Core.Grid.Grid
+open Mazes.Core.Grid.Grid.Wall
 
 let private carveRow (rng : Random) grid rowIndex row =
     let mutable lastColumnIndexWithTopWall = 0

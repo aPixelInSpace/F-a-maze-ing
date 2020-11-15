@@ -1,10 +1,10 @@
 ﻿module Mazes.Render.Text
 
 open System.Text
-open Mazes.Lib
-open Mazes.Lib.Extensions
-open Mazes.Lib.Cell
-open Mazes.Lib.Grid.Grid
+open Mazes.Core
+open Mazes.Core.Extensions
+open Mazes.Core.Cell
+open Mazes.Core.Grid.Grid
 
 let private repetitionsMiddlePart = 1
 

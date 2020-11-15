@@ -1,6 +1,6 @@
-﻿namespace Mazes.Lib.Grid
+﻿namespace Mazes.Core.Grid
 
-open Mazes.Lib.Cell
+open Mazes.Core.Cell
 
 module Grid =
     

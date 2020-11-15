@@ -12,7 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Mazes.Lib\Mazes.Lib.fsproj" />
       <ProjectReference Include="..\Mazes.Output\Mazes.Output.fsproj" />
       <ProjectReference Include="..\Mazes.Render\Mazes.Render.fsproj" />
     </ItemGroup>

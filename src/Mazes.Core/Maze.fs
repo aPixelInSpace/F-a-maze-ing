@@ -1,6 +1,6 @@
-﻿namespace Mazes.Lib
+﻿namespace Mazes.Core
 
-open Mazes.Lib.Grid.Grid
+open Mazes.Core.Grid.Grid
 
 type Maze = {
     Name : string

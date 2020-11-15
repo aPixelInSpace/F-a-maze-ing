@@ -1,0 +1,288 @@
+﻿module Mazes.Render.Tests.Text.Sidewinder.TriangleIsosceles
+
+open System
+open FsUnit
+open Xunit
+open Mazes.Core.Grid.Shape
+open Mazes.Core.Algo.Generate
+open Mazes.Render
+
+[<Fact>]
+let ``Rendering a base 11, base at bottom, triangle with a base value decrement of 1 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
+    // arrange
+    let maze =
+        (TriangleIsosceles.create 11 TriangleIsosceles.BaseAt.Bottom 1 1)
+        |> Sidewinder.transformIntoMaze (Random(1))
+    
+    // act
+    let renderedMaze = maze |> Text.printGrid
+        
+    // assert
+    let expectedRenderedMaze =
+        "          ┏━┓          \n" +
+        "        ┏━┛ ┗━┓        \n" +
+        "      ┏━┹─╴ ┬ ┗━┓      \n" +
+        "    ┏━┛ ┬ ╭─┴─╴ ┗━┓    \n" +
+        "  ┏━┛ ┬ │ │ ╶─────┺━┓  \n" +
+        "┏━┛ ┬ │ │ │ ┬ ┬ ╭─╴ ┗━┓\n" +
+        "┗━━━┷━┷━┷━┷━┷━┷━┷━━━━━┛"
+
+        
+    renderedMaze |> should equal expectedRenderedMaze
+
+[<Fact>]
+let ``Rendering a base 11, base at top, triangle with a base value decrement of 1 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
+    // arrange
+    let maze =
+        (TriangleIsosceles.create 11 TriangleIsosceles.BaseAt.Top 1 1)
+        |> Sidewinder.transformIntoMaze (Random(1))
+    
+    // act
+    let renderedMaze = maze |> Text.printGrid
+        
+    // assert
+    let expectedRenderedMaze =
+        "┏━━━━━━━━━━━━━━━━━━━━━┓\n" +
+        "┗━┱───╴ ╶─╮ ╶───╮ ┬ ┏━┛\n" +
+        "  ┗━┱─╴ ┬ │ ┬ ┬ ╰─╆━┛  \n" +
+        "    ┗━┓ ╰─┤ │ │ ┏━┛    \n" +
+        "      ┗━┓ ├─╯ ┢━┛      \n" +
+        "        ┗━┪ ┏━┛        \n" +
+        "          ┗━┛          "
+        
+    renderedMaze |> should equal expectedRenderedMaze
+
+[<Fact>]
+let ``Rendering a base 11, base at left, triangle with a base value decrement of 1 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
+    // arrange
+    let maze =
+        (TriangleIsosceles.create 11 TriangleIsosceles.BaseAt.Left 1 1)
+        |> Sidewinder.transformIntoMaze (Random(1))
+    
+    // act
+    let renderedMaze = maze |> Text.printGrid
+        
+    // assert
+    let expectedRenderedMaze =
+        "┏━┓          \n" +
+        "┃ ┗━┓        \n" +
+        "┠─╴ ┗━┓      \n" +
+        "┃ ╶───┺━┓    \n" +
+        "┃ ╭───╴ ┗━┓  \n" +
+        "┃ │ ┬ ┬ ╶─┺━┓\n" +
+        "┃ │ │ │ ┬ ┏━┛\n" +
+        "┠─╯ │ │ ┢━┛  \n" +
+        "┃ ┬ │ ┢━┛    \n" +
+        "┠─╯ ┢━┛      \n" +
+        "┃ ┏━┛        \n" +
+        "┗━┛          "
+
+        
+    renderedMaze |> should equal expectedRenderedMaze
+
+[<Fact>]
+let ``Rendering a base 11, base at right, triangle with a base value decrement of 1 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
+    // arrange
+    let maze =
+        (TriangleIsosceles.create 11 TriangleIsosceles.BaseAt.Right 1 1)
+        |> Sidewinder.transformIntoMaze (Random(1))
+    
+    // act
+    let renderedMaze = maze |> Text.printGrid
+        
+    // assert
+    let expectedRenderedMaze =
+        "          ┏━┓\n" +
+        "        ┏━┛ ┃\n" +
+        "      ┏━┛ ╶─┨\n" +
+        "    ┏━┛ ┬ ╶─┨\n" +
+        "  ┏━┛ ┬ │ ╶─┨\n" +
+        "┏━┛ ┬ │ │ ┬ ┃\n" +
+        "┗━┓ ╰─┴─┤ │ ┃\n" +
+        "  ┗━┓ ┬ ├─╯ ┃\n" +
+        "    ┗━┪ ├─╴ ┃\n" +
+        "      ┗━┪ ┬ ┃\n" +
+        "        ┗━┪ ┃\n" +
+        "          ┗━┛"
+        
+    renderedMaze |> should equal expectedRenderedMaze
+
+[<Fact>]
+let ``Rendering a base 21, base at bottom, triangle with a base value decrement of 3 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
+    // arrange
+    let maze =
+        (TriangleIsosceles.create 21 TriangleIsosceles.BaseAt.Bottom 3 1)
+        |> Sidewinder.transformIntoMaze (Random(1))
+    
+    // act
+    let renderedMaze = maze |> Text.printGrid
+        
+    // assert
+    let expectedRenderedMaze =
+        "                  ┏━━━━━┓                  \n" +
+        "            ┏━━━━━┹─╴ ╶─┺━━━━━┓            \n" +
+        "      ┏━━━━━┛ ┬ ╶─╮ ╭───╴ ┬ ┬ ┗━━━━━┓      \n" +
+        "┏━━━━━┛ ┬ ╶───┴─╮ │ │ ┬ ┬ │ │ ╭─╴ ╶─┺━━━━━┓\n" +
+        "┗━━━━━━━┷━━━━━━━┷━┷━┷━┷━┷━┷━┷━┷━━━━━━━━━━━┛"
+
+        
+    renderedMaze |> should equal expectedRenderedMaze
+
+[<Fact>]
+let ``Rendering a base 21, base at top, triangle with a base value decrement of 3 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
+    // arrange
+    let maze =
+        (TriangleIsosceles.create 21 TriangleIsosceles.BaseAt.Top 3 1)
+        |> Sidewinder.transformIntoMaze (Random(1))
+    
+    // act
+    let renderedMaze = maze |> Text.printGrid
+        
+    // assert
+    let expectedRenderedMaze =
+        "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n" +
+        "┗━━━━━┱───╴ ╶─╮ ╶───╮ ╭───╴ ┬ ┬ ┬ ┬ ┏━━━━━┛\n" +
+        "      ┗━━━━━┓ ╰───╮ │ │ ┬ ┬ │ ┢━┷━┷━┛      \n" +
+        "            ┗━━━━━╅─╯ │ ┢━┷━┷━┛            \n" +
+        "                  ┗━━━┷━┛                  "
+        
+    renderedMaze |> should equal expectedRenderedMaze
+
+[<Fact>]
+let ``Rendering a base 21, base at left, triangle with a base value decrement of 3 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
+    // arrange
+    let maze =
+        (TriangleIsosceles.create 21 TriangleIsosceles.BaseAt.Left 3 1)
+        |> Sidewinder.transformIntoMaze (Random(1))
+    
+    // act
+    let renderedMaze = maze |> Text.printGrid
+        
+    // assert
+    let expectedRenderedMaze =
+        "┏━┓      \n" +
+        "┃ ┃      \n" +
+        "┃ ┃      \n" +
+        "┃ ┗━┓    \n" +
+        "┃ ┬ ┃    \n" +
+        "┃ │ ┃    \n" +
+        "┃ ╰─┺━┓  \n" +
+        "┃ ┬ ┬ ┃  \n" +
+        "┃ │ │ ┃  \n" +
+        "┃ ╰─┤ ┗━┓\n" +
+        "┃ ┬ │ ┬ ┃\n" +
+        "┃ ├─╯ │ ┃\n" +
+        "┃ │ ╶─╆━┛\n" +
+        "┃ │ ╶─┨  \n" +
+        "┃ ╰─╮ ┃  \n" +
+        "┃ ┬ ┢━┛  \n" +
+        "┃ │ ┃    \n" +
+        "┠─╯ ┃    \n" +
+        "┃ ┏━┛    \n" +
+        "┃ ┃      \n" +
+        "┃ ┃      \n" +
+        "┗━┛      "
+
+        
+    renderedMaze |> should equal expectedRenderedMaze
+
+[<Fact>]
+let ``Rendering a base 21, base at right, triangle with a base value decrement of 3 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
+    // arrange
+    let maze =
+        (TriangleIsosceles.create 21 TriangleIsosceles.BaseAt.Right 3 1)
+        |> Sidewinder.transformIntoMaze (Random(1))
+    
+    // act
+    let renderedMaze = maze |> Text.printGrid
+        
+    // assert
+    let expectedRenderedMaze =
+        "      ┏━┓\n" +
+        "      ┃ ┃\n" +
+        "      ┃ ┃\n" +
+        "    ┏━┛ ┃\n" +
+        "    ┃ ┬ ┃\n" +
+        "    ┠─╯ ┃\n" +
+        "  ┏━┹─╴ ┃\n" +
+        "  ┃ ╶───┨\n" +
+        "  ┃ ┬ ┬ ┃\n" +
+        "┏━┛ │ │ ┃\n" +
+        "┃ ╶─┤ │ ┃\n" +
+        "┃ ┬ ├─╯ ┃\n" +
+        "┗━┪ ├─╴ ┃\n" +
+        "  ┃ │ ┬ ┃\n" +
+        "  ┠─╯ │ ┃\n" +
+        "  ┗━┓ ╰─┨\n" +
+        "    ┃ ┬ ┃\n" +
+        "    ┃ │ ┃\n" +
+        "    ┗━┪ ┃\n" +
+        "      ┃ ┃\n" +
+        "      ┃ ┃\n" +
+        "      ┗━┛"
+        
+    renderedMaze |> should equal expectedRenderedMaze
+
+[<Fact>]
+let ``Rendering a base 51, base at bottom, triangle with a base value decrement of 1 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
+    // arrange
+    let maze =
+        (TriangleIsosceles.create 51 TriangleIsosceles.BaseAt.Bottom 1 1)
+        |> Sidewinder.transformIntoMaze (Random(1))
+    
+    // act
+    let renderedMaze = maze |> Text.printGrid
+        
+    // assert
+    let expectedRenderedMaze =        
+        "                                                  ┏━┓                                                  \n" +
+        "                                                ┏━┛ ┗━┓                                                \n" +
+        "                                              ┏━┹─╴ ┬ ┗━┓                                              \n" +
+        "                                            ┏━┛ ┬ ╭─┴─╴ ┗━┓                                            \n" +
+        "                                          ┏━┛ ┬ │ │ ╶─────┺━┓                                          \n" +
+        "                                        ┏━┛ ┬ │ │ │ ┬ ┬ ╭─╴ ┗━┓                                        \n" +
+        "                                      ┏━┹───╯ │ ╰─┴─┴─┤ ╰─╮ ╶─┺━┓                                      \n" +
+        "                                    ┏━┛ ┬ ╭─╴ ╰─────╮ │ ╭─╯ ╶───┺━┓                                    \n" +
+        "                                  ┏━┛ ╭─┴─┴─────────┴─╯ ╰─╮ ┬ ╶───┺━┓                                  \n" +
+        "                                ┏━┛ ╭─┴─╴ ╶───────╮ ╶─────┴─┼─╴ ╭─╴ ┗━┓                                \n" +
+        "                              ┏━┛ ┬ │ ╭─────╴ ╶───┴───╮ ╭─╴ │ ┬ ╰───╮ ┗━┓                              \n" +
+        "                            ┏━┛ ┬ ╰─┼─╯ ╭─╴ ┬ ╶───╮ ╭─┴─╯ ╭─╯ ├───╴ ├─╴ ┗━┓                            \n" +
+        "                          ┏━┛ ┬ ╰───┤ ┬ │ ╭─╯ ╶─╮ ╰─┼─╴ ┬ ╰─┬─╯ ╶───┤ ┬ ╶─┺━┓                          \n" +
+        "                        ┏━┛ ╶─┴─────┼─┴─╯ │ ╭─╴ │ ╶─┼───╯ ╭─┴─╴ ┬ ┬ ╰─┴─╮ ┬ ┗━┓                        \n" +
+        "                      ┏━┛ ╶─╮ ╶─╮ ┬ │ ┬ ╶─┴─┤ ╶─┤ ╶─┤ ┬ ┬ ╰─────┴─┤ ┬ ╶─┴─┤ ┬ ┗━┓                      \n" +
+        "                    ┏━┛ ╶─┬─╯ ╶─┴─┼─╯ │ ┬ ╶─┤ ╭─╯ ╭─╯ ╰─┼─╴ ┬ ╶─╮ ╰─┴───╮ │ ╰─╮ ┗━┓                    \n" +
+        "                  ┏━┛ ┬ ┬ │ ╶─┬───┴───┴─╯ ┬ ├─┴─╴ ╰─╮ ┬ ╰─╮ │ ╶─┴───╮ ╶─┤ ├───┴─╴ ┗━┓                  \n" +
+        "                ┏━┛ ╶─┴─┼─╯ ╶─┤ ┬ ╶─╮ ┬ ┬ │ │ ╭─────┴─┴─╴ ├─╯ ┬ ┬ ╭─╯ ┬ │ ├───╴ ┬ ╶─┺━┓                \n" +
+        "              ┏━┛ ╶─╮ ╭─╯ ┬ ╭─╯ │ ╭─╯ │ │ │ ├─┴─╴ ╶─────╮ │ ╭─┴─╯ │ ╭─╯ │ ╰───╮ │ ┬ ┬ ┗━┓              \n" +
+        "            ┏━┛ ╭─╴ │ ╰─╮ │ │ ┬ │ │ ┬ │ │ ├─╯ ┬ ╶─╮ ╶───┴─┴─┴─╮ ╭─╯ │ ╶─┤ ╶─┬─┴─╯ │ │ ┬ ┗━┓            \n" +
+        "          ┏━┛ ╶─┤ ╭─╯ ┬ ├─╯ ╰─┤ ├─╯ │ │ │ │ ╭─┴─╴ ├───╴ ╶─╮ ╭─╯ ╰───┤ ╶─┤ ┬ ╰─╮ ┬ ├─╯ │ ┬ ┗━┓          \n" +
+        "        ┏━┛ ┬ ┬ │ │ ╶─┤ ├─╴ ╶─┤ │ ┬ │ │ │ │ │ ╶───┼─╴ ┬ ╭─┴─╯ ╶─╮ ┬ ╰─┬─╯ │ ┬ │ │ │ ┬ │ │ ╶─┺━┓        \n" +
+        "      ┏━┛ ╶─┤ │ ╰─┴───┴─┼─╴ ╶─┤ ╰─┴─┴─┤ ├─╯ ╰─╮ ┬ │ ╭─╯ ╰─╮ ┬ ┬ │ ├─╴ │ ┬ │ │ ├─╯ │ ├─╯ │ ╶───┺━┓      \n" +
+        "    ┏━┛ ╭───╯ │ ┬ ╶─╮ ┬ │ ┬ ╶─┼─╴ ┬ ┬ ├─╯ ┬ ╭─╯ │ │ ╰─╮ ┬ ╰─┤ ╰─┼─╯ ╶─┴─┴─┤ ├─╯ ╶─┼─╯ ╶─┼─╴ ┬ ╶─┺━┓    \n" +
+        "  ┏━┛ ╭─╯ ┬ ╶─┤ ╰─╮ │ │ │ │ ┬ ├─╴ ╰─┴─┴─╮ │ │ ╭─╯ │ ┬ ╰─┴─╮ ├───╯ ╶─╮ ┬ ╶─┤ ╰─────┴─╮ ┬ │ ╭─╯ ┬ ╶─┺━┓  \n" +
+        "┏━┹───╯ ┬ │ ┬ ╰─╮ │ ├─╯ ╰─┴─┼─┴─╴ ┬ ╶───┤ │ │ │ ╶─┼─╯ ╭───╯ │ ┬ ╭─╴ ╰─┤ ┬ │ ┬ ┬ ╶─╮ │ │ ╰─┤ ┬ │ ┬ ┬ ┗━┓\n" +
+        "┗━━━━━━━┷━┷━┷━━━┷━┷━┷━━━━━━━┷━━━━━┷━━━━━┷━┷━┷━┷━━━┷━━━┷━━━━━┷━┷━┷━━━━━┷━┷━┷━┷━┷━━━┷━┷━┷━━━┷━┷━┷━┷━┷━━━┛"
+        
+    renderedMaze |> should equal expectedRenderedMaze
+
+[<Fact>]
+let ``Rendering a base 51, base at bottom, triangle with a base value decrement of 5 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
+    // arrange
+    let maze =
+        (TriangleIsosceles.create 51 TriangleIsosceles.BaseAt.Bottom 5 1)
+        |> Sidewinder.transformIntoMaze (Random(1))
+    
+    // act
+    let renderedMaze = maze |> Text.printGrid
+        
+    // assert
+    let expectedRenderedMaze =        
+        "                                                  ┏━┓                                                  \n" +
+        "                                        ┏━━━━━━━━━┛ ┗━━━━━━━━━┓                                        \n" +
+        "                              ┏━━━━━━━━━┹─╴ ┬ ╶───╮ ╭───╴ ┬ ┬ ┗━━━━━━━━━┓                              \n" +
+        "                    ┏━━━━━━━━━┛ ┬ ╶─────╮ ┬ │ ┬ ┬ │ │ ╭─╴ ├─┴─╴ ┬ ╶─────┺━━━━━━━━━┓                    \n" +
+        "          ┏━━━━━━━━━┛ ╶─╮ ╶─╮ ┬ ├─╴ ╶───┴─┤ │ ├─╯ ╰─┴─┤ ╭─┴─────┴───────╴ ╶─╮ ╶───┺━━━━━━━━━┓          \n" +
+        "┏━━━━━━━━━┛ ┬ ╭───╴ ╶───┴───┤ ╰─┴─────┬─╴ ├─╯ │ ┬ ┬ ╭─┴─┴─╴ ╶───────╮ ╭─╴ ┬ │ ╶───┬─╴ ┬ ╶───┺━━━━━━━━━┓\n" +
+        "┗━━━━━━━━━━━┷━┷━━━━━━━━━━━━━┷━━━━━━━━━┷━━━┷━━━┷━┷━┷━┷━━━━━━━━━━━━━━━┷━┷━━━┷━┷━━━━━┷━━━┷━━━━━━━━━━━━━━━┛"
+        
+    renderedMaze |> should equal expectedRenderedMaze

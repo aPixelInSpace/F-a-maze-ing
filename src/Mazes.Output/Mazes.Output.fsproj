@@ -5,12 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Mazes.Lib\Mazes.Lib.fsproj" />
       <ProjectReference Include="..\Mazes.Render\Mazes.Render.fsproj" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Include="Html.fs" />
+      <Compile Include="RawForTest.fs" />
     </ItemGroup>
 
     <ItemGroup>

@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Mazes.Lib\Mazes.Lib.fsproj" />
+      <ProjectReference Include="..\..\src\Mazes.Core\Mazes.Core.fsproj" />
     </ItemGroup>
 
 </Project>

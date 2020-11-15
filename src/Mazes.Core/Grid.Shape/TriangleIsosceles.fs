@@ -1,8 +1,8 @@
-﻿module Mazes.Lib.Grid.Shape.TriangleIsosceles
+﻿module Mazes.Core.Grid.Shape.TriangleIsosceles
 
 open System
-open Mazes.Lib.Cell
-open Mazes.Lib.Grid.Grid
+open Mazes.Core.Cell
+open Mazes.Core.Grid.Grid
 
 type BaseAt =
     | Top
@@ -25,15 +25,15 @@ let private isCellPartOfTriangleIsosceles numberOfRows numberOfColumns rowIndex 
         let numberOfEmptyStartingCell = (numberOfColumns - 1 - columnIndex) * decrementValue
         rowIndex >= numberOfEmptyStartingCell && rowIndex < (numberOfRows - numberOfEmptyStartingCell)
 
-let private getBorderOrEmptyWall predicate =
-    match predicate with
+let private getBorderOrEmptyWall isCurrentCellPartOfTriangleIsosceles =
+    match isCurrentCellPartOfTriangleIsosceles with
     | true -> Border
     | false -> Empty
 
-let private getBorderOrNormalOrEmptyWall currentCellPartOfTriangleIsosceles otherCellPartOfTriangleIsosceles =
-    if not currentCellPartOfTriangleIsosceles && not otherCellPartOfTriangleIsosceles then Empty
-    elif not currentCellPartOfTriangleIsosceles && otherCellPartOfTriangleIsosceles then Border
-    elif currentCellPartOfTriangleIsosceles && not otherCellPartOfTriangleIsosceles then Border
+let private getBorderOrNormalOrEmptyWall isCurrentCellPartOfTriangleIsosceles isOtherCellPartOfTriangleIsosceles =
+    if not isCurrentCellPartOfTriangleIsosceles && not isOtherCellPartOfTriangleIsosceles then Empty
+    elif not isCurrentCellPartOfTriangleIsosceles && isOtherCellPartOfTriangleIsosceles then Border
+    elif isCurrentCellPartOfTriangleIsosceles && not isOtherCellPartOfTriangleIsosceles then Border
     else Normal
 
 let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt decrementValue =
@@ -86,8 +86,8 @@ let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt dec
         WallLeft = { WallType = wallTypeLeft; WallPosition = WallPosition.Left }
     }
 
-let create baseLength baseAt decrementValue =
-    let denominator = decrementValue * 2
+let create baseLength baseAt baseDecrementValue heightIncrementValue =
+    let denominator = baseDecrementValue * 2
     let height = (int (Math.Ceiling((float baseLength) / (float denominator))))
     
     let numberOfRows =
@@ -100,6 +100,6 @@ let create baseLength baseAt decrementValue =
         | BaseAt.Top | BaseAt.Bottom -> baseLength
         | BaseAt.Left | BaseAt.Right -> height
     
-    let cells = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt decrementValue)
+    let cells = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt baseDecrementValue)
 
     { Cells = cells; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }

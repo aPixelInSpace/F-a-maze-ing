@@ -1,4 +1,4 @@
-﻿namespace Mazes.Lib.Cell
+﻿namespace Mazes.Core.Cell
 
 type WallType =
     | Normal

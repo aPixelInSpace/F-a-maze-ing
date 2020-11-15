@@ -1,7 +1,7 @@
-﻿module Mazes.Lib.Grid.Shape.Rectangle
+﻿module Mazes.Core.Grid.Shape.Rectangle
 
-open Mazes.Lib.Cell
-open Mazes.Lib.Grid.Grid
+open Mazes.Core.Cell
+open Mazes.Core.Grid.Grid
 
 let private getCell numberOfRows numberOfColumns rowIndex columnIndex =
     let wallTop =

@@ -8,8 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Text.BinaryTree.fs" />
-        <Compile Include="Text.Sidewinder.fs" />
+		<Compile Include="Text\BinaryTree\Rectangle.fs" />
+		<Compile Include="Text\BinaryTree\TriangleIsosceles.fs" />
+		<Compile Include="Text\Sidewinder\Rectangle.fs" />
+		<Compile Include="Text\Sidewinder\TriangleIsosceles.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 

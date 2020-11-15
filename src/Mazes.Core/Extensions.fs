@@ -1,4 +1,4 @@
-﻿namespace Mazes.Lib.Extensions
+﻿namespace Mazes.Core.Extensions
 
 module Array2D =
     let extractRows array2d =

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mazes.Lib", "src\Mazes.Lib\Mazes.Lib.fsproj", "{E5B5F827-2B60-4995-9667-2364C4D670BA}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mazes.Core", "src\Mazes.Core\Mazes.Core.fsproj", "{E5B5F827-2B60-4995-9667-2364C4D670BA}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mazes", "src\Mazes\Mazes.fsproj", "{8CE1987E-78C1-42C2-B826-71020CF376A6}"
 EndProject
@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AB5FEDA9-28F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{265E2152-EAE8-4679-92A2-020D96A0F4E7}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mazes.Lib.Tests", "tests\Mazes.Lib.Tests\Mazes.Lib.Tests.fsproj", "{FCF82822-E3B5-4D5B-9768-EDC01A68DEC5}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mazes.Core.Tests", "tests\Mazes.Core.Tests\Mazes.Core.Tests.fsproj", "{FCF82822-E3B5-4D5B-9768-EDC01A68DEC5}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mazes.Render.Tests", "tests\Mazes.Render.Tests\Mazes.Render.Tests.fsproj", "{294DE816-CCD4-411D-B440-79AEA3E824F4}"
 EndProject

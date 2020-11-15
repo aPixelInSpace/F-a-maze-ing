@@ -1,10 +1,10 @@
-module Mazes.Render.Tests.Text.BinaryTree
+module Mazes.Render.Tests.Text.BinaryTree.Rectangle
 
 open System
 open FsUnit
 open Xunit
-open Mazes.Lib.Grid
-open Mazes.Lib.Algo.Generate
+open Mazes.Core.Grid
+open Mazes.Core.Algo.Generate
 open Mazes.Render
 
 [<Fact>]
