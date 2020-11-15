@@ -30,6 +30,12 @@ let private getBorderOrEmptyWall predicate =
     | true -> Border
     | false -> Empty
 
+let private getBorderOrNormalOrEmptyWall currentCellPartOfTriangleIsosceles otherCellPartOfTriangleIsosceles =
+    if not currentCellPartOfTriangleIsosceles && not otherCellPartOfTriangleIsosceles then Empty
+    elif not currentCellPartOfTriangleIsosceles && otherCellPartOfTriangleIsosceles then Border
+    elif currentCellPartOfTriangleIsosceles && not otherCellPartOfTriangleIsosceles then Border
+    else Normal
+
 let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt decrementValue =
     let isCurrentCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles numberOfRows numberOfColumns rowIndex columnIndex baseAt decrementValue
     
@@ -44,10 +50,7 @@ let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt dec
         else
             let isTopCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles numberOfRows numberOfColumns (rowIndex - 1) columnIndex baseAt decrementValue
 
-            if not isCurrentCellPartOfTriangleIsosceles && not isTopCellPartOfTriangleIsosceles then Empty
-            elif not isCurrentCellPartOfTriangleIsosceles && isTopCellPartOfTriangleIsosceles then Border
-            elif isCurrentCellPartOfTriangleIsosceles && not isTopCellPartOfTriangleIsosceles then Border
-            else Normal
+            getBorderOrNormalOrEmptyWall isCurrentCellPartOfTriangleIsosceles isTopCellPartOfTriangleIsosceles
 
     let wallTypeRight =
         let isLastColumn = columnIndex = (numberOfColumns - 1)
@@ -56,10 +59,7 @@ let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt dec
         else
             let isRightCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles numberOfRows numberOfColumns rowIndex (columnIndex + 1) baseAt decrementValue
 
-            if not isCurrentCellPartOfTriangleIsosceles && not isRightCellPartOfTriangleIsosceles then Empty
-            elif not isCurrentCellPartOfTriangleIsosceles && isRightCellPartOfTriangleIsosceles then Border
-            elif isCurrentCellPartOfTriangleIsosceles && not isRightCellPartOfTriangleIsosceles then Border
-            else Normal
+            getBorderOrNormalOrEmptyWall isCurrentCellPartOfTriangleIsosceles isRightCellPartOfTriangleIsosceles
 
     let wallTypeBottom =
         let isLastRow = rowIndex = (numberOfRows - 1)
@@ -68,10 +68,7 @@ let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt dec
         else
             let isBottomCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles numberOfRows numberOfColumns (rowIndex + 1) columnIndex baseAt decrementValue
 
-            if not isCurrentCellPartOfTriangleIsosceles && not isBottomCellPartOfTriangleIsosceles then Empty
-            elif not isCurrentCellPartOfTriangleIsosceles && isBottomCellPartOfTriangleIsosceles then Border
-            elif isCurrentCellPartOfTriangleIsosceles && not isBottomCellPartOfTriangleIsosceles then Border
-            else Normal
+            getBorderOrNormalOrEmptyWall isCurrentCellPartOfTriangleIsosceles isBottomCellPartOfTriangleIsosceles
 
     let wallTypeLeft =
         if columnIndex = 0 then
@@ -79,10 +76,7 @@ let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt dec
         else
             let isLeftCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles numberOfRows numberOfColumns rowIndex (columnIndex - 1) baseAt decrementValue
 
-            if not isCurrentCellPartOfTriangleIsosceles && not isLeftCellPartOfTriangleIsosceles then Empty
-            elif not isCurrentCellPartOfTriangleIsosceles && isLeftCellPartOfTriangleIsosceles then Border
-            elif isCurrentCellPartOfTriangleIsosceles && not isLeftCellPartOfTriangleIsosceles then Border
-            else Normal
+            getBorderOrNormalOrEmptyWall isCurrentCellPartOfTriangleIsosceles isLeftCellPartOfTriangleIsosceles
 
     {
         CellType = cellType
