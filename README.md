@@ -5,7 +5,7 @@ Currently only a text output is supported. See an example [here](https://apixeli
 
 ## Usage
 ```
-maze
+mazes
 
   -n, --name         A name for the maze. If empty, a default one is provided.
 

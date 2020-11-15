@@ -6,6 +6,7 @@ open System.Text
 open CommandLine
 open CLSimpleTypes
 open Mazes.Lib
+open Mazes.Lib.Grid
 open Mazes.Lib.Algo.Generate
 open Mazes.Render.Text
 open Mazes.Output.Html
@@ -34,21 +35,22 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
         match options.Value.name with
         | Some name -> name
         | None -> defaultNameOfFile
-    
+
     let directory =
         match options.Value.directory with
         | Some directory -> directory
         | None -> Directory.GetCurrentDirectory()
-     
+
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
-     
-    let grid = (Grid.create options.Value.rows options.Value.columns)
-    
+
+    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns)
+    let grid = (Shape.TriangleIsosceles.create 100 Shape.TriangleIsosceles.BaseAt.Bottom 1)
+
     let rng =
         match options.Value.seed with
         | Some seed -> Random(seed)
         | None -> Random()
-    
+
     let algo =
         match options.Value.algo with
         | Some algo -> matchAlgoEnumWithFunction algo
@@ -56,23 +58,21 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
             let rngAlgo = Random()
             let enumAlgoUpperBound = ((AlgoEnum.GetValues(typeof<AlgoEnum>)).GetUpperBound(0)) + 1            
             matchAlgoEnumWithFunction (enum<AlgoEnum> (rngAlgo.Next(enumAlgoUpperBound)))
-    
+
     let transformedGrid = (algo rng grid)
-    
+
     let maze =
         { Name = nameOfMaze
           Grid = transformedGrid }
-    
+
     let htmlOutput = outputHtml maze (printGrid transformedGrid)
-    
+
     File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
-        
+
     printfn "Mazes creation finished !"
     printfn "File location is %s" filePath
-    
+
     if not options.Value.quiet then    
         printfn "Press any key to exit"
         |> Console.ReadKey
         |> ignore
-    else
-        ()

@@ -2,19 +2,19 @@ module Mazes.Lib.Tests.Grid
 
 open FsUnit
 open Xunit
-open Mazes.Lib
 open Mazes.Lib.Cell
-open Mazes.Lib.Grid.Wall
+open Mazes.Lib.Grid
+open Mazes.Lib.Grid.Grid.Wall
 
 [<Fact>]
 let ``Creating a 0 by 0 grid should create a grid with an empty 2d array`` () =
-    let grid = (Grid.create 0 0)
+    let grid = (Shape.Rectangle.create 0 0)
     
     grid.Cells.Length |> should equal 0
 
 [<Fact>]  
 let ``Creating a 1 by 1 grid should create a grid with 1 cell that has every wall as a border`` () =    
-    let grid = (Grid.create 1 1)
+    let grid = (Shape.Rectangle.create 1 1)
         
     grid.Cells.Length |> should equal 1
     
@@ -25,7 +25,7 @@ let ``Creating a 1 by 1 grid should create a grid with 1 cell that has every wal
 
 [<Fact>]  
 let ``Creating a 1 by 2 grid should create a grid with 2 horizontal cells that has border walls on the edge and the wall in the middle is normal`` () =
-    let grid = (Grid.create 1 2)
+    let grid = (Shape.Rectangle.create 1 2)
     
     grid.Cells.Length |> should equal 2
     grid.Cells.[0, *].Length |> should equal 2
@@ -42,7 +42,7 @@ let ``Creating a 1 by 2 grid should create a grid with 2 horizontal cells that h
 
 [<Fact>]  
 let ``Creating a 2 by 1 grid should create a grid with 2 vertical cells that has border walls on the edge and the wall in the middle is normal`` () =
-    let grid = (Grid.create 2 1)
+    let grid = (Shape.Rectangle.create 2 1)
     
     grid.Cells.Length |> should equal 2
     grid.Cells.[*, 0].Length |> should equal 2
@@ -59,7 +59,7 @@ let ``Creating a 2 by 1 grid should create a grid with 2 vertical cells that has
     
 [<Fact>]  
 let ``Creating a 3 by 3 grid should create a grid with 9 cells (3x3) that has border walls on the edge and the walls in the middle are normal`` () =
-    let grid = (Grid.create 3 3)
+    let grid = (Shape.Rectangle.create 3 3)
     
     // | 1 | 4 | 7 | 
     // | 2 | 5 | 8 |
@@ -130,7 +130,7 @@ let ``Creating a 3 by 3 grid should create a grid with 9 cells (3x3) that has bo
 [<Fact>]  
 let ``Updating a wall should change it to the specified type : the wall of the cell itself and the wall of the corresponding neighbor`` () =
     // arrange
-    let grid = (Grid.create 3 3)
+    let grid = (Shape.Rectangle.create 3 3)
         
     // act top
     grid.Cells.[1, 1].WallTop |> should equal { WallPosition = Top; WallType = Normal }

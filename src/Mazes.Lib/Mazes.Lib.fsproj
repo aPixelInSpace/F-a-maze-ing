@@ -8,9 +8,12 @@
         <Compile Include="Extensions.fs" />
         <Compile Include="Cell.fs" />
         <Compile Include="Grid.fs" />
+		<Compile Include="Grid.Shape\Rectangle.fs" />
+		<Compile Include="Grid.Shape\TriangleIsosceles.fs" />
         <Compile Include="Maze.fs" />
         <Compile Include="Algo.Generate\BinaryTree.fs" />
         <Compile Include="Algo.Generate\Sidewinder.fs" />
+        <Compile Include="Algo.Analyse\Dijkstra.fs" />        
     </ItemGroup>
 
 </Project>

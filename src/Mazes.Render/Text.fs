@@ -4,7 +4,7 @@ open System.Text
 open Mazes.Lib
 open Mazes.Lib.Extensions
 open Mazes.Lib.Cell
-open Mazes.Lib.Grid
+open Mazes.Lib.Grid.Grid
 
 let private repetitionsMiddlePart = 1
 

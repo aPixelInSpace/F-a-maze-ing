@@ -3,7 +3,7 @@ module Mazes.Render.Tests.Text.BinaryTree
 open System
 open FsUnit
 open Xunit
-open Mazes.Lib
+open Mazes.Lib.Grid
 open Mazes.Lib.Algo.Generate
 open Mazes.Render
 
@@ -11,7 +11,7 @@ open Mazes.Render
 let ``Rendering a 3 by 3 maze generated with the binary tree algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (Grid.create 3 3)
+        (Shape.Rectangle.create 3 3)
         |> BinaryTree.transformIntoMaze (Random(1))
     
     // act
@@ -30,7 +30,7 @@ let ``Rendering a 3 by 3 maze generated with the binary tree algorithm (and a rn
 let ``Rendering a 5 by 5 maze generated with the binary tree algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (Grid.create 5 5)
+        (Shape.Rectangle.create 5 5)
         |> BinaryTree.transformIntoMaze (Random(1))
     
     // act
@@ -51,7 +51,7 @@ let ``Rendering a 5 by 5 maze generated with the binary tree algorithm (and a rn
 let ``Rendering a 5 by 10 maze generated with the binary tree algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (Grid.create 5 10)
+        (Shape.Rectangle.create 5 10)
         |> BinaryTree.transformIntoMaze (Random(1))
     
     // act
