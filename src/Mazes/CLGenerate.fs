@@ -44,8 +44,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
 
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns)
-    let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 5 1)
+    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns)
+    //let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 5 1)
 
     let rng =
         match options.Value.seed with
@@ -69,8 +69,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let htmlOutput = outputHtml maze (printGrid transformedGrid)
     File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
     
-    let rawTestOutput = outputRawForTest maze (printGrid transformedGrid)
-    File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
+    //let rawTestOutput = outputRawForTest maze (printGrid transformedGrid)
+    //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
     printfn "Mazes creation finished !"
     printfn "File location is %s" filePath
