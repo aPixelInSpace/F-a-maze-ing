@@ -22,7 +22,7 @@ let removeRandomTopWallFromRange startColumnIndex endColumnIndex (rng : Random) 
 let private carveRow (rng : Random) grid rowIndex row =
     let mutable runStartIndex = 0
     let mutable lastColumnIndexWithLeftWall = 0    
-    
+
     row
     |> Array.iteri(
         fun columnIndex _ ->
@@ -33,12 +33,12 @@ let private carveRow (rng : Random) grid rowIndex row =
 
             let isTopALimit = (Cell.isTopALimit rowIndex columnIndex grid)
             let isRightALimit = (Cell.isRightALimit rowIndex columnIndex grid)
-    
+
             // if we are in a top right corner, we check which of the previous cells have a wall at the top that can be removed            
             if isTopALimit && isRightALimit then
 
                 let couldRemoveATopWall = removeRandomTopWallFromRange runStartIndex (columnIndex - 1) rng grid rowIndex
-                
+
                 if not couldRemoveATopWall then                
                     // we absolutely have to ensure that the last wall on the left is empty if possible                    
                     let isLastLeftWallALimit = (Cell.isLeftALimit rowIndex lastColumnIndexWithLeftWall grid)

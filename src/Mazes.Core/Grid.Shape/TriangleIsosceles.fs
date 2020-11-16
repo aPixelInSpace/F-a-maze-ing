@@ -10,20 +10,26 @@ type BaseAt =
     | Bottom
     | Left
 
-let private isCellPartOfTriangleIsosceles numberOfRows numberOfColumns rowIndex columnIndex baseAt decrementValue =
+let private isCellPartOfTriangleIsosceles numberOfRows numberOfColumns baseAt baseDecrementValue heightIncrementValue rowIndex columnIndex =
     match baseAt with
     | BaseAt.Top ->
-        let numberOfEmptyStartingCell = rowIndex * decrementValue
-        columnIndex >= numberOfEmptyStartingCell && columnIndex < (numberOfColumns - numberOfEmptyStartingCell)
+        let currentFloorIndex = rowIndex / heightIncrementValue
+        let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrementValue
+        columnIndex >= numberOfEmptyStartingCellRow && columnIndex < (numberOfColumns - numberOfEmptyStartingCellRow)
     | BaseAt.Bottom ->
-        let numberOfEmptyStartingCell = (numberOfRows - 1 - rowIndex) * decrementValue
-        columnIndex >= numberOfEmptyStartingCell && columnIndex < (numberOfColumns - numberOfEmptyStartingCell)
+        let numberOfFloors = numberOfRows / heightIncrementValue
+        let currentFloorIndex = rowIndex / heightIncrementValue
+        let numberOfEmptyStartingCellRow = (numberOfFloors - 1 - currentFloorIndex) * baseDecrementValue        
+        columnIndex >= numberOfEmptyStartingCellRow && columnIndex < (numberOfColumns - numberOfEmptyStartingCellRow)
     | BaseAt.Left ->
-        let numberOfEmptyStartingCell = columnIndex * decrementValue
-        rowIndex >= numberOfEmptyStartingCell && rowIndex < (numberOfRows - numberOfEmptyStartingCell)
+        let currentFloorIndex = columnIndex / heightIncrementValue
+        let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrementValue
+        rowIndex >= numberOfEmptyStartingCellRow && rowIndex < (numberOfRows - numberOfEmptyStartingCellRow)
     | BaseAt.Right ->
-        let numberOfEmptyStartingCell = (numberOfColumns - 1 - columnIndex) * decrementValue
-        rowIndex >= numberOfEmptyStartingCell && rowIndex < (numberOfRows - numberOfEmptyStartingCell)
+        let numberOfFloors = numberOfColumns / heightIncrementValue
+        let currentFloorIndex = columnIndex / heightIncrementValue
+        let numberOfEmptyStartingCellRow = (numberOfFloors - 1 - currentFloorIndex) * baseDecrementValue
+        rowIndex >= numberOfEmptyStartingCellRow && rowIndex < (numberOfRows - numberOfEmptyStartingCellRow)
 
 let private getBorderOrEmptyWall isCurrentCellPartOfTriangleIsosceles =
     match isCurrentCellPartOfTriangleIsosceles with
@@ -36,8 +42,10 @@ let private getBorderOrNormalOrEmptyWall isCurrentCellPartOfTriangleIsosceles is
     elif isCurrentCellPartOfTriangleIsosceles && not isOtherCellPartOfTriangleIsosceles then Border
     else Normal
 
-let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt decrementValue =
-    let isCurrentCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles numberOfRows numberOfColumns rowIndex columnIndex baseAt decrementValue
+let private getCell numberOfRows numberOfColumns baseAt decrementValue heightIncrementValue rowIndex columnIndex =
+    let isCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles numberOfRows numberOfColumns baseAt decrementValue heightIncrementValue
+    
+    let isCurrentCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles rowIndex columnIndex
     
     let cellType =
         match isCurrentCellPartOfTriangleIsosceles with
@@ -48,7 +56,7 @@ let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt dec
         if rowIndex = 0 then
             getBorderOrEmptyWall isCurrentCellPartOfTriangleIsosceles
         else
-            let isTopCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles numberOfRows numberOfColumns (rowIndex - 1) columnIndex baseAt decrementValue
+            let isTopCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles (rowIndex - 1) columnIndex
 
             getBorderOrNormalOrEmptyWall isCurrentCellPartOfTriangleIsosceles isTopCellPartOfTriangleIsosceles
 
@@ -57,7 +65,7 @@ let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt dec
         if isLastColumn then
             getBorderOrEmptyWall isCurrentCellPartOfTriangleIsosceles
         else
-            let isRightCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles numberOfRows numberOfColumns rowIndex (columnIndex + 1) baseAt decrementValue
+            let isRightCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles rowIndex (columnIndex + 1)
 
             getBorderOrNormalOrEmptyWall isCurrentCellPartOfTriangleIsosceles isRightCellPartOfTriangleIsosceles
 
@@ -66,7 +74,7 @@ let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt dec
         if isLastRow then
             getBorderOrEmptyWall isCurrentCellPartOfTriangleIsosceles
         else
-            let isBottomCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles numberOfRows numberOfColumns (rowIndex + 1) columnIndex baseAt decrementValue
+            let isBottomCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles (rowIndex + 1) columnIndex
 
             getBorderOrNormalOrEmptyWall isCurrentCellPartOfTriangleIsosceles isBottomCellPartOfTriangleIsosceles
 
@@ -74,7 +82,7 @@ let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt dec
         if columnIndex = 0 then
             getBorderOrEmptyWall isCurrentCellPartOfTriangleIsosceles
         else
-            let isLeftCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles numberOfRows numberOfColumns rowIndex (columnIndex - 1) baseAt decrementValue
+            let isLeftCellPartOfTriangleIsosceles = isCellPartOfTriangleIsosceles rowIndex (columnIndex - 1)
 
             getBorderOrNormalOrEmptyWall isCurrentCellPartOfTriangleIsosceles isLeftCellPartOfTriangleIsosceles
 
@@ -88,7 +96,7 @@ let private getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt dec
 
 let create baseLength baseAt baseDecrementValue heightIncrementValue =
     let denominator = baseDecrementValue * 2
-    let height = (int (Math.Ceiling((float baseLength) / (float denominator))))
+    let height = ((int (Math.Ceiling((float baseLength) / (float denominator)))) * heightIncrementValue)
     
     let numberOfRows =
         match baseAt with
@@ -100,6 +108,6 @@ let create baseLength baseAt baseDecrementValue heightIncrementValue =
         | BaseAt.Top | BaseAt.Bottom -> baseLength
         | BaseAt.Left | BaseAt.Right -> height
     
-    let cells = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> getCell numberOfRows numberOfColumns rowIndex columnIndex baseAt baseDecrementValue)
+    let cells = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> getCell numberOfRows numberOfColumns baseAt baseDecrementValue heightIncrementValue rowIndex columnIndex)
 
     { Cells = cells; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }

@@ -45,7 +45,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
 
     let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns)
-    //let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 5 1)
+    //let grid = (Shape.TriangleIsosceles.create 30 Shape.TriangleIsosceles.BaseAt.Bottom 2 5)
 
     let rng =
         match options.Value.seed with
