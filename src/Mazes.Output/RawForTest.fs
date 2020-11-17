@@ -1,7 +1,6 @@
 ﻿module Mazes.Output.RawForTest
 
 open System.Text
-open System.IO
 
 let outputRawForTest maze (textRenderedMaze : string) =
     let sbMaze = StringBuilder()

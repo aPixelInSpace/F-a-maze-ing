@@ -3,9 +3,7 @@
 open System
 open Mazes.Core
 open Mazes.Core.Extensions
-open Mazes.Core.Cell
-open Mazes.Core.Grid.Grid
-open Mazes.Core.Grid.Grid.Wall
+open Mazes.Core.GridWall
 
 let private carveRow (rng : Random) grid rowIndex row =
     let mutable lastColumnIndexWithTopWall = 0
@@ -17,22 +15,22 @@ let private carveRow (rng : Random) grid rowIndex row =
     |> Array.iteri(
         fun columnIndex _ ->
             // if the cell is not part of the maze, we do nothing
-            if not (Cell.isPartOfMaze rowIndex columnIndex grid) then ()
+            if not (GridCell.isPartOfMaze rowIndex columnIndex grid) then ()
             else
 
-            let isTopALimit = (Cell.isTopALimit rowIndex columnIndex grid)
-            let isRightALimit = (Cell.isRightALimit rowIndex columnIndex grid)
+            let isTopALimit = (GridCell.isALimitAt Top rowIndex columnIndex grid)
+            let isRightALimit = (GridCell.isALimitAt Right rowIndex columnIndex grid)
 
             // if we are in a top right corner 
             if isTopALimit &&  isRightALimit then                
                 if isLastRemovedTop then                    
                     // we absolutely have to ensure that the wall on the left is empty if possible
-                    let isLastLeftALimit = (Cell.isLeftALimit rowIndex lastColumnIndexWithLeftWall grid)
+                    let isLastLeftALimit = (GridCell.isALimitAt Left rowIndex lastColumnIndexWithLeftWall grid)
                     if not isLastLeftALimit then
                         updateWallAtPosition Left Empty rowIndex lastColumnIndexWithLeftWall grid
                 else                    
                     // or with top
-                    let isLastTopALimit = (Cell.isTopALimit rowIndex lastColumnIndexWithTopWall grid)
+                    let isLastTopALimit = (GridCell.isALimitAt Top rowIndex lastColumnIndexWithTopWall grid)
                     if not isLastTopALimit then
                         updateWallAtPosition Top Empty rowIndex lastColumnIndexWithTopWall grid            
             else
@@ -60,8 +58,7 @@ let private carveRow (rng : Random) grid rowIndex row =
 
 let transformIntoMaze rng grid =
     grid.Cells
-    |> Array2D.extractRows
-    |> Seq.iteri(fun rowIndex row -> carveRow rng grid rowIndex row)
-    //|> Array2D.iteri(removeOneWall rng grid)
+    |> Array2D.extractByRows
+    |> Seq.iteri(fun rowIndex row -> carveRow rng grid rowIndex row)    
 
     grid

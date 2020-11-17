@@ -1,20 +1,4 @@
-﻿namespace Mazes.Core.Cell
-
-type WallType =
-    | Normal
-    | Border
-    | Empty
-
-type WallPosition =
-    | Top
-    | Right
-    | Bottom
-    | Left
-
-type Wall = {
-    WallType : WallType
-    WallPosition : WallPosition
-}
+﻿namespace Mazes.Core
 
 type CellType =
     | PartOfMaze

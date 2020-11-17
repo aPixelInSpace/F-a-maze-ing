@@ -6,14 +6,17 @@
 
     <ItemGroup>
         <Compile Include="Extensions.fs" />
+        <Compile Include="Wall.fs" />
         <Compile Include="Cell.fs" />
         <Compile Include="Grid.fs" />
-		<Compile Include="Grid.Shape\Rectangle.fs" />
-		<Compile Include="Grid.Shape\TriangleIsosceles.fs" />
+        <Compile Include="GridCell.fs" />
+        <Compile Include="GridWall.fs" />
+		<Compile Include="Shape\Rectangle.fs" />
+		<Compile Include="Shape\TriangleIsosceles.fs" />
         <Compile Include="Maze.fs" />
-        <Compile Include="Algo.Generate\BinaryTree.fs" />
-        <Compile Include="Algo.Generate\Sidewinder.fs" />
-        <Compile Include="Algo.Analyse\Dijkstra.fs" />        
+        <Compile Include="Algo\Generate\BinaryTree.fs" />
+        <Compile Include="Algo\Generate\Sidewinder.fs" />
+        <Compile Include="Algo\Analyse\Dijkstra.fs" />        
     </ItemGroup>
 
 </Project>

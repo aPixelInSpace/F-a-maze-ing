@@ -3,7 +3,7 @@
 open System
 open FsUnit
 open Xunit
-open Mazes.Core.Grid.Shape
+open Mazes.Core
 open Mazes.Core.Algo.Generate
 open Mazes.Render
 
@@ -11,7 +11,7 @@ open Mazes.Render
 let ``Rendering a base 11, base at bottom, triangle with a base decrement value of 1 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 11 TriangleIsosceles.BaseAt.Bottom 1 1)
+        (Shape.TriangleIsosceles.create 11 Shape.TriangleIsosceles.BaseAt.Bottom 1 1)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -34,7 +34,7 @@ let ``Rendering a base 11, base at bottom, triangle with a base decrement value 
 let ``Rendering a base 11, base at top, triangle with a base decrement value of 1 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 11 TriangleIsosceles.BaseAt.Top 1 1)
+        (Shape.TriangleIsosceles.create 11 Shape.TriangleIsosceles.BaseAt.Top 1 1)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -56,7 +56,7 @@ let ``Rendering a base 11, base at top, triangle with a base decrement value of 
 let ``Rendering a base 11, base at left, triangle with a base decrement value of 1 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 11 TriangleIsosceles.BaseAt.Left 1 1)
+        (Shape.TriangleIsosceles.create 11 Shape.TriangleIsosceles.BaseAt.Left 1 1)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -84,7 +84,7 @@ let ``Rendering a base 11, base at left, triangle with a base decrement value of
 let ``Rendering a base 11, base at right, triangle with a base decrement value of 1 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 11 TriangleIsosceles.BaseAt.Right 1 1)
+        (Shape.TriangleIsosceles.create 11 Shape.TriangleIsosceles.BaseAt.Right 1 1)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -111,7 +111,7 @@ let ``Rendering a base 11, base at right, triangle with a base decrement value o
 let ``Rendering a base 21, base at bottom, triangle with a base decrement value of 3 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 21 TriangleIsosceles.BaseAt.Bottom 3 1)
+        (Shape.TriangleIsosceles.create 21 Shape.TriangleIsosceles.BaseAt.Bottom 3 1)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -132,7 +132,7 @@ let ``Rendering a base 21, base at bottom, triangle with a base decrement value 
 let ``Rendering a base 21, base at top, triangle with a base decrement value of 3 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 21 TriangleIsosceles.BaseAt.Top 3 1)
+        (Shape.TriangleIsosceles.create 21 Shape.TriangleIsosceles.BaseAt.Top 3 1)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -152,7 +152,7 @@ let ``Rendering a base 21, base at top, triangle with a base decrement value of 
 let ``Rendering a base 21, base at left, triangle with a base decrement value of 3 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 21 TriangleIsosceles.BaseAt.Left 3 1)
+        (Shape.TriangleIsosceles.create 21 Shape.TriangleIsosceles.BaseAt.Left 3 1)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -190,7 +190,7 @@ let ``Rendering a base 21, base at left, triangle with a base decrement value of
 let ``Rendering a base 21, base at right, triangle with a base decrement value of 3 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 21 TriangleIsosceles.BaseAt.Right 3 1)
+        (Shape.TriangleIsosceles.create 21 Shape.TriangleIsosceles.BaseAt.Right 3 1)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -227,7 +227,7 @@ let ``Rendering a base 21, base at right, triangle with a base decrement value o
 let ``Rendering a base 51, base at bottom, triangle with a base decrement value of 1 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 51 TriangleIsosceles.BaseAt.Bottom 1 1)
+        (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 1 1)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -269,7 +269,7 @@ let ``Rendering a base 51, base at bottom, triangle with a base decrement value 
 let ``Rendering a base 51, base at bottom, triangle with a base decrement value of 5 and an height increment value of 1, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 51 TriangleIsosceles.BaseAt.Bottom 5 1)
+        (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 5 1)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -291,7 +291,7 @@ let ``Rendering a base 51, base at bottom, triangle with a base decrement value 
 let ``Rendering a base 10, base at bottom, triangle with a base decrement value of 1 and an height increment value of 3, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 10 TriangleIsosceles.BaseAt.Bottom 1 3)
+        (Shape.TriangleIsosceles.create 10 Shape.TriangleIsosceles.BaseAt.Bottom 1 3)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -322,7 +322,7 @@ let ``Rendering a base 10, base at bottom, triangle with a base decrement value 
 let ``Rendering a base 10, base at top, triangle with a base decrement value of 1 and an height increment value of 3, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 10 TriangleIsosceles.BaseAt.Top 1 3)
+        (Shape.TriangleIsosceles.create 10 Shape.TriangleIsosceles.BaseAt.Top 1 3)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -353,7 +353,7 @@ let ``Rendering a base 10, base at top, triangle with a base decrement value of 
 let ``Rendering a base 10, base at left, triangle with a base decrement value of 1 and an height increment value of 3, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 10 TriangleIsosceles.BaseAt.Left 1 3)
+        (Shape.TriangleIsosceles.create 10 Shape.TriangleIsosceles.BaseAt.Left 1 3)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -379,7 +379,7 @@ let ``Rendering a base 10, base at left, triangle with a base decrement value of
 let ``Rendering a base 10, base at right, triangle with a base decrement value of 1 and an height increment value of 3, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 10 TriangleIsosceles.BaseAt.Right 1 3)
+        (Shape.TriangleIsosceles.create 10 Shape.TriangleIsosceles.BaseAt.Right 1 3)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act
@@ -405,7 +405,7 @@ let ``Rendering a base 10, base at right, triangle with a base decrement value o
 let ``Rendering a base 30, base at bottom, triangle with a base decrement value of 2 and an height increment value of 5, maze generated with the sidewinder algorithm (and a rng seed of 1) should be like the expected output`` () =
     // arrange
     let maze =
-        (TriangleIsosceles.create 30 TriangleIsosceles.BaseAt.Bottom 2 5)
+        (Shape.TriangleIsosceles.create 30 Shape.TriangleIsosceles.BaseAt.Bottom 2 5)
         |> Sidewinder.transformIntoMaze (Random(1))
     
     // act

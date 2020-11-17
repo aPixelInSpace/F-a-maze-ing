@@ -3,8 +3,7 @@ module Mazes.Render.Tests.Text.Sidewinder.Rectangle
 open System
 open FsUnit
 open Xunit
-open Mazes.Core.Cell
-open Mazes.Core.Grid
+open Mazes.Core
 open Mazes.Core.Algo.Generate
 open Mazes.Render
 

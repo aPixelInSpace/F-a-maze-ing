@@ -3,8 +3,7 @@
 open System.Text
 open Mazes.Core
 open Mazes.Core.Extensions
-open Mazes.Core.Cell
-open Mazes.Core.Grid.Grid
+open Mazes.Core.Grid
 
 let private repetitionsMiddlePart = 1
 
@@ -133,19 +132,21 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
 
 let private append (sBuilder : StringBuilder) (grid : Grid) rowIndex columnIndex =
 
+    let cell = getCell rowIndex columnIndex grid
+
     let startWallLeft =
-        match Cell.existAt rowIndex (columnIndex - 1) grid with
-        | true -> (Cell.getCell rowIndex (columnIndex - 1) grid).WallTop.WallType
+        match existAt rowIndex (columnIndex - 1) grid with
+        | true -> (getCell rowIndex (columnIndex - 1) grid).WallTop.WallType
         | false -> Empty
 
     let startWallTop =
-        match Cell.existAt (rowIndex - 1) columnIndex grid with
-        | true -> (Cell.getCell (rowIndex - 1) columnIndex grid).WallLeft.WallType
+        match existAt (rowIndex - 1) columnIndex grid with
+        | true -> (getCell (rowIndex - 1) columnIndex grid).WallLeft.WallType
         | false -> Empty
 
-    let startWallRight = (Cell.getCell rowIndex columnIndex grid).WallTop.WallType
+    let startWallRight = cell.WallTop.WallType
 
-    let startWallBottom = (Cell.getCell rowIndex columnIndex grid).WallLeft.WallType
+    let startWallBottom = cell.WallLeft.WallType
 
     // starting part
     sBuilder.Append(getPieceOfWall
@@ -157,24 +158,24 @@ let private append (sBuilder : StringBuilder) (grid : Grid) rowIndex columnIndex
     // middle part
     [1 .. repetitionsMiddlePart ] |> List.iter(fun _ ->
         sBuilder.Append(getPieceOfWall
-                            (Cell.getCell rowIndex columnIndex grid).WallTop.WallType
+                            cell.WallTop.WallType
                             Empty
-                            (Cell.getCell rowIndex columnIndex grid).WallTop.WallType
+                            cell.WallTop.WallType
                             Empty) |> ignore)
 
     // last part only on the last column
     if (columnIndex = (maxColumnIndex grid)) then
 
-        let endWallLeft = (Cell.getCell rowIndex columnIndex grid).WallTop.WallType
+        let endWallLeft = cell.WallTop.WallType
 
         let endWallTop =
-            match Cell.existAt (rowIndex - 1) columnIndex grid with
-            | true -> (Cell.getCell (rowIndex - 1) columnIndex grid).WallRight.WallType
+            match existAt (rowIndex - 1) columnIndex grid with
+            | true -> (getCell (rowIndex - 1) columnIndex grid).WallRight.WallType
             | false -> Empty
 
         let endWallRight = Empty
 
-        let endWallBottom = (Cell.getCell rowIndex columnIndex grid).WallRight.WallType
+        let endWallBottom = cell.WallRight.WallType
 
         sBuilder.Append(getPieceOfWall
                             endWallLeft
@@ -186,13 +187,15 @@ let private append (sBuilder : StringBuilder) (grid : Grid) rowIndex columnIndex
 
 let private appendForLastRow (sBuilder : StringBuilder) (grid : Grid) rowIndex columnIndex =
 
+    let cell = getCell rowIndex columnIndex grid
+
     let startWallLeft =
-        match Cell.existAt rowIndex (columnIndex - 1) grid with
-        | true -> (Cell.getCell rowIndex (columnIndex - 1) grid).WallBottom.WallType
+        match existAt rowIndex (columnIndex - 1) grid with
+        | true -> (getCell rowIndex (columnIndex - 1) grid).WallBottom.WallType
         | false -> Empty
 
-    let startWallTop = (Cell.getCell rowIndex columnIndex grid).WallLeft.WallType
-    let startWallRight = (Cell.getCell rowIndex columnIndex grid).WallBottom.WallType
+    let startWallTop = cell.WallLeft.WallType
+    let startWallRight = cell.WallBottom.WallType
     let startWallBottom = Empty
     
     // starting part
@@ -205,16 +208,16 @@ let private appendForLastRow (sBuilder : StringBuilder) (grid : Grid) rowIndex c
     // middle part
     [1 .. repetitionsMiddlePart ] |> List.iter(fun _ ->
         sBuilder.Append(getPieceOfWall
-                            (Cell.getCell rowIndex columnIndex grid).WallBottom.WallType
+                            cell.WallBottom.WallType
                             Empty
-                            (Cell.getCell rowIndex columnIndex grid).WallBottom.WallType
+                            cell.WallBottom.WallType
                             Empty) |> ignore)
 
     // last part only on the last column
     if (columnIndex = (maxColumnIndex grid)) then
-        let endWallLeft = (Cell.getCell rowIndex columnIndex grid).WallBottom.WallType
+        let endWallLeft = cell.WallBottom.WallType
 
-        let endWallTop = (Cell.getCell rowIndex columnIndex grid).WallRight.WallType
+        let endWallTop = cell.WallRight.WallType
 
         let endWallRight = Empty
 
@@ -243,7 +246,7 @@ let printGrid grid =
     let sBuilder = StringBuilder()
 
     grid.Cells
-        |> Array2D.extractRows
+        |> Array2D.extractByRows
         |> Seq.toList
         |> appendRows sBuilder grid
     

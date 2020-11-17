@@ -2,9 +2,8 @@ module Mazes.Core.Tests.Grid
 
 open FsUnit
 open Xunit
-open Mazes.Core.Cell
-open Mazes.Core.Grid
-open Mazes.Core.Grid.Grid.Wall
+open Mazes.Core
+open Mazes.Core.GridWall
 
 [<Fact>]
 let ``Creating a 0 by 0 grid should create a grid with an empty 2d array`` () =
