@@ -46,6 +46,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns)
     //let grid = (Shape.TriangleIsosceles.create 30 Shape.TriangleIsosceles.BaseAt.Bottom 2 5)
+    //let grid = (Shape.Ellipse.create 15 20)
 
     let rng =
         match options.Value.seed with

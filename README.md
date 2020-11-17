@@ -4,7 +4,7 @@
 A simple maze generator made with F#
 
 Currently only a text output is supported.
-See examples with a [Rectangular](https://apixelinspace.github.io/F-a-maze-ing/RectangularMaze.html) and a [Triangular](https://apixelinspace.github.io/F-a-maze-ing/TriangularMaze.html) mazes.
+See examples with a [Rectangular](https://apixelinspace.github.io/F-a-maze-ing/RectangularMaze.html), a [Triangular](https://apixelinspace.github.io/F-a-maze-ing/TriangularMaze.html) or an [Ellipse](https://apixelinspace.github.io/F-a-maze-ing/EllipseMaze.html) mazes.
 Theses examples dot not display correctly on mobile for now. 
 
 ## Usage

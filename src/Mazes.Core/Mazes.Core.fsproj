@@ -13,6 +13,7 @@
         <Compile Include="GridWall.fs" />
 		<Compile Include="Shape\Rectangle.fs" />
 		<Compile Include="Shape\TriangleIsosceles.fs" />
+		<Compile Include="Shape\Ellipse.fs" />
         <Compile Include="Maze.fs" />
         <Compile Include="Algo\Generate\BinaryTree.fs" />
         <Compile Include="Algo\Generate\Sidewinder.fs" />

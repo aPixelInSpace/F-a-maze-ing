@@ -9,9 +9,9 @@ type BaseAt =
     | Bottom
     | Left
 
-let private getCell numberOfRows numberOfColumns baseAt decrementValue heightIncrementValue rowIndex columnIndex =
+let private getCell baseAt decrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex =
     
-    let isCellPartOfTriangleIsosceles numberOfRows numberOfColumns baseAt baseDecrementValue heightIncrementValue rowIndex columnIndex =
+    let isCellPartOfTriangleIsosceles baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex =
         match baseAt with
         | BaseAt.Top ->
             let currentFloorIndex = rowIndex / heightIncrementValue
@@ -39,11 +39,12 @@ let private getCell numberOfRows numberOfColumns baseAt decrementValue heightInc
 
             rowIndex >= numberOfEmptyStartingCellRow && rowIndex < (numberOfRows - numberOfEmptyStartingCellRow)
 
-    let isCellPartOfMaze = isCellPartOfTriangleIsosceles numberOfRows numberOfColumns baseAt decrementValue heightIncrementValue
+    let isCellPartOfMaze = isCellPartOfTriangleIsosceles baseAt decrementValue heightIncrementValue numberOfRows numberOfColumns
 
     GridCell.getCellInstance numberOfRows numberOfColumns rowIndex columnIndex isCellPartOfMaze
 
-let create baseLength baseAt baseDecrementValue heightIncrementValue =    
+// todo : allow to have an array of values for baseDecrementValue and heightIncrementValue
+let create baseLength baseAt baseDecrementValue heightIncrementValue =
     let height =
         (int (Math.Ceiling((float baseLength)
                            / (float (baseDecrementValue * 2)))))
@@ -59,6 +60,6 @@ let create baseLength baseAt baseDecrementValue heightIncrementValue =
         | BaseAt.Top | BaseAt.Bottom -> baseLength
         | BaseAt.Left | BaseAt.Right -> height
     
-    let cells = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> getCell numberOfRows numberOfColumns baseAt baseDecrementValue heightIncrementValue rowIndex columnIndex)
+    let cells = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> getCell baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex)
 
     { Cells = cells; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }
