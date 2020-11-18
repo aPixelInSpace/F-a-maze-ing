@@ -27,8 +27,8 @@ type GenerateOptions = {
 
 let matchAlgoEnumWithFunction algoEnum =
     match algoEnum with
-       | AlgoEnum.BinaryTree -> BinaryTree.transformIntoMaze
-       | AlgoEnum.Sidewinder -> Sidewinder.transformIntoMaze
+       | AlgoEnum.BinaryTree -> BinaryTree.transformIntoMaze Top Right
+       | AlgoEnum.Sidewinder -> Sidewinder.transformIntoMaze Top Right
        | _ -> raise(Exception("Generating algorithm unknown"))
 
 let handleVerbGenerate (options : Parsed<GenerateOptions>) =
@@ -45,8 +45,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
 
     let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns)
-    //let grid = (Shape.TriangleIsosceles.create 30 Shape.TriangleIsosceles.BaseAt.Bottom 2 5)
-    //let grid = (Shape.Ellipse.create 15 20)
+    //let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 3 2)
+    //let grid = (Shape.Ellipse.create 5 7 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
 
     let rng =
         match options.Value.seed with
@@ -70,8 +70,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let htmlOutput = outputHtml maze (printGrid transformedGrid)
     File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
     
-    //let rawTestOutput = outputRawForTest maze (printGrid transformedGrid)
-    //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
+    let rawTestOutput = outputRawForTest maze (printGrid transformedGrid)
+    File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
     printfn "Mazes creation finished !"
     printfn "File location is %s" filePath

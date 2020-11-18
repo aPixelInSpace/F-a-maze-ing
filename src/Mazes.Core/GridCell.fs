@@ -2,7 +2,7 @@
 
 open Mazes.Core.Grid
 
-let getWallTypeForBorder isCurrentCellPartOfMaze =
+let getWallTypeForEdge isCurrentCellPartOfMaze =
     match isCurrentCellPartOfMaze with
     | true -> Border
     | false -> Empty
@@ -23,7 +23,7 @@ let getCellInstance numberOfRows numberOfColumns rowIndex columnIndex isCellPart
     
     let wallTypeTop =
         if isFirstRow rowIndex then
-            getWallTypeForBorder isCurrentCellPartOfMaze
+            getWallTypeForEdge isCurrentCellPartOfMaze
         else
             let isTopCellPartOfMaze = isCellPartOfMaze (rowIndex - 1) columnIndex
 
@@ -31,7 +31,7 @@ let getCellInstance numberOfRows numberOfColumns rowIndex columnIndex isCellPart
 
     let wallTypeRight =
         if isLastColumn columnIndex numberOfColumns then
-            getWallTypeForBorder isCurrentCellPartOfMaze
+            getWallTypeForEdge isCurrentCellPartOfMaze
         else
             let isRightCellPartOfMaze = isCellPartOfMaze rowIndex (columnIndex + 1)
 
@@ -39,7 +39,7 @@ let getCellInstance numberOfRows numberOfColumns rowIndex columnIndex isCellPart
 
     let wallTypeBottom =
         if isLastRow rowIndex numberOfRows then
-            getWallTypeForBorder isCurrentCellPartOfMaze
+            getWallTypeForEdge isCurrentCellPartOfMaze
         else
             let isBottomCellPartOfMaze = isCellPartOfMaze (rowIndex + 1) columnIndex
 
@@ -47,7 +47,7 @@ let getCellInstance numberOfRows numberOfColumns rowIndex columnIndex isCellPart
 
     let wallTypeLeft =
         if isFirstColumn columnIndex then
-            getWallTypeForBorder isCurrentCellPartOfMaze
+            getWallTypeForEdge isCurrentCellPartOfMaze
         else
             let isLeftCellPartOfMaze = isCellPartOfMaze rowIndex (columnIndex - 1)
 

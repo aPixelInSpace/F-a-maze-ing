@@ -10,8 +10,10 @@
     <ItemGroup>
 		<Compile Include="Text\BinaryTree\Rectangle.fs" />
 		<Compile Include="Text\BinaryTree\TriangleIsosceles.fs" />
+		<Compile Include="Text\BinaryTree\Ellipse.fs" />
 		<Compile Include="Text\Sidewinder\Rectangle.fs" />
 		<Compile Include="Text\Sidewinder\TriangleIsosceles.fs" />
+		<Compile Include="Text\Sidewinder\Ellipse.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 

@@ -15,3 +15,11 @@ type Wall = {
     WallType : WallType
     WallPosition : Position
 }
+
+module Position =
+    let getOpposite position =
+        match position with
+        | Top -> Bottom
+        | Right -> Left
+        | Bottom -> Top
+        | Left -> Right

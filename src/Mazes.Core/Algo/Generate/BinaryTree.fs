@@ -5,60 +5,64 @@ open Mazes.Core
 open Mazes.Core.Extensions
 open Mazes.Core.GridWall
 
-let private carveRow (rng : Random) grid rowIndex row =
-    let mutable lastColumnIndexWithTopWall = 0
-    let mutable lastColumnIndexWithLeftWall = 0
+let private carveRow direction1 direction2 (rng : Random) grid rowIndex startColumnIndex increment endColumnIndex =
+    let mutable lastColumnIndexWithDir1Wall = 0
+    let mutable lastColumnIndexWithDir2Wall = 0
     
-    let mutable isLastRemovedTop = false
+    let mutable isLastRemovedDir1 = false
+
+    for columnIndex in startColumnIndex .. increment .. endColumnIndex do
+
+        // if the cell is not part of the maze, we do nothing
+        if not (GridCell.isPartOfMaze rowIndex columnIndex grid) then ()
+        else
+
+        let isDir1ALimit = (GridCell.isALimitAt direction1 rowIndex columnIndex grid)
+        let isDir2ALimit = (GridCell.isALimitAt direction2 rowIndex columnIndex grid)
+
+        // if we are in a corner 
+        if isDir1ALimit &&  isDir2ALimit then                
+            if isLastRemovedDir1 then
+                ifNotAtLimitUpdateWallAtPosition direction2 Empty rowIndex lastColumnIndexWithDir2Wall grid
+                ifNotAtLimitUpdateWallAtPosition (Position.getOpposite direction1) Empty rowIndex columnIndex grid
+            else
+                ifNotAtLimitUpdateWallAtPosition direction1 Empty rowIndex lastColumnIndexWithDir1Wall grid
+                ifNotAtLimitUpdateWallAtPosition (Position.getOpposite direction2) Empty rowIndex columnIndex grid
+        else
+
+        // if the dir 1 is a limit then we always choose remove dir 2 (and the opposite dir 2 if possible)
+        if isDir1ALimit then
+            updateWallAtPosition direction2 Empty rowIndex columnIndex grid
+            ifNotAtLimitUpdateWallAtPosition (Position.getOpposite direction2) Empty rowIndex columnIndex grid
+        else
+
+        // if the dir 2 is a limit then we always choose remove dir 1 (and the opposite dir 1 if possible)
+        if isDir2ALimit then
+            updateWallAtPosition direction1 Empty rowIndex columnIndex grid
+            ifNotAtLimitUpdateWallAtPosition (Position.getOpposite direction1) Empty rowIndex columnIndex grid
+        else
+
+        // if dir 1 and dir 2 are both not a limit we flip a coin to decide which one we remove
+        match rng.Next(2) with
+        | 0 ->
+            updateWallAtPosition direction1 Empty rowIndex columnIndex grid
+            isLastRemovedDir1 <- true
+            lastColumnIndexWithDir2Wall <- columnIndex
+        | 1 ->
+            updateWallAtPosition direction2 Empty rowIndex columnIndex grid
+            isLastRemovedDir1 <- false
+            lastColumnIndexWithDir1Wall <- columnIndex
+        | _ -> raise(Exception("Random number generation problem"))
+
+let transformIntoMaze direction1 direction2 rng grid =
     
-    row
-    |> Array.iteri(
-        fun columnIndex _ ->
-            // if the cell is not part of the maze, we do nothing
-            if not (GridCell.isPartOfMaze rowIndex columnIndex grid) then ()
-            else
-
-            let isTopALimit = (GridCell.isALimitAt Top rowIndex columnIndex grid)
-            let isRightALimit = (GridCell.isALimitAt Right rowIndex columnIndex grid)
-
-            // if we are in a top right corner 
-            if isTopALimit &&  isRightALimit then                
-                if isLastRemovedTop then                    
-                    // we absolutely have to ensure that the wall on the left is empty if possible
-                    let isLastLeftALimit = (GridCell.isALimitAt Left rowIndex lastColumnIndexWithLeftWall grid)
-                    if not isLastLeftALimit then
-                        updateWallAtPosition Left Empty rowIndex lastColumnIndexWithLeftWall grid
-                else                    
-                    // or with top
-                    let isLastTopALimit = (GridCell.isALimitAt Top rowIndex lastColumnIndexWithTopWall grid)
-                    if not isLastTopALimit then
-                        updateWallAtPosition Top Empty rowIndex lastColumnIndexWithTopWall grid            
-            else
-
-            // if the top is a limit then we always choose remove right
-            if isTopALimit then updateWallAtPosition Right Empty rowIndex columnIndex grid
-            else
-
-            // if the right is a limit then we always choose remove top
-            if isRightALimit then updateWallAtPosition Top Empty rowIndex columnIndex grid
-            else
-
-            // if top and right are both not a limit we flip a coin to decide which one we remove
-            match rng.Next(2) with
-            | 0 ->
-                updateWallAtPosition Top Empty rowIndex columnIndex grid
-                isLastRemovedTop <- true
-                lastColumnIndexWithLeftWall <- columnIndex + 1
-            | 1 ->
-                updateWallAtPosition Right Empty rowIndex columnIndex grid
-                isLastRemovedTop <- false
-                lastColumnIndexWithTopWall <- columnIndex
-            | _ -> raise(Exception("Random number generation problem"))
-       )
-
-let transformIntoMaze rng grid =
+    let (startColumnIndex, increment, endColumnIndex) =
+        match direction1, direction2 with
+        | _, Left | Left, _ -> (Grid.getIndex grid.NumberOfColumns, -1, 0)
+        | _ -> (0, 1, Grid.getIndex grid.NumberOfColumns)
+    
     grid.Cells
     |> Array2D.extractByRows
-    |> Seq.iteri(fun rowIndex row -> carveRow rng grid rowIndex row)    
+    |> Seq.iteri(fun rowIndex _ -> carveRow direction1 direction2 rng grid rowIndex startColumnIndex increment endColumnIndex)    
 
     grid

@@ -16,3 +16,8 @@ let updateWallAtPosition wallPosition wallType rowIndex columnIndex grid =
     | Left ->
         grid.Cells.[rowIndex, columnIndex] <- { grid.Cells.[rowIndex, columnIndex] with WallLeft = { WallType = wallType; WallPosition = Position.Left } }
         grid.Cells.[rowIndex, columnIndex - 1] <- { grid.Cells.[rowIndex, columnIndex - 1] with WallRight = { WallType = wallType; WallPosition = Position.Right } }
+
+let ifNotAtLimitUpdateWallAtPosition wallPosition wallType rowIndex columnIndex grid =
+    let isPosAtLimit = (GridCell.isALimitAt wallPosition rowIndex columnIndex grid)
+    if not isPosAtLimit then
+        updateWallAtPosition wallPosition wallType rowIndex columnIndex grid
