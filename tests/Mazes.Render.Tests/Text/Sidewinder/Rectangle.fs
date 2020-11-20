@@ -4,6 +4,7 @@ open System
 open FsUnit
 open Xunit
 open Mazes.Core
+open Mazes.Core.Position
 open Mazes.Core.Algo.Generate
 open Mazes.Render
 
@@ -12,7 +13,7 @@ let ``Rendering a 3 by 3 maze generated with the sidewinder algorithm (Top, Righ
     // arrange
     let maze =
         (Shape.Rectangle.create 3 3)
-        |> Sidewinder.transformIntoMaze Top Right (Random(1))
+        |> Sidewinder.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -31,7 +32,7 @@ let ``Rendering a 5 by 5 maze generated with the sidewinder algorithm (Top, Righ
     // arrange
     let maze =
         (Shape.Rectangle.create 5 5)
-        |> Sidewinder.transformIntoMaze Top Right (Random(1))
+        |> Sidewinder.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -52,7 +53,7 @@ let ``Rendering a 5 by 10 maze generated with the sidewinder algorithm (Top, Rig
     // arrange
     let maze =
         (Shape.Rectangle.create 5 10)
-        |> Sidewinder.transformIntoMaze Top Right (Random(1))
+        |> Sidewinder.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid

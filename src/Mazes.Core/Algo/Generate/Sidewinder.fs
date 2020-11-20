@@ -3,6 +3,7 @@
 open System
 open Mazes.Core
 open Mazes.Core.Extensions
+open Mazes.Core.Position
 open Mazes.Core.GridWall
 
 type private mode =
@@ -37,7 +38,7 @@ let private isPartOfMaze mode rowIndex columnIndex grid =
     | ByColumns ->
        GridCell.isPartOfMaze columnIndex rowIndex grid
 
-let private getRandomColumnIndexFromRange isALimitAt dir (rng : Random) grid rowIndex increment startColumnIndex endColumnIndex =
+let private getRandomColumnIndexForDir1FromRange isALimitAt dir (rng : Random) grid rowIndex increment startColumnIndex endColumnIndex =
     let eligibleCellsWithRemovableWallAtDir = ResizeArray<int>()
 
     for i in startColumnIndex .. increment .. endColumnIndex do
@@ -50,10 +51,23 @@ let private getRandomColumnIndexFromRange isALimitAt dir (rng : Random) grid row
         None
 
 let private carveRow
-    // functions
-    isPartOfMaze isALimitAt updateWallAtPosition ifNotAtLimitUpdateWallAtPosition
+    // dependencies
+    isPartOfMaze
+    isALimitAt
+    updateWallAtPosition
+    ifNotAtLimitUpdateWallAtPosition
+    getRandomColumnIndexForDir1FromRange
     // params
-    direction1 direction2 (rng : Random) grid rowIndex startColumnIndex increment endColumnIndex =
+    direction1
+    direction2
+    (rng : Random)
+    rngTotalWeight    
+    rngDirection2Weight
+    grid
+    rowIndex
+    startColumnIndex
+    increment
+    endColumnIndex =
         
     let mutable runStartIndex = startColumnIndex
     let mutable lastColumnIndexWithDir2Wall = startColumnIndex
@@ -71,14 +85,14 @@ let private carveRow
         // if we are in a corner
         if isDir1ALimit && isDir2ALimit then
             // we check which of the previous cells have a wall at the dir 1 that can be removed
-            let randomColumnIndex = getRandomColumnIndexFromRange isALimitAt direction1 rng grid rowIndex increment runStartIndex (columnIndex - increment)
+            let randomColumnIndex = getRandomColumnIndexForDir1FromRange runStartIndex (columnIndex - increment)
 
             match randomColumnIndex with
             | Some randomColumnIndex ->
                 // if there is some we remove it
                 updateWallAtPosition direction1 Empty rowIndex randomColumnIndex grid
             | None ->
-                // we absolutely have to ensure that the last wall on the opposite dir 2 is empty if possible
+                // we absolutely have to ensure that the last wall on the dir 2 is empty if possible
                 ifNotAtLimitUpdateWallAtPosition direction2 Empty rowIndex lastColumnIndexWithDir2Wall grid                
         else
 
@@ -86,8 +100,8 @@ let private carveRow
         if isDir1ALimit then                
             updateWallAtPosition direction2 Empty rowIndex columnIndex grid
             
-            // we have to check whether if there was some prior wall to remove 
-            let randomColumnIndex = getRandomColumnIndexFromRange isALimitAt direction1 rng grid rowIndex increment runStartIndex (columnIndex - increment)
+            // we have to check whether if there was some prior dir 1 wall to remove 
+            let randomColumnIndex = getRandomColumnIndexForDir1FromRange runStartIndex (columnIndex - increment)
             match randomColumnIndex with
             | Some columnIndexForDir1Removal ->                
                 updateWallAtPosition direction1 Empty rowIndex columnIndexForDir1Removal grid
@@ -104,19 +118,18 @@ let private carveRow
         else
 
         // if dir 1 and dir 2 are both not a limit we flip a coin to decide which one we remove
-        match rng.Next(2) with
+        match rng.Next(rngTotalWeight) with
         // we continue carving to the dir 2
-        | 0 -> updateWallAtPosition direction2 Empty rowIndex columnIndex grid
+        | rng when rng < rngDirection2Weight -> updateWallAtPosition direction2 Empty rowIndex columnIndex grid
         // or we open to the dir 1 by choosing randomly one of the dir 1 wall
-        | 1 -> 
+        | _ -> 
                let randomColumnIndex = rng.Next(Math.Min(runStartIndex, columnIndex), Math.Max(runStartIndex, columnIndex) + 1)
                updateWallAtPosition direction1 Empty rowIndex randomColumnIndex grid
                
                lastColumnIndexWithDir2Wall <- columnIndex
-               runStartIndex <- columnIndex + increment
-        | _ -> raise(Exception("Random number generation problem"))
+               runStartIndex <- columnIndex + increment        
 
-let transformIntoMaze direction1 direction2 rng grid =    
+let transformIntoMaze direction1 direction2 rng rngDirection1Weight rngDirection2Weight grid =    
     
     let (extractBy, startColumnIndex, increment, endColumnIndex, mode) =
         match direction1, direction2 with
@@ -125,13 +138,31 @@ let transformIntoMaze direction1 direction2 rng grid =
         | _, Top -> (Array2D.extractByColumns, Grid.getIndex grid.NumberOfRows, -1, 0, ByColumns)
         | _, Bottom -> (Array2D.extractByColumns, 0, 1, Grid.getIndex grid.NumberOfRows, ByColumns)
     
+    let isALimitAt = isALimitAt mode
+    
+    let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
+    
     grid.Cells
     |> extractBy
     |> Seq.iteri(fun rowIndex _ ->
         carveRow
-            // functions
-            (isPartOfMaze mode) (isALimitAt mode) (updateWallAtPosition mode) (ifNotAtLimitUpdateWallAtPosition mode)
+            // dependencies
+            (isPartOfMaze mode)
+            isALimitAt
+            (updateWallAtPosition mode)
+            (ifNotAtLimitUpdateWallAtPosition mode)
+            (getRandomColumnIndexForDir1FromRange isALimitAt direction1 rng grid rowIndex increment)
+
             // params
-            direction1 direction2 rng grid rowIndex startColumnIndex increment endColumnIndex)
+            direction1
+            direction2
+            rng
+            rngTotalWeight
+            rngDirection2Weight
+            grid
+            rowIndex
+            startColumnIndex
+            increment
+            endColumnIndex)
     
     grid

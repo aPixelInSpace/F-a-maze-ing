@@ -3,6 +3,7 @@ module Mazes.Core.Tests.Grid
 open FsUnit
 open Xunit
 open Mazes.Core
+open Mazes.Core.Position
 open Mazes.Core.GridWall
 
 [<Fact>]

@@ -43,7 +43,7 @@ let private getCell baseAt decrementValue heightIncrementValue numberOfRows numb
 
     GridCell.getCellInstance numberOfRows numberOfColumns rowIndex columnIndex isCellPartOfMaze
 
-// todo : allow to have an array of values for baseDecrementValue and heightIncrementValue
+// todo : allow to have an array of values for baseDecrementValue and heightIncrementValue (or, even, a function)
 let create baseLength baseAt baseDecrementValue heightIncrementValue =
     let height =
         (int (Math.Ceiling((float baseLength)

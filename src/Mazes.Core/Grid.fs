@@ -8,6 +8,12 @@ type Grid = {
     NumberOfColumns : int
 }
 
+// todo : replace singles rowIndex and columnIndex with GridCoordinate
+type GridCoordinate = {    
+    RowIndex : int
+    ColumnIndex : int
+}
+
 module Grid =
 
     let hasCells grid =

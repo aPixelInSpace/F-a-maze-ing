@@ -3,9 +3,21 @@
 open System
 open Mazes.Core
 open Mazes.Core.Extensions
+open Mazes.Core.Position
 open Mazes.Core.GridWall
 
-let private carveRow direction1 direction2 (rng : Random) grid rowIndex startColumnIndex increment endColumnIndex =
+let private carveRow
+    // params
+    direction1
+    direction2
+    (rng : Random)
+    rngTotalWeight    
+    rngDirection1Weight
+    grid
+    rowIndex
+    startColumnIndex
+    increment
+    endColumnIndex =
     let mutable lastColumnIndexWithDir1Wall = 0
     let mutable lastColumnIndexWithDir2Wall = 0
     
@@ -43,26 +55,39 @@ let private carveRow direction1 direction2 (rng : Random) grid rowIndex startCol
         else
 
         // if dir 1 and dir 2 are both not a limit we flip a coin to decide which one we remove
-        match rng.Next(2) with
-        | 0 ->
+        match rng.Next(rngTotalWeight) with
+        | rng when rng < rngDirection1Weight ->
             updateWallAtPosition direction1 Empty rowIndex columnIndex grid
             isLastRemovedDir1 <- true
             lastColumnIndexWithDir2Wall <- columnIndex
-        | 1 ->
+        | _ ->
             updateWallAtPosition direction2 Empty rowIndex columnIndex grid
             isLastRemovedDir1 <- false
-            lastColumnIndexWithDir1Wall <- columnIndex
-        | _ -> raise(Exception("Random number generation problem"))
+            lastColumnIndexWithDir1Wall <- columnIndex        
 
-let transformIntoMaze direction1 direction2 rng grid =
+let transformIntoMaze direction1 direction2 rng rngDirection1Weight rngDirection2Weight grid =
     
     let (startColumnIndex, increment, endColumnIndex) =
         match direction1, direction2 with
         | _, Left | Left, _ -> (Grid.getIndex grid.NumberOfColumns, -1, 0)
         | _ -> (0, 1, Grid.getIndex grid.NumberOfColumns)
-    
+
+    let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
+
     grid.Cells
     |> Array2D.extractByRows
-    |> Seq.iteri(fun rowIndex _ -> carveRow direction1 direction2 rng grid rowIndex startColumnIndex increment endColumnIndex)    
+    |> Seq.iteri(fun rowIndex _ ->
+        carveRow
+            // params
+            direction1
+            direction2
+            rng
+            rngTotalWeight
+            rngDirection1Weight
+            grid
+            rowIndex
+            startColumnIndex
+            increment
+            endColumnIndex)    
 
     grid

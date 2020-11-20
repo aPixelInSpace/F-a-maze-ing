@@ -4,6 +4,7 @@ open System
 open FsUnit
 open Xunit
 open Mazes.Core
+open Mazes.Core.Position
 open Mazes.Core.Algo.Generate
 open Mazes.Render
 
@@ -12,7 +13,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
-        |> BinaryTree.transformIntoMaze Top Right (Random(1))
+        |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -33,7 +34,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
-        |> BinaryTree.transformIntoMaze Top Left (Random(1))
+        |> BinaryTree.transformIntoMaze Top Left (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -54,7 +55,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
-        |> BinaryTree.transformIntoMaze Bottom Right (Random(1))
+        |> BinaryTree.transformIntoMaze Bottom Right (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -75,7 +76,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
-        |> BinaryTree.transformIntoMaze Bottom Left (Random(1))
+        |> BinaryTree.transformIntoMaze Bottom Left (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -96,7 +97,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
-        |> BinaryTree.transformIntoMaze Right Top (Random(1))
+        |> BinaryTree.transformIntoMaze Right Top (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -117,7 +118,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
-        |> BinaryTree.transformIntoMaze Left Top (Random(1))
+        |> BinaryTree.transformIntoMaze Left Top (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -138,7 +139,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
-        |> BinaryTree.transformIntoMaze Right Bottom (Random(1))
+        |> BinaryTree.transformIntoMaze Right Bottom (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -159,7 +160,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
-        |> BinaryTree.transformIntoMaze Left Bottom (Random(1))
+        |> BinaryTree.transformIntoMaze Left Bottom (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -180,7 +181,7 @@ let ``Rendering a row radius 15, column radius 25, row translation factor 14, in
     // arrange
     let maze =
         (Shape.Ellipse.create 15 25 0.0 0.0 14 0 Shape.Ellipse.Side.Outside)
-        |> BinaryTree.transformIntoMaze Bottom Right (Random(1))
+        |> BinaryTree.transformIntoMaze Bottom Right (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -225,7 +226,7 @@ let ``Rendering a row radius 15, column radius 25, row translation factor 14, in
     // arrange
     let maze =
         (Shape.Ellipse.create 15 25 0.0 0.0 14 0 Shape.Ellipse.Side.Outside)
-        |> BinaryTree.transformIntoMaze Left Bottom (Random(1))
+        |> BinaryTree.transformIntoMaze Left Bottom (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -270,7 +271,7 @@ let ``Rendering a row radius 25, column radius 15, column translation factor 14,
     // arrange
     let maze =
         (Shape.Ellipse.create 25 15 0.0 0.0 0 14 Shape.Ellipse.Side.Outside)
-        |> BinaryTree.transformIntoMaze Top Right (Random(1))
+        |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid
@@ -335,7 +336,7 @@ let ``Rendering a row radius 25, column radius 15, column translation factor 14,
     // arrange
     let maze =
         (Shape.Ellipse.create 25 15 0.0 0.0 0 14 Shape.Ellipse.Side.Outside)
-        |> BinaryTree.transformIntoMaze Left Bottom (Random(1))
+        |> BinaryTree.transformIntoMaze Left Bottom (Random(1)) 1 1
     
     // act
     let renderedMaze = maze |> Text.printGrid

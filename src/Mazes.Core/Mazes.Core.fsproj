@@ -6,6 +6,7 @@
 
     <ItemGroup>
         <Compile Include="Extensions.fs" />
+        <Compile Include="Position.fs" />
         <Compile Include="Wall.fs" />
         <Compile Include="Cell.fs" />
         <Compile Include="Grid.fs" />
@@ -17,6 +18,7 @@
         <Compile Include="Maze.fs" />
         <Compile Include="Algo\Generate\BinaryTree.fs" />
         <Compile Include="Algo\Generate\Sidewinder.fs" />
+        <Compile Include="Algo\Analyse\Map.fs" />
         <Compile Include="Algo\Analyse\Dijkstra.fs" />        
     </ItemGroup>
 

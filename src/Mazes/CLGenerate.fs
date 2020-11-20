@@ -6,7 +6,7 @@ open System.Text
 open CommandLine
 open CLSimpleTypes
 open Mazes.Core
-open Mazes.Core.Grid
+open Mazes.Core.Position
 open Mazes.Core.Algo.Generate
 open Mazes.Render.Text
 open Mazes.Output.Html
@@ -25,13 +25,20 @@ type GenerateOptions = {
     [<Option('q', "quiet", Required = false, Default = false, HelpText = "Automatically exit the program when finished")>] quiet : bool
 }
 
-let matchAlgoEnumWithFunction algoEnum =
-    match algoEnum with
-       | AlgoEnum.BinaryTree -> BinaryTree.transformIntoMaze Top Right
-       | AlgoEnum.Sidewinder -> Sidewinder.transformIntoMaze Top Right
-       | _ -> raise(Exception("Generating algorithm unknown"))
-
 let handleVerbGenerate (options : Parsed<GenerateOptions>) =
+
+    let rng =
+        match options.Value.seed with
+        | Some seed -> Random(seed)
+        | None -> Random()
+
+    let matchAlgoEnumWithFunction algoEnum =
+        match algoEnum with
+           | AlgoEnum.BinaryTree -> BinaryTree.transformIntoMaze Top Right rng 1 1
+           | AlgoEnum.Sidewinder -> Sidewinder.transformIntoMaze Right Bottom rng 1 1
+           | _ -> raise(Exception("Generating algorithm unknown"))
+
+
     let nameOfMaze =
         match options.Value.name with
         | Some name -> name
@@ -46,12 +53,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns)
     //let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 3 2)
-    //let grid = (Shape.Ellipse.create 5 7 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
-
-    let rng =
-        match options.Value.seed with
-        | Some seed -> Random(seed)
-        | None -> Random()
+    //let grid = (Shape.Ellipse.create 20 30 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
 
     let algo =
         match options.Value.algo with
@@ -61,7 +63,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
             let enumAlgoUpperBound = ((AlgoEnum.GetValues(typeof<AlgoEnum>)).GetUpperBound(0)) + 1            
             matchAlgoEnumWithFunction (enum<AlgoEnum> (rngAlgo.Next(enumAlgoUpperBound)))
 
-    let transformedGrid = (algo rng grid)
+    let transformedGrid = (algo grid)
 
     let maze =
         { Name = nameOfMaze
