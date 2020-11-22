@@ -18,7 +18,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
         |> Sidewinder.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -40,7 +40,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
         |> Sidewinder.transformIntoMaze Top Left (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -62,7 +62,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
         |> Sidewinder.transformIntoMaze Bottom Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -84,7 +84,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
         |> Sidewinder.transformIntoMaze Bottom Left (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -106,7 +106,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
         |> Sidewinder.transformIntoMaze Right Top (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -128,7 +128,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
         |> Sidewinder.transformIntoMaze Left Top (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -150,7 +150,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
         |> Sidewinder.transformIntoMaze Left Bottom (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -172,7 +172,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
         |> Sidewinder.transformIntoMaze Right Bottom (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -194,7 +194,7 @@ let ``Rendering a row radius 15, column radius 25, row translation factor 14, in
         |> Sidewinder.transformIntoMaze Bottom Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -240,7 +240,7 @@ let ``Rendering a row radius 15, column radius 25, row translation factor 14, in
         |> Sidewinder.transformIntoMaze Left Bottom (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -286,7 +286,7 @@ let ``Rendering a row radius 25, column radius 15, column translation factor 14,
         |> Sidewinder.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -352,7 +352,7 @@ let ``Rendering a row radius 25, column radius 15, column translation factor 14,
         |> Sidewinder.transformIntoMaze Left Bottom (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

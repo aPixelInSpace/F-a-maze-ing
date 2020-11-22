@@ -18,7 +18,7 @@ let ``Rendering a 3 by 3 maze generated with the sidewinder algorithm (Top, Righ
         |> Sidewinder.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -38,7 +38,7 @@ let ``Rendering a 5 by 5 maze generated with the sidewinder algorithm (Top, Righ
         |> Sidewinder.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -60,7 +60,7 @@ let ``Rendering a 5 by 10 maze generated with the sidewinder algorithm (Top, Rig
         |> Sidewinder.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

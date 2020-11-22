@@ -18,7 +18,7 @@ let ``Rendering a base 11, base at bottom, triangle with a base decrement value 
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -41,7 +41,7 @@ let ``Rendering a base 11, base at top, triangle with a base decrement value of 
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -64,7 +64,7 @@ let ``Rendering a base 11, base at left, triangle with a base decrement value of
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -92,7 +92,7 @@ let ``Rendering a base 11, base at right, triangle with a base decrement value o
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -120,7 +120,7 @@ let ``Rendering a base 21, base at bottom, triangle with a base decrement value 
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -141,7 +141,7 @@ let ``Rendering a base 21, base at top, triangle with a base decrement value of 
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -162,7 +162,7 @@ let ``Rendering a base 21, base at left, triangle with a base decrement value of
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -200,7 +200,7 @@ let ``Rendering a base 21, base at right, triangle with a base decrement value o
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -238,7 +238,7 @@ let ``Rendering a base 51, base at bottom, triangle with a base decrement value 
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =        
@@ -281,7 +281,7 @@ let ``Rendering a base 51, base at bottom, triangle with a base decrement value 
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =        
@@ -304,7 +304,7 @@ let ``Rendering a base 10, base at bottom, triangle with a base decrement value 
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -336,7 +336,7 @@ let ``Rendering a base 10, base at top, triangle with a base decrement value of 
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
 
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -368,7 +368,7 @@ let ``Rendering a base 10, base at left, triangle with a base decrement value of
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
 
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -395,7 +395,7 @@ let ``Rendering a base 10, base at right, triangle with a base decrement value o
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
 
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -422,7 +422,7 @@ let ``Rendering a base 30, base at bottom, triangle with a base decrement value 
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

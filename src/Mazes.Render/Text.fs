@@ -1,6 +1,5 @@
 ﻿module Mazes.Render.Text
 
-open System
 open System.Text
 open Mazes.Core
 open Mazes.Core.Canvas
@@ -244,7 +243,7 @@ let private appendRows sBuilder grid rows =
         // necessary to add the last line
         rows.[(maxRowIndex grid)] |> Array.iteri(fun columnIndex _ -> appendForLastRow sBuilder grid { RowIndex = (maxRowIndex grid); ColumnIndex = columnIndex } |> ignore)
 
-let printGrid grid =
+let renderGrid grid =
     let sBuilder = StringBuilder()
 
     grid.Cells

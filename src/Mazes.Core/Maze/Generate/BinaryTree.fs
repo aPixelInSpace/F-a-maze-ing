@@ -17,12 +17,8 @@ let private carveRow
     rowIndex
     startColumnIndex
     increment
-    endColumnIndex =
-    let mutable lastColumnIndexWithDir1Wall = 0
-    let mutable lastColumnIndexWithDir2Wall = 0
+    endColumnIndex =    
     
-    let mutable isLastRemovedDir1 = false
-
     for columnIndex in startColumnIndex .. increment .. endColumnIndex do
 
         let coordinate = { RowIndex = rowIndex; ColumnIndex = columnIndex }
@@ -35,13 +31,9 @@ let private carveRow
         let isDir2ALimit = (isALimitAt direction2 coordinate grid)
 
         // if we are in a corner 
-        if isDir1ALimit &&  isDir2ALimit then                
-            if isLastRemovedDir1 then
-                ifNotAtLimitUpdateWallAtPosition direction2 Empty { coordinate with ColumnIndex = lastColumnIndexWithDir2Wall } grid
-                ifNotAtLimitUpdateWallAtPosition (Position.getOpposite direction1) Empty coordinate grid
-            else
-                ifNotAtLimitUpdateWallAtPosition direction1 Empty { coordinate with ColumnIndex = lastColumnIndexWithDir1Wall } grid
-                ifNotAtLimitUpdateWallAtPosition (Position.getOpposite direction2) Empty coordinate grid
+        if isDir1ALimit &&  isDir2ALimit then
+            ifNotAtLimitUpdateWallAtPosition (Position.getOpposite direction1) Empty coordinate grid
+            ifNotAtLimitUpdateWallAtPosition (Position.getOpposite direction2) Empty coordinate grid
         else
 
         // if the dir 1 is a limit then we always choose remove dir 2 (and the opposite dir 2 if possible)
@@ -60,12 +52,8 @@ let private carveRow
         match rng.Next(rngTotalWeight) with
         | rng when rng < rngDirection1Weight ->
             updateWallAtPosition direction1 Empty coordinate grid
-            isLastRemovedDir1 <- true
-            lastColumnIndexWithDir2Wall <- columnIndex
         | _ ->
             updateWallAtPosition direction2 Empty coordinate grid
-            isLastRemovedDir1 <- false
-            lastColumnIndexWithDir1Wall <- columnIndex        
 
 let transformIntoMaze direction1 direction2 rng rngDirection1Weight rngDirection2Weight grid =
     

@@ -2,22 +2,22 @@
 
 module Array2D =
 
+    let getIndex number =
+        number - 1
+
     let extractByRows array2d =
-        let numberRowsIndex = (array2d |> Array2D.length1) - 1
+        let numberRowsIndex = getIndex (array2d |> Array2D.length1)
         seq {
             for i in 0 .. numberRowsIndex do
                 yield array2d.[i, *]
         }
 
     let extractByColumns array2d =
-        let numberColumnsIndex = (array2d |> Array2D.length2) - 1
+        let numberColumnsIndex = getIndex (array2d |> Array2D.length2)
         seq {
             for i in 0 .. numberColumnsIndex do
                 yield array2d.[*, i]
         }
-
-    let getIndex number =
-        number - 1
 
     let minRowIndex =
         0

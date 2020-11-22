@@ -21,9 +21,6 @@ let private isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared
     | Inside -> ellipseMathFormula <= 1.0
     | Outside -> ellipseMathFormula > 1.0    
 
-let private getCellType rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side rowIndex columnIndex =
-    CellType.create (isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side rowIndex columnIndex)
-
 let create rowRadiusLength columnRadiusLength rowEnlargingFactor columnEnlargingFactor rowTranslationFactor columnTranslationFactor side =
     let rowEnlargingFactor = rowEnlargingFactor * (float)rowRadiusLength
     let columnEnlargingFactor = columnEnlargingFactor * (float)columnRadiusLength
@@ -40,6 +37,8 @@ let create rowRadiusLength columnRadiusLength rowEnlargingFactor columnEnlarging
     let columnRadiusLengthIndex = getIndex columnRadiusLength
     let columnRadiusLengthIndexSquared = float (pown columnRadiusLengthIndex 2) + columnEnlargingFactor
 
-    let cellsType = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> getCellType rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side rowIndex columnIndex)
+    let cellsType =
+        Array2D.init numberOfRows numberOfColumns
+            (fun rowIndex columnIndex -> CellType.create (isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side rowIndex columnIndex))
 
     { CellsType = cellsType; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }

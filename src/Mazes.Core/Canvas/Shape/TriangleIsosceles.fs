@@ -10,37 +10,33 @@ type BaseAt =
     | Bottom
     | Left
 
-let private getCellType baseAt decrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex =
-    
-    let isCellPartOfTriangleIsosceles baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex =
-        match baseAt with
-        | BaseAt.Top ->
-            let currentFloorIndex = rowIndex / heightIncrementValue
-            let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrementValue
+let private isCellPartOfTriangleIsosceles baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex =
+    match baseAt with
+    | BaseAt.Top ->
+        let currentFloorIndex = rowIndex / heightIncrementValue
+        let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrementValue
 
-            columnIndex >= numberOfEmptyStartingCellRow && columnIndex < (numberOfColumns - numberOfEmptyStartingCellRow)
+        columnIndex >= numberOfEmptyStartingCellRow && columnIndex < (numberOfColumns - numberOfEmptyStartingCellRow)
 
-        | BaseAt.Bottom ->
-            let numberOfFloors = numberOfRows / heightIncrementValue
-            let currentFloorIndex = rowIndex / heightIncrementValue
-            let numberOfEmptyStartingCellRow = (numberOfFloors - 1 - currentFloorIndex) * baseDecrementValue
+    | BaseAt.Bottom ->
+        let numberOfFloors = numberOfRows / heightIncrementValue
+        let currentFloorIndex = rowIndex / heightIncrementValue
+        let numberOfEmptyStartingCellRow = (numberOfFloors - 1 - currentFloorIndex) * baseDecrementValue
 
-            columnIndex >= numberOfEmptyStartingCellRow && columnIndex < (numberOfColumns - numberOfEmptyStartingCellRow)
+        columnIndex >= numberOfEmptyStartingCellRow && columnIndex < (numberOfColumns - numberOfEmptyStartingCellRow)
 
-        | BaseAt.Left ->
-            let currentFloorIndex = columnIndex / heightIncrementValue
-            let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrementValue
+    | BaseAt.Left ->
+        let currentFloorIndex = columnIndex / heightIncrementValue
+        let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrementValue
 
-            rowIndex >= numberOfEmptyStartingCellRow && rowIndex < (numberOfRows - numberOfEmptyStartingCellRow)
+        rowIndex >= numberOfEmptyStartingCellRow && rowIndex < (numberOfRows - numberOfEmptyStartingCellRow)
 
-        | BaseAt.Right ->
-            let numberOfFloors = numberOfColumns / heightIncrementValue
-            let currentFloorIndex = columnIndex / heightIncrementValue
-            let numberOfEmptyStartingCellRow = (numberOfFloors - 1 - currentFloorIndex) * baseDecrementValue
+    | BaseAt.Right ->
+        let numberOfFloors = numberOfColumns / heightIncrementValue
+        let currentFloorIndex = columnIndex / heightIncrementValue
+        let numberOfEmptyStartingCellRow = (numberOfFloors - 1 - currentFloorIndex) * baseDecrementValue
 
-            rowIndex >= numberOfEmptyStartingCellRow && rowIndex < (numberOfRows - numberOfEmptyStartingCellRow)
-
-    CellType.create (isCellPartOfTriangleIsosceles baseAt decrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex)
+        rowIndex >= numberOfEmptyStartingCellRow && rowIndex < (numberOfRows - numberOfEmptyStartingCellRow)
 
 // todo : allow to have an array of values for baseDecrementValue and heightIncrementValue (or, even, a function)
 let create baseLength baseAt baseDecrementValue heightIncrementValue =
@@ -59,6 +55,8 @@ let create baseLength baseAt baseDecrementValue heightIncrementValue =
         | BaseAt.Top | BaseAt.Bottom -> baseLength
         | BaseAt.Left | BaseAt.Right -> height
     
-    let cellsType = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> getCellType baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex)
+    let cellsType =
+        Array2D.init numberOfRows numberOfColumns
+            (fun rowIndex columnIndex -> CellType.create (isCellPartOfTriangleIsosceles baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex))
 
     { CellsType = cellsType; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }

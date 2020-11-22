@@ -18,7 +18,7 @@ let ``Rendering a 3 by 3 maze generated with the binary tree algorithm (Top, Rig
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -38,7 +38,7 @@ let ``Rendering a 5 by 5 maze generated with the binary tree algorithm (Top, Rig
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -60,7 +60,7 @@ let ``Rendering a 5 by 10 maze generated with the binary tree algorithm (Top, Ri
         |> BinaryTree.transformIntoMaze Top Right (Random(1)) 1 1
     
     // act
-    let renderedMaze = maze |> Text.printGrid
+    let renderedMaze = maze |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

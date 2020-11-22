@@ -35,8 +35,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let matchAlgoEnumWithFunction algoEnum =
         match algoEnum with
-           | AlgoEnum.BinaryTree -> BinaryTree.transformIntoMaze Top Right rng 1 1
-           | AlgoEnum.Sidewinder -> Sidewinder.transformIntoMaze Right Bottom rng 1 1
+           | AlgoEnum.BinaryTree -> BinaryTree.transformIntoMaze Left Bottom rng 1 1
+           | AlgoEnum.Sidewinder -> Sidewinder.transformIntoMaze Bottom Right rng 1 1
            | _ -> raise(Exception("Generating algorithm unknown"))
 
 
@@ -52,11 +52,19 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
 
-    //printfn "%s" (Shape.Ellipse.createCanvas 5 15 0.0 0.0 0 0 Shape.Ellipse.Side.Outside |> renderCanvas)
-    
     let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.create)
     //let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
     //let grid = (Shape.Ellipse.create 20 30 0.0 0.0 0 0 Shape.Ellipse.Side.Inside |> Grid.create)
+
+    //let canvasSave = (Shape.Rectangle.create 15 15 |> Canvas.save)
+    //File.WriteAllText(filePath.Replace(".html", ".canvas.mazes"), canvasSave, Encoding.UTF8)
+    //let save = File.ReadAllText(filePath.Replace(".html", ".canvas.mazes"))     
+    //let canvas =
+    //    match Canvas.load save with
+    //    | Some canvas -> canvas
+    //    | None -> raise(Exception("A problem occured while loading the saved canvas"))
+
+    //let grid = (canvas |> Grid.create)
 
     let algo =
         match options.Value.algo with
@@ -72,10 +80,12 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
         { Name = nameOfMaze
           Grid = transformedGrid }
 
-    let htmlOutput = outputHtml maze (printGrid transformedGrid)
+    let renderedGrid = renderGrid transformedGrid
+    
+    let htmlOutput = outputHtml maze renderedGrid
     File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
     
-    //let rawTestOutput = outputRawForTest maze (printGrid transformedGrid)
+    //let rawTestOutput = outputRawForTest maze renderedGrid
     //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
     printfn "Mazes creation finished !"
