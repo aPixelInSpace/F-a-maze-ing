@@ -1,7 +1,8 @@
-﻿module Mazes.Core.Shape.TriangleIsosceles
+﻿module Mazes.Core.Canvas.Shape.TriangleIsosceles
 
 open System
 open Mazes.Core
+open Mazes.Core.Canvas
 
 type BaseAt =
     | Top
@@ -9,7 +10,7 @@ type BaseAt =
     | Bottom
     | Left
 
-let private getCell baseAt decrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex =
+let private getCellType baseAt decrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex =
     
     let isCellPartOfTriangleIsosceles baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex =
         match baseAt with
@@ -39,9 +40,7 @@ let private getCell baseAt decrementValue heightIncrementValue numberOfRows numb
 
             rowIndex >= numberOfEmptyStartingCellRow && rowIndex < (numberOfRows - numberOfEmptyStartingCellRow)
 
-    let isCellPartOfMaze = isCellPartOfTriangleIsosceles baseAt decrementValue heightIncrementValue numberOfRows numberOfColumns
-
-    GridCell.getCellInstance numberOfRows numberOfColumns rowIndex columnIndex isCellPartOfMaze
+    CellType.create (isCellPartOfTriangleIsosceles baseAt decrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex)
 
 // todo : allow to have an array of values for baseDecrementValue and heightIncrementValue (or, even, a function)
 let create baseLength baseAt baseDecrementValue heightIncrementValue =
@@ -60,6 +59,6 @@ let create baseLength baseAt baseDecrementValue heightIncrementValue =
         | BaseAt.Top | BaseAt.Bottom -> baseLength
         | BaseAt.Left | BaseAt.Right -> height
     
-    let cells = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> getCell baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex)
+    let cellsType = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> getCellType baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex)
 
-    { Cells = cells; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }
+    { CellsType = cellsType; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }

@@ -1,9 +1,11 @@
 ﻿module Mazes.Render.Text
 
+open System
 open System.Text
 open Mazes.Core
-open Mazes.Core.Extensions
+open Mazes.Core.Canvas
 open Mazes.Core.Grid
+open Mazes.Core.Grid.Grid
 
 let private repetitionsMiddlePart = 1
 
@@ -130,18 +132,18 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
     | Normal, Empty, Border, Empty -> '╼'
     | Border, Empty, Normal, Empty -> '╾'
 
-let private append (sBuilder : StringBuilder) (grid : Grid) rowIndex columnIndex =
+let private append (sBuilder : StringBuilder) (grid : Grid) coordinate =
 
-    let cell = getCell rowIndex columnIndex grid
+    let cell = getCell coordinate grid
 
     let startWallLeft =
-        match existAt rowIndex (columnIndex - 1) grid with
-        | true -> (getCell rowIndex (columnIndex - 1) grid).WallTop.WallType
+        match existAt (Cell.getNeighborCoordinateAtPos coordinate Left) grid with
+        | true -> (getCell (Cell.getNeighborCoordinateAtPos coordinate Left) grid).WallTop.WallType
         | false -> Empty
 
     let startWallTop =
-        match existAt (rowIndex - 1) columnIndex grid with
-        | true -> (getCell (rowIndex - 1) columnIndex grid).WallLeft.WallType
+        match existAt (Cell.getNeighborCoordinateAtPos coordinate Top) grid with
+        | true -> (getCell (Cell.getNeighborCoordinateAtPos coordinate Top) grid).WallLeft.WallType
         | false -> Empty
 
     let startWallRight = cell.WallTop.WallType
@@ -164,13 +166,13 @@ let private append (sBuilder : StringBuilder) (grid : Grid) rowIndex columnIndex
                             Empty) |> ignore)
 
     // last part only on the last column
-    if (columnIndex = (maxColumnIndex grid)) then
+    if (coordinate.ColumnIndex = (maxColumnIndex grid)) then
 
         let endWallLeft = cell.WallTop.WallType
 
         let endWallTop =
-            match existAt (rowIndex - 1) columnIndex grid with
-            | true -> (getCell (rowIndex - 1) columnIndex grid).WallRight.WallType
+            match existAt (Cell.getNeighborCoordinateAtPos coordinate Top) grid with
+            | true -> (getCell (Cell.getNeighborCoordinateAtPos coordinate Top) grid).WallRight.WallType
             | false -> Empty
 
         let endWallRight = Empty
@@ -185,13 +187,13 @@ let private append (sBuilder : StringBuilder) (grid : Grid) rowIndex columnIndex
 
     ()
 
-let private appendForLastRow (sBuilder : StringBuilder) (grid : Grid) rowIndex columnIndex =
+let private appendForLastRow (sBuilder : StringBuilder) (grid : Grid) coordinate =
 
-    let cell = getCell rowIndex columnIndex grid
+    let cell = getCell coordinate grid
 
     let startWallLeft =
-        match existAt rowIndex (columnIndex - 1) grid with
-        | true -> (getCell rowIndex (columnIndex - 1) grid).WallBottom.WallType
+        match existAt (Cell.getNeighborCoordinateAtPos coordinate Left) grid with
+        | true -> (getCell (Cell.getNeighborCoordinateAtPos coordinate Left) grid).WallBottom.WallType
         | false -> Empty
 
     let startWallTop = cell.WallLeft.WallType
@@ -214,7 +216,7 @@ let private appendForLastRow (sBuilder : StringBuilder) (grid : Grid) rowIndex c
                             Empty) |> ignore)
 
     // last part only on the last column
-    if (columnIndex = (maxColumnIndex grid)) then
+    if (coordinate.ColumnIndex = (maxColumnIndex grid)) then
         let endWallLeft = cell.WallBottom.WallType
 
         let endWallTop = cell.WallRight.WallType
@@ -230,7 +232,7 @@ let private appendForLastRow (sBuilder : StringBuilder) (grid : Grid) rowIndex c
                             endWallBottom) |> ignore
 
 let private appendRow (sBuilder : StringBuilder) grid rowIndex row =
-    row |> Array.iteri(fun columnIndex _ -> append sBuilder grid rowIndex columnIndex |> ignore)
+    row |> Array.iteri(fun columnIndex _ -> append sBuilder grid { RowIndex = rowIndex; ColumnIndex = columnIndex } |> ignore)
     sBuilder.Append("\n") |> ignore
 
 let private appendRows sBuilder grid rows =
@@ -240,7 +242,7 @@ let private appendRows sBuilder grid rows =
 
     if hasCells grid then
         // necessary to add the last line
-        rows.[(maxRowIndex grid)] |> Array.iteri(fun columnIndex _ -> appendForLastRow sBuilder grid (maxRowIndex grid) columnIndex |> ignore)
+        rows.[(maxRowIndex grid)] |> Array.iteri(fun columnIndex _ -> appendForLastRow sBuilder grid { RowIndex = (maxRowIndex grid); ColumnIndex = columnIndex } |> ignore)
 
 let printGrid grid =
     let sBuilder = StringBuilder()
@@ -249,5 +251,28 @@ let printGrid grid =
         |> Array2D.extractByRows
         |> Seq.toList
         |> appendRows sBuilder grid
+    
+    sBuilder.ToString()
+
+let renderCanvas canvas =
+
+    let appendCellType (sBuilder : StringBuilder) cellType =
+        let char =
+            match cellType with
+            | NotPartOfMaze -> "░░"
+            | PartOfMaze -> "▓▓"
+
+        sBuilder.Append(char) |> ignore
+
+    let appendRow (sBuilder : StringBuilder) rowCellType =
+        rowCellType
+        |> Array.iter(fun cellType -> appendCellType sBuilder cellType)
+
+        sBuilder.Append('\n') |> ignore
+
+    let sBuilder = StringBuilder()
+    canvas.CellsType
+        |> Array2D.extractByRows
+        |> Seq.iter(fun rowCellType -> appendRow sBuilder rowCellType)
     
     sBuilder.ToString()

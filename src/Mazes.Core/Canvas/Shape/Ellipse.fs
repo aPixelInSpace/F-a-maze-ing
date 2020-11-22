@@ -1,6 +1,8 @@
-﻿module Mazes.Core.Shape.Ellipse
+﻿module Mazes.Core.Canvas.Shape.Ellipse
 
 open Mazes.Core
+open Mazes.Core.Array2D
+open Mazes.Core.Canvas
 
 type Side =
     | Inside
@@ -19,9 +21,8 @@ let private isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared
     | Inside -> ellipseMathFormula <= 1.0
     | Outside -> ellipseMathFormula > 1.0    
 
-let private getCell rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared numberOfRows numberOfColumns centerRowIndex centerColumnIndex side rowIndex columnIndex =
-    let isCellPartOfMaze = isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side
-    GridCell.getCellInstance numberOfRows numberOfColumns rowIndex columnIndex isCellPartOfMaze
+let private getCellType rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side rowIndex columnIndex =
+    CellType.create (isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side rowIndex columnIndex)
 
 let create rowRadiusLength columnRadiusLength rowEnlargingFactor columnEnlargingFactor rowTranslationFactor columnTranslationFactor side =
     let rowEnlargingFactor = rowEnlargingFactor * (float)rowRadiusLength
@@ -30,15 +31,15 @@ let create rowRadiusLength columnRadiusLength rowEnlargingFactor columnEnlarging
     let numberOfRows = (rowRadiusLength * 2) - 1
     let numberOfColumns = (columnRadiusLength * 2) - 1
 
-    let centerRowIndex =  Grid.getIndex rowRadiusLength + rowTranslationFactor
-    let centerColumnIndex = Grid.getIndex columnRadiusLength + columnTranslationFactor
+    let centerRowIndex =  getIndex rowRadiusLength + rowTranslationFactor
+    let centerColumnIndex = getIndex columnRadiusLength + columnTranslationFactor
 
-    let rowRadiusLengthIndex = Grid.getIndex rowRadiusLength
+    let rowRadiusLengthIndex = getIndex rowRadiusLength
     let rowRadiusLengthIndexSquared = float (pown rowRadiusLengthIndex 2) + rowEnlargingFactor
     
-    let columnRadiusLengthIndex = Grid.getIndex columnRadiusLength
+    let columnRadiusLengthIndex = getIndex columnRadiusLength
     let columnRadiusLengthIndexSquared = float (pown columnRadiusLengthIndex 2) + columnEnlargingFactor
 
-    let cells = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> getCell rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared numberOfRows numberOfColumns centerRowIndex centerColumnIndex side rowIndex columnIndex)
+    let cellsType = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> getCellType rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side rowIndex columnIndex)
 
-    { Cells = cells; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }
+    { CellsType = cellsType; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }

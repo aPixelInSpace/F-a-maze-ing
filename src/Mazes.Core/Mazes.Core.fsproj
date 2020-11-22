@@ -5,21 +5,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Extensions.fs" />
-        <Compile Include="Position.fs" />
-        <Compile Include="Wall.fs" />
-        <Compile Include="Cell.fs" />
-        <Compile Include="Grid.fs" />
-        <Compile Include="GridCell.fs" />
-        <Compile Include="GridWall.fs" />
-		<Compile Include="Shape\Rectangle.fs" />
-		<Compile Include="Shape\TriangleIsosceles.fs" />
-		<Compile Include="Shape\Ellipse.fs" />
-        <Compile Include="Maze.fs" />
-        <Compile Include="Algo\Generate\BinaryTree.fs" />
-        <Compile Include="Algo\Generate\Sidewinder.fs" />
-        <Compile Include="Algo\Analyse\Map.fs" />
-        <Compile Include="Algo\Analyse\Dijkstra.fs" />        
+        <Compile Include="Array2D.fs" />
+        <Compile Include="Coordinate.fs" />
+        <Compile Include="CellType.fs" />
+		<Compile Include="Canvas\Canvas.fs" />
+		<Compile Include="Canvas\Shape\Rectangle.fs" />
+		<Compile Include="Canvas\Shape\TriangleIsosceles.fs" />
+		<Compile Include="Canvas\Shape\Ellipse.fs" />
+		<Compile Include="Grid\Wall.fs" />
+		<Compile Include="Grid\Cell.fs" />
+		<Compile Include="Grid\Grid.fs" />
+		<Compile Include="Maze\Maze.fs" />
+        <Compile Include="Maze\Generate\BinaryTree.fs" />
+        <Compile Include="Maze\Generate\Sidewinder.fs" />
+        <Compile Include="Maze\Analyse\Map.fs" />
+        <Compile Include="Maze\Analyse\Dijkstra.fs" />
     </ItemGroup>
 
 </Project>

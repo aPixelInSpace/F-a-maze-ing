@@ -1,4 +1,4 @@
-﻿namespace Mazes.Core.Algo.Analyse
+﻿namespace Mazes.Core.Maze.Analyse
 
 open Mazes.Core
 
@@ -10,10 +10,10 @@ type DistanceFromRoot =
 
 type CellMap = {    
     DistanceFromRoot : int
-    Neighbors : GridCoordinate[]
+    Neighbors : Coordinate[]
 }
 
 type Map = {
-    Root : GridCoordinate
+    Root : Coordinate
     DistancesFromRoot : CellMap[,]
 }

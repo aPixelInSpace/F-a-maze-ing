@@ -1,4 +1,4 @@
-﻿module Mazes.Core.Position
+﻿namespace Mazes.Core.Grid
 
 type Position =
     | Top
@@ -13,3 +13,13 @@ module Position =
         | Right -> Left
         | Bottom -> Top
         | Left -> Right
+
+type WallType =
+    | Normal
+    | Border
+    | Empty
+
+type Wall = {
+    WallType : WallType
+    WallPosition : Position
+}

@@ -5,9 +5,10 @@ open System.IO
 open System.Text
 open CommandLine
 open CLSimpleTypes
-open Mazes.Core
-open Mazes.Core.Position
-open Mazes.Core.Algo.Generate
+open Mazes.Core.Canvas
+open Mazes.Core.Grid
+open Mazes.Core.Maze
+open Mazes.Core.Maze.Generate
 open Mazes.Render.Text
 open Mazes.Output.Html
 open Mazes.Output.RawForTest
@@ -51,9 +52,11 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
 
-    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns)
-    //let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 3 2)
-    //let grid = (Shape.Ellipse.create 20 30 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
+    //printfn "%s" (Shape.Ellipse.createCanvas 5 15 0.0 0.0 0 0 Shape.Ellipse.Side.Outside |> renderCanvas)
+    
+    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.create)
+    //let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
+    //let grid = (Shape.Ellipse.create 20 30 0.0 0.0 0 0 Shape.Ellipse.Side.Inside |> Grid.create)
 
     let algo =
         match options.Value.algo with
@@ -72,8 +75,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let htmlOutput = outputHtml maze (printGrid transformedGrid)
     File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
     
-    let rawTestOutput = outputRawForTest maze (printGrid transformedGrid)
-    File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
+    //let rawTestOutput = outputRawForTest maze (printGrid transformedGrid)
+    //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
     printfn "Mazes creation finished !"
     printfn "File location is %s" filePath
