@@ -1,10 +1,11 @@
-﻿namespace Mazes.Core
+﻿namespace Mazes.Core.Canvas
 
-type CellType =
+type Zone =
     | PartOfMaze
     | NotPartOfMaze
 
-module CellType =
+module Zone =
+
     let create isPartOfMaze =
         match isPartOfMaze with
         | true -> PartOfMaze

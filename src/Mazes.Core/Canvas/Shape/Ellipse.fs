@@ -37,8 +37,8 @@ let create rowRadiusLength columnRadiusLength rowEnlargingFactor columnEnlarging
     let columnRadiusLengthIndex = getIndex columnRadiusLength
     let columnRadiusLengthIndexSquared = float (pown columnRadiusLengthIndex 2) + columnEnlargingFactor
 
-    let cellsType =
+    let zones =
         Array2D.init numberOfRows numberOfColumns
-            (fun rowIndex columnIndex -> CellType.create (isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side rowIndex columnIndex))
+            (fun rowIndex columnIndex -> Zone.create (isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side rowIndex columnIndex))
 
-    { CellsType = cellsType; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }
+    { Zones = zones; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }

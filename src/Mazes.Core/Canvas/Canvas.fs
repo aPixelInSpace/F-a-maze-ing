@@ -3,48 +3,63 @@
 open System
 open System.Text
 open Mazes.Core
+open Mazes.Core.Array2D
 
 type Canvas = {
-    CellsType : CellType[,]
+    Zones : Zone[,]
     NumberOfRows : int
     NumberOfColumns : int
 }
 
 module Canvas =
+
+    let getZone canvas coordinate =
+        get coordinate canvas.Zones
+
+    let maxRowIndex canvas =
+        getIndex canvas.NumberOfRows
+
+    let maxColumnIndex canvas =
+        getIndex canvas.NumberOfColumns
+
+    let existAt canvas coordinate =
+        minRowIndex <= coordinate.RowIndex &&
+        coordinate.RowIndex <= (maxRowIndex canvas) &&
+        minColumnIndex <= coordinate.ColumnIndex &&
+        coordinate.ColumnIndex <= (maxColumnIndex canvas)
+
+    let isPartOfMaze canvas coordinate =
+        (coordinate |> getZone canvas) = PartOfMaze
+
     let private charPartOfMaze = '*'
     let private charNotPartOfMaze = '-'
 
-    let isPartOfMaze canvas coordinate =
-        match canvas.CellsType.[coordinate.RowIndex, coordinate.ColumnIndex] with
-        | PartOfMaze -> true
-        | NotPartOfMaze -> false
-
-    let private cellTypeToChar cellType =
-        match cellType with
+    let private zoneToChar zone =
+        match zone with
         | PartOfMaze -> charPartOfMaze
         | NotPartOfMaze -> charNotPartOfMaze
 
-    let private charToCellType char =
+    let private charToZone char =
         match char with
         | c when c = charPartOfMaze -> PartOfMaze 
         | c when c = charNotPartOfMaze -> NotPartOfMaze
         | _ -> raise(Exception "Canvas character not supported")
 
     let save canvas =
-        let appendCellType (sBuilder : StringBuilder) cellType =
-            sBuilder.Append(cellTypeToChar(cellType)) |> ignore
+        let appendZone (sBuilder : StringBuilder) zone =
+            sBuilder.Append(zoneToChar(zone)) |> ignore
 
-        let appendRow (sBuilder : StringBuilder) rowCellType =
-            rowCellType
-            |> Array.iter(fun cellType -> appendCellType sBuilder cellType)
+        let appendRow (sBuilder : StringBuilder) rowZones =
+            rowZones
+            |> Array.iter(fun zone -> appendZone sBuilder zone)
 
             sBuilder.Append('\n') |> ignore
 
         let sBuilder = StringBuilder()
         sBuilder.Append("Type=Canvas\n") |> ignore
-        canvas.CellsType
+        canvas.Zones
             |> Array2D.extractByRows
-            |> Seq.iter(fun rowCellType -> appendRow sBuilder rowCellType)
+            |> Seq.iter(fun rowZones -> appendRow sBuilder rowZones)
 
         sBuilder.Append("end") |> ignore
 
@@ -56,8 +71,8 @@ module Canvas =
             let numberOfRows = lines.Length - 2
             let numberOfColumns = lines.[1].Length
 
-            let cellsType = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> CellType.create ((charToCellType lines.[rowIndex + 1].[columnIndex]) = PartOfMaze))
+            let zones = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> Zone.create ((charToZone lines.[rowIndex + 1].[columnIndex]) = PartOfMaze))
 
-            Some { CellsType = cellsType; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }            
+            Some { Zones = zones; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }            
         else
             None

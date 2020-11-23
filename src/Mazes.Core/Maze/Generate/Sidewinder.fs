@@ -3,6 +3,7 @@
 open System
 open Mazes.Core
 open Mazes.Core.Array2D
+open Mazes.Core.Canvas.Canvas
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Grid
 
@@ -10,19 +11,19 @@ type private mode =
     | ByRows
     | ByColumns
 
-let private updateWallAtPosition mode grid wallPosition wallType coordinate =
+let private updateWallAtPosition mode grid position wallType coordinate =
     match mode with
     | ByRows ->
-        updateWallAtPosition wallPosition wallType coordinate grid
+        updateWallAtPosition position wallType coordinate grid
     | ByColumns ->
-        updateWallAtPosition wallPosition wallType { RowIndex = coordinate.ColumnIndex; ColumnIndex = coordinate.RowIndex  } grid
+        updateWallAtPosition position wallType { RowIndex = coordinate.ColumnIndex; ColumnIndex = coordinate.RowIndex  } grid
 
-let private ifNotAtLimitUpdateWallAtPosition mode grid wallPosition wallType coordinate =
+let private ifNotAtLimitUpdateWallAtPosition mode grid position wallType coordinate =
     match mode with
     | ByRows ->
-        ifNotAtLimitUpdateWallAtPosition wallPosition wallType coordinate grid
+        ifNotAtLimitUpdateWallAtPosition position wallType coordinate grid
     | ByColumns ->
-        ifNotAtLimitUpdateWallAtPosition wallPosition wallType { RowIndex = coordinate.ColumnIndex; ColumnIndex = coordinate.RowIndex  } grid
+        ifNotAtLimitUpdateWallAtPosition position wallType { RowIndex = coordinate.ColumnIndex; ColumnIndex = coordinate.RowIndex  } grid
 
 let private isALimitAt mode grid position coordinate =
     match mode with
@@ -34,9 +35,9 @@ let private isALimitAt mode grid position coordinate =
 let private isPartOfMaze mode grid coordinate =
     match mode with
     | ByRows ->
-        isPartOfMaze coordinate grid
+        isPartOfMaze grid.Canvas coordinate
     | ByColumns ->
-       isPartOfMaze { RowIndex = coordinate.ColumnIndex; ColumnIndex = coordinate.RowIndex  } grid
+       isPartOfMaze grid.Canvas { RowIndex = coordinate.ColumnIndex; ColumnIndex = coordinate.RowIndex  }
 
 let private getRandomColumnIndexForDir1FromRange isALimitAt (rng : Random) rowIndex increment dir startColumnIndex endColumnIndex =
     let eligibleCellsWithRemovableWallAtDir = ResizeArray<int>()
@@ -137,10 +138,10 @@ let transformIntoMaze direction1 direction2 rng rngDirection1Weight rngDirection
     
     let (extractBy, startColumnIndex, increment, endColumnIndex, mode) =
         match direction1, direction2 with
-        | _, Right -> (extractByRows, 0, 1, getIndex grid.NumberOfColumns, ByRows)
-        | _, Left -> (extractByRows, getIndex grid.NumberOfColumns, -1, 0, ByRows)
-        | _, Top -> (extractByColumns, getIndex grid.NumberOfRows, -1, 0, ByColumns)
-        | _, Bottom -> (extractByColumns, 0, 1, getIndex grid.NumberOfRows, ByColumns)
+        | _, Right -> (extractByRows, 0, 1, getIndex grid.Canvas.NumberOfColumns, ByRows)
+        | _, Left -> (extractByRows, getIndex grid.Canvas.NumberOfColumns, -1, 0, ByRows)
+        | _, Top -> (extractByColumns, getIndex grid.Canvas.NumberOfRows, -1, 0, ByColumns)
+        | _, Bottom -> (extractByColumns, 0, 1, getIndex grid.Canvas.NumberOfRows, ByColumns)
     
     let isALimitAt = isALimitAt mode grid
     

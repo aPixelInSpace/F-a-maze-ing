@@ -55,8 +55,8 @@ let create baseLength baseAt baseDecrementValue heightIncrementValue =
         | BaseAt.Top | BaseAt.Bottom -> baseLength
         | BaseAt.Left | BaseAt.Right -> height
     
-    let cellsType =
+    let zones =
         Array2D.init numberOfRows numberOfColumns
-            (fun rowIndex columnIndex -> CellType.create (isCellPartOfTriangleIsosceles baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex))
+            (fun rowIndex columnIndex -> Zone.create (isCellPartOfTriangleIsosceles baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex))
 
-    { CellsType = cellsType; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }
+    { Zones = zones; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }

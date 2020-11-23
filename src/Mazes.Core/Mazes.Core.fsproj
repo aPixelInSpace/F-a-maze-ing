@@ -5,9 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Array2D.fs" />
         <Compile Include="Coordinate.fs" />
-        <Compile Include="CellType.fs" />
+        <Compile Include="Array2D.fs" />
+        <Compile Include="Canvas\Zone.fs" />
 		<Compile Include="Canvas\Canvas.fs" />
 		<Compile Include="Canvas\Shape\Rectangle.fs" />
 		<Compile Include="Canvas\Shape\TriangleIsosceles.fs" />

@@ -4,7 +4,6 @@ open Mazes.Core
 open Mazes.Core.Array2D
 
 type Cell = {
-    CellType : CellType
     WallTop : Wall
     WallRight : Wall
     WallBottom : Wall
@@ -13,67 +12,49 @@ type Cell = {
 
 module Cell =
 
-    let private getWallTypeForEdge isCurrentCellPartOfMaze =
-        match isCurrentCellPartOfMaze with
-        | true -> Border
-        | false -> Empty
-
-    let private getWallTypeForInternal isCurrentCellPartOfMaze isOtherCellPartOfMaze =
-        match isCurrentCellPartOfMaze, isOtherCellPartOfMaze with
-        | false, false -> Empty
-        | true, true -> Normal
-        | true, false | false, true -> Border
-
-    let getNeighborCoordinateAtPos coordinate position =    
+    let getNeighborCoordinateAtPosition coordinate position =    
         match position with
         | Top -> { coordinate with RowIndex = coordinate.RowIndex - 1; }
         | Right -> { coordinate with ColumnIndex = coordinate.ColumnIndex + 1 }
         | Bottom -> { coordinate with RowIndex = coordinate.RowIndex + 1; }
         | Left -> { coordinate with ColumnIndex = coordinate.ColumnIndex - 1 }
 
-    let create numberOfRows numberOfColumns coordinate isCellPartOfMaze =
-        let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
-        
-        let cellType = CellType.create isCurrentCellPartOfMaze
-        
-        let neighborCoordinate = getNeighborCoordinateAtPos coordinate
-        
-        let wallTypeTop =
-            if isFirstRow coordinate.RowIndex then
-                getWallTypeForEdge isCurrentCellPartOfMaze
-            else
-                let isTopCellPartOfMaze = isCellPartOfMaze (neighborCoordinate Top)
+    module Instance =
 
-                getWallTypeForInternal isCurrentCellPartOfMaze isTopCellPartOfMaze
+        let create numberOfRows numberOfColumns coordinate isCellPartOfMaze =
 
-        let wallTypeRight =
-            if isLastColumn coordinate.ColumnIndex numberOfColumns then
-                getWallTypeForEdge isCurrentCellPartOfMaze
-            else
-                let isRightCellPartOfMaze = isCellPartOfMaze (neighborCoordinate Right)
+            let getWallTypeForEdge isCurrentCellPartOfMaze =
+                match isCurrentCellPartOfMaze with
+                | true -> Border
+                | false -> Empty
 
-                getWallTypeForInternal isCurrentCellPartOfMaze isRightCellPartOfMaze
+            let getWallTypeForInternal isCurrentCellPartOfMaze isOtherCellPartOfMaze =
+                match isCurrentCellPartOfMaze, isOtherCellPartOfMaze with
+                | false, false -> Empty
+                | true, true -> Normal
+                | true, false | false, true -> Border
 
-        let wallTypeBottom =
-            if isLastRow coordinate.RowIndex numberOfRows then
-                getWallTypeForEdge isCurrentCellPartOfMaze
-            else
-                let isBottomCellPartOfMaze = isCellPartOfMaze (neighborCoordinate Bottom)
+            let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
 
-                getWallTypeForInternal isCurrentCellPartOfMaze isBottomCellPartOfMaze
+            let getWallType isOnEdge position =
+                if isOnEdge then
+                    getWallTypeForEdge isCurrentCellPartOfMaze
+                else
+                    let neighborCoordinate = getNeighborCoordinateAtPosition coordinate
+                    let isNeighborPartOfMaze = isCellPartOfMaze (neighborCoordinate position)
+                    getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
 
-        let wallTypeLeft =
-            if isFirstColumn coordinate.ColumnIndex then
-                getWallTypeForEdge isCurrentCellPartOfMaze
-            else
-                let isLeftCellPartOfMaze = isCellPartOfMaze (neighborCoordinate Left)
+            let wallTypeTop = getWallType (isFirstRow coordinate.RowIndex) Top
 
-                getWallTypeForInternal isCurrentCellPartOfMaze isLeftCellPartOfMaze
+            let wallTypeRight = getWallType (isLastColumn coordinate.ColumnIndex numberOfColumns) Right
 
-        {
-            CellType = cellType
-            WallTop = { WallType = wallTypeTop; WallPosition = Top }
-            WallRight = { WallType = wallTypeRight; WallPosition = Right }
-            WallBottom = { WallType = wallTypeBottom; WallPosition = Bottom }
-            WallLeft = { WallType = wallTypeLeft; WallPosition = Left }
-        }
+            let wallTypeBottom = getWallType (isLastRow coordinate.RowIndex numberOfRows) Bottom
+
+            let wallTypeLeft = getWallType (isFirstColumn coordinate.ColumnIndex) Left                
+
+            {
+                WallTop = { WallType = wallTypeTop; WallPosition = Top }
+                WallRight = { WallType = wallTypeRight; WallPosition = Right }
+                WallBottom = { WallType = wallTypeBottom; WallPosition = Bottom }
+                WallLeft = { WallType = wallTypeLeft; WallPosition = Left }
+            }

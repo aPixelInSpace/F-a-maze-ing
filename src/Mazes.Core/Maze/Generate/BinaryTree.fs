@@ -3,6 +3,7 @@
 open System
 open Mazes.Core
 open Mazes.Core.Array2D
+open Mazes.Core.Canvas.Canvas
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Grid
 
@@ -24,7 +25,7 @@ let private carveRow
         let coordinate = { RowIndex = rowIndex; ColumnIndex = columnIndex }
         
         // if the cell is not part of the maze, we do nothing
-        if not (isPartOfMaze coordinate grid) then ()
+        if not (isPartOfMaze grid.Canvas coordinate) then ()
         else
 
         let isDir1ALimit = (isALimitAt direction1 coordinate grid)
@@ -59,8 +60,8 @@ let transformIntoMaze direction1 direction2 rng rngDirection1Weight rngDirection
     
     let (startColumnIndex, increment, endColumnIndex) =
         match direction1, direction2 with
-        | _, Left | Left, _ -> (getIndex grid.NumberOfColumns, -1, 0)
-        | _ -> (0, 1, getIndex grid.NumberOfColumns)
+        | _, Left | Left, _ -> (getIndex grid.Canvas.NumberOfColumns, -1, 0)
+        | _ -> (0, 1, getIndex grid.Canvas.NumberOfColumns)
 
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
 

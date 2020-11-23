@@ -63,10 +63,10 @@ let outputHtml maze (textRenderedMaze : string) =
     |> Array.iteri(fun rowIndex mazeTextRow ->
                     let row = mazeLineHtml
                                   .Replace("{{MazeRow}}", mazeTextRow)
-                                  .Replace("{{MazeRowNumber}}", rowNumber maze.Grid.NumberOfRows rowIndex)
+                                  .Replace("{{MazeRowNumber}}", rowNumber maze.Grid.Canvas.NumberOfRows rowIndex)
                     sbMaze.Append(row) |> ignore)
 
-    let columnsAxisHtml = columnsAxis columnsAxisHtml maze.Grid.NumberOfRows maze.Grid.NumberOfColumns
+    let columnsAxisHtml = columnsAxis columnsAxisHtml maze.Grid.Canvas.NumberOfRows maze.Grid.Canvas.NumberOfColumns
     
     let mainHtml = mainHtml
                        .Replace("{{Name}}", maze.Name)

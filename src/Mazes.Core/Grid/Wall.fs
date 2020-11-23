@@ -7,6 +7,7 @@ type Position =
     | Left
 
 module Position =
+
     let getOpposite position =
         match position with
         | Top -> Bottom
