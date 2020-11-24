@@ -2,7 +2,10 @@
 
 open Mazes.Core.Grid
 
-type Maze = {
-    Name : string
+type Maze = {    
     Grid : Grid
+}
+
+type MazeInfo = {
+    Name : string
 }

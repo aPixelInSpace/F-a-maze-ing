@@ -14,7 +14,7 @@ type Canvas = {
 module Canvas =
 
     let getZone canvas coordinate =
-        get coordinate canvas.Zones
+        get canvas.Zones coordinate
 
     let maxRowIndex canvas =
         getIndex canvas.NumberOfRows

@@ -24,18 +24,18 @@ module Grid =
     let hasCells grid =
         grid.Cells.Length > 0
 
-    let getWallTypeAtPosition position cell =
+    let getWallTypeAtPosition cell position =
         match position with
         | Top -> cell.WallTop.WallType
         | Right -> cell.WallRight.WallType
         | Bottom -> cell.WallBottom.WallType
         | Left -> cell.WallLeft.WallType
 
-    let isALimitAt position coordinate grid =
+    let isALimitAt grid coordinate position =
         let zone = coordinate |> getZone grid.Canvas
-        let cell = get coordinate grid.Cells
+        let cell = get grid.Cells coordinate
 
-        if zone = NotPartOfMaze || (getWallTypeAtPosition position cell) = Border then
+        if zone = NotPartOfMaze || (getWallTypeAtPosition cell position) = Border then
             true
         else
             let neighborCoordinate = Cell.getNeighborCoordinateAtPosition coordinate position
@@ -44,8 +44,8 @@ module Grid =
             neighborCoordinate |> getZone grid.Canvas  = NotPartOfMaze
 
     let isNavigable grid fromCoordinate toCoordinate pos =
-        not (isALimitAt pos fromCoordinate grid) &&        
-        (get fromCoordinate grid.Cells) |> getWallTypeAtPosition pos = Empty &&
+        not (isALimitAt grid fromCoordinate pos) &&        
+        getWallTypeAtPosition (get grid.Cells fromCoordinate) pos = Empty &&
         toCoordinate |> getZone grid.Canvas = PartOfMaze
 
     let getNavigableNeighborsCoordinates grid coordinate =        
@@ -71,7 +71,7 @@ module Grid =
                 yield leftCoordinate
         }
 
-    let updateWallAtPosition position wallType coordinate grid =
+    let updateWallAtPosition grid coordinate position wallType =
         let r = coordinate.RowIndex
         let c = coordinate.ColumnIndex
 
@@ -89,6 +89,6 @@ module Grid =
             grid.Cells.[r, c] <- { grid.Cells.[r, c] with WallLeft = { WallType = wallType; WallPosition = Left } }
             grid.Cells.[r, c - 1] <- { grid.Cells.[r, c - 1] with WallRight = { WallType = wallType; WallPosition = Right } }
 
-    let ifNotAtLimitUpdateWallAtPosition position wallType coordinate grid =        
-        if not (isALimitAt position coordinate grid) then
-            updateWallAtPosition position wallType coordinate grid
+    let ifNotAtLimitUpdateWallAtPosition grid coordinate position wallType =        
+        if not (isALimitAt grid coordinate position) then
+            updateWallAtPosition grid coordinate position wallType

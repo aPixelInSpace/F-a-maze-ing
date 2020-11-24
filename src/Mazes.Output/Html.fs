@@ -50,7 +50,7 @@ let private rowNumber numberOfRows rowIndex =
         String.replicate (rowIndex.ToString().Length) " "
         + " "
 
-let outputHtml maze (textRenderedMaze : string) =
+let outputHtml maze mazeInfo (textRenderedMaze : string) =
     let resourcesDir = Path.Combine(Directory.GetCurrentDirectory(), "Output.Resources/")
 
     let mainHtml = File.ReadAllText(Path.Combine(resourcesDir, "Main.html-template"))
@@ -69,7 +69,7 @@ let outputHtml maze (textRenderedMaze : string) =
     let columnsAxisHtml = columnsAxis columnsAxisHtml maze.Grid.Canvas.NumberOfRows maze.Grid.Canvas.NumberOfColumns
     
     let mainHtml = mainHtml
-                       .Replace("{{Name}}", maze.Name)
+                       .Replace("{{Name}}", mazeInfo.Name)
                        .Replace("{{Maze}}", sbMaze.ToString())
                        .Replace("{{ColumnsAxis}}", columnsAxisHtml)
 

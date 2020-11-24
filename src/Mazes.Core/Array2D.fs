@@ -37,5 +37,5 @@ module Array2D =
     let isLastColumn columnIndex numberOfColumns =
         columnIndex = (getIndex numberOfColumns)
 
-    let get coordinate (array2d : 't[,]) =
+    let get (array2d : 't[,]) coordinate =
         array2d.[coordinate.RowIndex, coordinate.ColumnIndex]

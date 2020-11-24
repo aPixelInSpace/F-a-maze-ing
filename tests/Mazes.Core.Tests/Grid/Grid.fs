@@ -144,7 +144,7 @@ let ``Updating a wall should change it to the specified type : the wall of the c
     grid.Cells.[1, 1].WallTop |> should equal { WallPosition = Top; WallType = Normal }
     grid.Cells.[0, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal }
     
-    grid |> Grid.updateWallAtPosition Top Empty coordinate11
+    Grid.updateWallAtPosition grid coordinate11 Top Empty
     
     // assert top
     grid.Cells.[1, 1].WallTop |> should equal { WallPosition = Top; WallType = Empty }
@@ -156,7 +156,7 @@ let ``Updating a wall should change it to the specified type : the wall of the c
     grid.Cells.[1, 1].WallRight |> should equal { WallPosition = Right; WallType = Normal }
     grid.Cells.[1, 2].WallLeft |> should equal { WallPosition = Left; WallType = Normal }
     
-    grid |> Grid.updateWallAtPosition Right Empty coordinate11
+    Grid.updateWallAtPosition grid coordinate11 Right Empty
     
     // assert right
     grid.Cells.[1, 1].WallRight |> should equal { WallPosition = Right; WallType = Empty }
@@ -168,7 +168,7 @@ let ``Updating a wall should change it to the specified type : the wall of the c
     grid.Cells.[1, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal }
     grid.Cells.[2, 1].WallTop |> should equal { WallPosition = Top; WallType = Normal }
     
-    grid |> Grid.updateWallAtPosition Bottom Empty coordinate11
+    Grid.updateWallAtPosition grid coordinate11 Bottom Empty
     
     // assert bottom
     grid.Cells.[1, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Empty }
@@ -180,7 +180,7 @@ let ``Updating a wall should change it to the specified type : the wall of the c
     grid.Cells.[1, 1].WallLeft |> should equal { WallPosition = Left; WallType = Normal }
     grid.Cells.[1, 0].WallRight |> should equal { WallPosition = Right; WallType = Normal }
     
-    grid |> Grid.updateWallAtPosition Left Empty coordinate11
+    Grid.updateWallAtPosition grid coordinate11 Left Empty
     
     // assert left
     grid.Cells.[1, 1].WallLeft |> should equal { WallPosition = Left; WallType = Empty }

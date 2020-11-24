@@ -10,5 +10,5 @@ type CellMap = {
 type Map = {
     Root : Coordinate
     DistancesFromRoot : CellMap[,]
-    AccessibleFromRoot : int
+    ZonesAccessibleFromRoot : int
 }

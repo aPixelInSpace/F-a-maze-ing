@@ -37,8 +37,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let matchAlgoEnumWithFunction algoEnum =
         match algoEnum with
-           | AlgoEnum.BinaryTree -> BinaryTree.transformIntoMaze Left Bottom rng 1 1
-           | AlgoEnum.Sidewinder -> Sidewinder.transformIntoMaze Bottom Right rng 1 1
+           | AlgoEnum.BinaryTree -> BinaryTree.createMaze Left Bottom rng 1 1
+           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Top Right rng 1 1
            | _ -> raise(Exception("Generating algorithm unknown"))
 
 
@@ -76,17 +76,13 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
             let enumAlgoUpperBound = ((AlgoEnum.GetValues(typeof<AlgoEnum>)).GetUpperBound(0)) + 1            
             matchAlgoEnumWithFunction (enum<AlgoEnum> (rngAlgo.Next(enumAlgoUpperBound)))
 
-    let transformedGrid = (algo grid)
-
-    let maze =
-        { Name = nameOfMaze
-          Grid = transformedGrid }
-
-    //let map = Dijkstra.createMap { RowIndex = 0; ColumnIndex = 0  } maze
-
-    let renderedGrid = renderGrid transformedGrid
+    let maze = (algo grid)
     
-    let htmlOutput = outputHtml maze renderedGrid
+    //let map = Dijkstra.createMap { RowIndex = 2; ColumnIndex = 2  } maze
+
+    let renderedGrid = renderGrid maze.Grid
+    
+    let htmlOutput = outputHtml maze { Name = nameOfMaze } renderedGrid
     File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
     
     //let rawTestOutput = outputRawForTest maze renderedGrid
