@@ -1,11 +1,15 @@
 ![build](https://github.com/apixelinspace/F-a-maze-ing/workflows/build/badge.svg)
 
 # F-a-maze-ing
-A simple maze generator made with F#
+A, simple, composable and configurable maze generator made with F#
 
-Currently only a text output is supported.
-See examples with a [Rectangular](https://apixelinspace.github.io/F-a-maze-ing/RectangularMaze.html), a [Triangular](https://apixelinspace.github.io/F-a-maze-ing/TriangularMaze.html) or an [Ellipse](https://apixelinspace.github.io/F-a-maze-ing/EllipseMaze.html) mazes.
-Theses examples dot not display correctly on mobile for now. 
+Currently only a html/text output is supported.
+
+## Examples
+* [Rectangular](https://apixelinspace.github.io/F-a-maze-ing/RectangularMaze.html)
+* [Triangular](https://apixelinspace.github.io/F-a-maze-ing/TriangularMaze.html)
+* [Ellipse](https://apixelinspace.github.io/F-a-maze-ing/EllipseMaze.html)
+* [Composite](https://apixelinspace.github.io/F-a-maze-ing/CompositeMaze.html)
 
 ## Usage
 ```

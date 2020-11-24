@@ -48,8 +48,7 @@ module Grid =
         (get fromCoordinate grid.Cells) |> getWallTypeAtPosition pos = Empty &&
         toCoordinate |> getZone grid.Canvas = PartOfMaze
 
-    let getNavigableNeighbors coordinate grid =
-        let neighbors = ResizeArray<Coordinate>()
+    let getNavigableNeighborsCoordinates grid coordinate =        
         let isNavigable = isNavigable grid coordinate
         let neighborCoordinate = Cell.getNeighborCoordinateAtPosition coordinate
         
@@ -58,19 +57,19 @@ module Grid =
         let bottomCoordinate = neighborCoordinate Bottom
         let leftCoordinate = neighborCoordinate Left
         
-        if (isNavigable topCoordinate Top) then
-            neighbors.Add(topCoordinate)
-        
-        if (isNavigable rightCoordinate Right) then
-            neighbors.Add(rightCoordinate)
-        
-        if (isNavigable bottomCoordinate Bottom) then
-            neighbors.Add(bottomCoordinate)
-        
-        if (isNavigable leftCoordinate Left) then
-            neighbors.Add(leftCoordinate)
-        
-        neighbors
+        seq {
+            if (isNavigable topCoordinate Top) then
+                yield topCoordinate
+            
+            if (isNavigable rightCoordinate Right) then
+                yield  rightCoordinate
+            
+            if (isNavigable bottomCoordinate Bottom) then
+                yield bottomCoordinate
+            
+            if (isNavigable leftCoordinate Left) then
+                yield leftCoordinate
+        }
 
     let updateWallAtPosition position wallType coordinate grid =
         let r = coordinate.RowIndex

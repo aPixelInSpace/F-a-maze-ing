@@ -5,10 +5,12 @@ open System.IO
 open System.Text
 open CommandLine
 open CLSimpleTypes
+open Mazes.Core
 open Mazes.Core.Canvas
 open Mazes.Core.Grid
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
+open Mazes.Core.Maze.Analyse
 open Mazes.Render.Text
 open Mazes.Output.Html
 open Mazes.Output.RawForTest
@@ -79,6 +81,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let maze =
         { Name = nameOfMaze
           Grid = transformedGrid }
+
+    //let map = Dijkstra.createMap { RowIndex = 0; ColumnIndex = 0  } maze
 
     let renderedGrid = renderGrid transformedGrid
     

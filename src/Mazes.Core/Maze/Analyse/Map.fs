@@ -2,18 +2,13 @@
 
 open Mazes.Core
 
-type Distance = Distance of int
-
-type DistanceFromRoot =
-    | Distance
-    | Unknown
-
 type CellMap = {    
-    DistanceFromRoot : int
-    Neighbors : Coordinate[]
+    DistanceFromRoot : int option
+    Neighbors :  seq<Coordinate> option
 }
 
 type Map = {
     Root : Coordinate
     DistancesFromRoot : CellMap[,]
+    AccessibleFromRoot : int
 }
