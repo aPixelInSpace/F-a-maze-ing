@@ -10,35 +10,33 @@ open Mazes.Core.Grid
 open Mazes.Core.Maze.Generate
 open Mazes.Core.Maze.Analyse
 
-let canvas10By10 =
-    let savedCanvas =
-        "Type=Canvas\n" +
-        "*-********\n" +
-        "*-**-***--\n" +
-        "**********\n" +
-        "---*******\n" +
-        "**-****-**\n" +
-        "**-****--*\n" +
-        "********-*\n" +
-        "**********\n" +
-        "*---*****-\n" +
-        "*-*****-*-\n" +    
-        "end"
-    
-    match Canvas.load savedCanvas with
-    | Some canvas -> canvas
-    | None -> raise(Exception "The saved canvas is not correct")
+// fixture
+let maze =
+    let canvas10By10 =
+        let stringCanvas =
+            "Type=Canvas\n" +
+            "*-********\n" +
+            "*-**-***--\n" +
+            "**********\n" +
+            "---*******\n" +
+            "**-****-**\n" +
+            "**-****--*\n" +
+            "********-*\n" +
+            "**********\n" +
+            "*---*****-\n" +
+            "*-*****-*-\n" +    
+            "end"
 
-[<Fact>]
-let ``Creating a map with root (0,0) on a maze generated with the sidewinder algorithm (Top, Right, rng 1) on the canvas 10x10 should contain the following zones and distances`` () =
-    // arrange
-    let maze =
-        canvas10By10
-        |> Grid.create
-        |> Sidewinder.createMaze Top Right (Random(1)) 1 1
+        match Canvas.Convert.fromString stringCanvas with
+        | Some canvas -> canvas
+        | None -> raise(Exception "The saved canvas is not correct")
+
+    canvas10By10
+    |> Grid.create
+    |> Sidewinder.createMaze Top Right (Random(1)) 1 1
 
     (*
-        the maze looks like this
+        the above maze looks like this
         ┏━┓ ┏━━━━━━━━━━━━━━━┓
         ┃ ┃ ┃ ╶─┲━┓ ┬ ╶─┲━━━┛
         ┃ ┗━┛ ┬ ┗━┛ │ ┬ ┗━━━┓
@@ -52,8 +50,11 @@ let ``Creating a map with root (0,0) on a maze generated with the sidewinder alg
         ┗━┛ ┗━━━━━━━━━┛ ┗━┛  
     *)
 
+[<Fact>]
+let ``Given a root inside the maze when creating a map then it should give all the distances from the root for every zone inside the maze`` () =
+
     // act
-    let map = maze |> Dijkstra.createMap { RowIndex = 0; ColumnIndex = 0  }
+    let map = maze |> Dijkstra.createMap { RowIndex = 0; ColumnIndex = 0  }  
 
     // assert
     let get = get map.DistancesFromRoot
@@ -73,3 +74,28 @@ let ``Creating a map with root (0,0) on a maze generated with the sidewinder alg
 
     let outsideOfTheMazeZone = get { RowIndex = 0; ColumnIndex = 1 }
     outsideOfTheMazeZone.DistanceFromRoot |> should equal None
+
+[<Fact>]
+let ``Given a root outside the maze when creating a map then the root is the only zone of the map`` () =
+
+    // act
+    let map = maze |> Dijkstra.createMap { RowIndex = 0; ColumnIndex = 1  }  
+
+    // assert
+    let get = get map.DistancesFromRoot
+    map.ZonesAccessibleFromRoot |> should equal 1
+
+    let outsideOfTheMazeZone = get { RowIndex = 0; ColumnIndex = 1 }
+    outsideOfTheMazeZone.DistanceFromRoot |> should equal (Some 0)
+
+    let topLeftZone = get { RowIndex = 0; ColumnIndex = 9 }
+    topLeftZone.DistanceFromRoot |> should equal None
+
+    let bottomLeftZone = get { RowIndex = 9; ColumnIndex = 0 }
+    bottomLeftZone.DistanceFromRoot |> should equal None
+
+    let bottomRightZone = get { RowIndex = 9; ColumnIndex = 8 }
+    bottomRightZone.DistanceFromRoot |> should equal None
+
+    let centerZone = get { RowIndex = 5; ColumnIndex = 4 }
+    centerZone.DistanceFromRoot |> should equal None

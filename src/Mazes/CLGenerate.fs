@@ -38,7 +38,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let matchAlgoEnumWithFunction algoEnum =
         match algoEnum with
            | AlgoEnum.BinaryTree -> BinaryTree.createMaze Left Bottom rng 1 1
-           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Top Right rng 1 1
+           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Bottom Right rng 1 1
            | _ -> raise(Exception("Generating algorithm unknown"))
 
 
@@ -78,7 +78,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let maze = (algo grid)
     
-    //let map = Dijkstra.createMap { RowIndex = 2; ColumnIndex = 2  } maze
+    //let map = Dijkstra.createMap { RowIndex = 0; ColumnIndex = 0 } maze
 
     let renderedGrid = renderGrid maze.Grid
     

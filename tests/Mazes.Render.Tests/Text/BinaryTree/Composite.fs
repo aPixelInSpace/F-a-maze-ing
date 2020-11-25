@@ -29,7 +29,7 @@ let savedCanvas =
     "end"
 
 let canvas =
-    match Canvas.load savedCanvas with
+    match Canvas.Convert.fromString savedCanvas with
     | Some canvas -> canvas
     | None -> raise(Exception "The saved canvas is not correct")
 

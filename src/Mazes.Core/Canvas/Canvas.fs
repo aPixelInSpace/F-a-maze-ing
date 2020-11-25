@@ -29,50 +29,61 @@ module Canvas =
         coordinate.ColumnIndex <= (maxColumnIndex canvas)
 
     let isPartOfMaze canvas coordinate =
-        (coordinate |> getZone canvas) = PartOfMaze
+        (getZone canvas coordinate) = PartOfMaze
 
-    let private charPartOfMaze = '*'
-    let private charNotPartOfMaze = '-'
+    let countPartOfMazeZones canvas =
+        let counter = 0
 
-    let private zoneToChar zone =
-        match zone with
-        | PartOfMaze -> charPartOfMaze
-        | NotPartOfMaze -> charNotPartOfMaze
-
-    let private charToZone char =
-        match char with
-        | c when c = charPartOfMaze -> PartOfMaze 
-        | c when c = charNotPartOfMaze -> NotPartOfMaze
-        | _ -> raise(Exception "Canvas character not supported")
-
-    let save canvas =
-        let appendZone (sBuilder : StringBuilder) zone =
-            sBuilder.Append(zoneToChar(zone)) |> ignore
-
-        let appendRow (sBuilder : StringBuilder) rowZones =
-            rowZones
-            |> Array.iter(fun zone -> appendZone sBuilder zone)
-
-            sBuilder.Append('\n') |> ignore
-
-        let sBuilder = StringBuilder()
-        sBuilder.Append("Type=Canvas\n") |> ignore
         canvas.Zones
-            |> Array2D.extractByRows
-            |> Seq.iter(fun rowZones -> appendRow sBuilder rowZones)
+        |> reduce(fun _ _ counter zone ->
+            match zone with
+            | PartOfMaze -> counter + 1
+            | _ -> counter) counter
 
-        sBuilder.Append("end") |> ignore
+    module Convert =
 
-        sBuilder.ToString()
+        let private charPartOfMaze = '*'
+        let private charNotPartOfMaze = '-'
 
-    let load (save : string) =
-        let lines = save.Split('\n')
-        if lines.[0] = "Type=Canvas" then
-            let numberOfRows = lines.Length - 2
-            let numberOfColumns = lines.[1].Length
+        let private zoneToChar zone =
+            match zone with
+            | PartOfMaze -> charPartOfMaze
+            | NotPartOfMaze -> charNotPartOfMaze
 
-            let zones = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> Zone.create ((charToZone lines.[rowIndex + 1].[columnIndex]) = PartOfMaze))
+        let private charToZone char =
+            match char with
+            | c when c = charPartOfMaze -> PartOfMaze 
+            | c when c = charNotPartOfMaze -> NotPartOfMaze
+            | _ -> raise(Exception "Canvas character not supported")
 
-            Some { Zones = zones; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }            
-        else
-            None
+        let toString canvas =
+            let appendZone (sBuilder : StringBuilder) zone =
+                sBuilder.Append(zoneToChar(zone)) |> ignore
+
+            let appendRow (sBuilder : StringBuilder) rowZones =
+                rowZones
+                |> Array.iter(fun zone -> appendZone sBuilder zone)
+
+                sBuilder.Append('\n') |> ignore
+
+            let sBuilder = StringBuilder()
+            sBuilder.Append("Type=Canvas\n") |> ignore
+            canvas.Zones
+                |> extractByRows
+                |> Seq.iter(fun rowZones -> appendRow sBuilder rowZones)
+
+            sBuilder.Append("end") |> ignore
+
+            sBuilder.ToString()
+
+        let fromString (save : string) =
+            let lines = save.Split('\n')
+            if lines.[0] = "Type=Canvas" then
+                let numberOfRows = lines.Length - 2
+                let numberOfColumns = lines.[1].Length
+
+                let zones = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> Zone.create ((charToZone lines.[rowIndex + 1].[columnIndex]) = PartOfMaze))
+
+                Some { Zones = zones; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }            
+            else
+                None

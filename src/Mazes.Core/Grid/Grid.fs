@@ -24,18 +24,11 @@ module Grid =
     let hasCells grid =
         grid.Cells.Length > 0
 
-    let getWallTypeAtPosition cell position =
-        match position with
-        | Top -> cell.WallTop.WallType
-        | Right -> cell.WallRight.WallType
-        | Bottom -> cell.WallBottom.WallType
-        | Left -> cell.WallLeft.WallType
-
     let isALimitAt grid coordinate position =
         let zone = coordinate |> getZone grid.Canvas
         let cell = get grid.Cells coordinate
 
-        if zone = NotPartOfMaze || (getWallTypeAtPosition cell position) = Border then
+        if zone = NotPartOfMaze || (Cell.getWallTypeAtPosition cell position) = Border then
             true
         else
             let neighborCoordinate = Cell.getNeighborCoordinateAtPosition coordinate position
@@ -45,28 +38,27 @@ module Grid =
 
     let isNavigable grid fromCoordinate toCoordinate pos =
         not (isALimitAt grid fromCoordinate pos) &&        
-        getWallTypeAtPosition (get grid.Cells fromCoordinate) pos = Empty &&
+        Cell.getWallTypeAtPosition (get grid.Cells fromCoordinate) pos = Empty &&
         toCoordinate |> getZone grid.Canvas = PartOfMaze
 
     let getNavigableNeighborsCoordinates grid coordinate =        
         let isNavigable = isNavigable grid coordinate
         let neighborCoordinate = Cell.getNeighborCoordinateAtPosition coordinate
-        
-        let topCoordinate = neighborCoordinate Top
-        let rightCoordinate = neighborCoordinate Right
-        let bottomCoordinate = neighborCoordinate Bottom
-        let leftCoordinate = neighborCoordinate Left
-        
+
         seq {
+            let topCoordinate = neighborCoordinate Top
             if (isNavigable topCoordinate Top) then
                 yield topCoordinate
-            
+
+            let rightCoordinate = neighborCoordinate Right
             if (isNavigable rightCoordinate Right) then
                 yield  rightCoordinate
-            
+
+            let bottomCoordinate = neighborCoordinate Bottom
             if (isNavigable bottomCoordinate Bottom) then
                 yield bottomCoordinate
-            
+
+            let leftCoordinate = neighborCoordinate Left
             if (isNavigable leftCoordinate Left) then
                 yield leftCoordinate
         }

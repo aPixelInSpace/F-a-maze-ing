@@ -19,7 +19,7 @@ let private getCoordinate mode coordinate =
     | ByColumns ->
         { RowIndex = coordinate.ColumnIndex; ColumnIndex = coordinate.RowIndex  }
 
-let private getRandomColumnIndexForDir1FromRange isALimitAt (rng : Random) rowIndex increment dir startColumnIndex endColumnIndex =
+let private getRandomColumnIndexFromRange isALimitAt (rng : Random) rowIndex increment dir startColumnIndex endColumnIndex =
     let eligibleCellsWithRemovableWallAtDir = ResizeArray<int>()
 
     for columnIndex in startColumnIndex .. increment .. endColumnIndex do
@@ -37,7 +37,7 @@ let private carveRow
     isALimitAt
     updateWallAtPosition
     ifNotAtLimitUpdateWallAtPosition
-    getRandomColumnIndexForFromRange
+    getRandomColumnIndexAtDir1ForFromRange
     // params
     direction1
     direction2
@@ -68,7 +68,7 @@ let private carveRow
         // if we are in a corner
         if isDir1ALimit && isDir2ALimit then
             // we check which of the previous cells have a wall at the dir 1 that can be removed
-            let randomColumnIndex = getRandomColumnIndexForFromRange direction1 runStartIndex (columnIndex - increment)
+            let randomColumnIndex = getRandomColumnIndexAtDir1ForFromRange runStartIndex (columnIndex - increment)
 
             match randomColumnIndex with
             | Some randomColumnIndex ->
@@ -87,7 +87,7 @@ let private carveRow
             ifNotAtLimitUpdateWallAtPosition coordinate (Position.getOpposite direction2) Empty
 
             // we have to check whether there was some prior dir 1 wall to remove 
-            let randomColumnIndex = getRandomColumnIndexForFromRange direction1 runStartIndex (columnIndex - increment)
+            let randomColumnIndex = getRandomColumnIndexAtDir1ForFromRange runStartIndex (columnIndex - increment)
             match randomColumnIndex with
             | Some columnIndexForDir1Removal ->                
                 updateWallAtPosition { coordinate with ColumnIndex = columnIndexForDir1Removal } direction1 Empty
@@ -142,7 +142,7 @@ let createMaze direction1 direction2 rng rngDirection1Weight rngDirection2Weight
             (isALimitAt)
             (updateWallAtPosition)
             (ifNotAtLimitUpdateWallAtPosition)
-            (getRandomColumnIndexForDir1FromRange isALimitAt rng rowIndex increment)
+            (getRandomColumnIndexFromRange isALimitAt rng rowIndex increment direction1)
 
             // params
             direction1

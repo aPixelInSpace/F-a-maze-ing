@@ -39,3 +39,10 @@ module Array2D =
 
     let get (array2d : 't[,]) coordinate =
         array2d.[coordinate.RowIndex, coordinate.ColumnIndex]
+
+    let reduce (reducer: int -> int -> 'S -> 'T -> 'S) (state: 'S) (array2d: 'T[,]) =
+        let mutable state = state
+        for r in 0 .. Array2D.length1 array2d |> getIndex do
+            for c in 0 .. Array2D.length2 array2d |> getIndex do
+                state <- reducer r c state (array2d.[r, c])
+        state

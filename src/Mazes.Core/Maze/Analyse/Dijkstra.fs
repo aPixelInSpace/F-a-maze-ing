@@ -7,7 +7,6 @@ open Mazes.Core.Grid.Grid
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Analyse
 
-
 type private DistanceSoFar = DistanceSoFar of int
 module private DistanceSoFar =
     let value (DistanceSoFar dist) = dist
@@ -19,11 +18,11 @@ let createMap root maze =
 
     let mutable unvisited = Map.empty.Add(root, DistanceSoFar -1)    
 
-    let mutable counter = 0
+    let counter = ref 0
     
     while not unvisited.IsEmpty do
         let unvisitedCoordinate = unvisited |> Seq.head
-        
+
         let coordinate = unvisitedCoordinate.Key
         let actualDistance = (unvisitedCoordinate.Value |> DistanceSoFar.value) + 1
 
@@ -31,7 +30,7 @@ let createMap root maze =
 
         distancesFromRoot.[coordinate.RowIndex, coordinate.ColumnIndex] <- { DistanceFromRoot = Some actualDistance; Neighbors = Some neighbors }
 
-        counter <- counter + 1
+        incr counter
         
         unvisited <-
                 neighbors
@@ -40,4 +39,4 @@ let createMap root maze =
                        (fun (m : Map<Coordinate, DistanceSoFar>) i -> m.Add(i, DistanceSoFar actualDistance))
                        (unvisited.Remove(coordinate))
 
-    { Root = root; DistancesFromRoot = distancesFromRoot; ZonesAccessibleFromRoot = counter }
+    { Root = root; DistancesFromRoot = distancesFromRoot; ZonesAccessibleFromRoot = counter.Value }

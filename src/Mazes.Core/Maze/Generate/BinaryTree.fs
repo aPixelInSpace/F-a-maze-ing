@@ -86,4 +86,4 @@ let createMaze direction1 direction2 rng rngDirection1Weight rngDirection2Weight
             increment
             endColumnIndex)    
 
-    { Grid = grid}
+    { Grid = grid }

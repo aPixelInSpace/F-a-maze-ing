@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+		<Compile Include="Canvas\Canvas.fs" />
         <Compile Include="Grid\Grid.fs" />
         <Compile Include="Maze\Analyse\Dijkstra.fs" />
         <Compile Include="Program.fs" />

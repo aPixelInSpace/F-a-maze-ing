@@ -135,7 +135,7 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
 
 let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate pos1 pos2 =
     match existAt grid.Canvas (Cell.getNeighborCoordinateAtPosition coordinate pos1) with
-    | true -> getWallTypeAtPosition (get grid.Cells (Cell.getNeighborCoordinateAtPosition coordinate pos1)) pos2
+    | true -> Cell.getWallTypeAtPosition (get grid.Cells (Cell.getNeighborCoordinateAtPosition coordinate pos1)) pos2
     | false -> Empty
 
 let private append
@@ -170,7 +170,7 @@ let private append
 
 let private wallTypes (grid : Grid) coordinate =
     let cell = get grid.Cells coordinate
-    let getWallTypeAtPosition = getWallTypeAtPosition cell
+    let getWallTypeAtPosition = Cell.getWallTypeAtPosition cell
     let ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate
     
     let intersectionWallLeft = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Left Top        
@@ -195,7 +195,7 @@ let private wallTypes (grid : Grid) coordinate =
 
 let private wallTypesLastRow (grid : Grid) coordinate =
     let cell = get grid.Cells coordinate
-    let getWallTypeAtPosition = getWallTypeAtPosition cell
+    let getWallTypeAtPosition = Cell.getWallTypeAtPosition cell
     let ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate
     
     let intersectionWallLeft = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Left Bottom

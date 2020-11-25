@@ -12,6 +12,13 @@ type Cell = {
 
 module Cell =
 
+    let getWallTypeAtPosition cell position =
+        match position with
+        | Top -> cell.WallTop.WallType
+        | Right -> cell.WallRight.WallType
+        | Bottom -> cell.WallBottom.WallType
+        | Left -> cell.WallLeft.WallType
+
     let getNeighborCoordinateAtPosition coordinate position =    
         match position with
         | Top -> { coordinate with RowIndex = coordinate.RowIndex - 1; }
