@@ -8,8 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+		<Compile Include="Helpers.fs" />
 		<Compile Include="Canvas\Canvas.fs" />
+		<Compile Include="Canvas\Shape\Rectangle.fs" />
+		<Compile Include="Canvas\Shape\TriangleIsosceles.fs" />
         <Compile Include="Grid\Grid.fs" />
+		<Compile Include="Maze\Generate\BinaryTree.fs" />
+		<Compile Include="Maze\Generate\Sidewinder.fs" />
         <Compile Include="Maze\Analyse\Dijkstra.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>

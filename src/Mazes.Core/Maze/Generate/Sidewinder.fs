@@ -1,4 +1,6 @@
-﻿module Mazes.Core.Maze.Generate.Sidewinder
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+module Mazes.Core.Maze.Generate.Sidewinder
 
 open System
 open Mazes.Core
@@ -19,7 +21,7 @@ let private getCoordinate mode coordinate =
     | ByColumns ->
         { RowIndex = coordinate.ColumnIndex; ColumnIndex = coordinate.RowIndex  }
 
-let private getRandomColumnIndexFromRange isALimitAt (rng : Random) rowIndex increment dir startColumnIndex endColumnIndex =
+let private getRandomColumnIndexFromRange isALimitAt (rng : Random) increment dir rowIndex startColumnIndex endColumnIndex =
     let eligibleCellsWithRemovableWallAtDir = ResizeArray<int>()
 
     for columnIndex in startColumnIndex .. increment .. endColumnIndex do
@@ -40,7 +42,7 @@ let private carveRow
     getRandomColumnIndexAtDir1ForFromRange
     // params
     direction1
-    direction2
+    (direction2 : Position)
     (rng : Random)
     rngTotalWeight    
     rngDirection2Weight    
@@ -84,7 +86,7 @@ let private carveRow
         // if the dir 1 is a limit then we always choose remove dir 2
         if isDir1ALimit then                
             updateWallAtPosition coordinate direction2 Empty
-            ifNotAtLimitUpdateWallAtPosition coordinate (Position.getOpposite direction2) Empty
+            ifNotAtLimitUpdateWallAtPosition coordinate direction2.Opposite Empty
 
             // we have to check whether there was some prior dir 1 wall to remove 
             let randomColumnIndex = getRandomColumnIndexAtDir1ForFromRange runStartIndex (columnIndex - increment)
@@ -130,6 +132,7 @@ let createMaze direction1 direction2 rng rngDirection1Weight rngDirection2Weight
     let isALimitAt coordinate = (isALimitAt grid (getCoordinate coordinate))
     let updateWallAtPosition coordinate = (updateWallAtPosition grid (getCoordinate coordinate))
     let ifNotAtLimitUpdateWallAtPosition coordinate = (ifNotAtLimitUpdateWallAtPosition grid (getCoordinate coordinate))
+    let getRandomColumnIndexFromRange = (getRandomColumnIndexFromRange isALimitAt rng increment direction1)
 
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
 
@@ -138,12 +141,11 @@ let createMaze direction1 direction2 rng rngDirection1Weight rngDirection2Weight
     |> Seq.iteri(fun rowIndex _ ->
         carveRow
             // dependencies
-            (isPartOfMaze)
-            (isALimitAt)
-            (updateWallAtPosition)
-            (ifNotAtLimitUpdateWallAtPosition)
-            (getRandomColumnIndexFromRange isALimitAt rng rowIndex increment direction1)
-
+            isPartOfMaze
+            isALimitAt
+            updateWallAtPosition
+            ifNotAtLimitUpdateWallAtPosition
+            (getRandomColumnIndexFromRange rowIndex)
             // params
             direction1
             direction2

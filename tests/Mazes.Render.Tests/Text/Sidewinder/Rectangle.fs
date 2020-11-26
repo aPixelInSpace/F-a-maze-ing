@@ -1,3 +1,5 @@
+// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
 module Mazes.Render.Tests.Text.Sidewinder.Rectangle
 
 open System

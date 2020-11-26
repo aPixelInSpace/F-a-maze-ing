@@ -1,4 +1,6 @@
-﻿module Mazes.Render.Tests.Text.BinaryTree.TriangleIsosceles
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+module Mazes.Render.Tests.Text.BinaryTree.TriangleIsosceles
 
 open System
 open FsUnit

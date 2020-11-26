@@ -1,4 +1,6 @@
-﻿module Mazes.Core.Canvas.Shape.TriangleIsosceles
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+module Mazes.Core.Canvas.Shape.TriangleIsosceles
 
 open System
 open Mazes.Core
@@ -10,40 +12,40 @@ type BaseAt =
     | Bottom
     | Left
 
-let private isCellPartOfTriangleIsosceles baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex =
+let private isCellPartOfTriangleIsosceles baseAt baseDecrement heightIncrement numberOfRows numberOfColumns rowIndex columnIndex =
     match baseAt with
     | BaseAt.Top ->
-        let currentFloorIndex = rowIndex / heightIncrementValue
-        let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrementValue
+        let currentFloorIndex = rowIndex / heightIncrement
+        let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrement
 
         columnIndex >= numberOfEmptyStartingCellRow && columnIndex < (numberOfColumns - numberOfEmptyStartingCellRow)
 
     | BaseAt.Bottom ->
-        let numberOfFloors = numberOfRows / heightIncrementValue
-        let currentFloorIndex = rowIndex / heightIncrementValue
-        let numberOfEmptyStartingCellRow = (numberOfFloors - 1 - currentFloorIndex) * baseDecrementValue
+        let numberOfFloors = numberOfRows / heightIncrement
+        let currentFloorIndex = rowIndex / heightIncrement
+        let numberOfEmptyStartingCellRow = (numberOfFloors - 1 - currentFloorIndex) * baseDecrement
 
         columnIndex >= numberOfEmptyStartingCellRow && columnIndex < (numberOfColumns - numberOfEmptyStartingCellRow)
 
     | BaseAt.Left ->
-        let currentFloorIndex = columnIndex / heightIncrementValue
-        let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrementValue
+        let currentFloorIndex = columnIndex / heightIncrement
+        let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrement
 
         rowIndex >= numberOfEmptyStartingCellRow && rowIndex < (numberOfRows - numberOfEmptyStartingCellRow)
 
     | BaseAt.Right ->
-        let numberOfFloors = numberOfColumns / heightIncrementValue
-        let currentFloorIndex = columnIndex / heightIncrementValue
-        let numberOfEmptyStartingCellRow = (numberOfFloors - 1 - currentFloorIndex) * baseDecrementValue
+        let numberOfFloors = numberOfColumns / heightIncrement
+        let currentFloorIndex = columnIndex / heightIncrement
+        let numberOfEmptyStartingCellRow = (numberOfFloors - 1 - currentFloorIndex) * baseDecrement
 
         rowIndex >= numberOfEmptyStartingCellRow && rowIndex < (numberOfRows - numberOfEmptyStartingCellRow)
 
 // todo : allow to have an array of values for baseDecrementValue and heightIncrementValue (or, even, a function)
-let create baseLength baseAt baseDecrementValue heightIncrementValue =
+let create baseLength baseAt baseDecrement heightIncrement =
     let height =
         (int (Math.Ceiling((float baseLength)
-                           / (float (baseDecrementValue * 2)))))
-        * heightIncrementValue
+                           / (float (baseDecrement * 2)))))
+        * heightIncrement
     
     let numberOfRows =
         match baseAt with
@@ -57,6 +59,6 @@ let create baseLength baseAt baseDecrementValue heightIncrementValue =
     
     let zones =
         Array2D.init numberOfRows numberOfColumns
-            (fun rowIndex columnIndex -> Zone.create (isCellPartOfTriangleIsosceles baseAt baseDecrementValue heightIncrementValue numberOfRows numberOfColumns rowIndex columnIndex))
+            (fun rowIndex columnIndex -> Zone.create (isCellPartOfTriangleIsosceles baseAt baseDecrement heightIncrement numberOfRows numberOfColumns rowIndex columnIndex))
 
-    { Zones = zones; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }
+    { Zones = zones; }

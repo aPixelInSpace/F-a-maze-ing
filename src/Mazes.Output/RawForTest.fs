@@ -1,4 +1,6 @@
-﻿module Mazes.Output.RawForTest
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+module Mazes.Output.RawForTest
 
 open System.Text
 

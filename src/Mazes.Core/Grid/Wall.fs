@@ -1,4 +1,6 @@
-﻿namespace Mazes.Core.Grid
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+namespace Mazes.Core.Grid
 
 type Position =
     | Top
@@ -6,10 +8,8 @@ type Position =
     | Bottom
     | Left
 
-module Position =
-
-    let getOpposite position =
-        match position with
+    member this.Opposite =
+        match this with
         | Top -> Bottom
         | Right -> Left
         | Bottom -> Top

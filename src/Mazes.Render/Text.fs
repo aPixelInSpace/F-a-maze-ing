@@ -1,4 +1,6 @@
-﻿module Mazes.Render.Text
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+module Mazes.Render.Text
 
 open System.Text
 open Mazes.Core
@@ -6,7 +8,6 @@ open Mazes.Core.Array2D
 open Mazes.Core.Canvas
 open Mazes.Core.Canvas.Canvas
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Grid
 
 let private repetitionsMiddlePart = 1
 
@@ -135,7 +136,9 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
 
 let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate pos1 pos2 =
     match existAt grid.Canvas (Cell.getNeighborCoordinateAtPosition coordinate pos1) with
-    | true -> Cell.getWallTypeAtPosition (get grid.Cells (Cell.getNeighborCoordinateAtPosition coordinate pos1)) pos2
+    | true ->
+        let neighborCoordinate = (Cell.getNeighborCoordinateAtPosition coordinate pos1)
+        (get grid.Cells neighborCoordinate).WallTypeAtPosition pos2
     | false -> Empty
 
 let private append
@@ -170,47 +173,46 @@ let private append
 
 let private wallTypes (grid : Grid) coordinate =
     let cell = get grid.Cells coordinate
-    let getWallTypeAtPosition = Cell.getWallTypeAtPosition cell
+    
     let ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate
     
     let intersectionWallLeft = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Left Top        
 
     let intersectionWallTop = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Top Left
     
-    let intersectionWallRight = getWallTypeAtPosition Top
+    let intersectionWallRight = cell.WallTypeAtPosition Top
 
-    let intersectionWallBottom = getWallTypeAtPosition Left
+    let intersectionWallBottom = cell.WallTypeAtPosition Left
     
-    let middleWall = getWallTypeAtPosition Top
+    let middleWall = cell.WallTypeAtPosition Top
 
-    let lastIntersectionWallLeft = (fun () -> getWallTypeAtPosition Top)
+    let lastIntersectionWallLeft = (fun () -> cell.WallTypeAtPosition Top)
 
     let lastIntersectionWallTop = (fun () -> ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Top Right)
 
     let lastIntersectionWallRight = Empty
 
-    let lastIntersectionWallBottom = getWallTypeAtPosition Right
+    let lastIntersectionWallBottom = cell.WallTypeAtPosition Right
 
     (intersectionWallLeft, intersectionWallTop, intersectionWallRight, intersectionWallBottom, middleWall, lastIntersectionWallLeft, lastIntersectionWallTop, lastIntersectionWallRight, lastIntersectionWallBottom)
 
 let private wallTypesLastRow (grid : Grid) coordinate =
-    let cell = get grid.Cells coordinate
-    let getWallTypeAtPosition = Cell.getWallTypeAtPosition cell
+    let cell = get grid.Cells coordinate    
     let ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate
     
     let intersectionWallLeft = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Left Bottom
 
-    let intersectionWallTop = getWallTypeAtPosition Left
+    let intersectionWallTop = cell.WallTypeAtPosition Left
 
-    let intersectionWallRight = getWallTypeAtPosition Bottom
+    let intersectionWallRight = cell.WallTypeAtPosition Bottom
 
     let intersectionWallBottom = Empty
     
-    let middleWall = getWallTypeAtPosition Bottom
+    let middleWall = cell.WallTypeAtPosition Bottom
 
-    let lastIntersectionWallLeft = (fun () -> getWallTypeAtPosition Bottom)
+    let lastIntersectionWallLeft = (fun () -> cell.WallTypeAtPosition Bottom)
 
-    let lastIntersectionWallTop = (fun () -> getWallTypeAtPosition Right)
+    let lastIntersectionWallTop = (fun () -> cell.WallTypeAtPosition Right)
 
     let lastIntersectionWallRight = Empty
 
@@ -232,7 +234,7 @@ let private appendRows sBuilder grid rows =
 
         sBuilder.Append("\n") |> ignore)
 
-    if hasCells grid then
+    if grid.HasCells then
         // necessary to add the last char line on the last row
         let lastRowIndex = (maxRowIndex grid.Canvas)
         rows.[lastRowIndex]
@@ -253,11 +255,11 @@ let renderGrid grid =
 
 let renderCanvas canvas =
 
-    let appendZone (sBuilder : StringBuilder) zone =
+    let appendZone (sBuilder : StringBuilder) (zone : Zone) =
         let char =
-            match zone with
-            | NotPartOfMaze -> "░░"
-            | PartOfMaze -> "▓▓"
+            match zone.IsAPartOfMaze with
+            | true -> "▓▓"
+            | false -> "░░"           
 
         sBuilder.Append(char) |> ignore
 

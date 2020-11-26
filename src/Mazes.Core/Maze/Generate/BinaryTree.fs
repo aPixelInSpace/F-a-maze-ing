@@ -1,4 +1,6 @@
-﻿module Mazes.Core.Maze.Generate.BinaryTree
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+module Mazes.Core.Maze.Generate.BinaryTree
 
 open System
 open Mazes.Core
@@ -36,8 +38,8 @@ let private carveRow
 
         // if we are in a corner 
         if isDir1ALimit &&  isDir2ALimit then
-            ifNotAtLimitUpdateWallAtPosition (Position.getOpposite direction1) Empty
-            ifNotAtLimitUpdateWallAtPosition (Position.getOpposite direction2) Empty
+            ifNotAtLimitUpdateWallAtPosition direction1.Opposite Empty
+            ifNotAtLimitUpdateWallAtPosition direction2.Opposite Empty
         else
 
         let updateWallAtPosition = updateWallAtPosition grid coordinate
@@ -45,13 +47,13 @@ let private carveRow
         // if the dir 1 is a limit then we always choose remove dir 2 (and the opposite dir 2 if possible)
         if isDir1ALimit then
             updateWallAtPosition direction2 Empty
-            ifNotAtLimitUpdateWallAtPosition (Position.getOpposite direction2) Empty
+            ifNotAtLimitUpdateWallAtPosition direction2.Opposite Empty
         else
 
         // if the dir 2 is a limit then we always choose remove dir 1 (and the opposite dir 1 if possible)
         if isDir2ALimit then
             updateWallAtPosition direction1 Empty
-            ifNotAtLimitUpdateWallAtPosition (Position.getOpposite direction1) Empty
+            ifNotAtLimitUpdateWallAtPosition direction1.Opposite Empty
         else
 
         // if dir 1 and dir 2 are both not a limit we flip a coin to decide which one we remove

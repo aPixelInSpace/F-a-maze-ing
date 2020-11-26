@@ -1,10 +1,11 @@
-﻿module Mazes.CLGenerate
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+module Mazes.CLGenerate
 
 open System
 open System.IO
 open System.Text
 open CommandLine
-open CLSimpleTypes
 open Mazes.Core
 open Mazes.Core.Canvas
 open Mazes.Core.Grid
@@ -14,6 +15,10 @@ open Mazes.Core.Maze.Analyse
 open Mazes.Render.Text
 open Mazes.Output.Html
 open Mazes.Output.RawForTest
+
+type AlgoEnum =
+    | BinaryTree = 0
+    | Sidewinder = 1
 
 let private defaultNameOfFile = "The F Amazing Maze"
 

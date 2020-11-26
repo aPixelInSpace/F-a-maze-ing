@@ -1,4 +1,6 @@
-﻿module Mazes.Core.Canvas.Shape.Ellipse
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+module Mazes.Core.Canvas.Shape.Ellipse
 
 open Mazes.Core
 open Mazes.Core.Array2D
@@ -41,4 +43,4 @@ let create rowRadiusLength columnRadiusLength rowEnlargingFactor columnEnlarging
         Array2D.init numberOfRows numberOfColumns
             (fun rowIndex columnIndex -> Zone.create (isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side rowIndex columnIndex))
 
-    { Zones = zones; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }
+    { Zones = zones; }

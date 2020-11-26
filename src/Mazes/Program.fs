@@ -1,4 +1,6 @@
-﻿// Learn more about F# at http://fsharp.org
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+// Learn more about F# at http://fsharp.org
 
 open System
 open CommandLine

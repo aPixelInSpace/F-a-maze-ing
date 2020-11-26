@@ -1,49 +1,54 @@
-﻿namespace Mazes.Core.Canvas
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+namespace Mazes.Core.Canvas
 
 open System
 open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
 
-type Canvas = {
-    Zones : Zone[,]
-    NumberOfRows : int
-    NumberOfColumns : int
-}
+type Canvas =
+    { Zones : Zone[,] }
+
+    member this.NumberOfRows =
+        Array2D.length1 this.Zones
+
+    member this.NumberOfColumns =
+        Array2D.length2 this.Zones
+
+    member this.TotalOfMazeZones =
+        let counter = 0
+
+        this.Zones
+        |> reduce(fun _ _ counter zone ->
+            match zone with
+            | PartOfMaze -> counter + 1
+            | _ -> counter) counter
 
 module Canvas =
 
     let getZone canvas coordinate =
         get canvas.Zones coordinate
 
+    let isPartOfMaze canvas coordinate =
+        (getZone canvas coordinate).IsAPartOfMaze
+
     let maxRowIndex canvas =
-        getIndex canvas.NumberOfRows
+        maxRowIndex canvas.Zones 
 
     let maxColumnIndex canvas =
-        getIndex canvas.NumberOfColumns
+        maxColumnIndex canvas.Zones 
 
     let existAt canvas coordinate =
-        minRowIndex <= coordinate.RowIndex &&
-        coordinate.RowIndex <= (maxRowIndex canvas) &&
-        minColumnIndex <= coordinate.ColumnIndex &&
-        coordinate.ColumnIndex <= (maxColumnIndex canvas)
-
-    let isPartOfMaze canvas coordinate =
-        (getZone canvas coordinate) = PartOfMaze
-
-    let countPartOfMazeZones canvas =
-        let counter = 0
-
-        canvas.Zones
-        |> reduce(fun _ _ counter zone ->
-            match zone with
-            | PartOfMaze -> counter + 1
-            | _ -> counter) counter
+        existAt canvas.Zones coordinate
 
     module Convert =
 
         let private charPartOfMaze = '*'
-        let private charNotPartOfMaze = '-'
+        let private charNotPartOfMaze = '.'
+        
+        let startLineTag = "Type=Canvas\n"
+        let endLineTag = "end"
 
         let private zoneToChar zone =
             match zone with
@@ -67,12 +72,12 @@ module Canvas =
                 sBuilder.Append('\n') |> ignore
 
             let sBuilder = StringBuilder()
-            sBuilder.Append("Type=Canvas\n") |> ignore
+            sBuilder.Append(startLineTag) |> ignore
             canvas.Zones
                 |> extractByRows
                 |> Seq.iter(fun rowZones -> appendRow sBuilder rowZones)
 
-            sBuilder.Append("end") |> ignore
+            sBuilder.Append(endLineTag) |> ignore
 
             sBuilder.ToString()
 
@@ -80,10 +85,13 @@ module Canvas =
             let lines = save.Split('\n')
             if lines.[0] = "Type=Canvas" then
                 let numberOfRows = lines.Length - 2
-                let numberOfColumns = lines.[1].Length
+                let numberOfColumns =
+                    match lines.[1].StartsWith(endLineTag) with
+                    | false -> lines.[1].Length
+                    | true -> 0
 
                 let zones = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> Zone.create ((charToZone lines.[rowIndex + 1].[columnIndex]) = PartOfMaze))
 
-                Some { Zones = zones; NumberOfRows = numberOfRows; NumberOfColumns = numberOfColumns }            
+                Some { Zones = zones; }            
             else
                 None

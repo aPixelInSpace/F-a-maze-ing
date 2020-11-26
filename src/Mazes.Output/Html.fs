@@ -1,4 +1,6 @@
-﻿module Mazes.Output.Html
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+module Mazes.Output.Html
 
 open System.IO
 open System.Text

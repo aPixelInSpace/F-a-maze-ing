@@ -1,4 +1,6 @@
-﻿module Mazes.Core.Tests.Maze.Analyse.Dijkstra
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+module Mazes.Core.Tests.Maze.Analyse.Dijkstra
 
 open System
 open FsUnit
@@ -14,18 +16,18 @@ open Mazes.Core.Maze.Analyse
 let maze =
     let canvas10By10 =
         let stringCanvas =
-            "Type=Canvas\n" +
-            "*-********\n" +
-            "*-**-***--\n" +
+            Canvas.Convert.startLineTag +
+            "*.********\n" +
+            "*.**.***..\n" +
             "**********\n" +
-            "---*******\n" +
-            "**-****-**\n" +
-            "**-****--*\n" +
-            "********-*\n" +
+            "...*******\n" +
+            "**.****.**\n" +
+            "**.****..*\n" +
+            "********.*\n" +
             "**********\n" +
-            "*---*****-\n" +
-            "*-*****-*-\n" +    
-            "end"
+            "*...*****.\n" +
+            "*.*****.*.\n" +    
+            Canvas.Convert.endLineTag
 
         match Canvas.Convert.fromString stringCanvas with
         | Some canvas -> canvas
@@ -51,14 +53,14 @@ let maze =
     *)
 
 [<Fact>]
-let ``Given a root inside the maze when creating a map then it should give all the distances from the root for every zone inside the maze`` () =
+let ``Given a root inside the maze, when creating a map, then it should give all the distances from the root for every zone inside the maze`` () =
 
     // act
     let map = maze |> Dijkstra.createMap { RowIndex = 0; ColumnIndex = 0  }  
 
     // assert
     let get = get map.DistancesFromRoot
-    map.ZonesAccessibleFromRoot |> should equal 79
+    map.TotalZonesAccessibleFromRoot |> should equal 79
 
     let topLeftZone = get { RowIndex = 0; ColumnIndex = 9 }
     topLeftZone.DistanceFromRoot |> should equal (Some 13)
@@ -76,14 +78,14 @@ let ``Given a root inside the maze when creating a map then it should give all t
     outsideOfTheMazeZone.DistanceFromRoot |> should equal None
 
 [<Fact>]
-let ``Given a root outside the maze when creating a map then the root is the only zone of the map`` () =
+let ``Given a root outside the maze, when creating a map, then the root is the only zone of the map`` () =
 
     // act
     let map = maze |> Dijkstra.createMap { RowIndex = 0; ColumnIndex = 1  }  
 
     // assert
     let get = get map.DistancesFromRoot
-    map.ZonesAccessibleFromRoot |> should equal 1
+    map.TotalZonesAccessibleFromRoot |> should equal 1
 
     let outsideOfTheMazeZone = get { RowIndex = 0; ColumnIndex = 1 }
     outsideOfTheMazeZone.DistanceFromRoot |> should equal (Some 0)

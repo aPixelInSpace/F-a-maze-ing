@@ -1,45 +1,56 @@
-﻿namespace Mazes.Core.Grid
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+namespace Mazes.Core.Grid
 
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas
 open Mazes.Core.Canvas.Canvas
 
-type Grid = {
-    Canvas : Canvas
-    Cells : Cell[,]
-}
+type Grid =
+    {
+        Canvas : Canvas
+        Cells : Cell[,]
+    }
+
+    member this.HasCells =
+        this.Cells.Length > 0
+
+    member this.Cell coordinate =
+        get this.Cells coordinate
 
 module Grid =
 
     let create canvas =
         let isPartOfMaze = Canvas.isPartOfMaze canvas
+
         let cells =
-            Array2D.init
-                canvas.NumberOfRows canvas.NumberOfColumns
-                (fun rowIndex columnIndex -> Cell.Instance.create canvas.NumberOfRows canvas.NumberOfColumns { RowIndex = rowIndex; ColumnIndex = columnIndex } isPartOfMaze)
+            canvas.Zones |>
+            Array2D.mapi(fun rowIndex columnIndex _ ->
+                Cell.Instance.create
+                    canvas.NumberOfRows
+                    canvas.NumberOfColumns
+                    { RowIndex = rowIndex; ColumnIndex = columnIndex }
+                    isPartOfMaze)
 
         { Canvas = canvas; Cells = cells; }
-
-    let hasCells grid =
-        grid.Cells.Length > 0
 
     let isALimitAt grid coordinate position =
         let zone = coordinate |> getZone grid.Canvas
         let cell = get grid.Cells coordinate
 
-        if zone = NotPartOfMaze || (Cell.getWallTypeAtPosition cell position) = Border then
+        if not zone.IsAPartOfMaze || cell.WallTypeAtPosition position = Border then
             true
         else
             let neighborCoordinate = Cell.getNeighborCoordinateAtPosition coordinate position
 
             (existAt grid.Canvas neighborCoordinate) &&
-            neighborCoordinate |> getZone grid.Canvas  = NotPartOfMaze
+            not (getZone grid.Canvas neighborCoordinate).IsAPartOfMaze
 
     let isNavigable grid fromCoordinate toCoordinate pos =
         not (isALimitAt grid fromCoordinate pos) &&        
-        Cell.getWallTypeAtPosition (get grid.Cells fromCoordinate) pos = Empty &&
-        toCoordinate |> getZone grid.Canvas = PartOfMaze
+        (get grid.Cells fromCoordinate).WallTypeAtPosition pos = Empty &&
+        isPartOfMaze grid.Canvas toCoordinate
 
     let getNavigableNeighborsCoordinates grid coordinate =        
         let isNavigable = isNavigable grid coordinate

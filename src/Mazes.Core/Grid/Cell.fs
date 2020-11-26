@@ -1,23 +1,27 @@
-﻿namespace Mazes.Core.Grid
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License.md in the project root for license information.
+
+namespace Mazes.Core.Grid
 
 open Mazes.Core
 open Mazes.Core.Array2D
 
-type Cell = {
-    WallTop : Wall
-    WallRight : Wall
-    WallBottom : Wall
-    WallLeft : Wall
-}
+type Cell =
+    {
+        WallTop : Wall
+        WallRight : Wall
+        WallBottom : Wall
+        WallLeft : Wall
+    }
 
-module Cell =
-
-    let getWallTypeAtPosition cell position =
+    member this.WallTypeAtPosition position =
         match position with
-        | Top -> cell.WallTop.WallType
-        | Right -> cell.WallRight.WallType
-        | Bottom -> cell.WallBottom.WallType
-        | Left -> cell.WallLeft.WallType
+        | Top -> this.WallTop.WallType
+        | Right -> this.WallRight.WallType
+        | Bottom -> this.WallBottom.WallType
+        | Left -> this.WallLeft.WallType
+    
+
+module Cell =    
 
     let getNeighborCoordinateAtPosition coordinate position =    
         match position with
