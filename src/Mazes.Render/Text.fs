@@ -6,7 +6,6 @@ open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas
-open Mazes.Core.Canvas.Canvas
 open Mazes.Core.Grid
 
 let private repetitionsMiddlePart = 1
@@ -135,7 +134,7 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
     | Border, Empty, Normal, Empty -> '╾'
 
 let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate pos1 pos2 =
-    match existAt grid.Canvas (Cell.getNeighborCoordinateAtPosition coordinate pos1) with
+    match grid.Canvas.ExistAt (Cell.getNeighborCoordinateAtPosition coordinate pos1) with
     | true ->
         let neighborCoordinate = (Cell.getNeighborCoordinateAtPosition coordinate pos1)
         (get grid.Cells neighborCoordinate).WallTypeAtPosition pos2
@@ -163,7 +162,7 @@ let private append
                             Empty) |> ignore)
 
     // last part only on the last column
-    if (coordinate.ColumnIndex = (maxColumnIndex grid.Canvas)) then
+    if (coordinate.ColumnIndex = grid.Canvas.MaxColumnIndex) then
         sBuilder.Append(getPieceOfWall
                             (lastIntersectionWallLeft ())
                             (lastIntersectionWallTop ())
@@ -236,7 +235,7 @@ let private appendRows sBuilder grid rows =
 
     if grid.HasCells then
         // necessary to add the last char line on the last row
-        let lastRowIndex = (maxRowIndex grid.Canvas)
+        let lastRowIndex = grid.Canvas.MaxRowIndex
         rows.[lastRowIndex]
         |> Array.iteri(fun columnIndex _ ->
             let coordinate = { RowIndex = lastRowIndex; ColumnIndex = columnIndex }

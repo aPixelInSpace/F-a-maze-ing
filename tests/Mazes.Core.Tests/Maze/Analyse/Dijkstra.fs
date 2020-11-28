@@ -35,7 +35,7 @@ let maze =
 
     canvas10By10
     |> Grid.create
-    |> Sidewinder.createMaze Top Right (Random(1)) 1 1
+    |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right (Random(1)) 1 1
 
     (*
         the above maze looks like this
@@ -55,11 +55,14 @@ let maze =
 [<Fact>]
 let ``Given a root inside the maze, when creating a map, then it should give all the distances from the root for every zone inside the maze`` () =
 
+    // arrange
+    let (_, rootCoordinate) = maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
+
     // act
-    let map = maze |> Dijkstra.createMap { RowIndex = 0; ColumnIndex = 0  }  
+    let map = maze |> Dijkstra.createMap rootCoordinate
 
     // assert
-    let get = get map.DistancesFromRoot
+    let get = get map.MapZones
     map.TotalZonesAccessibleFromRoot |> should equal 79
 
     let topLeftZone = get { RowIndex = 0; ColumnIndex = 9 }
@@ -84,7 +87,7 @@ let ``Given a root outside the maze, when creating a map, then the root is the o
     let map = maze |> Dijkstra.createMap { RowIndex = 0; ColumnIndex = 1  }  
 
     // assert
-    let get = get map.DistancesFromRoot
+    let get = get map.MapZones
     map.TotalZonesAccessibleFromRoot |> should equal 1
 
     let outsideOfTheMazeZone = get { RowIndex = 0; ColumnIndex = 1 }

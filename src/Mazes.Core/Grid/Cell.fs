@@ -6,12 +6,19 @@ open Mazes.Core
 open Mazes.Core.Array2D
 
 type Cell =
-    {
-        WallTop : Wall
-        WallRight : Wall
-        WallBottom : Wall
-        WallLeft : Wall
-    }
+    { Walls : Wall array }
+
+    member this.WallTop =
+        this.Walls.[Wall.wallIndex Top]
+
+    member this.WallRight =
+        this.Walls.[Wall.wallIndex Right]
+
+    member this.WallBottom =
+        this.Walls.[Wall.wallIndex Bottom]
+
+    member this.WallLeft =
+        this.Walls.[Wall.wallIndex Left]
 
     member this.WallTypeAtPosition position =
         match position with
@@ -19,7 +26,6 @@ type Cell =
         | Right -> this.WallRight.WallType
         | Bottom -> this.WallBottom.WallType
         | Left -> this.WallLeft.WallType
-    
 
 module Cell =    
 
@@ -64,8 +70,9 @@ module Cell =
             let wallTypeLeft = getWallType (isFirstColumn coordinate.ColumnIndex) Left                
 
             {
-                WallTop = { WallType = wallTypeTop; WallPosition = Top }
-                WallRight = { WallType = wallTypeRight; WallPosition = Right }
-                WallBottom = { WallType = wallTypeBottom; WallPosition = Bottom }
-                WallLeft = { WallType = wallTypeLeft; WallPosition = Left }
+                Walls =
+                    [| { WallType = wallTypeTop; WallPosition = Top }
+                       { WallType = wallTypeRight; WallPosition = Right }
+                       { WallType = wallTypeBottom; WallPosition = Bottom }
+                       { WallType = wallTypeLeft; WallPosition = Left } |]                
             }

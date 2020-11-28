@@ -17,7 +17,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
         |> Grid.create
-        |> Sidewinder.createMaze Top Right (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right (Random(1)) 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -39,7 +39,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
         |> Grid.create
-        |> Sidewinder.createMaze Top Left (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Left (Random(1)) 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -61,7 +61,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
         |> Grid.create
-        |> Sidewinder.createMaze Bottom Right (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right (Random(1)) 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -83,7 +83,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
         |> Grid.create
-        |> Sidewinder.createMaze Bottom Left (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Left (Random(1)) 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -105,7 +105,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
         |> Grid.create
-        |> Sidewinder.createMaze Right Top (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top (Random(1)) 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -127,7 +127,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
         |> Grid.create
-        |> Sidewinder.createMaze Left Top (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Top (Random(1)) 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -149,7 +149,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
         |> Grid.create
-        |> Sidewinder.createMaze Left Bottom (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom (Random(1)) 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -171,7 +171,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let maze =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside)
         |> Grid.create
-        |> Sidewinder.createMaze Right Bottom (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Bottom (Random(1)) 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -193,7 +193,7 @@ let ``Rendering a row radius 15, column radius 25, row translation factor 14, in
     let maze =
         (Shape.Ellipse.create 15 25 0.0 0.0 14 0 Shape.Ellipse.Side.Outside)
         |> Grid.create
-        |> Sidewinder.createMaze Bottom Right (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right (Random(1)) 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -239,7 +239,7 @@ let ``Rendering a row radius 15, column radius 25, row translation factor 14, in
     let maze =
         (Shape.Ellipse.create 15 25 0.0 0.0 14 0 Shape.Ellipse.Side.Outside)
         |> Grid.create
-        |> Sidewinder.createMaze Left Bottom (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom (Random(1)) 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -285,7 +285,7 @@ let ``Rendering a row radius 25, column radius 15, column translation factor 14,
     let maze =
         (Shape.Ellipse.create 25 15 0.0 0.0 0 14 Shape.Ellipse.Side.Outside)
         |> Grid.create
-        |> Sidewinder.createMaze Top Right (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right (Random(1)) 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -351,7 +351,7 @@ let ``Rendering a row radius 25, column radius 15, column translation factor 14,
     let maze =
         (Shape.Ellipse.create 25 15 0.0 0.0 0 14 Shape.Ellipse.Side.Outside)
         |> Grid.create
-        |> Sidewinder.createMaze Left Bottom (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom (Random(1)) 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid

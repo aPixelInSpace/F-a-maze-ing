@@ -7,25 +7,25 @@ open System.Text
 open Mazes.Core.Maze
 
 let private columnsAxis (columnsAxisHtml : string) numberOfRows numberOfColumns =
-    let numberWhiteSpacesPrefixForColumns numberOfRows =
+    let numberWhiteSpacesPrefixForColumns =
         numberOfRows
             .ToString()
-            // 1 white space for the space between the number of the row and the maze
-            // 1 white space because the maze always start with an intersection and not directly a column 
+            // + 1 white space for the space between the number of the row and the maze
+            // + 1 white space because the maze always start with an intersection and not directly a column 
             .Length + 2
-    
+
     let totalOfDigitsForColumns = numberOfColumns.ToString().Length
 
     let sbColumnsRow = [| for _ in 1 .. totalOfDigitsForColumns -> StringBuilder()  |]
-    
+
     for sb in sbColumnsRow do
-        sb.Append(String.replicate (numberWhiteSpacesPrefixForColumns numberOfRows) " ") |> ignore
+        sb.Append(String.replicate numberWhiteSpacesPrefixForColumns " ") |> ignore
 
     for column in 1 .. numberOfColumns do
         let columnString = column.ToString()
         let digitLength = columnString.Length
         let offset = totalOfDigitsForColumns - digitLength
-        
+
         for sbIndex in 0 .. sbColumnsRow.Length - 1 do
             match sbIndex with
             | sbIndex when (totalOfDigitsForColumns - sbIndex) > digitLength -> sbColumnsRow.[sbIndex].Append("  ") |> ignore
@@ -43,7 +43,7 @@ let private columnsAxis (columnsAxisHtml : string) numberOfRows numberOfColumns 
 
 let private rowNumber numberOfRows rowIndex =
     let numberWhiteSpacesPrefixForRow numberOfRows rowNumber = numberOfRows.ToString().Length - rowNumber.ToString().Length
-    
+
     if rowIndex < numberOfRows then  
         String.replicate (numberWhiteSpacesPrefixForRow numberOfRows (rowIndex + 1)) " "
         + (rowIndex + 1).ToString()
@@ -60,7 +60,7 @@ let outputHtml maze mazeInfo (textRenderedMaze : string) =
     let columnsAxisHtml = File.ReadAllText(Path.Combine(resourcesDir, "ColumnsAxis.html-template"))
 
     let sbMaze = StringBuilder()
-    
+
     textRenderedMaze.Split("\n")
     |> Array.iteri(fun rowIndex mazeTextRow ->
                     let row = mazeLineHtml
@@ -69,7 +69,7 @@ let outputHtml maze mazeInfo (textRenderedMaze : string) =
                     sbMaze.Append(row) |> ignore)
 
     let columnsAxisHtml = columnsAxis columnsAxisHtml maze.Grid.Canvas.NumberOfRows maze.Grid.Canvas.NumberOfColumns
-    
+
     let mainHtml = mainHtml
                        .Replace("{{Name}}", mazeInfo.Name)
                        .Replace("{{Maze}}", sbMaze.ToString())

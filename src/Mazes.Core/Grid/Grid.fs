@@ -5,7 +5,6 @@ namespace Mazes.Core.Grid
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas
-open Mazes.Core.Canvas.Canvas
 
 type Grid =
     {
@@ -22,8 +21,6 @@ type Grid =
 module Grid =
 
     let create canvas =
-        let isPartOfMaze = Canvas.isPartOfMaze canvas
-
         let cells =
             canvas.Zones |>
             Array2D.mapi(fun rowIndex columnIndex _ ->
@@ -31,12 +28,12 @@ module Grid =
                     canvas.NumberOfRows
                     canvas.NumberOfColumns
                     { RowIndex = rowIndex; ColumnIndex = columnIndex }
-                    isPartOfMaze)
+                    canvas.IsZonePartOfMaze)
 
         { Canvas = canvas; Cells = cells; }
 
     let isALimitAt grid coordinate position =
-        let zone = coordinate |> getZone grid.Canvas
+        let zone = grid.Canvas.Zone coordinate
         let cell = get grid.Cells coordinate
 
         if not zone.IsAPartOfMaze || cell.WallTypeAtPosition position = Border then
@@ -44,53 +41,47 @@ module Grid =
         else
             let neighborCoordinate = Cell.getNeighborCoordinateAtPosition coordinate position
 
-            (existAt grid.Canvas neighborCoordinate) &&
-            not (getZone grid.Canvas neighborCoordinate).IsAPartOfMaze
+            (grid.Canvas.ExistAt neighborCoordinate) &&
+            not (grid.Canvas.Zone neighborCoordinate).IsAPartOfMaze
 
-    let isNavigable grid fromCoordinate toCoordinate pos =
+    let isNavigable grid fromCoordinate pos =
         not (isALimitAt grid fromCoordinate pos) &&        
         (get grid.Cells fromCoordinate).WallTypeAtPosition pos = Empty &&
-        isPartOfMaze grid.Canvas toCoordinate
+        grid.Canvas.IsZonePartOfMaze (Cell.getNeighborCoordinateAtPosition fromCoordinate pos)
 
     let getNavigableNeighborsCoordinates grid coordinate =        
         let isNavigable = isNavigable grid coordinate
-        let neighborCoordinate = Cell.getNeighborCoordinateAtPosition coordinate
+        let getNeighborCoordinateAtPosition = Cell.getNeighborCoordinateAtPosition coordinate
 
         seq {
-            let topCoordinate = neighborCoordinate Top
-            if (isNavigable topCoordinate Top) then
-                yield topCoordinate
+            if (isNavigable Top) then
+                yield getNeighborCoordinateAtPosition Top
 
-            let rightCoordinate = neighborCoordinate Right
-            if (isNavigable rightCoordinate Right) then
-                yield  rightCoordinate
+            if (isNavigable Right) then
+                yield getNeighborCoordinateAtPosition Right
 
-            let bottomCoordinate = neighborCoordinate Bottom
-            if (isNavigable bottomCoordinate Bottom) then
-                yield bottomCoordinate
+            if (isNavigable Bottom) then
+                yield getNeighborCoordinateAtPosition Bottom
 
-            let leftCoordinate = neighborCoordinate Left
-            if (isNavigable leftCoordinate Left) then
-                yield leftCoordinate
+            if (isNavigable Left) then
+                yield getNeighborCoordinateAtPosition Left
         }
 
-    let updateWallAtPosition grid coordinate position wallType =
-        let r = coordinate.RowIndex
-        let c = coordinate.ColumnIndex
+    let updateWallAtPosition grid coordinate (position : Position) wallType =               
 
-        match position with
-        | Top ->
-            grid.Cells.[r, c] <- { grid.Cells.[r, c] with WallTop = { WallType = wallType; WallPosition = Top } }
-            grid.Cells.[r - 1, c] <- { grid.Cells.[r - 1, c] with WallBottom = { WallType = wallType; WallPosition = Bottom } }
-        | Right ->
-            grid.Cells.[r, c] <- { grid.Cells.[r, c] with WallRight = { WallType = wallType; WallPosition = Right } }
-            grid.Cells.[r, c + 1] <- { grid.Cells.[r, c + 1] with WallLeft = { WallType = wallType; WallPosition = Left } }
-        | Bottom ->
-            grid.Cells.[r, c] <- { grid.Cells.[r, c] with WallBottom = { WallType = wallType; WallPosition = Bottom } }
-            grid.Cells.[r + 1, c] <- { grid.Cells.[r + 1, c] with WallTop = { WallType = wallType; WallPosition = Top } }
-        | Left ->
-            grid.Cells.[r, c] <- { grid.Cells.[r, c] with WallLeft = { WallType = wallType; WallPosition = Left } }
-            grid.Cells.[r, c - 1] <- { grid.Cells.[r, c - 1] with WallRight = { WallType = wallType; WallPosition = Right } }
+        let getWalls coordinate position =
+            grid.Cells.[coordinate.RowIndex, coordinate.ColumnIndex].Walls
+            |> Array.mapi(fun index wall ->
+                if index = Wall.wallIndex position then
+                    { WallType = wallType; WallPosition = position}
+                else
+                    wall
+                )
+
+        grid.Cells.[coordinate.RowIndex, coordinate.ColumnIndex] <- { Walls = (getWalls coordinate position) }
+
+        let neighbor = Cell.getNeighborCoordinateAtPosition coordinate position        
+        grid.Cells.[neighbor.RowIndex, neighbor.ColumnIndex] <- { Walls = (getWalls neighbor position.Opposite) }
 
     let ifNotAtLimitUpdateWallAtPosition grid coordinate position wallType =        
         if not (isALimitAt grid coordinate position) then

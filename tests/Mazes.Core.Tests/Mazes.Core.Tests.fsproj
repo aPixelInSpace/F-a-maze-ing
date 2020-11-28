@@ -9,6 +9,7 @@
 
     <ItemGroup>
 		<Compile Include="Helpers.fs" />
+		<Compile Include="Array2D.fs" />
 		<Compile Include="Canvas\Canvas.fs" />
 		<Compile Include="Canvas\Shape\Rectangle.fs" />
 		<Compile Include="Canvas\Shape\TriangleIsosceles.fs" />

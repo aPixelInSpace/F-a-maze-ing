@@ -4,8 +4,8 @@ module Mazes.Core.Tests.Canvas.Shape.Rectangle
 
 open FsUnit
 open Xunit
+open Mazes.Core
 open Mazes.Core.Tests.Helpers
-open Mazes.Core.Canvas
 open Mazes.Core.Canvas.Shape
 
 [<Fact>]

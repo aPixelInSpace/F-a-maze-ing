@@ -24,3 +24,11 @@ type Wall = {
     WallType : WallType
     WallPosition : Position
 }
+
+module Wall =
+    let wallIndex position =
+        match position with
+        | Top -> 0
+        | Right -> 1
+        | Bottom -> 2
+        | Left -> 3

@@ -5,7 +5,6 @@ module Mazes.Core.Maze.Generate.BinaryTree
 open System
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Canvas.Canvas
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Grid
 open Mazes.Core.Maze
@@ -28,7 +27,7 @@ let private carveRow
         let coordinate = { RowIndex = rowIndex; ColumnIndex = columnIndex }
         
         // if the cell is not part of the maze, we do nothing
-        if not (isPartOfMaze grid.Canvas coordinate) then ()
+        if not (grid.Canvas.IsZonePartOfMaze coordinate) then ()
         else
 
         let isDir1ALimit = (isALimitAt grid coordinate direction1)

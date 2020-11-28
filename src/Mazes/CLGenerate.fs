@@ -43,7 +43,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let matchAlgoEnumWithFunction algoEnum =
         match algoEnum with
            | AlgoEnum.BinaryTree -> BinaryTree.createMaze Left Bottom rng 1 1
-           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Bottom Right rng 1 1
+           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right rng 1 1
            | _ -> raise(Exception("Generating algorithm unknown"))
 
 

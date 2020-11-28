@@ -6,7 +6,6 @@ open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Tests.Helpers
-open Mazes.Core.Canvas
 open Mazes.Core.Array2D
 
 // fixture

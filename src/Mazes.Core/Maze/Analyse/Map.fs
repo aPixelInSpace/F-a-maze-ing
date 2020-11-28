@@ -4,13 +4,13 @@ namespace Mazes.Core.Maze.Analyse
 
 open Mazes.Core
 
-type CellMap = {    
+type MapZone = {    
     DistanceFromRoot : int option
     Neighbors :  seq<Coordinate> option
 }
 
 type Map = {
     Root : Coordinate
-    DistancesFromRoot : CellMap[,]
+    MapZones : MapZone[,]
     TotalZonesAccessibleFromRoot : int
 }

@@ -12,7 +12,7 @@ open Mazes.Core.Maze.Analyse
 type DistanceSoFar = int
 
 let createMap root maze =
-    let distancesFromRoot = Array2D.create maze.Grid.Canvas.NumberOfRows maze.Grid.Canvas.NumberOfColumns { DistanceFromRoot = None; Neighbors = None }
+    let mapZones = Array2D.create maze.Grid.Canvas.NumberOfRows maze.Grid.Canvas.NumberOfColumns { DistanceFromRoot = None; Neighbors = None }
 
     let getNavigableNeighborsCoordinates = getNavigableNeighborsCoordinates maze.Grid
 
@@ -28,15 +28,15 @@ let createMap root maze =
 
         let neighbors = getNavigableNeighborsCoordinates coordinate
 
-        distancesFromRoot.[coordinate.RowIndex, coordinate.ColumnIndex] <- { DistanceFromRoot = Some actualDistance; Neighbors = Some neighbors }
+        mapZones.[coordinate.RowIndex, coordinate.ColumnIndex] <- { DistanceFromRoot = Some actualDistance; Neighbors = Some neighbors }
 
         incr counter
         
         unvisited <-
                 neighbors
-                |> Seq.filter(fun nCoordinate -> (get distancesFromRoot nCoordinate).DistanceFromRoot.IsNone)
+                |> Seq.filter(fun nCoordinate -> (get mapZones nCoordinate).DistanceFromRoot.IsNone)
                 |> Seq.fold
                        (fun (m : Map<Coordinate, DistanceSoFar>) neighborCoordinate -> m.Add(neighborCoordinate, actualDistance))
                        (unvisited.Remove(coordinate))
 
-    { Root = root; DistancesFromRoot = distancesFromRoot; TotalZonesAccessibleFromRoot = counter.Value }
+    { Root = root; MapZones = mapZones; TotalZonesAccessibleFromRoot = counter.Value }

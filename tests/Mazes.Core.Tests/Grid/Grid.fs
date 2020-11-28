@@ -6,7 +6,6 @@ open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Tests.Helpers
-open Mazes.Core.Canvas
 open Mazes.Core.Grid
 
 [<Fact>]
@@ -184,7 +183,7 @@ let ``Given a 3x3 canvas, when creating a grid, then it should have 3x3 cells wi
     sut.Cells.[2, 2].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
     
 [<Fact>]  
-let ``Given a grid, when updating a wall, then the neighbor wall should also be updated`` () =
+let ``Given a grid, when updating a wall, then the neighbors walls should also be updated`` () =
 
     // arrange
     let threeByThreeStringCanvas =
