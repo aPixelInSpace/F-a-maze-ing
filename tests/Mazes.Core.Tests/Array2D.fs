@@ -1,4 +1,6 @@
-﻿module Mazes.Core.Tests.Array2D
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+
+module Mazes.Core.Tests.Array2D
 
 open FsUnit
 open Xunit
@@ -43,7 +45,7 @@ let ``Given a 2d array, when getting item by item, then it should it should retu
     let array2d = Array2D.init 3 3 (fun r c -> r.ToString() + "," + c.ToString())
 
     // act
-    let items = Array2D.getItemByItem array2d (mapExtractByEnumToExtractBy extractByEnum) (fun _ _ -> true)
+    let items = getItemByItem array2d (mapExtractByEnumToExtractBy extractByEnum) (fun _ _ -> true)
 
     // assert
     items

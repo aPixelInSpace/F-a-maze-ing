@@ -15,6 +15,7 @@
 		<Compile Include="Grid\Wall.fs" />
 		<Compile Include="Grid\Cell.fs" />
 		<Compile Include="Grid\Grid.fs" />
+		<Compile Include="Grid\GridView.fs" />
 		<Compile Include="Maze\Maze.fs" />
         <Compile Include="Maze\Generate\BinaryTree.fs" />
         <Compile Include="Maze\Generate\Sidewinder.fs" />

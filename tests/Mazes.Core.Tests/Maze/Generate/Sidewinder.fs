@@ -12,31 +12,39 @@ open Mazes.Core.Grid
 open Mazes.Core.Maze.Generate
 open Mazes.Core.Maze.Analyse
 
-let mapDirectionEnumToSidewinderDirection dirEnum =
+type SidewinderDirectionEnum =
+    | Top = 1
+    | Right = 2
+    | Bottom = 3
+    | Left = 4
+
+type SDE = SidewinderDirectionEnum
+
+let mapSidewinderDirectionEnumToSidewinderDirection dirEnum =
     match dirEnum with
-    | SidewinderDirectionEnum.Top -> Sidewinder.Direction.Top
-    | SidewinderDirectionEnum.Right -> Sidewinder.Direction.Right
-    | SidewinderDirectionEnum.Bottom -> Sidewinder.Direction.Bottom
-    | SidewinderDirectionEnum.Left -> Sidewinder.Direction.Left
-    | _ -> failwith "Direction enumeration unknown"
+    | SDE.Top -> Sidewinder.Direction.Top
+    | SDE.Right -> Sidewinder.Direction.Right
+    | SDE.Bottom -> Sidewinder.Direction.Bottom
+    | SDE.Left -> Sidewinder.Direction.Left
+    | _ -> failwith "Sidewinder Direction enumeration unknown"
 
 [<Theory>]
-[<InlineData(1, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(1, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 2, 1)>]
-[<InlineData(1, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 2)>]
-[<InlineData(1, 2, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(2, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(1, 5, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(5, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
+[<InlineData(1, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(1, 1, SDE.Top, SDE.Right, 1, 2, 1)>]
+[<InlineData(1, 1, SDE.Top, SDE.Right, 1, 1, 2)>]
+[<InlineData(1, 2, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(2, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(1, 5, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(5, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
 
-[<InlineData(5, 5, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 2, 1, 1)>]
-[<InlineData(5, 5, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Left, 2, 1, 1)>]
-[<InlineData(10, 25, SidewinderDirectionEnum.Right, SidewinderDirectionEnum.Top, 3, 1, 1)>]
-[<InlineData(25, 5, SidewinderDirectionEnum.Right, SidewinderDirectionEnum.Bottom, 4, 2, 1)>]
-[<InlineData(25, 25, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Left, 5, 2, 3)>]
-[<InlineData(25, 25, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Right, 6, 1, 1)>]
-[<InlineData(25, 35, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Top, 7, 3, 2)>]
-[<InlineData(40, 25, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Bottom, 8, 1, 1)>]
+[<InlineData(5, 5, SDE.Top, SDE.Right, 2, 1, 1)>]
+[<InlineData(5, 5, SDE.Top, SDE.Left, 2, 1, 1)>]
+[<InlineData(10, 25, SDE.Right, SDE.Top, 3, 1, 1)>]
+[<InlineData(25, 5, SDE.Right, SDE.Bottom, 4, 2, 1)>]
+[<InlineData(25, 25, SDE.Bottom, SDE.Left, 5, 2, 3)>]
+[<InlineData(25, 25, SDE.Bottom, SDE.Right, 6, 1, 1)>]
+[<InlineData(25, 35, SDE.Left, SDE.Top, 7, 3, 2)>]
+[<InlineData(40, 25, SDE.Left, SDE.Bottom, 8, 1, 1)>]
 let ``Given a rectangular canvas, when creating a maze with the sidewinder algorithm, then the maze should have every cell accessible``
     (numberOfRows, numberOfColumns,
      direction1, direction2,
@@ -48,11 +56,11 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
         Rectangle.create numberOfRows numberOfColumns
         |> Grid.create
 
-    let direction1 = mapDirectionEnumToSidewinderDirection direction1
-    let direction2 = mapDirectionEnumToSidewinderDirection direction2
+    let direction1 = mapSidewinderDirectionEnumToSidewinderDirection direction1
+    let direction2 = mapSidewinderDirectionEnumToSidewinderDirection direction2
 
     // act
-    let maze = Sidewinder.createMaze direction1 direction2 (Random(rngSeed)) direction1Weight direction2Weight gridRectangle
+    let maze = Sidewinder.createMaze direction1 direction2 rngSeed direction1Weight direction2Weight gridRectangle
 
     // we use the map to ensure that the total zones accessible in the maze is equal to the total number of maze zones of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
@@ -63,58 +71,58 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
     map.TotalZonesAccessibleFromRoot |> should equal (maze.Grid.Canvas).TotalOfMazeZones
 
 [<Theory>]
-[<InlineData(1, TriangleIsoscelesBaseAtEnum.Top, 1, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(1, TriangleIsoscelesBaseAtEnum.Top, 2, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(2, TriangleIsoscelesBaseAtEnum.Top, 1, 1, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Left, 1, 1, 1)>]
-[<InlineData(2, TriangleIsoscelesBaseAtEnum.Top, 3, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(5, TriangleIsoscelesBaseAtEnum.Top, 1, 2, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
+[<InlineData(1, TBE.Top, 1, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(1, TBE.Top, 2, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(2, TBE.Top, 1, 1, SDE.Bottom, SDE.Left, 1, 1, 1)>]
+[<InlineData(2, TBE.Top, 3, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(5, TBE.Top, 1, 2, SDE.Top, SDE.Right, 1, 1, 1)>]
 
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Top, 1, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Top, 1, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Left, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Top, 1, 1, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Top, 1, 1, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Left, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Top, 1, 1, SidewinderDirectionEnum.Right, SidewinderDirectionEnum.Top, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Top, 1, 1, SidewinderDirectionEnum.Right, SidewinderDirectionEnum.Bottom, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Top, 1, 1, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Top, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Top, 1, 1, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Bottom, 1, 1, 1)>]
+[<InlineData(10, TBE.Top, 1, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(10, TBE.Top, 1, 1, SDE.Top, SDE.Left, 1, 1, 1)>]
+[<InlineData(10, TBE.Top, 1, 1, SDE.Bottom, SDE.Right, 1, 1, 1)>]
+[<InlineData(10, TBE.Top, 1, 1, SDE.Bottom, SDE.Left, 1, 1, 1)>]
+[<InlineData(10, TBE.Top, 1, 1, SDE.Right, SDE.Top, 1, 1, 1)>]
+[<InlineData(10, TBE.Top, 1, 1, SDE.Right, SDE.Bottom, 1, 1, 1)>]
+[<InlineData(10, TBE.Top, 1, 1, SDE.Left, SDE.Top, 1, 1, 1)>]
+[<InlineData(10, TBE.Top, 1, 1, SDE.Left, SDE.Bottom, 1, 1, 1)>]
 
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Right, 1, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Right, 1, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Left, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Right, 1, 1, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Right, 1, 1, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Left, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Right, 1, 1, SidewinderDirectionEnum.Right, SidewinderDirectionEnum.Top, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Right, 1, 1, SidewinderDirectionEnum.Right, SidewinderDirectionEnum.Bottom, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Right, 1, 1, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Top, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Right, 1, 1, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Bottom, 1, 1, 1)>]
+[<InlineData(10, TBE.Right, 1, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(10, TBE.Right, 1, 1, SDE.Top, SDE.Left, 1, 1, 1)>]
+[<InlineData(10, TBE.Right, 1, 1, SDE.Bottom, SDE.Right, 1, 1, 1)>]
+[<InlineData(10, TBE.Right, 1, 1, SDE.Bottom, SDE.Left, 1, 1, 1)>]
+[<InlineData(10, TBE.Right, 1, 1, SDE.Right, SDE.Top, 1, 1, 1)>]
+[<InlineData(10, TBE.Right, 1, 1, SDE.Right, SDE.Bottom, 1, 1, 1)>]
+[<InlineData(10, TBE.Right, 1, 1, SDE.Left, SDE.Top, 1, 1, 1)>]
+[<InlineData(10, TBE.Right, 1, 1, SDE.Left, SDE.Bottom, 1, 1, 1)>]
 
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Bottom, 1, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Bottom, 1, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Left, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Bottom, 1, 1, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Bottom, 1, 1, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Left, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Bottom, 1, 1, SidewinderDirectionEnum.Right, SidewinderDirectionEnum.Top, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Bottom, 1, 1, SidewinderDirectionEnum.Right, SidewinderDirectionEnum.Bottom, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Bottom, 1, 1, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Top, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Bottom, 1, 1, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Bottom, 1, 1, 1)>]
+[<InlineData(10, TBE.Bottom, 1, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(10, TBE.Bottom, 1, 1, SDE.Top, SDE.Left, 1, 1, 1)>]
+[<InlineData(10, TBE.Bottom, 1, 1, SDE.Bottom, SDE.Right, 1, 1, 1)>]
+[<InlineData(10, TBE.Bottom, 1, 1, SDE.Bottom, SDE.Left, 1, 1, 1)>]
+[<InlineData(10, TBE.Bottom, 1, 1, SDE.Right, SDE.Top, 1, 1, 1)>]
+[<InlineData(10, TBE.Bottom, 1, 1, SDE.Right, SDE.Bottom, 1, 1, 1)>]
+[<InlineData(10, TBE.Bottom, 1, 1, SDE.Left, SDE.Top, 1, 1, 1)>]
+[<InlineData(10, TBE.Bottom, 1, 1, SDE.Left, SDE.Bottom, 1, 1, 1)>]
 
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Left, 1, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Left, 1, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Left, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Left, 1, 1, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Left, 1, 1, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Left, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Left, 1, 1, SidewinderDirectionEnum.Right, SidewinderDirectionEnum.Top, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Left, 1, 1, SidewinderDirectionEnum.Right, SidewinderDirectionEnum.Bottom, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Left, 1, 1, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Top, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Left, 1, 1, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Bottom, 1, 1, 1)>]
+[<InlineData(10, TBE.Left, 1, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(10, TBE.Left, 1, 1, SDE.Top, SDE.Left, 1, 1, 1)>]
+[<InlineData(10, TBE.Left, 1, 1, SDE.Bottom, SDE.Right, 1, 1, 1)>]
+[<InlineData(10, TBE.Left, 1, 1, SDE.Bottom, SDE.Left, 1, 1, 1)>]
+[<InlineData(10, TBE.Left, 1, 1, SDE.Right, SDE.Top, 1, 1, 1)>]
+[<InlineData(10, TBE.Left, 1, 1, SDE.Right, SDE.Bottom, 1, 1, 1)>]
+[<InlineData(10, TBE.Left, 1, 1, SDE.Left, SDE.Top, 1, 1, 1)>]
+[<InlineData(10, TBE.Left, 1, 1, SDE.Left, SDE.Bottom, 1, 1, 1)>]
 
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Top, 3, 1, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Right, 1, 4, SidewinderDirectionEnum.Top, SidewinderDirectionEnum.Left, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Bottom, 2, 2, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Right, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Left, 4, 2, SidewinderDirectionEnum.Bottom, SidewinderDirectionEnum.Left, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Top, 2, 3, SidewinderDirectionEnum.Right, SidewinderDirectionEnum.Top, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Right, 2, 4, SidewinderDirectionEnum.Right, SidewinderDirectionEnum.Bottom, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Bottom, 1, 2, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Top, 1, 1, 1)>]
-[<InlineData(10, TriangleIsoscelesBaseAtEnum.Left, 2, 1, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Bottom, 1, 1, 1)>]
+[<InlineData(10, TBE.Top, 3, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(10, TBE.Right, 1, 4, SDE.Top, SDE.Left, 1, 1, 1)>]
+[<InlineData(10, TBE.Bottom, 2, 2, SDE.Bottom, SDE.Right, 1, 1, 1)>]
+[<InlineData(10, TBE.Left, 4, 2, SDE.Bottom, SDE.Left, 1, 1, 1)>]
+[<InlineData(10, TBE.Top, 2, 3, SDE.Right, SDE.Top, 1, 1, 1)>]
+[<InlineData(10, TBE.Right, 2, 4, SDE.Right, SDE.Bottom, 1, 1, 1)>]
+[<InlineData(10, TBE.Bottom, 1, 2, SDE.Left, SDE.Top, 1, 1, 1)>]
+[<InlineData(10, TBE.Left, 2, 1, SDE.Left, SDE.Bottom, 1, 1, 1)>]
 
-[<InlineData(30, TriangleIsoscelesBaseAtEnum.Left, 2, 3, SidewinderDirectionEnum.Left, SidewinderDirectionEnum.Bottom, 1, 1, 1)>]
+[<InlineData(30, TBE.Left, 2, 3, SDE.Left, SDE.Bottom, 1, 1, 1)>]
 let ``Given a triangular canvas, when creating a maze with the sidewinder algorithm, then the maze should have every cell accessible``
     (baseLength, baseAt, baseDecrement, heightIncrement,
      direction1, direction2,
@@ -128,11 +136,11 @@ let ``Given a triangular canvas, when creating a maze with the sidewinder algori
         TriangleIsosceles.create baseLength baseAt baseDecrement heightIncrement
         |> Grid.create
 
-    let direction1 = mapDirectionEnumToSidewinderDirection direction1
-    let direction2 = mapDirectionEnumToSidewinderDirection direction2
+    let direction1 = mapSidewinderDirectionEnumToSidewinderDirection direction1
+    let direction2 = mapSidewinderDirectionEnumToSidewinderDirection direction2
 
     // act
-    let maze = Sidewinder.createMaze direction1 direction2 (Random(rngSeed)) direction1Weight direction2Weight gridTriangle
+    let maze = Sidewinder.createMaze direction1 direction2 rngSeed direction1Weight direction2Weight gridTriangle
 
     // we use the map to ensure that the total zones accessible in the maze is equal to the total number of maze zones of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze

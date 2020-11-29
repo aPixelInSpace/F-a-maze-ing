@@ -41,7 +41,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let maze =
         canvas
         |> Grid.create
-        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -73,7 +73,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let maze =
         canvas
         |> Grid.create
-        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Left (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Left 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -105,7 +105,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let maze =
         canvas
         |> Grid.create
-        |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -137,7 +137,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let maze =
         canvas
         |> Grid.create
-        |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Left (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Left 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -169,7 +169,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let maze =
         canvas
         |> Grid.create
-        |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -201,7 +201,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let maze =
         canvas
         |> Grid.create
-        |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Bottom (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Bottom 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -233,11 +233,11 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let maze =
         canvas
         |> Grid.create
-        |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Top (Random(1)) 1 1
-    
+        |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Top 1 1 1
+
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
-        
+
     // assert
     let expectedRenderedMaze =
         "                      ┏━┓   ┏━┓                             ┏━━━┯━━━━━━━━━┯━━━┯━┯━━━┯━┓                 ┏━━━━━━━┯━━━━━┓                            \n" +
@@ -265,8 +265,8 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let maze =
         canvas
         |> Grid.create
-        |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom (Random(1)) 1 1
-    
+        |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom 1 1 1
+
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
         

@@ -35,7 +35,7 @@ let maze =
 
     canvas10By10
     |> Grid.create
-    |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right (Random(1)) 1 1
+    |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     (*
         the above maze looks like this

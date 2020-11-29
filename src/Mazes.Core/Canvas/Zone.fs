@@ -4,7 +4,7 @@ namespace Mazes.Core.Canvas
 
 type Zone =
     | PartOfMaze
-    | NotPartOfMaze
+    | Empty
 
     member this.IsAPartOfMaze =
         this = PartOfMaze
@@ -14,4 +14,4 @@ module Zone =
     let create isPartOfMaze =
         match isPartOfMaze with
         | true -> PartOfMaze
-        | false -> NotPartOfMaze
+        | false -> Empty

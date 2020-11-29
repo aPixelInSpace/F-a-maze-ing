@@ -14,6 +14,7 @@
 		<Compile Include="Canvas\Shape\Rectangle.fs" />
 		<Compile Include="Canvas\Shape\TriangleIsosceles.fs" />
         <Compile Include="Grid\Grid.fs" />
+        <Compile Include="Grid\GridView.fs" />
 		<Compile Include="Maze\Generate\BinaryTree.fs" />
 		<Compile Include="Maze\Generate\Sidewinder.fs" />
         <Compile Include="Maze\Analyse\Dijkstra.fs" />

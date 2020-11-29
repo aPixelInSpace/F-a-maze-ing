@@ -53,7 +53,7 @@ type Canvas =
 module Convert =
 
     let charPartOfMaze = '*'
-    let charNotPartOfMaze = '.'
+    let charEmpty = '.'
     
     let startLineTag = "Type=Canvas\n"
     let endLineTag = "end"
@@ -61,12 +61,12 @@ module Convert =
     let private zoneToChar zone =
         match zone with
         | PartOfMaze -> charPartOfMaze
-        | NotPartOfMaze -> charNotPartOfMaze
+        | Empty -> charEmpty
 
     let private charToZone char =
         match char with
         | c when c = charPartOfMaze -> PartOfMaze 
-        | c when c = charNotPartOfMaze -> NotPartOfMaze
+        | c when c = charEmpty -> Empty
         | _ -> raise(Exception "Canvas character not supported")
 
     let toString canvas =

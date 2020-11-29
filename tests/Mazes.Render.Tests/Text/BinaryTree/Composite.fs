@@ -41,7 +41,7 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let maze =
         canvas
         |> Grid.create
-        |> BinaryTree.createMaze Top Right (Random(1)) 1 1
+        |> BinaryTree.createMaze Top Right 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -73,7 +73,7 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let maze =
         canvas
         |> Grid.create
-        |> BinaryTree.createMaze Top Left (Random(1)) 1 1
+        |> BinaryTree.createMaze Top Left 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -105,7 +105,7 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let maze =
         canvas
         |> Grid.create
-        |> BinaryTree.createMaze Bottom Right (Random(1)) 1 1
+        |> BinaryTree.createMaze Bottom Right 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -137,7 +137,7 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let maze =
         canvas
         |> Grid.create
-        |> BinaryTree.createMaze Bottom Left (Random(1)) 1 1
+        |> BinaryTree.createMaze Bottom Left 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -169,7 +169,7 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let maze =
         canvas
         |> Grid.create
-        |> BinaryTree.createMaze Right Top (Random(1)) 1 1
+        |> BinaryTree.createMaze Right Top 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -201,7 +201,7 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let maze =
         canvas
         |> Grid.create
-        |> BinaryTree.createMaze Right Bottom (Random(1)) 1 1
+        |> BinaryTree.createMaze Right Bottom 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -233,7 +233,7 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let maze =
         canvas
         |> Grid.create
-        |> BinaryTree.createMaze Left Top (Random(1)) 1 1
+        |> BinaryTree.createMaze Left Top 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -256,7 +256,7 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
         "            ┃ ╶─┺━━━┛ ┬ ┃   ┃ ┃         ┃ ┗━━━━━━━━━━━━━━━┛ │ ╰─┴───┴─╮ │ ┬ ╰─────┴───┴─┺━━━━━━━━━━━━━━━╋━┛         ┃ ┃ ┃ ┬ ┃                      \n" +
         "            ┃ ╶───────┤ ┃   ┃ ┃         ┗━━━━━━━━━━━━━━━━━━━┪ ╶─╮ ╶───┤ ╰─┴─────╮ ╶─╮ ┏━━━━━━━━━━━━━━━━━┛           ┃ ┃ ┗━┷━┛                      \n" +
         "            ┗━━━━━━━━━┷━┛   ┗━┛                             ┗━━━┷━━━━━┷━━━━━━━━━┷━━━┷━┛                             ┗━┛                            "
-        
+ 
     renderedMaze |> should equal expectedRenderedMaze
 
 [<Fact>]
@@ -265,7 +265,7 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let maze =
         canvas
         |> Grid.create
-        |> BinaryTree.createMaze Left Bottom (Random(1)) 1 1
+        |> BinaryTree.createMaze Left Bottom 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid

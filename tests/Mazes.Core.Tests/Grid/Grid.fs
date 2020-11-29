@@ -25,7 +25,7 @@ let ``Given an empty canvas, when creating a grid, then the grid should also be 
     sut.Cells.Length |> should equal 0
 
 [<Fact>]  
-let ``Given a canvas with a single zone part of the maze, when creating a grid, then the grid should contain a single cell with only border`` () =
+let ``Given a canvas with a single zone part of the maze, when creating a grid, then the grid should contain a single cell with only borders`` () =
 
     // arrange
     let singleZoneStringCanvas =

@@ -62,8 +62,10 @@ let private carveRow
         | _ ->
             updateWallAtPosition direction2 Empty
 
-let createMaze direction1 direction2 rng rngDirection1Weight rngDirection2Weight grid =
-    
+let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight grid =
+
+    let rng = Random(rngSeed)
+
     let (startColumnIndex, increment, endColumnIndex) =
         match direction1, direction2 with
         | _, Left | Left, _ -> (getIndex grid.Canvas.NumberOfColumns, -1, 0)

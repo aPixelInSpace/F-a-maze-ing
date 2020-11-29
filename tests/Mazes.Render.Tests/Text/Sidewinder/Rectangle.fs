@@ -17,8 +17,8 @@ let ``Rendering a 3 by 3 maze generated with the sidewinder algorithm (Top, Righ
     let maze =
         (Shape.Rectangle.create 3 3)
         |> Grid.create
-        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right (Random(1)) 1 1
-    
+        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
+
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
         
@@ -37,7 +37,7 @@ let ``Rendering a 5 by 5 maze generated with the sidewinder algorithm (Top, Righ
     let maze =
         (Shape.Rectangle.create 5 5)
         |> Grid.create
-        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
@@ -50,7 +50,7 @@ let ``Rendering a 5 by 5 maze generated with the sidewinder algorithm (Top, Righ
         "┃ ┬ │ │ ┬ ┃\n" +
         "┃ ╰─┴─┤ │ ┃\n" +
         "┗━━━━━┷━┷━┛"
-        
+
     renderedMaze |> should equal expectedRenderedMaze
 
 [<Fact>]
@@ -59,7 +59,7 @@ let ``Rendering a 5 by 10 maze generated with the sidewinder algorithm (Top, Rig
     let maze =
         (Shape.Rectangle.create 5 10)
         |> Grid.create
-        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right (Random(1)) 1 1
+        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
     
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid

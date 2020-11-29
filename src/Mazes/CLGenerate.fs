@@ -35,15 +35,10 @@ type GenerateOptions = {
 
 let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
-    let rng =
-        match options.Value.seed with
-        | Some seed -> Random(seed)
-        | None -> Random()
-
-    let matchAlgoEnumWithFunction algoEnum =
+    let matchAlgoEnumWithFunction algoEnum rngSeed =
         match algoEnum with
-           | AlgoEnum.BinaryTree -> BinaryTree.createMaze Left Bottom rng 1 1
-           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right rng 1 1
+           | AlgoEnum.BinaryTree -> BinaryTree.createMaze Left Bottom rngSeed 1 1
+           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right rngSeed 1 1
            | _ -> raise(Exception("Generating algorithm unknown"))
 
 
@@ -61,7 +56,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.create)
     //let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
-    //let grid = (Shape.Ellipse.create 20 30 0.0 0.0 0 0 Shape.Ellipse.Side.Inside |> Grid.create)
+    //let grid = (Shape.Ellipse.create 5 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside |> Grid.create)
 
     //let canvasSave = (Shape.Rectangle.create 15 15 |> Canvas.save)
     //File.WriteAllText(filePath.Replace(".html", ".canvas.mazes"), canvasSave, Encoding.UTF8)
@@ -72,7 +67,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //    | None -> raise(Exception("A problem occured while loading the saved canvas"))
 
     //let grid = (canvas |> Grid.create)
-
+    
     let algo =
         match options.Value.algo with
         | Some algo -> matchAlgoEnumWithFunction algo
@@ -81,7 +76,42 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
             let enumAlgoUpperBound = ((AlgoEnum.GetValues(typeof<AlgoEnum>)).GetUpperBound(0)) + 1            
             matchAlgoEnumWithFunction (enum<AlgoEnum> (rngAlgo.Next(enumAlgoUpperBound)))
 
-    let maze = (algo grid)
+    let rngSeed =
+        match options.Value.seed with
+        | Some seed -> seed
+        | None -> 0
+
+    // Async
+//    let maze1 =
+//        async {
+//                let gridSliced1 = GridView.sliceGrid grid { RowIndex = 0; ColumnIndex = 0 } { RowIndex = 9; ColumnIndex = 9 }
+//                let maze = (algo (rngSeed) gridSliced1)
+//                GridView.mergeGrid maze.Grid grid { RowIndex = 0; ColumnIndex = 0 }
+//            }
+//    let maze2 =
+//        async {
+//                let gridSliced2 = GridView.sliceGrid grid { RowIndex = 0; ColumnIndex = 10 } { RowIndex = 8; ColumnIndex = 19 }
+//                let maze = (algo (rngSeed + 1) gridSliced2)
+//                GridView.mergeGrid maze.Grid grid { RowIndex = 0; ColumnIndex = 10 }
+//            }
+//    let maze3 =
+//        async {
+//                let gridSliced3 = GridView.sliceGrid grid { RowIndex = 10; ColumnIndex = 0 } { RowIndex = 19; ColumnIndex = 9 }
+//                let maze = (algo (rngSeed + 2) gridSliced3)
+//                GridView.mergeGrid maze.Grid grid { RowIndex = 10; ColumnIndex = 0 }
+//            }
+//    let maze4 =
+//        async {
+//                let gridSliced4 = GridView.sliceGrid grid { RowIndex = 9; ColumnIndex = 10 } { RowIndex = 19; ColumnIndex = 19 }
+//                let maze = (algo (rngSeed + 3) gridSliced4)
+//                GridView.mergeGrid maze.Grid grid { RowIndex = 9; ColumnIndex = 10 }
+//            }
+//    
+//    [maze1; maze2; maze3; maze4] |> Async.Parallel |> Async.RunSynchronously |> ignore
+//    
+//    let maze = { Grid = grid }
+    
+    let maze = (algo rngSeed grid)
     
     //let map = Dijkstra.createMap { RowIndex = 0; ColumnIndex = 0 } maze
 

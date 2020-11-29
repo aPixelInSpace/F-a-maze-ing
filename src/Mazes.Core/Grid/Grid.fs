@@ -2,6 +2,7 @@
 
 namespace Mazes.Core.Grid
 
+open System
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas
@@ -41,12 +42,12 @@ module Grid =
         else
             let neighborCoordinate = Cell.getNeighborCoordinateAtPosition coordinate position
 
-            (grid.Canvas.ExistAt neighborCoordinate) &&
-            not (grid.Canvas.Zone neighborCoordinate).IsAPartOfMaze
+            not ((grid.Canvas.ExistAt neighborCoordinate) &&
+                 (grid.Canvas.Zone neighborCoordinate).IsAPartOfMaze)
 
     let isNavigable grid fromCoordinate pos =
         not (isALimitAt grid fromCoordinate pos) &&        
-        (get grid.Cells fromCoordinate).WallTypeAtPosition pos = Empty &&
+        (get grid.Cells fromCoordinate).WallTypeAtPosition pos = WallType.Empty &&
         grid.Canvas.IsZonePartOfMaze (Cell.getNeighborCoordinateAtPosition fromCoordinate pos)
 
     let getNavigableNeighborsCoordinates grid coordinate =        
