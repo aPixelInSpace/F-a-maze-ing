@@ -10,7 +10,7 @@ Currently only a html/text output is supported.
 * [Triangular](https://apixelinspace.github.io/F-a-maze-ing/TriangularMaze.html)
 * [Ellipse](https://apixelinspace.github.io/F-a-maze-ing/EllipseMaze.html)
 * [Composite](https://apixelinspace.github.io/F-a-maze-ing/CompositeMaze.html)
-* [Doughnut](https://apixelinspace.github.io/F-a-maze-ing/Doughnut.html)
+* [Doughnut](https://apixelinspace.github.io/F-a-maze-ing/DoughnutMaze.html)
 ## Usage
 ```
 mazes
