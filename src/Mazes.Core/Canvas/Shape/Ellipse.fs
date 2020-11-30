@@ -10,7 +10,7 @@ type Side =
     | Inside
     | Outside
 
-let private isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side rowIndex columnIndex =
+let private isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex ellipseFactor side rowIndex columnIndex =
     let distanceRow = rowIndex - centerRowIndex
     let distanceColumn = columnIndex - centerColumnIndex
 
@@ -19,11 +19,26 @@ let private isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared
                   +
                   float (pown distanceColumn 2) / columnRadiusLengthIndexSquared
 
-    match side with
-    | Inside -> ellipseMathFormula <= 1.0
-    | Outside -> ellipseMathFormula > 1.0    
+    let (ellipseMathFormulaPart, factorPart) =
+        match side with
+        | Inside ->
+            let ellipseMathFormulaPart = ellipseMathFormula <= 1.0
+            let factorPart =
+                match ellipseFactor with
+                | Some factor -> ellipseMathFormula >= factor
+                | None -> true
+            (ellipseMathFormulaPart, factorPart)
+        | Outside ->
+            let ellipseMathFormulaPart = ellipseMathFormula > 1.0
+            let factorPart =
+                match ellipseFactor with
+                | Some factor -> ellipseMathFormula <= factor
+                | None -> true
+            (ellipseMathFormulaPart, factorPart)
 
-let create rowRadiusLength columnRadiusLength rowEnlargingFactor columnEnlargingFactor rowTranslationFactor columnTranslationFactor side =
+    ellipseMathFormulaPart && factorPart
+
+let create rowRadiusLength columnRadiusLength rowEnlargingFactor columnEnlargingFactor rowTranslationFactor columnTranslationFactor ellipseFactor side =
     let rowEnlargingFactor = rowEnlargingFactor * (float)rowRadiusLength
     let columnEnlargingFactor = columnEnlargingFactor * (float)columnRadiusLength
     
@@ -41,6 +56,6 @@ let create rowRadiusLength columnRadiusLength rowEnlargingFactor columnEnlarging
 
     let zones =
         Array2D.init numberOfRows numberOfColumns
-            (fun rowIndex columnIndex -> Zone.create (isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex side rowIndex columnIndex))
+            (fun rowIndex columnIndex -> Zone.create (isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex ellipseFactor side rowIndex columnIndex))
 
     { Zones = zones; }

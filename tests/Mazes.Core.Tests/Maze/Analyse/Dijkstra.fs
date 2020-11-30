@@ -7,16 +7,16 @@ open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Canvas
 open Mazes.Core.Grid
 open Mazes.Core.Maze.Generate
 open Mazes.Core.Maze.Analyse
+open Mazes.Core.Tests.Helpers
 
 // fixture
 let maze =
     let canvas10By10 =
         let stringCanvas =
-            Canvas.Convert.startLineTag +
+            Canvas.Convert.startLineTag + "\n" +
             "*.********\n" +
             "*.**.***..\n" +
             "**********\n" +
@@ -62,23 +62,27 @@ let ``Given a root inside the maze, when creating a map, then it should give all
     let map = maze |> Dijkstra.createMap rootCoordinate
 
     // assert
-    let get = get map.MapZones
+    let zone = map.MapZone
     map.TotalZonesAccessibleFromRoot |> should equal 79
 
-    let topLeftZone = get { RowIndex = 0; ColumnIndex = 9 }
-    topLeftZone.DistanceFromRoot |> should equal (Some 13)
+    let topLeftZone = zone { RowIndex = 0; ColumnIndex = 9 }
+    topLeftZone.IsSome |> should equal true
+    (getValue topLeftZone).DistanceFromRoot |> should equal 13
 
-    let bottomLeftZone = get { RowIndex = 9; ColumnIndex = 0 }
-    bottomLeftZone.DistanceFromRoot |> should equal (Some 17)
+    let bottomLeftZone = zone { RowIndex = 9; ColumnIndex = 0 }
+    bottomLeftZone.IsSome |> should equal true
+    (getValue bottomLeftZone).DistanceFromRoot |> should equal 17
 
-    let bottomRightZone = get { RowIndex = 9; ColumnIndex = 8 }
-    bottomRightZone.DistanceFromRoot |> should equal (Some 19)
+    let bottomRightZone = zone { RowIndex = 9; ColumnIndex = 8 }
+    bottomRightZone.IsSome |> should equal true
+    (getValue bottomRightZone).DistanceFromRoot |> should equal 19
 
-    let centerZone = get { RowIndex = 5; ColumnIndex = 4 }
-    centerZone.DistanceFromRoot |> should equal (Some 15)
+    let centerZone = zone { RowIndex = 5; ColumnIndex = 4 }
+    centerZone.IsSome |> should equal true
+    (getValue centerZone).DistanceFromRoot |> should equal 15
 
-    let outsideOfTheMazeZone = get { RowIndex = 0; ColumnIndex = 1 }
-    outsideOfTheMazeZone.DistanceFromRoot |> should equal None
+    let outsideOfTheMazeZone = zone { RowIndex = 0; ColumnIndex = 1 }
+    outsideOfTheMazeZone.IsNone |> should equal true
 
 [<Fact>]
 let ``Given a root outside the maze, when creating a map, then the root is the only zone of the map`` () =
@@ -87,20 +91,41 @@ let ``Given a root outside the maze, when creating a map, then the root is the o
     let map = maze |> Dijkstra.createMap { RowIndex = 0; ColumnIndex = 1  }  
 
     // assert
-    let get = get map.MapZones
+    let zone = map.MapZone
     map.TotalZonesAccessibleFromRoot |> should equal 1
 
-    let outsideOfTheMazeZone = get { RowIndex = 0; ColumnIndex = 1 }
-    outsideOfTheMazeZone.DistanceFromRoot |> should equal (Some 0)
+    let outsideOfTheMazeZone = zone { RowIndex = 0; ColumnIndex = 1 }
+    outsideOfTheMazeZone.IsSome |> should equal true
+    (getValue outsideOfTheMazeZone).DistanceFromRoot |> should equal 0
 
-    let topLeftZone = get { RowIndex = 0; ColumnIndex = 9 }
-    topLeftZone.DistanceFromRoot |> should equal None
+    let topLeftZone = zone { RowIndex = 0; ColumnIndex = 9 }
+    topLeftZone.IsNone |> should equal true
 
-    let bottomLeftZone = get { RowIndex = 9; ColumnIndex = 0 }
-    bottomLeftZone.DistanceFromRoot |> should equal None
+    let bottomLeftZone = zone { RowIndex = 9; ColumnIndex = 0 }
+    bottomLeftZone.IsNone |> should equal true
 
-    let bottomRightZone = get { RowIndex = 9; ColumnIndex = 8 }
-    bottomRightZone.DistanceFromRoot |> should equal None
+    let bottomRightZone = zone { RowIndex = 9; ColumnIndex = 8 }
+    bottomRightZone.IsNone |> should equal true
 
-    let centerZone = get { RowIndex = 5; ColumnIndex = 4 }
-    centerZone.DistanceFromRoot |> should equal None
+    let centerZone = zone { RowIndex = 5; ColumnIndex = 4 }
+    centerZone.IsNone |> should equal true
+
+[<Fact>]
+let ``Given a root coordinate of a map and a goal coordinate, when searching the shortest path between the root and the goal, then it should return the list of coordinates that forms that path`` () =
+
+    // arrange
+    let (_, rootCoordinate) = maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
+    let map = maze |> Dijkstra.createMap rootCoordinate
+
+    // act
+    let path = map.PathFromRootTo (Some { RowIndex = 9; ColumnIndex = 8 })
+
+    // assert
+    let expectedPath =
+            [ { RowIndex = 0; ColumnIndex = 0 }; { RowIndex = 1; ColumnIndex = 0 }; { RowIndex = 2; ColumnIndex = 0 }; { RowIndex = 2; ColumnIndex = 1 }
+              { RowIndex = 2; ColumnIndex = 2 }; { RowIndex = 1; ColumnIndex = 2 }; { RowIndex = 1; ColumnIndex = 3 }; { RowIndex = 2; ColumnIndex = 3 }
+              { RowIndex = 2; ColumnIndex = 4 }; { RowIndex = 3; ColumnIndex = 4 }; { RowIndex = 3; ColumnIndex = 5 }; { RowIndex = 3; ColumnIndex = 6 }
+              { RowIndex = 4; ColumnIndex = 6 }; { RowIndex = 5; ColumnIndex = 6 }; { RowIndex = 6; ColumnIndex = 6 }; { RowIndex = 6; ColumnIndex = 7 }
+              { RowIndex = 7; ColumnIndex = 7 }; { RowIndex = 7; ColumnIndex = 8 }; { RowIndex = 8; ColumnIndex = 8 }; { RowIndex = 9; ColumnIndex = 8 } ]
+
+    path |> Seq.toList |> should equal expectedPath

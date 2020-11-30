@@ -4,6 +4,7 @@ module Mazes.Output.Html
 
 open System.IO
 open System.Text
+open Mazes.Core.Array2D
 open Mazes.Core.Maze
 
 let private columnsAxis (columnsAxisHtml : string) numberOfRows numberOfColumns =
@@ -21,7 +22,7 @@ let private columnsAxis (columnsAxisHtml : string) numberOfRows numberOfColumns 
     for sb in sbColumnsRow do
         sb.Append(String.replicate numberWhiteSpacesPrefixForColumns " ") |> ignore
 
-    for column in 1 .. numberOfColumns do
+    for column in 0 .. numberOfColumns do
         let columnString = column.ToString()
         let digitLength = columnString.Length
         let offset = totalOfDigitsForColumns - digitLength
@@ -45,8 +46,8 @@ let private rowNumber numberOfRows rowIndex =
     let numberWhiteSpacesPrefixForRow numberOfRows rowNumber = numberOfRows.ToString().Length - rowNumber.ToString().Length
 
     if rowIndex < numberOfRows then  
-        String.replicate (numberWhiteSpacesPrefixForRow numberOfRows (rowIndex + 1)) " "
-        + (rowIndex + 1).ToString()
+        String.replicate (numberWhiteSpacesPrefixForRow numberOfRows rowIndex) " "
+        + rowIndex.ToString()
         + " "
     else
         String.replicate (rowIndex.ToString().Length) " "
@@ -68,7 +69,7 @@ let outputHtml maze mazeInfo (textRenderedMaze : string) =
                                   .Replace("{{MazeRowNumber}}", rowNumber maze.Grid.Canvas.NumberOfRows rowIndex)
                     sbMaze.Append(row) |> ignore)
 
-    let columnsAxisHtml = columnsAxis columnsAxisHtml maze.Grid.Canvas.NumberOfRows maze.Grid.Canvas.NumberOfColumns
+    let columnsAxisHtml = columnsAxis columnsAxisHtml (getIndex maze.Grid.Canvas.NumberOfRows) (getIndex maze.Grid.Canvas.NumberOfColumns)
 
     let mainHtml = mainHtml
                        .Replace("{{Name}}", mazeInfo.Name)

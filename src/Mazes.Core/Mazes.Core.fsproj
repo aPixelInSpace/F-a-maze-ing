@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="Position.fs" />
         <Compile Include="Coordinate.fs" />
         <Compile Include="Array2D.fs" />
         <Compile Include="Canvas\Zone.fs" />

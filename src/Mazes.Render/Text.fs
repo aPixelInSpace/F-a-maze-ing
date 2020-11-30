@@ -4,6 +4,7 @@ module Mazes.Render.Text
 
 open System.Text
 open Mazes.Core
+open Mazes.Core.Position
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas
 open Mazes.Core.Grid
@@ -133,11 +134,11 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
     | Normal, Empty, Border, Empty -> '╼'
     | Border, Empty, Normal, Empty -> '╾'
 
-let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate pos1 pos2 =
-    match grid.Canvas.ExistAt (Cell.getNeighborCoordinateAtPosition coordinate pos1) with
+let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid (coordinate : Coordinate) pos1 pos2 =
+    let neighborAtPos1 = coordinate.NeighborCoordinateAtPosition pos1
+    match grid.Canvas.ExistAt neighborAtPos1 with
     | true ->
-        let neighborCoordinate = (Cell.getNeighborCoordinateAtPosition coordinate pos1)
-        (get grid.Cells neighborCoordinate).WallTypeAtPosition pos2
+        (grid.Cell neighborAtPos1).WallTypeAtPosition pos2
     | false -> Empty
 
 let private append
@@ -171,7 +172,7 @@ let private append
     ()
 
 let private wallTypes (grid : Grid) coordinate =
-    let cell = get grid.Cells coordinate
+    let cell = grid.Cell coordinate
     
     let ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate
     
@@ -196,7 +197,7 @@ let private wallTypes (grid : Grid) coordinate =
     (intersectionWallLeft, intersectionWallTop, intersectionWallRight, intersectionWallBottom, middleWall, lastIntersectionWallLeft, lastIntersectionWallTop, lastIntersectionWallRight, lastIntersectionWallBottom)
 
 let private wallTypesLastRow (grid : Grid) coordinate =
-    let cell = get grid.Cells coordinate    
+    let cell = grid.Cell coordinate    
     let ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate
     
     let intersectionWallLeft = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Left Bottom

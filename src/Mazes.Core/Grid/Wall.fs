@@ -2,18 +2,7 @@
 
 namespace Mazes.Core.Grid
 
-type Position =
-    | Top
-    | Right
-    | Bottom
-    | Left
-
-    member this.Opposite =
-        match this with
-        | Top -> Bottom
-        | Right -> Left
-        | Bottom -> Top
-        | Left -> Right
+open Mazes.Core.Position
 
 type WallType =
     | Normal

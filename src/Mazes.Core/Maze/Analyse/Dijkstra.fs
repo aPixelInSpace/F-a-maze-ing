@@ -5,18 +5,15 @@ module Mazes.Core.Maze.Analyse.Dijkstra
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Grid
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Analyse
 
 type DistanceSoFar = int
 
-let createMap root maze =
-    let mapZones = Array2D.create maze.Grid.Canvas.NumberOfRows maze.Grid.Canvas.NumberOfColumns { DistanceFromRoot = None; Neighbors = None }
+let createMap rootCoordinate maze =
+    let mapZones = Array2D.create maze.Grid.Canvas.NumberOfRows maze.Grid.Canvas.NumberOfColumns None
 
-    let getNavigableNeighborsCoordinates = getNavigableNeighborsCoordinates maze.Grid
-
-    let mutable unvisited = Map.empty.Add(root, -1)    
+    let mutable unvisited = Map.empty.Add(rootCoordinate, -1)    
 
     let counter = ref 0
     
@@ -26,17 +23,17 @@ let createMap root maze =
         let coordinate = unvisitedCoordinate.Key
         let actualDistance = unvisitedCoordinate.Value + 1
 
-        let neighbors = getNavigableNeighborsCoordinates coordinate
+        let neighbors = maze.Grid.NavigableNeighborsCoordinates coordinate
 
-        mapZones.[coordinate.RowIndex, coordinate.ColumnIndex] <- { DistanceFromRoot = Some actualDistance; Neighbors = Some neighbors }
+        mapZones.[coordinate.RowIndex, coordinate.ColumnIndex] <- Some { DistanceFromRoot = actualDistance; Neighbors = neighbors }
 
         incr counter
         
         unvisited <-
                 neighbors
-                |> Seq.filter(fun nCoordinate -> (get mapZones nCoordinate).DistanceFromRoot.IsNone)
+                |> Seq.filter(fun nCoordinate -> (get mapZones nCoordinate).IsNone)
                 |> Seq.fold
                        (fun (m : Map<Coordinate, DistanceSoFar>) neighborCoordinate -> m.Add(neighborCoordinate, actualDistance))
                        (unvisited.Remove(coordinate))
 
-    { Root = root; MapZones = mapZones; TotalZonesAccessibleFromRoot = counter.Value }
+    { Root = rootCoordinate; MapZones = mapZones; TotalZonesAccessibleFromRoot = counter.Value }

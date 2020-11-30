@@ -23,7 +23,7 @@ let ``Given a base length of 9, a base at bottom, a base decrement of 1 and a he
     // assert
     let expectedCanvas =
         let stringRepresentationCanvas =
-            Canvas.Convert.startLineTag +
+            Canvas.Convert.startLineTag + "\n" +
             "....*....\n" +
             "...***...\n" +
             "..*****..\n" +
@@ -50,7 +50,7 @@ let ``Given a base length of 7, a base at top, a base decrement of 2 and a heigh
     // assert
     let expectedCanvas =
         let stringRepresentationCanvas =
-            Canvas.Convert.startLineTag +
+            Canvas.Convert.startLineTag + "\n" +
             "*******\n" +
             "..***..\n" +
             Canvas.Convert.endLineTag
@@ -74,7 +74,7 @@ let ``Given a base length of 5, a base at left, a base decrement of 1 and a heig
     // assert
     let expectedCanvas =
         let stringRepresentationCanvas =
-            Canvas.Convert.startLineTag +
+            Canvas.Convert.startLineTag + "\n" +
             "**....\n" +
             "****..\n" +
             "******\n" +
@@ -101,7 +101,7 @@ let ``Given a base length of 10, a base at right, a base decrement of 2 and a he
     // assert
     let expectedCanvas =
         let stringRepresentationCanvas =
-            Canvas.Convert.startLineTag +
+            Canvas.Convert.startLineTag + "\n" +
             "....**\n" +
             "....**\n" +
             "..****\n" +

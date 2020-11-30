@@ -2,8 +2,8 @@
 
 module Mazes.Core.Tests.Maze.Generate.BinaryTree
 
-open System
 open FsUnit
+open Mazes.Core.Maze.Generate.BinaryTree
 open Xunit
 open Mazes.Core
 open Mazes.Core.Canvas.Shape
@@ -21,10 +21,10 @@ type BDE = BinaryTreeDirectionEnum
 
 let mapBinaryTreeDirectionEnumToBinaryTreeDirection dirEnum =
     match dirEnum with
-    | BDE.Top -> Position.Top
-    | BDE.Right -> Position.Right
-    | BDE.Bottom -> Position.Bottom
-    | BDE.Left -> Position.Left
+    | BDE.Top -> Direction.Top
+    | BDE.Right -> Direction.Right
+    | BDE.Bottom -> Direction.Bottom
+    | BDE.Left -> Direction.Left
     | _ -> failwith "Binary Tree Direction enumeration unknown"
 
 [<Theory>]

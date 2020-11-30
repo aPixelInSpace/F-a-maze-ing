@@ -2,7 +2,6 @@
 
 module Mazes.Core.Tests.Maze.Generate.Sidewinder
 
-open System
 open FsUnit
 open Xunit
 open Mazes.Core

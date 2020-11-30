@@ -21,7 +21,7 @@ let ``Given a number of rows and columns, when creating a rectangle, then it sho
     // assert
     let expectedCanvas =
         let stringRepresentationCanvas =
-            Canvas.Convert.startLineTag +
+            Canvas.Convert.startLineTag + "\n" +
             "*****\n" +
             "*****\n" +
             "*****\n" +

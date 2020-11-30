@@ -55,7 +55,7 @@ module Convert =
     let charPartOfMaze = '*'
     let charEmpty = '.'
     
-    let startLineTag = "Type=Canvas\n"
+    let startLineTag = "Type=Canvas"
     let endLineTag = "end"
 
     let private zoneToChar zone =
@@ -80,7 +80,7 @@ module Convert =
             sBuilder.Append('\n') |> ignore
 
         let sBuilder = StringBuilder()
-        sBuilder.Append(startLineTag) |> ignore
+        sBuilder.Append(startLineTag + "\n") |> ignore
         canvas.Zones
             |> extractByRows
             |> Seq.iter(fun rowZones -> appendRow sBuilder rowZones)
@@ -91,7 +91,7 @@ module Convert =
 
     let fromString (save : string) =
         let lines = save.Split('\n')
-        if lines.[0] = "Type=Canvas" then
+        if lines.[0].StartsWith(startLineTag) then
             let numberOfRows = lines.Length - 2
             let numberOfColumns =
                 match lines.[1].StartsWith(endLineTag) with

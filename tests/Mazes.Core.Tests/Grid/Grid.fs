@@ -5,15 +5,16 @@ module Mazes.Core.Tests.Grid.Grid
 open FsUnit
 open Xunit
 open Mazes.Core
-open Mazes.Core.Tests.Helpers
+open Mazes.Core.Position
 open Mazes.Core.Grid
+open Mazes.Core.Tests.Helpers
 
 [<Fact>]
 let ``Given an empty canvas, when creating a grid, then the grid should also be empty`` () =
 
     // arrange
     let emptyStringCanvas =
-        Canvas.Convert.startLineTag +    
+        Canvas.Convert.startLineTag +  "\n" +
         Canvas.Convert.endLineTag
 
     let emptyCanvas = Canvas.Convert.fromString emptyStringCanvas
@@ -29,7 +30,7 @@ let ``Given a canvas with a single zone part of the maze, when creating a grid, 
 
     // arrange
     let singleZoneStringCanvas =
-        Canvas.Convert.startLineTag +
+        Canvas.Convert.startLineTag + "\n" +
         "*\n" +
         Canvas.Convert.endLineTag
 
@@ -51,7 +52,7 @@ let ``Given a canvas with two zones part of the maze side by side horizontally, 
 
     // arrange
     let twoZonesStringCanvas =
-        Canvas.Convert.startLineTag +
+        Canvas.Convert.startLineTag + "\n" +
         "**\n" +
         Canvas.Convert.endLineTag
 
@@ -79,7 +80,7 @@ let ``Given a canvas with two zones part of the maze side by side vertically, wh
 
     // arrange
     let twoZonesStringCanvas =
-        Canvas.Convert.startLineTag +
+        Canvas.Convert.startLineTag + "\n" +
         "*\n" +
         "*\n" +
         Canvas.Convert.endLineTag
@@ -108,7 +109,7 @@ let ``Given a 3x3 canvas, when creating a grid, then it should have 3x3 cells wi
 
     // arrange
     let threeByThreeStringCanvas =
-        Canvas.Convert.startLineTag +
+        Canvas.Convert.startLineTag + "\n" +
         "***\n" +
         "***\n" +
         "***\n" +
@@ -187,7 +188,7 @@ let ``Given a grid, when updating a wall, then the neighbors walls should also b
 
     // arrange
     let threeByThreeStringCanvas =
-        Canvas.Convert.startLineTag +
+        Canvas.Convert.startLineTag + "\n" +
         "***\n" +
         "***\n" +
         "***\n" +
@@ -204,7 +205,7 @@ let ``Given a grid, when updating a wall, then the neighbors walls should also b
     grid.Cells.[1, 1].WallTop |> should equal { WallPosition = Top; WallType = Normal }
     grid.Cells.[0, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal }
     
-    Grid.updateWallAtPosition grid coordinate11 Top Empty
+    grid.UpdateWallAtPosition coordinate11 Top Empty
     
     // assert top
     grid.Cells.[1, 1].WallTop |> should equal { WallPosition = Top; WallType = Empty }
@@ -216,7 +217,7 @@ let ``Given a grid, when updating a wall, then the neighbors walls should also b
     grid.Cells.[1, 1].WallRight |> should equal { WallPosition = Right; WallType = Normal }
     grid.Cells.[1, 2].WallLeft |> should equal { WallPosition = Left; WallType = Normal }
     
-    Grid.updateWallAtPosition grid coordinate11 Right Empty
+    grid.UpdateWallAtPosition coordinate11 Right Empty
     
     // assert right
     grid.Cells.[1, 1].WallRight |> should equal { WallPosition = Right; WallType = Empty }
@@ -228,7 +229,7 @@ let ``Given a grid, when updating a wall, then the neighbors walls should also b
     grid.Cells.[1, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal }
     grid.Cells.[2, 1].WallTop |> should equal { WallPosition = Top; WallType = Normal }
     
-    Grid.updateWallAtPosition grid coordinate11 Bottom Empty
+    grid.UpdateWallAtPosition coordinate11 Bottom Empty
     
     // assert bottom
     grid.Cells.[1, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Empty }
@@ -240,7 +241,7 @@ let ``Given a grid, when updating a wall, then the neighbors walls should also b
     grid.Cells.[1, 1].WallLeft |> should equal { WallPosition = Left; WallType = Normal }
     grid.Cells.[1, 0].WallRight |> should equal { WallPosition = Right; WallType = Normal }
     
-    Grid.updateWallAtPosition grid coordinate11 Left Empty
+    grid.UpdateWallAtPosition coordinate11 Left Empty
     
     // assert left
     grid.Cells.[1, 1].WallLeft |> should equal { WallPosition = Left; WallType = Empty }

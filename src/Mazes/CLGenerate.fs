@@ -11,10 +11,8 @@ open Mazes.Core.Canvas
 open Mazes.Core.Grid
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
-open Mazes.Core.Maze.Analyse
 open Mazes.Render.Text
 open Mazes.Output.Html
-open Mazes.Output.RawForTest
 
 type AlgoEnum =
     | BinaryTree = 0
@@ -37,7 +35,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let matchAlgoEnumWithFunction algoEnum rngSeed =
         match algoEnum with
-           | AlgoEnum.BinaryTree -> BinaryTree.createMaze Left Bottom rngSeed 1 1
+           | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
            | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right rngSeed 1 1
            | _ -> raise(Exception("Generating algorithm unknown"))
 
@@ -56,7 +54,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.create)
     //let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
-    //let grid = (Shape.Ellipse.create 5 5 0.0 0.0 0 0 Shape.Ellipse.Side.Inside |> Grid.create)
+    //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 2.5 Shape.Ellipse.Side.Outside |> Grid.create)
+    //let grid = (Shape.Ellipse.create 20 22 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> Grid.create)
 
     //let canvasSave = (Shape.Rectangle.create 15 15 |> Canvas.save)
     //File.WriteAllText(filePath.Replace(".html", ".canvas.mazes"), canvasSave, Encoding.UTF8)

@@ -4,9 +4,9 @@ module Mazes.Core.Maze.Generate.Sidewinder
 
 open System
 open Mazes.Core
+open Mazes.Core.Position
 open Mazes.Core.Array2D
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Grid
 open Mazes.Core.Maze
 
 let private getRandomColumnIndexFromRange isALimitAt (rng : Random) increment position rowIndex startColumnIndex endColumnIndex =
@@ -141,9 +141,9 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
     let position2 = mapDirectionToPosition direction2
 
     let isPartOfMaze coordinate = (grid.Canvas.IsZonePartOfMaze (getCoordinate coordinate))
-    let isALimitAt coordinate = (isALimitAt grid (getCoordinate coordinate))
-    let updateWallAtPosition coordinate = (updateWallAtPosition grid (getCoordinate coordinate))
-    let ifNotAtLimitUpdateWallAtPosition coordinate = (ifNotAtLimitUpdateWallAtPosition grid (getCoordinate coordinate))
+    let isALimitAt coordinate = (grid.IsLimitAt (getCoordinate coordinate))
+    let updateWallAtPosition coordinate = (grid.UpdateWallAtPosition (getCoordinate coordinate))
+    let ifNotAtLimitUpdateWallAtPosition coordinate = (grid.IfNotAtLimitUpdateWallAtPosition (getCoordinate coordinate))
     let getRandomIndex2FromRange = (getRandomColumnIndexFromRange isALimitAt rng increment position1)
 
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight

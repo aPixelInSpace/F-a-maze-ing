@@ -1,4 +1,6 @@
-﻿module Mazes.Core.Grid.GridView
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+
+module Mazes.Core.Grid.GridView
 
 open Mazes.Core
 open Mazes.Core.Canvas

@@ -6,16 +6,15 @@ open System
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Grid
 open Mazes.Core.Maze
 
 let private carveRow
     // params
-    direction1
-    direction2
+    position1
+    position2
     (rng : Random)
     rngTotalWeight    
-    rngDirection1Weight
+    rngPosition1Weight
     grid
     rowIndex
     startColumnIndex
@@ -30,37 +29,50 @@ let private carveRow
         if not (grid.Canvas.IsZonePartOfMaze coordinate) then ()
         else
 
-        let isDir1ALimit = (isALimitAt grid coordinate direction1)
-        let isDir2ALimit = (isALimitAt grid coordinate direction2)
+        let isPos1ALimit = (grid.IsLimitAt coordinate position1)
+        let isPos2ALimit = (grid.IsLimitAt coordinate position2)
         
-        let ifNotAtLimitUpdateWallAtPosition = ifNotAtLimitUpdateWallAtPosition grid coordinate
+        let ifNotAtLimitUpdateWallAtPosition = grid.IfNotAtLimitUpdateWallAtPosition coordinate
 
         // if we are in a corner 
-        if isDir1ALimit &&  isDir2ALimit then
-            ifNotAtLimitUpdateWallAtPosition direction1.Opposite Empty
-            ifNotAtLimitUpdateWallAtPosition direction2.Opposite Empty
+        if isPos1ALimit &&  isPos2ALimit then
+            ifNotAtLimitUpdateWallAtPosition position1.Opposite Empty
+            ifNotAtLimitUpdateWallAtPosition position2.Opposite Empty
         else
 
-        let updateWallAtPosition = updateWallAtPosition grid coordinate
+        let updateWallAtPosition = grid.UpdateWallAtPosition coordinate
 
-        // if the dir 1 is a limit then we always choose remove dir 2 (and the opposite dir 2 if possible)
-        if isDir1ALimit then
-            updateWallAtPosition direction2 Empty
-            ifNotAtLimitUpdateWallAtPosition direction2.Opposite Empty
+        // if the pos 1 is a limit then we always choose remove pos 2 (and the opposite pos 2 if possible)
+        if isPos1ALimit then
+            updateWallAtPosition position2 Empty
+            ifNotAtLimitUpdateWallAtPosition position2.Opposite Empty
         else
 
-        // if the dir 2 is a limit then we always choose remove dir 1 (and the opposite dir 1 if possible)
-        if isDir2ALimit then
-            updateWallAtPosition direction1 Empty
-            ifNotAtLimitUpdateWallAtPosition direction1.Opposite Empty
+        // if the pos 2 is a limit then we always choose remove pos 1 (and the opposite pos 1 if possible)
+        if isPos2ALimit then
+            updateWallAtPosition position1 Empty
+            ifNotAtLimitUpdateWallAtPosition position1.Opposite Empty
         else
 
-        // if dir 1 and dir 2 are both not a limit we flip a coin to decide which one we remove
+        // if pos 1 and pos 2 are both not a limit we flip a coin to decide which one we remove
         match rng.Next(rngTotalWeight) with
-        | rng when rng < rngDirection1Weight ->
-            updateWallAtPosition direction1 Empty
+        | rng when rng < rngPosition1Weight ->
+            updateWallAtPosition position1 Empty
         | _ ->
-            updateWallAtPosition direction2 Empty
+            updateWallAtPosition position2 Empty
+
+type Direction =
+    | Top
+    | Right
+    | Bottom
+    | Left
+
+let mapDirectionToPosition direction =
+    match direction with
+    | Top -> Position.Top
+    | Right -> Position.Right
+    | Bottom -> Position.Bottom
+    | Left -> Position.Left
 
 let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight grid =
 
@@ -73,13 +85,16 @@ let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2We
 
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
 
+    let position1 = mapDirectionToPosition direction1
+    let position2 = mapDirectionToPosition direction2
+
     grid.Cells
     |> extractByRows
     |> Seq.iteri(fun rowIndex _ ->
         carveRow
             // params
-            direction1
-            direction2
+            position1
+            position2
             rng
             rngTotalWeight
             rngDirection1Weight

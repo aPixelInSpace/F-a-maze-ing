@@ -2,7 +2,17 @@
 
 namespace Mazes.Core
 
-type Coordinate = {
-    RowIndex : int
-    ColumnIndex : int
-}
+open Mazes.Core.Position
+
+type Coordinate =
+    {
+        RowIndex : int
+        ColumnIndex : int
+    }
+    
+    member this.NeighborCoordinateAtPosition position =    
+        match position with
+        | Top -> { this with RowIndex = this.RowIndex - 1; }
+        | Right -> { this with ColumnIndex = this.ColumnIndex + 1 }
+        | Bottom -> { this with RowIndex = this.RowIndex + 1; }
+        | Left -> { this with ColumnIndex = this.ColumnIndex - 1 }

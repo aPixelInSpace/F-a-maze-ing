@@ -13,32 +13,36 @@ type BaseAt =
     | Left
 
 let private isCellPartOfTriangleIsosceles baseAt baseDecrement heightIncrement numberOfRows numberOfColumns rowIndex columnIndex =
-    match baseAt with
-    | BaseAt.Top ->
-        let currentFloorIndex = rowIndex / heightIncrement
-        let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrement
 
-        columnIndex >= numberOfEmptyStartingCellRow && columnIndex < (numberOfColumns - numberOfEmptyStartingCellRow)
+    let triangleIsoscelesCondition index indexLength numberOfEmptyStartingCell =
+        index >= numberOfEmptyStartingCell && index < (indexLength - numberOfEmptyStartingCell)
 
-    | BaseAt.Bottom ->
-        let numberOfFloors = numberOfRows / heightIncrement
-        let currentFloorIndex = rowIndex / heightIncrement
-        let numberOfEmptyStartingCellRow = (numberOfFloors - 1 - currentFloorIndex) * baseDecrement
+    let (index, indexLength, numberOfEmptyStartingCell) =
+        match baseAt with
+        | BaseAt.Top ->
+            let currentFloorIndex = rowIndex / heightIncrement
+            let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrement
 
-        columnIndex >= numberOfEmptyStartingCellRow && columnIndex < (numberOfColumns - numberOfEmptyStartingCellRow)
+            (columnIndex, numberOfColumns, numberOfEmptyStartingCellRow)
+        | BaseAt.Bottom ->
+            let currentFloorIndex = rowIndex / heightIncrement
+            let numberOfFloors = numberOfRows / heightIncrement
+            let numberOfEmptyStartingCellRow = ((numberOfFloors - 1) - currentFloorIndex) * baseDecrement
 
-    | BaseAt.Left ->
-        let currentFloorIndex = columnIndex / heightIncrement
-        let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrement
+            (columnIndex, numberOfColumns, numberOfEmptyStartingCellRow)
+        | BaseAt.Left ->
+            let currentFloorIndex = columnIndex / heightIncrement
+            let numberOfEmptyStartingCellRow = currentFloorIndex * baseDecrement
 
-        rowIndex >= numberOfEmptyStartingCellRow && rowIndex < (numberOfRows - numberOfEmptyStartingCellRow)
+            (rowIndex, numberOfRows, numberOfEmptyStartingCellRow)
+        | BaseAt.Right ->
+            let currentFloorIndex = columnIndex / heightIncrement
+            let numberOfFloors = numberOfColumns / heightIncrement
+            let numberOfEmptyStartingCellRow = ((numberOfFloors - 1) - currentFloorIndex) * baseDecrement
 
-    | BaseAt.Right ->
-        let numberOfFloors = numberOfColumns / heightIncrement
-        let currentFloorIndex = columnIndex / heightIncrement
-        let numberOfEmptyStartingCellRow = (numberOfFloors - 1 - currentFloorIndex) * baseDecrement
+            (rowIndex, numberOfRows, numberOfEmptyStartingCellRow)
 
-        rowIndex >= numberOfEmptyStartingCellRow && rowIndex < (numberOfRows - numberOfEmptyStartingCellRow)
+    triangleIsoscelesCondition index indexLength numberOfEmptyStartingCell
 
 // todo : allow to have an array of values for baseDecrementValue and heightIncrementValue (or, even, a function)
 let create baseLength baseAt baseDecrement heightIncrement =

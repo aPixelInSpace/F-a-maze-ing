@@ -6,11 +6,10 @@ open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Tests.Helpers
-open Mazes.Core.Array2D
 
 // fixture
 let stringFixtureCanvas =
-    Canvas.Convert.startLineTag +
+    Canvas.Convert.startLineTag + "\n" +
     "*.********\n" +
     "*.**.***..\n" +
     "**********\n" +
@@ -36,8 +35,8 @@ let ``Given a string representation of a canvas, when converting it to a canvas,
 
     canvas.NumberOfRows |> should equal 10
     canvas.NumberOfColumns |> should equal 10
-    (get canvas.Zones { RowIndex = 0; ColumnIndex = 0 }).IsAPartOfMaze |> should equal true
-    (get canvas.Zones { RowIndex = 3; ColumnIndex = 2 }).IsAPartOfMaze |> should equal false
+    (canvas.Zone { RowIndex = 0; ColumnIndex = 0 }).IsAPartOfMaze |> should equal true
+    (canvas.Zone { RowIndex = 3; ColumnIndex = 2 }).IsAPartOfMaze |> should equal false
 
 [<Fact>]
 let ``Given a wrong string representation of a canvas, when converting it to a canvas, then it should return no canvas`` () =
@@ -56,7 +55,7 @@ let ``Given an empty string representation of a canvas, when converting it to a 
 
     // arrange
     let emptyStringCanvas =
-        Canvas.Convert.startLineTag +    
+        Canvas.Convert.startLineTag + "\n" +
         Canvas.Convert.endLineTag
 
     // act

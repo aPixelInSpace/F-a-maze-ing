@@ -6,7 +6,6 @@ open System
 open FsUnit
 open Xunit
 open Mazes.Core
-open Mazes.Core.Canvas
 open Mazes.Core.Grid
 open Mazes.Core.Maze.Generate
 open Mazes.Render

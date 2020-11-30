@@ -3,6 +3,7 @@
 namespace Mazes.Core.Grid
 
 open Mazes.Core
+open Mazes.Core.Position
 open Mazes.Core.Array2D
 
 type Cell =
@@ -29,16 +30,9 @@ type Cell =
 
 module Cell =    
 
-    let getNeighborCoordinateAtPosition coordinate position =    
-        match position with
-        | Top -> { coordinate with RowIndex = coordinate.RowIndex - 1; }
-        | Right -> { coordinate with ColumnIndex = coordinate.ColumnIndex + 1 }
-        | Bottom -> { coordinate with RowIndex = coordinate.RowIndex + 1; }
-        | Left -> { coordinate with ColumnIndex = coordinate.ColumnIndex - 1 }
-
     module Instance =
 
-        let create numberOfRows numberOfColumns coordinate isCellPartOfMaze =
+        let create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =
 
             let getWallTypeForEdge isCurrentCellPartOfMaze =
                 match isCurrentCellPartOfMaze with
@@ -57,8 +51,7 @@ module Cell =
                 if isOnEdge then
                     getWallTypeForEdge isCurrentCellPartOfMaze
                 else
-                    let neighborCoordinate = getNeighborCoordinateAtPosition coordinate
-                    let isNeighborPartOfMaze = isCellPartOfMaze (neighborCoordinate position)
+                    let isNeighborPartOfMaze = isCellPartOfMaze (coordinate.NeighborCoordinateAtPosition position)
                     getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
 
             let wallTypeTop = getWallType (isFirstRow coordinate.RowIndex) Top
