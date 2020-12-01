@@ -3,12 +3,11 @@
 module Mazes.Core.Tests.Maze.Generate.BinaryTree
 
 open FsUnit
-open Mazes.Core.Maze.Generate.BinaryTree
 open Xunit
 open Mazes.Core
 open Mazes.Core.Canvas.Shape
 open Mazes.Core.Grid
-open Mazes.Core.Maze.Generate
+open Mazes.Core.Maze.Generate.BinaryTree
 open Mazes.Core.Maze.Analyse
 
 type BinaryTreeDirectionEnum =
@@ -59,12 +58,12 @@ let ``Given a rectangular canvas, when a creating a maze with the binary tree al
     let direction2 = mapBinaryTreeDirectionEnumToBinaryTreeDirection direction2
 
     // act
-    let maze = BinaryTree.createMaze direction1 direction2 rngSeed direction1Weight direction2Weight gridRectangle
+    let maze = createMaze direction1 direction2 rngSeed direction1Weight direction2Weight gridRectangle
 
     // we use the map to ensure that the total zones accessible in the maze is equal to the total number of maze zones of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
     let (_, rootCoordinate) = gridRectangle.Canvas.GetFirstTopLeftPartOfMazeZone
-    let map = Dijkstra.createMap rootCoordinate maze
+    let map = Dijkstra.createMap maze rootCoordinate
 
     // assert
     map.TotalZonesAccessibleFromRoot |> should equal (maze.Grid.Canvas).TotalOfMazeZones

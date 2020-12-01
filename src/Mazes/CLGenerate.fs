@@ -36,9 +36,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let matchAlgoEnumWithFunction algoEnum rngSeed =
         match algoEnum with
            | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
-           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right rngSeed 1 1
-           | _ -> raise(Exception("Generating algorithm unknown"))
-
+           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right rngSeed 1 1
+           | _ -> failwith "Generating algorithm unknown"
 
     let nameOfMaze =
         match options.Value.name with
@@ -63,7 +62,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let canvas =
     //    match Canvas.load save with
     //    | Some canvas -> canvas
-    //    | None -> raise(Exception("A problem occured while loading the saved canvas"))
+    //    | None -> failwith A problem occured while loading the saved canvas"
 
     //let grid = (canvas |> Grid.create)
     

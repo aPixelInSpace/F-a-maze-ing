@@ -9,17 +9,24 @@ open Mazes.Core.Array2D
 type Cell =
     { Walls : Wall array }
 
+    static member WallIndex position =
+        match position with
+        | Top -> 0
+        | Right -> 1
+        | Bottom -> 2
+        | Left -> 3
+
     member this.WallTop =
-        this.Walls.[Wall.wallIndex Top]
+        this.Walls.[Cell.WallIndex Top]
 
     member this.WallRight =
-        this.Walls.[Wall.wallIndex Right]
+        this.Walls.[Cell.WallIndex Right]
 
     member this.WallBottom =
-        this.Walls.[Wall.wallIndex Bottom]
+        this.Walls.[Cell.WallIndex Bottom]
 
     member this.WallLeft =
-        this.Walls.[Wall.wallIndex Left]
+        this.Walls.[Cell.WallIndex Left]
 
     member this.WallTypeAtPosition position =
         match position with

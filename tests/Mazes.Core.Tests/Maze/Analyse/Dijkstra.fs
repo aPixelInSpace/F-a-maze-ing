@@ -2,11 +2,9 @@
 
 module Mazes.Core.Tests.Maze.Analyse.Dijkstra
 
-open System
 open FsUnit
 open Xunit
 open Mazes.Core
-open Mazes.Core.Array2D
 open Mazes.Core.Grid
 open Mazes.Core.Maze.Generate
 open Mazes.Core.Maze.Analyse
@@ -31,7 +29,7 @@ let maze =
 
         match Canvas.Convert.fromString stringCanvas with
         | Some canvas -> canvas
-        | None -> raise(Exception "The saved canvas is not correct")
+        | None -> failwith "The saved canvas is not correct"
 
     canvas10By10
     |> Grid.create
@@ -59,7 +57,7 @@ let ``Given a root inside the maze, when creating a map, then it should give all
     let (_, rootCoordinate) = maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
 
     // act
-    let map = maze |> Dijkstra.createMap rootCoordinate
+    let map = Dijkstra.createMap maze rootCoordinate
 
     // assert
     let zone = map.MapZone
@@ -88,7 +86,7 @@ let ``Given a root inside the maze, when creating a map, then it should give all
 let ``Given a root outside the maze, when creating a map, then the root is the only zone of the map`` () =
 
     // act
-    let map = maze |> Dijkstra.createMap { RowIndex = 0; ColumnIndex = 1  }  
+    let map = Dijkstra.createMap maze { RowIndex = 0; ColumnIndex = 1  }  
 
     // assert
     let zone = map.MapZone
@@ -111,21 +109,92 @@ let ``Given a root outside the maze, when creating a map, then the root is the o
     centerZone.IsNone |> should equal true
 
 [<Fact>]
-let ``Given a root coordinate of a map and a goal coordinate, when searching the shortest path between the root and the goal, then it should return the list of coordinates that forms that path`` () =
+let ``Given a map and a goal coordinate, when searching the shortest path between the root and the goal, then it should return the list of coordinates that forms that path`` () =
 
     // arrange
     let (_, rootCoordinate) = maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
-    let map = maze |> Dijkstra.createMap rootCoordinate
+    let map = Dijkstra.createMap maze rootCoordinate
 
     // act
     let path = map.PathFromRootTo (Some { RowIndex = 9; ColumnIndex = 8 })
 
     // assert
     let expectedPath =
-            [ { RowIndex = 0; ColumnIndex = 0 }; { RowIndex = 1; ColumnIndex = 0 }; { RowIndex = 2; ColumnIndex = 0 }; { RowIndex = 2; ColumnIndex = 1 }
-              { RowIndex = 2; ColumnIndex = 2 }; { RowIndex = 1; ColumnIndex = 2 }; { RowIndex = 1; ColumnIndex = 3 }; { RowIndex = 2; ColumnIndex = 3 }
-              { RowIndex = 2; ColumnIndex = 4 }; { RowIndex = 3; ColumnIndex = 4 }; { RowIndex = 3; ColumnIndex = 5 }; { RowIndex = 3; ColumnIndex = 6 }
-              { RowIndex = 4; ColumnIndex = 6 }; { RowIndex = 5; ColumnIndex = 6 }; { RowIndex = 6; ColumnIndex = 6 }; { RowIndex = 6; ColumnIndex = 7 }
-              { RowIndex = 7; ColumnIndex = 7 }; { RowIndex = 7; ColumnIndex = 8 }; { RowIndex = 8; ColumnIndex = 8 }; { RowIndex = 9; ColumnIndex = 8 } ]
+            [| { RowIndex = 0; ColumnIndex = 0 }; { RowIndex = 1; ColumnIndex = 0 }; { RowIndex = 2; ColumnIndex = 0 }; { RowIndex = 2; ColumnIndex = 1 }
+               { RowIndex = 2; ColumnIndex = 2 }; { RowIndex = 1; ColumnIndex = 2 }; { RowIndex = 1; ColumnIndex = 3 }; { RowIndex = 2; ColumnIndex = 3 }
+               { RowIndex = 2; ColumnIndex = 4 }; { RowIndex = 3; ColumnIndex = 4 }; { RowIndex = 3; ColumnIndex = 5 }; { RowIndex = 3; ColumnIndex = 6 }
+               { RowIndex = 4; ColumnIndex = 6 }; { RowIndex = 5; ColumnIndex = 6 }; { RowIndex = 6; ColumnIndex = 6 }; { RowIndex = 6; ColumnIndex = 7 }
+               { RowIndex = 7; ColumnIndex = 7 }; { RowIndex = 7; ColumnIndex = 8 }; { RowIndex = 8; ColumnIndex = 8 }; { RowIndex = 9; ColumnIndex = 8 } |]
 
-    path |> Seq.toList |> should equal expectedPath
+    path |> Seq.toArray |> should equal expectedPath
+
+[<Fact>]
+let ``Given a map, when getting the farthest coordinates, then it should return the infos of the farthest coordinates from the root`` () =
+
+    // arrange
+    let (_, rootCoordinate) = maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
+
+    // act
+    let map = Dijkstra.createMap maze rootCoordinate
+
+    // assert
+    map.FarthestFromRoot.Distance |> should equal 19
+    
+    let expectedFarthestCoordinates = [| { RowIndex = 6; ColumnIndex = 9 }; { RowIndex = 9; ColumnIndex = 2 }; { RowIndex = 9; ColumnIndex = 6 }; { RowIndex = 9; ColumnIndex = 8 } |]
+
+    map.FarthestFromRoot.Coordinates |> should equal expectedFarthestCoordinates
+
+[<Fact>]
+let ``Given a maze and a map, when getting the longest paths in the maze, then it should return the coordinates that forms the longest paths in the maze`` () =
+
+    // arrange
+    let maze =
+        let canvas5By5 =
+            let stringCanvas =
+                Canvas.Convert.startLineTag + "\n" +
+                "*****\n" +
+                "*****\n" +
+                "*****\n" +
+                "*****\n" +
+                "*****\n" +    
+                Canvas.Convert.endLineTag
+
+            match Canvas.Convert.fromString stringCanvas with
+            | Some canvas -> canvas
+            | None -> failwith "The saved canvas is not correct"
+
+        canvas5By5
+        |> Grid.create
+        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
+
+        (*
+            the above maze looks like this
+            ┏━━━━━━━━━┓
+            ┠───╴ ╶─╮ ┃
+            ┃ ╶─╮ ┬ ╰─┨
+            ┃ ┬ │ │ ┬ ┃
+            ┃ ╰─┴─┤ │ ┃
+            ┗━━━━━┷━┷━┛
+        *)
+
+    let (_, rootCoordinate) = maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
+    let map = Dijkstra.createMap maze rootCoordinate
+
+    // act
+    let longestPaths = Dijkstra.longestPaths maze map
+
+    // assert
+    longestPaths
+    |> Seq.length
+    |> should equal 1
+
+    let longestPath = longestPaths |> Seq.head
+    longestPath |> Seq.length |> should equal 13
+
+    let expectedLongestPath =
+        [| { RowIndex = 4; ColumnIndex = 4 } ; { RowIndex = 3; ColumnIndex = 4 } ; { RowIndex = 2; ColumnIndex = 4 } ; { RowIndex = 2; ColumnIndex = 3 }
+           { RowIndex = 1; ColumnIndex = 3 } ; { RowIndex = 1; ColumnIndex = 2 } ; { RowIndex = 1; ColumnIndex = 1 } ; { RowIndex = 1; ColumnIndex = 0 }
+           { RowIndex = 2; ColumnIndex = 0 } ; { RowIndex = 3; ColumnIndex = 0 } ; { RowIndex = 4; ColumnIndex = 0 } ; { RowIndex = 4; ColumnIndex = 1 }
+           { RowIndex = 4; ColumnIndex = 2 } |]
+
+    longestPath |> Seq.toArray |> should equal expectedLongestPath

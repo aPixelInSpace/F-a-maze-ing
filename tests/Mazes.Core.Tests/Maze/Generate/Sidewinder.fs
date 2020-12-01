@@ -64,7 +64,7 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
     // we use the map to ensure that the total zones accessible in the maze is equal to the total number of maze zones of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
     let (_, rootCoordinate) = gridRectangle.Canvas.GetFirstTopLeftPartOfMazeZone
-    let map = Dijkstra.createMap rootCoordinate maze
+    let map = Dijkstra.createMap maze rootCoordinate
 
     // assert
     map.TotalZonesAccessibleFromRoot |> should equal (maze.Grid.Canvas).TotalOfMazeZones
@@ -144,7 +144,7 @@ let ``Given a triangular canvas, when creating a maze with the sidewinder algori
     // we use the map to ensure that the total zones accessible in the maze is equal to the total number of maze zones of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
     let (_, rootCoordinate) = gridTriangle.Canvas.GetFirstTopLeftPartOfMazeZone
-    let map = Dijkstra.createMap rootCoordinate maze
+    let map = Dijkstra.createMap maze rootCoordinate
 
     // assert
     map.TotalZonesAccessibleFromRoot |> should equal (maze.Grid.Canvas).TotalOfMazeZones

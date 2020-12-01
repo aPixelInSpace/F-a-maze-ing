@@ -32,7 +32,7 @@ let savedCanvas =
 let canvas =
     match Canvas.Convert.fromString savedCanvas with
     | Some canvas -> canvas
-    | None -> raise(Exception "The saved canvas is not correct")
+    | None -> failwith "The saved canvas is not correct"
 
 [<Fact>]
 let ``Rendering a customized composite canvas generated with the binary tree algorithm (Top, Right, rng 1) should be like the expected output`` () =

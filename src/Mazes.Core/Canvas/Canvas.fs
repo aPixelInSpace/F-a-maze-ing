@@ -2,7 +2,6 @@
 
 namespace Mazes.Core.Canvas
 
-open System
 open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
@@ -67,7 +66,7 @@ module Convert =
         match char with
         | c when c = charPartOfMaze -> PartOfMaze 
         | c when c = charEmpty -> Empty
-        | _ -> raise(Exception "Canvas character not supported")
+        | _ -> failwith "Canvas character not supported"
 
     let toString canvas =
         let appendZone (sBuilder : StringBuilder) zone =

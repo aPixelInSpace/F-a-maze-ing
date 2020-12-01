@@ -5,9 +5,16 @@ namespace Mazes.Core.Maze.Analyse
 open Mazes.Core
 open Mazes.Core.Array2D
 
+type Distance = int
+
 type MapZone = {    
     DistanceFromRoot : int
     Neighbors :  seq<Coordinate>
+}
+
+type FarthestFromRoot = {
+    Distance : int
+    Coordinates : Coordinate array
 }
 
 type Map =
@@ -15,6 +22,7 @@ type Map =
         Root : Coordinate
         MapZones : (MapZone option)[,]
         TotalZonesAccessibleFromRoot : int
+        FarthestFromRoot : FarthestFromRoot
     }
 
     member this.MapZone coordinate =
@@ -24,12 +32,12 @@ type Map =
         let nextCoordinate mapZone =
             mapZone.Neighbors
             |> Seq.tryFind(
-                    fun coordinateNeighbor ->
+                fun coordinateNeighbor ->
 
-                    let mapZoneNeighbor = this.MapZone coordinateNeighbor
-                    match mapZoneNeighbor with
-                    | Some mapZoneNeighbor -> mapZoneNeighbor.DistanceFromRoot < mapZone.DistanceFromRoot
-                    | None -> false)
+                let mapZoneNeighbor = this.MapZone coordinateNeighbor
+                match mapZoneNeighbor with
+                | Some mapZoneNeighbor -> mapZoneNeighbor.DistanceFromRoot < mapZone.DistanceFromRoot
+                | None -> false)
 
         seq {
             let mutable currentCoordinate = goalCoordinate

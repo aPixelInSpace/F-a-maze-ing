@@ -38,7 +38,7 @@ type Grid =
         let getWalls coordinate position =
             this.Cells.[coordinate.RowIndex, coordinate.ColumnIndex].Walls
             |> Array.mapi(fun index wall ->
-                if index = Wall.wallIndex position then
+                if index = Cell.WallIndex position then
                     { WallType = wallType; WallPosition = position}
                 else
                     wall
