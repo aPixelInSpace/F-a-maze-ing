@@ -96,9 +96,9 @@ module Array2D =
                         yield (item, coordinate)
         }
 
-    let reduce (reducer: int -> int -> 'S -> 'T -> 'S) (state: 'S) (array2d: 'T[,]) =
+    let fold (folding: int -> int -> 'S -> 'T -> 'S) (state: 'S) (array2d: 'T[,]) =
         let mutable state = state
         for r in 0 .. maxRowIndex array2d do
             for c in 0 .. maxColumnIndex array2d do
-                state <- reducer r c state (array2d.[r, c])
+                state <- folding r c state (array2d.[r, c])
         state

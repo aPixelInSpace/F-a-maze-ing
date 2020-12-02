@@ -37,42 +37,40 @@ type Cell =
 
 module Cell =    
 
-    module Instance =
+    let create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =
 
-        let create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =
+        let getWallTypeForEdge isCurrentCellPartOfMaze =
+            match isCurrentCellPartOfMaze with
+            | true -> Border
+            | false -> Empty
 
-            let getWallTypeForEdge isCurrentCellPartOfMaze =
-                match isCurrentCellPartOfMaze with
-                | true -> Border
-                | false -> Empty
+        let getWallTypeForInternal isCurrentCellPartOfMaze isOtherCellPartOfMaze =
+            match isCurrentCellPartOfMaze, isOtherCellPartOfMaze with
+            | false, false -> Empty
+            | true, true -> Normal
+            | true, false | false, true -> Border
 
-            let getWallTypeForInternal isCurrentCellPartOfMaze isOtherCellPartOfMaze =
-                match isCurrentCellPartOfMaze, isOtherCellPartOfMaze with
-                | false, false -> Empty
-                | true, true -> Normal
-                | true, false | false, true -> Border
+        let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
 
-            let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
+        let getWallType isOnEdge position =
+            if isOnEdge then
+                getWallTypeForEdge isCurrentCellPartOfMaze
+            else
+                let isNeighborPartOfMaze = isCellPartOfMaze (coordinate.NeighborCoordinateAtPosition position)
+                getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
 
-            let getWallType isOnEdge position =
-                if isOnEdge then
-                    getWallTypeForEdge isCurrentCellPartOfMaze
-                else
-                    let isNeighborPartOfMaze = isCellPartOfMaze (coordinate.NeighborCoordinateAtPosition position)
-                    getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
+        let wallTypeTop = getWallType (isFirstRow coordinate.RowIndex) Top
 
-            let wallTypeTop = getWallType (isFirstRow coordinate.RowIndex) Top
+        let wallTypeRight = getWallType (isLastColumn coordinate.ColumnIndex numberOfColumns) Right
 
-            let wallTypeRight = getWallType (isLastColumn coordinate.ColumnIndex numberOfColumns) Right
+        let wallTypeBottom = getWallType (isLastRow coordinate.RowIndex numberOfRows) Bottom
 
-            let wallTypeBottom = getWallType (isLastRow coordinate.RowIndex numberOfRows) Bottom
+        let wallTypeLeft = getWallType (isFirstColumn coordinate.ColumnIndex) Left                
 
-            let wallTypeLeft = getWallType (isFirstColumn coordinate.ColumnIndex) Left                
-
-            {
-                Walls =
-                    [| { WallType = wallTypeTop; WallPosition = Top }
-                       { WallType = wallTypeRight; WallPosition = Right }
-                       { WallType = wallTypeBottom; WallPosition = Bottom }
-                       { WallType = wallTypeLeft; WallPosition = Left } |]                
-            }
+        {
+            Walls =
+                [| { WallType = wallTypeTop; WallPosition = Top }
+                   { WallType = wallTypeRight; WallPosition = Right }
+                   { WallType = wallTypeBottom; WallPosition = Bottom }
+                   { WallType = wallTypeLeft; WallPosition = Left } |]                
+        }

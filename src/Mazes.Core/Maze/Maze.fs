@@ -2,11 +2,16 @@
 
 namespace Mazes.Core.Maze
 
+open Mazes.Core.Analysis
 open Mazes.Core.Grid
 
-type Maze = {    
-    Grid : Grid
-}
+type Maze =
+    {    
+        Grid : Grid
+    }
+
+    member this.createDijkstraMap rootCoordinate =
+        Dijkstra.Map.create this.Grid.NavigableNeighborsCoordinates this.Grid.Canvas.NumberOfRows this.Grid.Canvas.NumberOfColumns rootCoordinate
 
 type MazeInfo = {
     Name : string

@@ -38,8 +38,8 @@ type Grid =
         let getWalls coordinate position =
             this.Cells.[coordinate.RowIndex, coordinate.ColumnIndex].Walls
             |> Array.mapi(fun index wall ->
-                if index = Cell.WallIndex position then
-                    { WallType = wallType; WallPosition = position}
+                if index = (Cell.WallIndex position) then
+                    { WallType = wallType; WallPosition = position }
                 else
                     wall
                 )
@@ -81,7 +81,7 @@ module Grid =
         let cells =
             canvas.Zones |>
             Array2D.mapi(fun rowIndex columnIndex _ ->
-                Cell.Instance.create
+                Cell.create
                     canvas.NumberOfRows
                     canvas.NumberOfColumns
                     { RowIndex = rowIndex; ColumnIndex = columnIndex }

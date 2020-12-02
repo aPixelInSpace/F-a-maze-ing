@@ -8,6 +8,8 @@
         <Compile Include="Position.fs" />
         <Compile Include="Coordinate.fs" />
         <Compile Include="Array2D.fs" />
+        <Compile Include="Analysis\Dijkstra.fs" />
+        <Compile Include="Analysis\DepthFirstSearch.fs" />
         <Compile Include="Canvas\Zone.fs" />
 		<Compile Include="Canvas\Canvas.fs" />
 		<Compile Include="Canvas\Shape\Rectangle.fs" />
@@ -19,10 +21,7 @@
 		<Compile Include="Grid\GridView.fs" />
 		<Compile Include="Maze\Maze.fs" />
         <Compile Include="Maze\Generate\BinaryTree.fs" />
-        <Compile Include="Maze\Generate\Sidewinder.fs" />
-        <Compile Include="Maze\Analyse\Map.fs" />
-        <Compile Include="Maze\Analyse\Dijkstra.fs" />
-        <Compile Include="Maze\Analyse\DepthFirstSearch.fs" />
+        <Compile Include="Maze\Generate\Sidewinder.fs" />        
     </ItemGroup>
 
 </Project>

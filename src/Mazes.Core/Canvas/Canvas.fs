@@ -32,8 +32,7 @@ type Canvas =
         let counter = 0
 
         this.Zones
-        |> reduce
-                (fun _ _ counter zone ->
+        |> fold (fun _ _ counter zone ->
                  match zone.IsAPartOfMaze with
                  | true -> counter + 1
                  | _ -> counter)
