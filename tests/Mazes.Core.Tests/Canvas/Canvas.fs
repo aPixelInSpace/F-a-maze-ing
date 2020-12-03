@@ -5,7 +5,6 @@ module Mazes.Core.Tests.Canvas.Canvas
 open FsUnit
 open Xunit
 open Mazes.Core
-open Mazes.Core.Tests.Helpers
 
 // fixture
 let stringFixtureCanvas =
@@ -31,7 +30,7 @@ let ``Given a string representation of a canvas, when converting it to a canvas,
     // assert
     sut.IsSome |> should be True
 
-    let canvas = getValue sut
+    let canvas = sut.Value
 
     canvas.NumberOfRows |> should equal 10
     canvas.NumberOfColumns |> should equal 10
@@ -64,7 +63,7 @@ let ``Given an empty string representation of a canvas, when converting it to a 
     // assert
     sut.IsSome |> should be True
     
-    let canvas = getValue sut
+    let canvas = sut.Value
 
     canvas.NumberOfRows |> should equal 0
     canvas.NumberOfColumns |> should equal 0
@@ -76,7 +75,7 @@ let ``Given a canvas, when converting it to a string, then it should give a corr
     let canvas = Canvas.Convert.fromString stringFixtureCanvas
 
     // act
-    let sut = Canvas.Convert.toString (getValue canvas)
+    let sut = Canvas.Convert.toString canvas.Value
 
     // assert
     sut |> should equal stringFixtureCanvas
@@ -88,7 +87,7 @@ let ``Given a canvas, when counting the number of zones that are part of the maz
     let canvas = Canvas.Convert.fromString stringFixtureCanvas
 
     // act
-    let sut = (getValue canvas).TotalOfMazeZones
+    let sut = canvas.Value.TotalOfMazeZones
 
     // assert
     sut |> should equal 79

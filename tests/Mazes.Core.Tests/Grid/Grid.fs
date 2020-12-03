@@ -7,7 +7,6 @@ open Xunit
 open Mazes.Core
 open Mazes.Core.Position
 open Mazes.Core.Grid
-open Mazes.Core.Tests.Helpers
 
 [<Fact>]
 let ``Given an empty canvas, when creating a grid, then the grid should also be empty`` () =
@@ -20,7 +19,7 @@ let ``Given an empty canvas, when creating a grid, then the grid should also be 
     let emptyCanvas = Canvas.Convert.fromString emptyStringCanvas
 
     // act
-    let sut = getValue emptyCanvas |> Grid.create
+    let sut = emptyCanvas.Value |> Grid.create
 
     // assert
     sut.Cells.Length |> should equal 0
@@ -37,7 +36,7 @@ let ``Given a canvas with a single zone part of the maze, when creating a grid, 
     let singleZoneCanvas = Canvas.Convert.fromString singleZoneStringCanvas
 
     // act
-    let sut = getValue singleZoneCanvas |> Grid.create
+    let sut = singleZoneCanvas.Value |> Grid.create
     
     // assert
     sut.Cells.Length |> should equal 1
@@ -59,7 +58,7 @@ let ``Given a canvas with two zones part of the maze side by side horizontally, 
     let twoZonesCanvas = Canvas.Convert.fromString twoZonesStringCanvas
 
     // act
-    let sut = getValue twoZonesCanvas |> Grid.create
+    let sut = twoZonesCanvas.Value |> Grid.create
     
     // assert
     sut.Cells.Length |> should equal 2
@@ -88,7 +87,7 @@ let ``Given a canvas with two zones part of the maze side by side vertically, wh
     let twoZonesCanvas = Canvas.Convert.fromString twoZonesStringCanvas
 
     // act
-    let sut = getValue twoZonesCanvas |> Grid.create
+    let sut = twoZonesCanvas.Value |> Grid.create
 
     // assert
     sut.Cells.Length |> should equal 2
@@ -118,7 +117,7 @@ let ``Given a 3x3 canvas, when creating a grid, then it should have 3x3 cells wi
     let threeByThreeCanvas = Canvas.Convert.fromString threeByThreeStringCanvas
 
     // act
-    let sut = getValue threeByThreeCanvas |> Grid.create
+    let sut = threeByThreeCanvas.Value |> Grid.create
 
     // assert
     sut.Cells.Length |> should equal 9
@@ -195,7 +194,7 @@ let ``Given a grid, when updating a wall, then the neighbors walls should also b
         Canvas.Convert.endLineTag
 
     let threeByThreeCanvas = Canvas.Convert.fromString threeByThreeStringCanvas
-    let grid = getValue threeByThreeCanvas |> Grid.create
+    let grid = threeByThreeCanvas.Value |> Grid.create
 
     let coordinate11 = { RowIndex = 1; ColumnIndex = 1 }
 

@@ -169,4 +169,4 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
             increment
             endIndex)
 
-    { Grid = grid}
+    { Grid = grid }

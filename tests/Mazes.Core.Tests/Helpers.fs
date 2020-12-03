@@ -19,8 +19,3 @@ let mapBaseAtEnumToBaseAt dirEnum =
     | TBE.Bottom -> TriangleIsosceles.Bottom
     | TBE.Left -> TriangleIsosceles.Left
     | _ -> failwith "Triangle Isosceles Base at enumeration unknown"
-
-let getValue anOption =
-    match anOption with
-    | Some anOption -> anOption
-    | None -> failwith "There should be some option"

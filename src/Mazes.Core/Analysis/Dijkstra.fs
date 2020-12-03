@@ -2,28 +2,33 @@
 
 module Mazes.Core.Analysis.Dijkstra
 
+open System.Collections.Generic
+open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
 
 type Distance = int
 
-type Node =
-    {    
+type Node = {    
         DistanceFromRoot : int
         Neighbors :  seq<Coordinate>
     }
 
-type FarthestFromRoot =
-    {
+type FarthestFromRoot = {
         Distance : int
         Coordinates : Coordinate array
+    }
+
+type private DistanceVisited = {
+        Distance : Distance
+        Visited : bool
     }
 
 type Map =
     {
         Root : Coordinate
         Nodes : (Node option)[,]
-        TotalNodesAccessibleFromRoot : int
+        ConnectedNodes : int
         FarthestFromRoot : FarthestFromRoot
     }
 
@@ -47,35 +52,29 @@ type Map =
         | Some node -> node.Neighbors
         | None -> Seq.empty
 
-    member this.PathFromGoalToRoot (goalCoordinate : Coordinate option) =
-        let nextCoordinate node =
-            node.Neighbors
-            |> Seq.tryFind(
-                fun coordinateNeighbor ->
+    member this.PathFromGoalToRoot goalCoordinate =
+        let nextCoordinate coordinate =            
+            match this.Node coordinate with
+            | Some node ->
+                node.Neighbors
+                |> Seq.tryFind(
+                    fun coordinateNeighbor ->
 
-                let nodeNeighbor = this.Node coordinateNeighbor
-                match nodeNeighbor with
-                | Some nodeNeighbor -> nodeNeighbor.DistanceFromRoot < node.DistanceFromRoot
-                | None -> false)
+                    let nodeNeighbor = this.Node coordinateNeighbor
+                    match nodeNeighbor with
+                    | Some nodeNeighbor -> nodeNeighbor.DistanceFromRoot < node.DistanceFromRoot
+                    | None -> false)
+            | None -> None
 
         seq {
-            let mutable currentCoordinate = goalCoordinate
+            let mutable (currentCoordinate : Coordinate option) = Some goalCoordinate
+
             while currentCoordinate.IsSome do
-
-                let currentCoordinateValue = currentCoordinate.Value
-
-                yield currentCoordinateValue
-
-                let currentNode = this.Node currentCoordinateValue                   
-
-                match currentNode with
-                | Some currentNode ->
-                    currentCoordinate <- nextCoordinate currentNode                        
-                | None ->
-                    currentCoordinate <- None
+                yield currentCoordinate.Value
+                currentCoordinate <- nextCoordinate currentCoordinate.Value
         }
 
-    member this.PathFromRootTo (goalCoordinate : Coordinate option) =
+    member this.PathFromRootTo goalCoordinate =
         this.PathFromGoalToRoot goalCoordinate
         |> Seq.rev
 
@@ -84,53 +83,119 @@ type Map =
             for farthestCoordinate in this.FarthestFromRoot.Coordinates do
                 let mapFromFarthest = Map.create this.NodeNeighbors this.NumberOfRows this.NumberOfColumns farthestCoordinate
                 for newFarthestCoordinate in mapFromFarthest.FarthestFromRoot.Coordinates do
-                    yield mapFromFarthest.PathFromGoalToRoot (Some newFarthestCoordinate)
+                    yield mapFromFarthest.PathFromGoalToRoot newFarthestCoordinate
         }
 
     static member create getNeighborsCoordinate numberOfRows numberOfColumns rootCoordinate =
 
+        // keeping track of the nodes by distances
         let mutable farthestDistance = 0
-        let farthestCoordinates = ResizeArray<Coordinate>()
+        let coordinatesByDistance = Dictionary<Distance, ResizeArray<Coordinate>>()
 
-        let updateFarthest actualDistance actualCoordinate =
-            if actualDistance > farthestDistance then
-                farthestCoordinates.Clear()
-                farthestCoordinates.Add(actualCoordinate)
-                farthestDistance <- actualDistance
-            elif actualDistance = farthestDistance then
-                farthestCoordinates.Add(actualCoordinate)            
+        let removeCoordinateByDistance coordinate oldDistance newDistance =
+            if coordinatesByDistance.ContainsKey(oldDistance) then
+                let distanceArray = coordinatesByDistance.Item(oldDistance)
+                if distanceArray.Remove(coordinate) then
+                    if distanceArray.Count = 0 then
+                        farthestDistance <- newDistance
+                        coordinatesByDistance.Remove(oldDistance) |> ignore
+
+        let updateCoordinateByDistance coordinate newDistance =
+            if coordinatesByDistance.ContainsKey(newDistance) then
+                let distanceArray = coordinatesByDistance.Item(newDistance)
+                distanceArray.Add(coordinate)
             else
-                ()
+                let distanceArray = ResizeArray<Coordinate>()
+                distanceArray.Add(coordinate)
+                coordinatesByDistance.Add(newDistance, distanceArray)
 
+            if newDistance > farthestDistance then
+                farthestDistance <- newDistance
+
+        // the main array2d nodes
         let nodes = Array2D.create numberOfRows numberOfColumns None
+        
+        // gives the node which has the min distance from a seq of nodes
+        let minDistanceNode (coordinates : Coordinate seq) =
+            let someNodes =
+                coordinates
+                |> Seq.map(fun coordinate -> (get nodes coordinate))
+                |> Seq.filter(fun node -> node.IsSome)
+                
+            if someNodes |> Seq.isEmpty then
+                None
+            else
+                someNodes |> Seq.minBy(fun node -> node.Value.DistanceFromRoot)               
 
-        let mutable unvisited = Map.empty.Add(rootCoordinate, -1)    
+        // keeping track of the nodes to visit
+        let unvisited = Dictionary<Coordinate, DistanceVisited>()
 
-        let counter = ref 0
+        let updateUnvisited coordinate distance visited =
+            unvisited.Remove(coordinate) |> ignore
+            unvisited.Add(coordinate, { Distance = distance; Visited = visited })
 
-        while not unvisited.IsEmpty do
-            let unvisitedCoordinate = unvisited |> Seq.head
+        // initializing with the root node
+        unvisited.Add(rootCoordinate, { Distance = -1; Visited = false })
 
-            let coordinate = unvisitedCoordinate.Key
-            let actualDistance = unvisitedCoordinate.Value + 1
+        let connectedNodes = ref 0
 
-            // update the nodes
+        // main loop
+        while unvisited.Count > 0 do
+            let current = unvisited |> Seq.head
+
+            let coordinate = current.Key                   
             let neighbors = getNeighborsCoordinate coordinate
-            nodes.[coordinate.RowIndex, coordinate.ColumnIndex] <- Some { DistanceFromRoot = actualDistance; Neighbors = neighbors }
+            
+            let newDistance =
+                match (minDistanceNode neighbors) with
+                | Some minNeighborNode -> minNeighborNode.DistanceFromRoot + 1
+                | None -> current.Value.Distance + 1
+            
+            nodes.[coordinate.RowIndex, coordinate.ColumnIndex] <- Some { DistanceFromRoot = newDistance; Neighbors = neighbors }
 
             // update the others useful infos
-            incr counter
-            updateFarthest actualDistance coordinate
+            if not (current.Value.Visited) then
+                incr connectedNodes
 
-            // update the unvisited with the coordinates that are not yet visited
-            unvisited <-
-                    neighbors
-                    |> Seq.filter(fun nCoordinate -> (get nodes nCoordinate).IsNone)
-                    |> Seq.fold
-                           (fun (m : Map<Coordinate, Distance>) neighborCoordinate -> m.Add(neighborCoordinate, actualDistance))
-                           (unvisited.Remove(coordinate))
+            updateCoordinateByDistance coordinate newDistance
+
+            // update the unvisited with the coordinates that are not yet visited or if we found a path that is shorter
+            unvisited.Remove(coordinate) |> ignore
+
+            neighbors
+            |> Seq.iter(fun nCoordinate ->
+                    match (get nodes nCoordinate) with
+                    | Some neighborNode ->
+                        if neighborNode.DistanceFromRoot >= newDistance then
+                            updateUnvisited nCoordinate newDistance true
+                            removeCoordinateByDistance nCoordinate neighborNode.DistanceFromRoot newDistance
+                    | None -> updateUnvisited nCoordinate newDistance false    
+                )
 
         { Root = rootCoordinate
           Nodes = nodes
-          TotalNodesAccessibleFromRoot = counter.Value
-          FarthestFromRoot = { Distance = farthestDistance; Coordinates = farthestCoordinates.ToArray() } }
+          ConnectedNodes = connectedNodes.Value
+          FarthestFromRoot = { Distance = farthestDistance; Coordinates = coordinatesByDistance.Item(farthestDistance).ToArray() } }
+
+module Map =
+
+    let toString map =
+        let appendNode (sBuilder : StringBuilder) (node : Node option) =
+            let sNode =
+                match node with
+                | Some node -> "(" + node.DistanceFromRoot.ToString() + ")"
+                | None -> "( )"
+            sBuilder.Append(sNode) |> ignore
+
+        let appendRow (sBuilder : StringBuilder) rowNodes =
+            rowNodes
+            |> Array.iter(fun node -> appendNode sBuilder node)
+
+            sBuilder.Append('\n') |> ignore
+
+        let sBuilder = StringBuilder()        
+        map.Nodes
+            |> extractByRows
+            |> Seq.iter(fun rowNodes -> appendRow sBuilder rowNodes)
+
+        sBuilder.ToString()

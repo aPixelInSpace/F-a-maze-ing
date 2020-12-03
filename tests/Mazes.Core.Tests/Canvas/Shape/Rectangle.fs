@@ -5,7 +5,6 @@ module Mazes.Core.Tests.Canvas.Shape.Rectangle
 open FsUnit
 open Xunit
 open Mazes.Core
-open Mazes.Core.Tests.Helpers
 open Mazes.Core.Canvas.Shape
 
 [<Fact>]
@@ -27,6 +26,6 @@ let ``Given a number of rows and columns, when creating a rectangle, then it sho
             "*****\n" +
             Canvas.Convert.endLineTag
 
-        getValue (Canvas.Convert.fromString stringRepresentationCanvas)
+        (Canvas.Convert.fromString stringRepresentationCanvas).Value
 
     sut |> should equal expectedCanvas

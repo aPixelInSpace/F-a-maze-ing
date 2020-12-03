@@ -5,7 +5,6 @@ module Mazes.Core.Tests.Canvas.Shape.TriangleIsosceles
 open FsUnit
 open Xunit
 open Mazes.Core
-open Mazes.Core.Tests.Helpers
 open Mazes.Core.Canvas.Shape
 
 [<Fact>]
@@ -31,7 +30,7 @@ let ``Given a base length of 9, a base at bottom, a base decrement of 1 and a he
             "*********\n" +
             Canvas.Convert.endLineTag
 
-        getValue (Canvas.Convert.fromString stringRepresentationCanvas)
+        (Canvas.Convert.fromString stringRepresentationCanvas).Value
 
     sut |> should equal expectedCanvas
 
@@ -55,7 +54,7 @@ let ``Given a base length of 7, a base at top, a base decrement of 2 and a heigh
             "..***..\n" +
             Canvas.Convert.endLineTag
 
-        getValue (Canvas.Convert.fromString stringRepresentationCanvas)
+        (Canvas.Convert.fromString stringRepresentationCanvas).Value
 
     sut |> should equal expectedCanvas
 
@@ -82,7 +81,7 @@ let ``Given a base length of 5, a base at left, a base decrement of 1 and a heig
             "**....\n" +
             Canvas.Convert.endLineTag
 
-        getValue (Canvas.Convert.fromString stringRepresentationCanvas)
+        (Canvas.Convert.fromString stringRepresentationCanvas).Value
 
     sut |> should equal expectedCanvas
 
@@ -114,6 +113,6 @@ let ``Given a base length of 10, a base at right, a base decrement of 2 and a he
             "....**\n" +
             Canvas.Convert.endLineTag
 
-        getValue (Canvas.Convert.fromString stringRepresentationCanvas)
+        (Canvas.Convert.fromString stringRepresentationCanvas).Value
 
     sut |> should equal expectedCanvas

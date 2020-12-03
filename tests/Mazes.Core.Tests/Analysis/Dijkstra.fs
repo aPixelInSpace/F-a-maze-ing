@@ -5,9 +5,10 @@ module Mazes.Core.Tests.Analysis.Dijkstra
 open FsUnit
 open Xunit
 open Mazes.Core
+open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid
+open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
-open Mazes.Core.Tests.Helpers
 
 // fixture
 let maze =    
@@ -25,9 +26,7 @@ let maze =
         "*.*****.*.\n" +    
         Canvas.Convert.endLineTag
 
-    match Canvas.Convert.fromString stringCanvas with
-    | Some canvas -> canvas
-    | None -> failwith "The saved canvas is not correct"    
+    (Canvas.Convert.fromString stringCanvas).Value    
     |> Grid.create
     |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
@@ -50,30 +49,30 @@ let maze =
 let ``Given a root inside the maze, when creating a map, then it should give all the distances from the root for every node inside the maze`` () =
 
     // arrange
-    let (_, rootCoordinate) = maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
+    let rootCoordinate = snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
 
     // act
     let map = maze.createDijkstraMap rootCoordinate
 
     // assert
     let node = map.Node
-    map.TotalNodesAccessibleFromRoot |> should equal 79
+    map.ConnectedNodes |> should equal 79
 
     let topLeftNode = node { RowIndex = 0; ColumnIndex = 9 }
     topLeftNode.IsSome |> should equal true
-    (getValue topLeftNode).DistanceFromRoot |> should equal 13
+    topLeftNode.Value.DistanceFromRoot |> should equal 13
 
     let bottomLeftNode = node { RowIndex = 9; ColumnIndex = 0 }
     bottomLeftNode.IsSome |> should equal true
-    (getValue bottomLeftNode).DistanceFromRoot |> should equal 17
+    bottomLeftNode.Value.DistanceFromRoot |> should equal 17
 
     let bottomRightNode = node { RowIndex = 9; ColumnIndex = 8 }
     bottomRightNode.IsSome |> should equal true
-    (getValue bottomRightNode).DistanceFromRoot |> should equal 19
+    bottomRightNode.Value.DistanceFromRoot |> should equal 19
 
     let centerNode = node { RowIndex = 5; ColumnIndex = 4 }
     centerNode.IsSome |> should equal true
-    (getValue centerNode).DistanceFromRoot |> should equal 15
+    centerNode.Value.DistanceFromRoot |> should equal 15
 
     let outsideOfTheMazeNode = node { RowIndex = 0; ColumnIndex = 1 }
     outsideOfTheMazeNode.IsNone |> should equal true
@@ -86,11 +85,11 @@ let ``Given a root outside the maze, when creating a map, then the root is the o
 
     // assert
     let node = map.Node
-    map.TotalNodesAccessibleFromRoot |> should equal 1
+    map.ConnectedNodes |> should equal 1
 
     let outsideOfTheMazeNode = node { RowIndex = 0; ColumnIndex = 1 }
     outsideOfTheMazeNode.IsSome |> should equal true
-    (getValue outsideOfTheMazeNode).DistanceFromRoot |> should equal 0
+    outsideOfTheMazeNode.Value.DistanceFromRoot |> should equal 0
 
     let topLeftNode = node { RowIndex = 0; ColumnIndex = 9 }
     topLeftNode.IsNone |> should equal true
@@ -105,14 +104,71 @@ let ``Given a root outside the maze, when creating a map, then the root is the o
     centerNode.IsNone |> should equal true
 
 [<Fact>]
+let ``Given a map with no internal walls, when getting all the distances from the root, then it should match the expected distances`` () =
+
+    // arrange
+    let simpleCanvas =
+        Canvas.Convert.startLineTag + "\n" +
+        "*****\n" +
+        "*****\n" +
+        "*****\n" +
+        "*****\n" +
+        Canvas.Convert.endLineTag
+
+    let maze =
+        (Canvas.Convert.fromString simpleCanvas).Value
+        |> Grid.create
+        |> Maze.createEmpty
+
+    // act
+    let map = maze.createDijkstraMap (snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone)
+
+    // assert
+    let distances = Map.toString map
+    
+    let expectedDistances =
+        "(0)(1)(2)(3)(4)\n" +
+        "(1)(2)(3)(4)(5)\n" +
+        "(2)(3)(4)(5)(6)\n" +
+        "(3)(4)(5)(6)(7)\n"
+
+    distances |> should equal expectedDistances
+
+[<Fact>]
+let ``Given a map, when getting all the distances from the root, then it should match the expected distances`` () =
+
+    // arrange
+    let rootCoordinate = snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
+
+    // act
+    let map = maze.createDijkstraMap rootCoordinate
+
+    // assert
+    let distances = Map.toString map
+    
+    let expectedDistances =
+        "(0)( )(6)(7)(8)(9)(10)(11)(12)(13)\n" +
+        "(1)( )(5)(6)( )(10)(11)(12)( )( )\n" +
+        "(2)(3)(4)(7)(8)(9)(12)(13)(14)(15)\n" +
+        "( )( )( )(8)(9)(10)(11)(12)(15)(16)\n" +
+        "(16)(17)( )(9)(10)(13)(12)( )(16)(17)\n" +
+        "(15)(18)( )(10)(15)(14)(13)( )( )(18)\n" +
+        "(14)(13)(12)(11)(16)(17)(14)(15)( )(19)\n" +
+        "(15)(14)(13)(12)(13)(14)(15)(16)(17)(18)\n" +
+        "(16)( )( )( )(16)(15)(16)(17)(18)( )\n" +
+        "(17)( )(19)(18)(17)(18)(19)( )(19)( )\n"
+
+    distances |> should equal expectedDistances
+
+[<Fact>]
 let ``Given a map and a goal coordinate, when searching the shortest path between the root and the goal, then it should return the list of coordinates that forms that path`` () =
 
     // arrange
-    let (_, rootCoordinate) = maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
+    let rootCoordinate = snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
     let map = maze.createDijkstraMap rootCoordinate
 
     // act
-    let path = map.PathFromRootTo (Some { RowIndex = 9; ColumnIndex = 8 })
+    let path = map.PathFromRootTo { RowIndex = 9; ColumnIndex = 8 }
 
     // assert
     let expectedPath =
@@ -124,21 +180,52 @@ let ``Given a map and a goal coordinate, when searching the shortest path betwee
 
     path |> Seq.toArray |> should equal expectedPath
 
+
 [<Fact>]
-let ``Given a map, when getting the farthest coordinates, then it should return the infos of the farthest coordinates from the root`` () =
+let ``Given a grid with a hole, when getting the farthest coordinates, then it should return the information of the farthest coordinates from the root`` () =
 
     // arrange
-    let (_, rootCoordinate) = maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
+    let simpleCanvas =
+        Canvas.Convert.startLineTag + "\n" +
+        "***\n" +
+        "*.*\n" +
+        "***\n" +
+        Canvas.Convert.endLineTag
+
+    let maze =
+        (Canvas.Convert.fromString simpleCanvas).Value    
+        |> Grid.create
+        |> Maze.createEmpty
+
+    let rootCoordinate = snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
 
     // act
     let map = maze.createDijkstraMap rootCoordinate
 
     // assert
-    map.FarthestFromRoot.Distance |> should equal 19
+    map.ConnectedNodes |> should equal 8
+    map.FarthestFromRoot.Distance |> should equal 4
+    
+    map.Nodes.[2, 0].Value.DistanceFromRoot |> should equal 2
+    map.Nodes.[0, 2].Value.DistanceFromRoot |> should equal 2
+
+[<Fact>]
+let ``Given a map, when getting the farthest coordinates, then it should return the infos of the farthest coordinates from the root`` () =
+
+    // arrange
+    let rootCoordinate = snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
+
+    // act
+    let map = maze.createDijkstraMap rootCoordinate
+
+    // assert
+    map.FarthestFromRoot.Distance |> should equal 19    
     
     let expectedFarthestCoordinates = [| { RowIndex = 6; ColumnIndex = 9 }; { RowIndex = 9; ColumnIndex = 2 }; { RowIndex = 9; ColumnIndex = 6 }; { RowIndex = 9; ColumnIndex = 8 } |]
 
-    map.FarthestFromRoot.Coordinates |> should equal expectedFarthestCoordinates
+    map.FarthestFromRoot.Coordinates
+    |> Array.sortBy(fun c -> c.RowIndex, c.ColumnIndex)
+    |> should equal expectedFarthestCoordinates
 
 [<Fact>]
 let ``Given a map, when getting the longest paths in the map, then it should return the coordinates that forms the longest paths`` () =
@@ -154,9 +241,7 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
             "*****\n" +    
             Canvas.Convert.endLineTag
 
-        match Canvas.Convert.fromString stringCanvas with
-        | Some canvas -> canvas
-        | None -> failwith "The saved canvas is not correct"
+        (Canvas.Convert.fromString stringCanvas).Value
         |> Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
@@ -170,7 +255,7 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
             ┗━━━━━┷━┷━┛
         *)
 
-    let (_, rootCoordinate) = maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
+    let rootCoordinate = snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
     let map = maze.createDijkstraMap rootCoordinate
 
     // act
