@@ -55,7 +55,7 @@ let ``Given a root inside the maze, when creating a map, then it should give all
     let map = maze.createDijkstraMap rootCoordinate
 
     // assert
-    let node = map.Node
+    let node = map.Graph.Node
     map.ConnectedNodes |> should equal 79
 
     let topLeftNode = node { RowIndex = 0; ColumnIndex = 9 }
@@ -84,7 +84,7 @@ let ``Given a root outside the maze, when creating a map, then the root is the o
     let map = maze.createDijkstraMap { RowIndex = 0; ColumnIndex = 1  }  
 
     // assert
-    let node = map.Node
+    let node = map.Graph.Node
     map.ConnectedNodes |> should equal 1
 
     let outsideOfTheMazeNode = node { RowIndex = 0; ColumnIndex = 1 }
@@ -124,7 +124,7 @@ let ``Given a map with no internal walls, when getting all the distances from th
     let map = maze.createDijkstraMap (snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone)
 
     // assert
-    let distances = Map.toString map
+    let distances = map.Graph.ToString
     
     let expectedDistances =
         "(0)(1)(2)(3)(4)\n" +
@@ -144,7 +144,7 @@ let ``Given a map, when getting all the distances from the root, then it should 
     let map = maze.createDijkstraMap rootCoordinate
 
     // assert
-    let distances = Map.toString map
+    let distances = map.Graph.ToString
     
     let expectedDistances =
         "(0)( )(6)(7)(8)(9)(10)(11)(12)(13)\n" +
@@ -168,7 +168,7 @@ let ``Given a map and a goal coordinate, when searching the shortest path betwee
     let map = maze.createDijkstraMap rootCoordinate
 
     // act
-    let path = map.PathFromRootTo { RowIndex = 9; ColumnIndex = 8 }
+    let path = map.Graph.PathFromRootTo { RowIndex = 9; ColumnIndex = 8 }
 
     // assert
     let expectedPath =
@@ -206,8 +206,8 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
     map.ConnectedNodes |> should equal 8
     map.FarthestFromRoot.Distance |> should equal 4
     
-    map.Nodes.[2, 0].Value.DistanceFromRoot |> should equal 2
-    map.Nodes.[0, 2].Value.DistanceFromRoot |> should equal 2
+    map.Graph.Nodes.[2, 0].Value.DistanceFromRoot |> should equal 2
+    map.Graph.Nodes.[0, 2].Value.DistanceFromRoot |> should equal 2
 
 [<Fact>]
 let ``Given a map, when getting the farthest coordinates, then it should return the infos of the farthest coordinates from the root`` () =

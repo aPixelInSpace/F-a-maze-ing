@@ -8,8 +8,10 @@
         <Compile Include="Position.fs" />
         <Compile Include="Coordinate.fs" />
         <Compile Include="Array2D.fs" />
-        <Compile Include="Analysis\Dijkstra.fs" />
         <Compile Include="Analysis\DepthFirstSearch.fs" />
+        <Compile Include="Analysis\Dijkstra\BaseTypes.fs" />
+        <Compile Include="Analysis\Dijkstra\Graph.fs" />
+        <Compile Include="Analysis\Dijkstra\Map.fs" />
         <Compile Include="Canvas\Zone.fs" />
 		<Compile Include="Canvas\Canvas.fs" />
 		<Compile Include="Canvas\Shape\Rectangle.fs" />
@@ -22,6 +24,10 @@
 		<Compile Include="Maze\Maze.fs" />
         <Compile Include="Maze\Generate\BinaryTree.fs" />
         <Compile Include="Maze\Generate\Sidewinder.fs" />        
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="OptimizedPriorityQueue" Version="5.0.0" />
     </ItemGroup>
 
 </Project>
