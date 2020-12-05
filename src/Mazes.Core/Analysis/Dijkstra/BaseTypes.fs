@@ -7,11 +7,13 @@ open Mazes.Core
 
 type Distance = int
 
+[<Struct>]
 type Node = {    
         DistanceFromRoot : Distance
         Neighbors :  seq<Coordinate>
     }
 
+[<Struct>]
 type FarthestFromRoot = {
         Distance : Distance
         Coordinates : Coordinate array

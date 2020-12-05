@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <Compile Include="Text.fs" />
+      <Compile Include="SVG.fs" />
     </ItemGroup>
 
     <ItemGroup>

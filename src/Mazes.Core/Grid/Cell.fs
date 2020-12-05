@@ -6,6 +6,7 @@ open Mazes.Core
 open Mazes.Core.Position
 open Mazes.Core.Array2D
 
+[<Struct>]
 type Cell =
     { Walls : Wall array }
 

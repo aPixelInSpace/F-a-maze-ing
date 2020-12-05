@@ -9,6 +9,7 @@ type WallType =
     | Border
     | Empty
 
+[<Struct>]
 type Wall = {
     WallType : WallType
     WallPosition : Position

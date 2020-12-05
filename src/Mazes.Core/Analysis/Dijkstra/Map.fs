@@ -29,7 +29,7 @@ type Tracker<'Key, 'Priority, 'Payload when 'Key : equality and 'Priority :> ICo
 
     member this.Add key priority payload =
         this.AddQueue key priority
-        this.AddPayload key (payload)
+        this.AddPayload key payload
 
     member this.HasItems =
         this.PriorityQueue.Count > 0
@@ -39,9 +39,9 @@ type Tracker<'Key, 'Priority, 'Payload when 'Key : equality and 'Priority :> ICo
         let payload = this.Payloads.Item(key)
         (key, payload)
 
-    static member createEmpty =
+    static member createEmpty (numberOfElements : int) =
         { PriorityQueue = SimplePriorityQueue<'Key, 'Priority>()
-          Payloads = Dictionary<'Key, 'Payload>() }
+          Payloads = Dictionary<'Key, 'Payload>(numberOfElements) }
 
 type Map =
     {
@@ -65,14 +65,12 @@ type Map =
 
         let graph = Graph.createEmpty numberOfRows numberOfColumns
 
-        let unvisited = Tracker<Coordinate, Distance, (Distance * Visited)>.createEmpty
+        let unvisited = Tracker<Coordinate, Distance, (Distance * Visited)>.createEmpty (numberOfRows * numberOfColumns)
         unvisited.Add rootCoordinate -1 (-1, false)        
 
-        let connectedNodes = ref 0
-        let counter = ref 0
+        let connectedNodes = ref 0        
 
         while unvisited.HasItems do
-            incr counter
 
             let (coordinate, (currentDistance, visited)) = unvisited.Pop
 

@@ -276,3 +276,16 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
            { RowIndex = 4; ColumnIndex = 2 } |]
 
     longestPath |> Seq.toArray |> should equal expectedLongestPath
+
+//[<Fact>]
+//let ``Big maze`` () =
+//    let maze =
+//        Canvas.Shape.Rectangle.create 1000 1000
+//        |> Grid.create
+//        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
+//    
+//    let map = maze.createDijkstraMap (snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone)
+//
+//    map.ConnectedNodes |> should equal 1000000
+//
+//    true |> should equal true
