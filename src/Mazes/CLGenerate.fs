@@ -11,6 +11,7 @@ open Mazes.Core.Canvas
 open Mazes.Core.Grid
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
+open Mazes.Render
 open Mazes.Render.Text
 open Mazes.Output.Html
 
@@ -60,9 +61,9 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //File.WriteAllText(filePath.Replace(".html", ".canvas.mazes"), canvasSave, Encoding.UTF8)
     //let save = File.ReadAllText(filePath.Replace(".html", ".canvas.mazes"))     
     //let canvas =
-    //    match Canvas.load save with
+    //    match Canvas.Convert.fromString save with
     //    | Some canvas -> canvas
-    //    | None -> failwith A problem occured while loading the saved canvas"
+    //    | None -> failwith "A problem occured while loading the saved canvas"
 
     //let grid = (canvas |> Grid.create)
     
@@ -120,6 +121,9 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     
     //let rawTestOutput = outputRawForTest maze renderedGrid
     //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
+
+    //let renderedGridSvg = SVG.renderGrid maze.Grid
+    //File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
 
     printfn "Mazes creation finished !"
     printfn "File location is %s" filePath

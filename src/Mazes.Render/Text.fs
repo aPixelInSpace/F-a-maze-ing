@@ -145,7 +145,7 @@ let private append
     (sBuilder : StringBuilder) (grid : Grid) coordinate
     (intersectionWallLeft, intersectionWallTop, intersectionWallRight, intersectionWallBottom,
      middleWall,
-     lastIntersectionWallLeft, lastIntersectionWallTop, lastIntersectionWallRight, lastIntersectionWallBottom) =
+     (lastIntersectionWallLeft : WallType Lazy), (lastIntersectionWallTop : WallType Lazy), lastIntersectionWallRight, lastIntersectionWallBottom) =
 
     // intersection
     sBuilder.Append(getPieceOfWall
@@ -165,8 +165,8 @@ let private append
     // last part only on the last column
     if (coordinate.ColumnIndex = grid.Canvas.MaxColumnIndex) then
         sBuilder.Append(getPieceOfWall
-                            (lastIntersectionWallLeft ())
-                            (lastIntersectionWallTop ())
+                            lastIntersectionWallLeft.Value
+                            lastIntersectionWallTop.Value
                             lastIntersectionWallRight
                             lastIntersectionWallBottom) |> ignore
     ()
@@ -186,9 +186,9 @@ let private wallTypes (grid : Grid) coordinate =
     
     let middleWall = cell.WallTypeAtPosition Top
 
-    let lastIntersectionWallLeft = (fun () -> cell.WallTypeAtPosition Top)
+    let lastIntersectionWallLeft = (lazy (cell.WallTypeAtPosition Top))
 
-    let lastIntersectionWallTop = (fun () -> ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Top Right)
+    let lastIntersectionWallTop = (lazy (ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Top Right))
 
     let lastIntersectionWallRight = Empty
 
@@ -210,9 +210,9 @@ let private wallTypesLastRow (grid : Grid) coordinate =
     
     let middleWall = cell.WallTypeAtPosition Bottom
 
-    let lastIntersectionWallLeft = (fun () -> cell.WallTypeAtPosition Bottom)
+    let lastIntersectionWallLeft = (lazy (cell.WallTypeAtPosition Bottom))
 
-    let lastIntersectionWallTop = (fun () -> cell.WallTypeAtPosition Right)
+    let lastIntersectionWallTop = (lazy (cell.WallTypeAtPosition Right))    
 
     let lastIntersectionWallRight = Empty
 
@@ -220,28 +220,25 @@ let private wallTypesLastRow (grid : Grid) coordinate =
 
     (intersectionWallLeft, intersectionWallTop, intersectionWallRight, intersectionWallBottom, middleWall, lastIntersectionWallLeft, lastIntersectionWallTop, lastIntersectionWallRight, lastIntersectionWallBottom)
 
-let private appendRows sBuilder grid rows =
+let private appendColumns rowIndex lastColumnIndex append wallTypes =
+    for columnIndex in 0 .. lastColumnIndex do
+        let coordinate = { RowIndex = rowIndex; ColumnIndex = columnIndex }
+        append coordinate (wallTypes coordinate)
+
+let private appendRows sBuilder grid (rows : _[] List) =
     let append = append sBuilder grid
 
-    // one line for each row
-    rows
-    |> List.iteri(fun rowIndex row ->
-        row
-        |> Array.iteri(fun columnIndex _ ->
-        let coordinate = { RowIndex = rowIndex; ColumnIndex = columnIndex }
-        let wallTypes = wallTypes grid coordinate
-        append coordinate wallTypes)
+    let lastRowIndex = (rows |> Seq.length) - 1
+    for rowIndex in 0 .. lastRowIndex do
 
-        sBuilder.Append("\n") |> ignore)
+        let lastColumnIndex = (rows.[rowIndex] |> Seq.length) - 1
+        let appendColumns = appendColumns rowIndex lastColumnIndex append
 
-    if grid.HasCells then
-        // necessary to add the last char line on the last row
-        let lastRowIndex = grid.Canvas.MaxRowIndex
-        rows.[lastRowIndex]
-        |> Array.iteri(fun columnIndex _ ->
-            let coordinate = { RowIndex = lastRowIndex; ColumnIndex = columnIndex }
-            let wallTypesLastRow = wallTypesLastRow grid coordinate
-            append coordinate wallTypesLastRow)
+        appendColumns (wallTypes grid)
+        sBuilder.Append("\n") |> ignore
+
+        if rowIndex = lastRowIndex then
+            appendColumns (wallTypesLastRow grid)
 
 let renderGrid grid =
     let sBuilder = StringBuilder()
