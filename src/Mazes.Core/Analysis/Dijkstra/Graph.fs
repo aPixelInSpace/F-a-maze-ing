@@ -3,6 +3,7 @@
 namespace Mazes.Core.Analysis.Dijkstra
 
 open System.Text
+open Priority_Queue
 open Mazes.Core
 open Mazes.Core.Array2D
 
@@ -37,13 +38,17 @@ type Graph =
     member this.MinDistanceNode (coordinates : Coordinate seq) =
         let someNodes =
             coordinates
-            |> Seq.map(fun coordinate -> (this.Node coordinate))
-            |> Seq.filter(fun node -> node.IsSome)
-            
-        if someNodes |> Seq.isEmpty then
-            None
+            |> Seq.fold(fun (filtered : SimplePriorityQueue<Node, Distance>) coordinate ->
+                    match (this.Node coordinate) with
+                    | Some node -> filtered.Enqueue(node, node.DistanceFromRoot)
+                    | None -> ()
+                    filtered
+                ) (SimplePriorityQueue<Node, Distance>())
+
+        if someNodes.Count > 0 then
+            Some someNodes.First
         else
-            someNodes |> Seq.minBy(fun node -> node.Value.DistanceFromRoot)
+            None
 
     member this.PathFromGoalToRoot goalCoordinate =
         let nextCoordinate coordinate =            
