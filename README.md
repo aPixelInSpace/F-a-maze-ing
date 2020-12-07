@@ -6,18 +6,32 @@ A, simple, composable and configurable maze generator made with F#
 ## Examples
 
 The SVG render can color the maze and show the path(s) between two zones that are the most distant :
-* [Rectangular](https://apixelinspace.github.io/F-a-maze-ing/RectangularMaze.svg)
-* [Triangular](https://apixelinspace.github.io/F-a-maze-ing/TriangularMaze.svg)
-* [Ellipse](https://apixelinspace.github.io/F-a-maze-ing/EllipseMaze.svg)
-* [Composite](https://apixelinspace.github.io/F-a-maze-ing/CompositeMaze.svg)
-* [Doughnut](https://apixelinspace.github.io/F-a-maze-ing/DoughnutMaze.svg)
+* Rectangular
+
+<img src="docs/RectangularMaze.svg" width="400">
+
+* Triangular
+
+<img src="docs/TriangularMaze.svg" width="400">
+
+* Ellipse
+
+<img src="docs/EllipseMaze.svg" width="400">
+
+* Doughnut
+
+<img src="docs/DoughnutMaze.svg" width="400">
+
+* Composite
+
+<img src="docs/CompositeMaze.svg" width="400">
 
 The text render is simpler and only displays the maze :
 * [Rectangular](https://apixelinspace.github.io/F-a-maze-ing/RectangularMaze.html)
 * [Triangular](https://apixelinspace.github.io/F-a-maze-ing/TriangularMaze.html)
 * [Ellipse](https://apixelinspace.github.io/F-a-maze-ing/EllipseMaze.html)
-* [Composite](https://apixelinspace.github.io/F-a-maze-ing/CompositeMaze.html)
 * [Doughnut](https://apixelinspace.github.io/F-a-maze-ing/DoughnutMaze.html)
+* [Composite](https://apixelinspace.github.io/F-a-maze-ing/CompositeMaze.html)
 
 ## Usage
 ###### (more to come) 
