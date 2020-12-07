@@ -27,6 +27,9 @@ type Graph =
     member this.Node coordinate =
         get this.Nodes coordinate
 
+    member this.GetNodeByNode extractBy filter =
+        getItemByItem this.Nodes extractBy filter
+
     member this.UpdateNode coordinate node =
         this.Nodes.[coordinate.RowIndex, coordinate.ColumnIndex] <- node
 

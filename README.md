@@ -3,15 +3,24 @@
 # F-a-maze-ing
 A, simple, composable and configurable maze generator made with F#
 
-Currently only a html/text output is supported.
-
 ## Examples
+
+The SVG render can color the maze and show the path(s) between two zones that are the most distant :
+* [Rectangular](https://apixelinspace.github.io/F-a-maze-ing/RectangularMaze.svg)
+* [Triangular](https://apixelinspace.github.io/F-a-maze-ing/TriangularMaze.svg)
+* [Ellipse](https://apixelinspace.github.io/F-a-maze-ing/EllipseMaze.svg)
+* [Composite](https://apixelinspace.github.io/F-a-maze-ing/CompositeMaze.svg)
+* [Doughnut](https://apixelinspace.github.io/F-a-maze-ing/DoughnutMaze.svg)
+
+The text render is simpler and only displays the maze :
 * [Rectangular](https://apixelinspace.github.io/F-a-maze-ing/RectangularMaze.html)
 * [Triangular](https://apixelinspace.github.io/F-a-maze-ing/TriangularMaze.html)
 * [Ellipse](https://apixelinspace.github.io/F-a-maze-ing/EllipseMaze.html)
 * [Composite](https://apixelinspace.github.io/F-a-maze-ing/CompositeMaze.html)
 * [Doughnut](https://apixelinspace.github.io/F-a-maze-ing/DoughnutMaze.html)
+
 ## Usage
+###### (more to come) 
 ```
 mazes
 
