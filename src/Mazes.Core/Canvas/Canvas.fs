@@ -48,6 +48,10 @@ type Canvas =
         this.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
         |> Seq.head
 
+    member this.GetFirstBottomRightPartOfMazeZone =
+        this.GetZoneByZone RowsDescendingColumnsDescending (fun zone _ -> zone.IsAPartOfMaze)
+        |> Seq.head
+
 module Convert =
 
     let charPartOfMaze = '*'

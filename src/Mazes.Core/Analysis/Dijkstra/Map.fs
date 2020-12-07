@@ -61,7 +61,7 @@ type Map =
 
     static member create getNeighborsCoordinate numberOfRows numberOfColumns rootCoordinate =
 
-        let coordinatesByDistance = CoordinatesByDistance.Create
+        let coordinatesByDistance = CoordinatesByDistance.createEmpty
 
         let graph = Graph.createEmpty numberOfRows numberOfColumns
 

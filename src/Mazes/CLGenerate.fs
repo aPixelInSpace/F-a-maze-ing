@@ -52,20 +52,19 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
 
-    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.create)
+    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.create)
     //let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
     //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 2.5 Shape.Ellipse.Side.Outside |> Grid.create)
     //let grid = (Shape.Ellipse.create 20 22 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> Grid.create)
 
     //let canvasSave = (Shape.Rectangle.create 15 15 |> Canvas.save)
     //File.WriteAllText(filePath.Replace(".html", ".canvas.mazes"), canvasSave, Encoding.UTF8)
-    //let save = File.ReadAllText(filePath.Replace(".html", ".canvas.mazes"))     
-    //let canvas =
-    //    match Canvas.Convert.fromString save with
-    //    | Some canvas -> canvas
-    //    | None -> failwith "A problem occured while loading the saved canvas"
-
-    //let grid = (canvas |> Grid.create)
+    let save = File.ReadAllText(filePath.Replace(".html", ".canvas.mazes"))     
+    let canvas =
+        match Canvas.Convert.fromString save with
+        | Some canvas -> canvas
+        | None -> failwith "A problem occured while loading the saved canvas"
+    let grid = (canvas |> Grid.create)
     
     let algo =
         match options.Value.algo with
@@ -112,7 +111,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     
     let maze = (algo rngSeed grid)
     
-    //let map = Dijkstra.createMap { RowIndex = 0; ColumnIndex = 0 } maze
+    //let map = maze.createDijkstraMap (snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone)
 
     let renderedGrid = renderGrid maze.Grid
     
@@ -122,7 +121,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let rawTestOutput = outputRawForTest maze renderedGrid
     //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
-    //let renderedGridSvg = SVG.renderGrid maze.Grid
+    //let renderedGridSvg = SVG.renderGrid2 maze.Grid (map.Graph.PathFromRootTo (snd maze.Grid.Canvas.GetFirstRightBottomPartOfMazeZone))
+    //let renderedGridSvg = SVG.renderGrid2 maze.Grid (map.LongestPaths |> Seq.head)
     //File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
 
     printfn "Mazes creation finished !"

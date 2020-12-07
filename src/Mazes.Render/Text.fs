@@ -6,7 +6,6 @@ open System.Text
 open Mazes.Core
 open Mazes.Core.Position
 open Mazes.Core.Array2D
-open Mazes.Core.Canvas
 open Mazes.Core.Grid
 
 let private repetitionsMiddlePart = 1
@@ -247,28 +246,5 @@ let renderGrid grid =
         |> extractByRows
         |> Seq.toList
         |> appendRows sBuilder grid
-    
-    sBuilder.ToString()
-
-let renderCanvas canvas =
-
-    let appendZone (sBuilder : StringBuilder) (zone : Zone) =
-        let char =
-            match zone.IsAPartOfMaze with
-            | true -> "▓▓"
-            | false -> "░░"           
-
-        sBuilder.Append(char) |> ignore
-
-    let appendRow (sBuilder : StringBuilder) rowZones =
-        rowZones
-        |> Array.iter(fun zone -> appendZone sBuilder zone)
-
-        sBuilder.Append('\n') |> ignore
-
-    let sBuilder = StringBuilder()
-    canvas.Zones
-        |> extractByRows
-        |> Seq.iter(fun rowZones -> appendRow sBuilder rowZones)
     
     sBuilder.ToString()

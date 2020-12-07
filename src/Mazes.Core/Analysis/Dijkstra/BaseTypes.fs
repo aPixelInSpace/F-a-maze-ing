@@ -49,5 +49,5 @@ type CoordinatesByDistance =
 
         coordinates
 
-    static member Create =
+    static member createEmpty =
         { Container = Dictionary<Distance, HashSet<Coordinate>>() }
