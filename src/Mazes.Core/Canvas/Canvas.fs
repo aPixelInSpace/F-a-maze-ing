@@ -49,19 +49,19 @@ type Canvas =
         seq {
             let leftCoordinate = coordinate.NeighborCoordinateAtPosition Left
             if (this.ExistAt leftCoordinate) && (this.Zone leftCoordinate).IsAPartOfMaze then
-                yield leftCoordinate
+                yield (leftCoordinate, Left)
 
             let topCoordinate = coordinate.NeighborCoordinateAtPosition Top
             if (this.ExistAt topCoordinate) && (this.Zone topCoordinate).IsAPartOfMaze then
-                yield topCoordinate
+                yield (topCoordinate, Top)
 
             let rightCoordinate = coordinate.NeighborCoordinateAtPosition Right
             if (this.ExistAt rightCoordinate) && (this.Zone rightCoordinate).IsAPartOfMaze then
-                yield rightCoordinate
+                yield (rightCoordinate, Right)
 
             let bottomCoordinate = coordinate.NeighborCoordinateAtPosition Bottom
             if (this.ExistAt bottomCoordinate) && (this.Zone bottomCoordinate).IsAPartOfMaze then
-                yield bottomCoordinate
+                yield (bottomCoordinate, Bottom)
         }
 
     member this.GetFirstTopLeftPartOfMazeZone =

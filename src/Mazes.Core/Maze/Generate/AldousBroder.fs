@@ -3,8 +3,6 @@
 module Mazes.Core.Maze.Generate.AldousBroder
 
 open System
-open System.Collections.Generic
-open System.Linq
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Grid
@@ -12,28 +10,23 @@ open Mazes.Core.Maze
 
 let createMaze rngSeed grid =
 
+    let hasEmptyWall cell =
+        (cell.Walls
+        |> Array.where(fun wall -> wall.WallType = Empty)).Length > 0
+
     let rng = Random(rngSeed)
 
-    // todo : remove the dictionary because it's overkill : add a Cell.HasEmptyWall to know if a cell has been linked
-    let unvisited = 
-        grid.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
-        |> Seq.fold
-               (fun (dic : Dictionary<Coordinate, bool>) (_, coordinate) ->
-                    dic.Add(coordinate, false)
-                    dic)
-               (Dictionary<Coordinate, bool>(grid.Canvas.NumberOfRows * grid.Canvas.NumberOfColumns))
+    let zonesPartOfMaze = grid.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze) |> Seq.toArray
+    let mutable currentCoordinate = snd (zonesPartOfMaze.[rng.Next(zonesPartOfMaze.Length)])
 
-    let mutable currentCoordinate = unvisited.ElementAt(rng.Next(unvisited.Count)).Key
+    let unvisitedCount = ref (zonesPartOfMaze.Length - 1)
 
-    while unvisited.Count > 0 do
-        if unvisited.ContainsKey(currentCoordinate) then
-            unvisited.Remove(currentCoordinate) |> ignore
+    while unvisitedCount.Value > 0 do
+        let nextCoordinate = grid.RandomLinkableNeighborFrom rng currentCoordinate
 
-        let neighbors = grid.Canvas.NeighborsPartOfMazeOf currentCoordinate |> Seq.toArray 
-        let nextCoordinate = neighbors.[rng.Next(neighbors.Length)]
-
-        if unvisited.ContainsKey(nextCoordinate) then
+        if not (hasEmptyWall (grid.Cell nextCoordinate)) then
             grid.UpdateWallAtCoordinates currentCoordinate nextCoordinate Empty
+            decr unvisitedCount
 
         currentCoordinate <- nextCoordinate
 

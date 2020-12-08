@@ -24,7 +24,8 @@
 		<Compile Include="Maze\Maze.fs" />
         <Compile Include="Maze\Generate\BinaryTree.fs" />
         <Compile Include="Maze\Generate\Sidewinder.fs" />
-        <Compile Include="Maze\Generate\AldousBroder.fs" />        
+        <Compile Include="Maze\Generate\AldousBroder.fs" />
+        <Compile Include="Maze\Generate\Wilson.fs" />        
     </ItemGroup>
 
     <ItemGroup>

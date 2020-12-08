@@ -2,6 +2,7 @@
 
 namespace Mazes.Core.Grid
 
+open System
 open Mazes.Core
 open Mazes.Core.Position
 open Mazes.Core.Array2D
@@ -60,6 +61,17 @@ type Grid =
         | oc when oc = (coordinate.NeighborCoordinateAtPosition Right) -> this.UpdateWallAtPosition coordinate Right wallType
         | oc when oc = (coordinate.NeighborCoordinateAtPosition Bottom) -> this.UpdateWallAtPosition coordinate Bottom wallType
         | _ -> failwith "UpdateWallAtCoordinates unable to find a connection between the two coordinates"
+
+    member this.RandomLinkableNeighborFrom (rng : Random) coordinate =
+        let neighbors =
+            this.Canvas.NeighborsPartOfMazeOf coordinate
+            |> Seq.fold(fun (array : ResizeArray<Coordinate>) coordinatePosition ->
+                if not (this.IsLimitAt coordinate (snd coordinatePosition)) then
+                    array.Add((fst coordinatePosition))
+                array)
+                (ResizeArray<Coordinate>())
+
+        neighbors.[rng.Next(neighbors.Count)]
 
     member this.IsNavigable fromCoordinate toPos =
         not (this.IsLimitAt fromCoordinate toPos) &&        
