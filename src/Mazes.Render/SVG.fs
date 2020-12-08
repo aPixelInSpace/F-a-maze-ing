@@ -9,8 +9,8 @@ open Mazes.Core.Array2D
 open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid
 
-let private cellWidth = 15
-let private cellHeight = 15
+let private cellWidth = 30
+let private cellHeight = 30
 let private marginWidth = 20
 let private marginHeight = 20
 
@@ -92,7 +92,7 @@ let renderFullCellPath (sBuilder : StringBuilder) coordinate =
 let renderFullCellColor (sBuilder : StringBuilder) color coordinate node maxDistance =
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())
 
-    let opacity = 1.0 - Math.Round(float (maxDistance - node.DistanceFromRoot) / float maxDistance, 2)
+    let opacity = Math.Round(1.0 - (float (maxDistance - node.DistanceFromRoot) / float maxDistance), 2)
     let sOpacity = opacity.ToString().Replace(",", ".")
 
     addPathColorTag sBuilder "c" color sOpacity ("M " + topLeft.Value + (drawLine LeftToRight) + (drawLine TopToBottom) + (drawLine RightToLeft) + (drawLine BottomToTop))

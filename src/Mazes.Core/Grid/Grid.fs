@@ -53,6 +53,14 @@ type Grid =
         if not (this.IsLimitAt coordinate position) then
             this.UpdateWallAtPosition coordinate position wallType
 
+    member this.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =
+        match otherCoordinate with
+        | oc when oc = (coordinate.NeighborCoordinateAtPosition Left) -> this.UpdateWallAtPosition coordinate Left wallType
+        | oc when oc = (coordinate.NeighborCoordinateAtPosition Top) -> this.UpdateWallAtPosition coordinate Top wallType
+        | oc when oc = (coordinate.NeighborCoordinateAtPosition Right) -> this.UpdateWallAtPosition coordinate Right wallType
+        | oc when oc = (coordinate.NeighborCoordinateAtPosition Bottom) -> this.UpdateWallAtPosition coordinate Bottom wallType
+        | _ -> failwith "UpdateWallAtCoordinates unable to find a connection between the two coordinates"
+
     member this.IsNavigable fromCoordinate toPos =
         not (this.IsLimitAt fromCoordinate toPos) &&        
         (this.Cell fromCoordinate).WallTypeAtPosition toPos = WallType.Empty &&

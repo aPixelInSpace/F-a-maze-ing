@@ -4,6 +4,7 @@ namespace Mazes.Core.Canvas
 
 open System.Text
 open Mazes.Core
+open Mazes.Core.Position
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas
 
@@ -43,6 +44,25 @@ type Canvas =
 
     member this.GetZoneByZone extractBy filter =
         getItemByItem this.Zones extractBy filter
+
+    member this.NeighborsPartOfMazeOf (coordinate : Coordinate) =
+        seq {
+            let leftCoordinate = coordinate.NeighborCoordinateAtPosition Left
+            if (this.ExistAt leftCoordinate) && (this.Zone leftCoordinate).IsAPartOfMaze then
+                yield leftCoordinate
+
+            let topCoordinate = coordinate.NeighborCoordinateAtPosition Top
+            if (this.ExistAt topCoordinate) && (this.Zone topCoordinate).IsAPartOfMaze then
+                yield topCoordinate
+
+            let rightCoordinate = coordinate.NeighborCoordinateAtPosition Right
+            if (this.ExistAt rightCoordinate) && (this.Zone rightCoordinate).IsAPartOfMaze then
+                yield rightCoordinate
+
+            let bottomCoordinate = coordinate.NeighborCoordinateAtPosition Bottom
+            if (this.ExistAt bottomCoordinate) && (this.Zone bottomCoordinate).IsAPartOfMaze then
+                yield bottomCoordinate
+        }
 
     member this.GetFirstTopLeftPartOfMazeZone =
         this.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)

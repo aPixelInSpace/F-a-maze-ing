@@ -18,6 +18,7 @@ open Mazes.Output.Html
 type AlgoEnum =
     | BinaryTree = 0
     | Sidewinder = 1
+    | AldousBroder = 2
 
 let private defaultNameOfFile = "The F Amazing Maze"
 
@@ -38,6 +39,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
         match algoEnum with
            | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
            | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right rngSeed 1 1
+           | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
            | _ -> failwith "Generating algorithm unknown"
 
     let nameOfMaze =
@@ -55,7 +57,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.create)
     //let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Grid.create)
-    //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 2.5 Shape.Ellipse.Side.Outside |> Grid.create)
+    //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> Grid.create)
     //let grid = (Shape.Ellipse.create 20 22 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> Grid.create)
 
     //let canvasSave = (Shape.Rectangle.create 15 15 |> Canvas.save)
