@@ -5,6 +5,7 @@ A, simple, composable and configurable maze generator made with F#
 
 ## Examples
 
+### SVG
 The SVG render can color the maze and show the path(s) between two zones that are the most distant :
 * Rectangular
 
@@ -26,9 +27,10 @@ The SVG render can color the maze and show the path(s) between two zones that ar
 
 <img src="docs/CompositeMaze.svg" width="400">
 
+### ASCII
 The text render is simpler and only displays the maze :
 <div style="font-family: 'DejaVu Sans Mono', monospace">
-    <pre class="maze-line">            ┏━┓            
+    <pre class="maze-line">                ┏━┓            
           ┏━┯━━━┛ ┗━━━━━┓      
       ┏━━━┩ ┴ ╭─┬───────╄━━━┓  
       ┃ ┬ ┴ ╶─╯ │ ╶───╮ ╰─╴ ┃  
