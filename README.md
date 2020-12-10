@@ -27,11 +27,18 @@ The SVG render can color the maze and show the path(s) between two zones that ar
 <img src="docs/CompositeMaze.svg" width="400">
 
 The text render is simpler and only displays the maze :
-* [Rectangular](https://apixelinspace.github.io/F-a-maze-ing/RectangularMaze.html)
-* [Triangular](https://apixelinspace.github.io/F-a-maze-ing/TriangularMaze.html)
-* [Ellipse](https://apixelinspace.github.io/F-a-maze-ing/EllipseMaze.html)
-* [Doughnut](https://apixelinspace.github.io/F-a-maze-ing/DoughnutMaze.html)
-* [Composite](https://apixelinspace.github.io/F-a-maze-ing/CompositeMaze.html)
+<div style="font-family: 'DejaVu Sans Mono', monospace">
+    <pre class="maze-line">            ┏━┓            </pre>
+    <pre class="maze-line">      ┏━┯━━━┛ ┗━━━━━┓      </pre>
+    <pre class="maze-line">  ┏━━━┩ ┴ ╭─┬───────╄━━━┓  </pre>
+    <pre class="maze-line">  ┃ ┬ ┴ ╶─╯ │ ╶───╮ ╰─╴ ┃  </pre>
+    <pre class="maze-line">┏━┛ ╰─┬───┲━┷━━━┓ ├───╮ ┗━┓</pre>
+    <pre class="maze-line">┗━┓ ╶─╯ ┬ ┗━━━━━┩ │ ┬ ├─┲━┛</pre>
+    <pre class="maze-line">  ┃ ╶─╮ ╰─┬─╴ ╭─╯ │ │ ┴ ┃  </pre>
+    <pre class="maze-line">  ┗━━━╅─╴ │ ╶─╯ ┬ ┴ ┢━━━┛  </pre>
+    <pre class="maze-line">      ┗━━━┷━┓ ┏━┷━━━┛      </pre>
+    <pre class="maze-line">            ┗━┛            </pre>
+</div>
 
 ## Usage
 ###### (more to come) 
