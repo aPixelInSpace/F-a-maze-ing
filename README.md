@@ -28,16 +28,16 @@ The SVG render can color the maze and show the path(s) between two zones that ar
 
 The text render is simpler and only displays the maze :
 <div style="font-family: 'DejaVu Sans Mono', monospace">
-    <pre class="maze-line">            ┏━┓            </pre>
-    <pre class="maze-line">      ┏━┯━━━┛ ┗━━━━━┓      </pre>
-    <pre class="maze-line">  ┏━━━┩ ┴ ╭─┬───────╄━━━┓  </pre>
-    <pre class="maze-line">  ┃ ┬ ┴ ╶─╯ │ ╶───╮ ╰─╴ ┃  </pre>
-    <pre class="maze-line">┏━┛ ╰─┬───┲━┷━━━┓ ├───╮ ┗━┓</pre>
-    <pre class="maze-line">┗━┓ ╶─╯ ┬ ┗━━━━━┩ │ ┬ ├─┲━┛</pre>
-    <pre class="maze-line">  ┃ ╶─╮ ╰─┬─╴ ╭─╯ │ │ ┴ ┃  </pre>
-    <pre class="maze-line">  ┗━━━╅─╴ │ ╶─╯ ┬ ┴ ┢━━━┛  </pre>
-    <pre class="maze-line">      ┗━━━┷━┓ ┏━┷━━━┛      </pre>
-    <pre class="maze-line">            ┗━┛            </pre>
+    <pre class="maze-line">            ┏━┓            
+          ┏━┯━━━┛ ┗━━━━━┓      
+      ┏━━━┩ ┴ ╭─┬───────╄━━━┓  
+      ┃ ┬ ┴ ╶─╯ │ ╶───╮ ╰─╴ ┃  
+    ┏━┛ ╰─┬───┲━┷━━━┓ ├───╮ ┗━┓
+    ┗━┓ ╶─╯ ┬ ┗━━━━━┩ │ ┬ ├─┲━┛
+      ┃ ╶─╮ ╰─┬─╴ ╭─╯ │ │ ┴ ┃  
+      ┗━━━╅─╴ │ ╶─╯ ┬ ┴ ┢━━━┛  
+          ┗━━━┷━┓ ┏━┷━━━┛      
+                ┗━┛            </pre>
 </div>
 
 ## Usage
