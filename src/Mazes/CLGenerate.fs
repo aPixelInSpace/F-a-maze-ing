@@ -20,6 +20,7 @@ type AlgoEnum =
     | Sidewinder = 1
     | AldousBroder = 2
     | Wilson = 3
+    | HuntAndKill = 4
 
 let private defaultNameOfFile = "The F Amazing Maze"
 
@@ -42,6 +43,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
            | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right rngSeed 1 1
            | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
            | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
+           | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
            | _ -> failwith "Generating algorithm unknown"
 
     let nameOfMaze =
@@ -57,7 +59,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
 
     let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.create)
-    //let grid = (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
+    //let grid = (Shape.TriangleIsosceles.create 150 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Grid.create)
     //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> Grid.create)
     //let grid = (Shape.Ellipse.create 20 22 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> Grid.create)
@@ -126,8 +128,9 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let rawTestOutput = outputRawForTest maze renderedGrid
     //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
-    let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo (snd maze.Grid.Canvas.GetFirstBottomRightPartOfMazeZone)) map
-    //let renderedGridSvg = SVG.renderGrid maze.Grid (map.LongestPaths |> Seq.head) map
+    //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo (snd maze.Grid.Canvas.GetFirstBottomRightPartOfMazeZone)) map
+    //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RowIndex = 0; ColumnIndex = 3 }) map
+    let renderedGridSvg = SVG.renderGrid maze.Grid (map.LongestPaths |> Seq.head) map
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
 
     printfn "Mazes creation finished !"

@@ -48,6 +48,9 @@ mazes
                      Options are :
                      - BinaryTree
                      - Sidewinder
+                     - AldousBroder
+                     - Wilson
+                     - HuntAndKill
 
   -s, --seed         The seed number to use for the random number generator. If empty, a random seed is picked.
 

@@ -35,7 +35,7 @@ type Grid =
         cell.WallTypeAtPosition position = Border ||
         neighborCondition()
 
-    member this.UpdateWallAtPosition coordinate (position : Position) wallType =
+    member private this.UpdateWallAtPosition coordinate (position : Position) wallType =
         let getWalls coordinate position =
             this.Cells.[coordinate.RowIndex, coordinate.ColumnIndex].Walls
             |> Array.mapi(fun index wall ->
@@ -50,11 +50,17 @@ type Grid =
         let neighbor = coordinate.NeighborCoordinateAtPosition position        
         this.Cells.[neighbor.RowIndex, neighbor.ColumnIndex] <- { Walls = (getWalls neighbor position.Opposite) }
 
-    member this.IfNotAtLimitUpdateWallAtPosition coordinate position wallType =
+    member private this.IfNotAtLimitUpdateWallAtPosition coordinate position wallType =
         if not (this.IsLimitAt coordinate position) then
             this.UpdateWallAtPosition coordinate position wallType
 
-    member this.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =
+    member this.LinkCellAtPosition coordinate position =
+        this.UpdateWallAtPosition coordinate (position : Position) WallType.Empty
+
+    member this.IfNotAtLimitLinkCellAtPosition coordinate position =
+        this.IfNotAtLimitUpdateWallAtPosition coordinate position WallType.Empty
+
+    member private this.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =
         match otherCoordinate with
         | oc when oc = (coordinate.NeighborCoordinateAtPosition Left) -> this.UpdateWallAtPosition coordinate Left wallType
         | oc when oc = (coordinate.NeighborCoordinateAtPosition Top) -> this.UpdateWallAtPosition coordinate Top wallType
@@ -62,36 +68,39 @@ type Grid =
         | oc when oc = (coordinate.NeighborCoordinateAtPosition Bottom) -> this.UpdateWallAtPosition coordinate Bottom wallType
         | _ -> failwith "UpdateWallAtCoordinates unable to find a connection between the two coordinates"
 
-    member this.RandomLinkableNeighborFrom (rng : Random) coordinate =
-        let neighbors =
-            this.Canvas.NeighborsPartOfMazeOf coordinate
-            |> Seq.fold(fun (array : ResizeArray<Coordinate>) coordinatePosition ->
-                if not (this.IsLimitAt coordinate (snd coordinatePosition)) then
-                    array.Add((fst coordinatePosition))
-                array)
-                (ResizeArray<Coordinate>())
+    member this.LinkCellsAtCoordinates (coordinate : Coordinate) otherCoordinate =
+        this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Empty
 
-        neighbors.[rng.Next(neighbors.Count)]
+    member this.NeighborsFrom coordinate =
+        this.Canvas.NeighborsPartOfMazeOf coordinate
+            |> Seq.filter(fun (_, nPosition) -> not (this.IsLimitAt coordinate nPosition))
+            |> Seq.map(fun (coordinate, _) -> coordinate)
 
-    member this.IsNavigable fromCoordinate toPos =
-        not (this.IsLimitAt fromCoordinate toPos) &&        
-        (this.Cell fromCoordinate).WallTypeAtPosition toPos = WallType.Empty &&
-        this.Canvas.IsZonePartOfMaze (fromCoordinate.NeighborCoordinateAtPosition toPos)
+    member this.RandomNeighborFrom (rng : Random) coordinate =
+        let neighbors = this.NeighborsFrom coordinate |> Seq.toArray
+        neighbors.[rng.Next(neighbors.Length)]
 
-    member this.NavigableNeighborsCoordinates coordinate =
-        let isNavigable = this.IsNavigable coordinate
+    member this.LinkedNeighbors isLinked coordinate =
+        let neighbors = this.NeighborsFrom coordinate
+        neighbors |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked = isLinked)
+
+    /// Returns the neighbors coordinates that are linked with the parameter coordinate
+    member this.LinkedNeighborsCoordinates coordinate =
+        let isLinkedAt pos =
+            not (this.IsLimitAt coordinate pos) &&        
+            (this.Cell coordinate).IsLinkedAt pos
 
         seq {
-            if (isNavigable Top) then
+            if (isLinkedAt Top) then
                 yield coordinate.NeighborCoordinateAtPosition Top
 
-            if (isNavigable Right) then
+            if (isLinkedAt Right) then
                 yield coordinate.NeighborCoordinateAtPosition Right
 
-            if (isNavigable Bottom) then
+            if (isLinkedAt Bottom) then
                 yield coordinate.NeighborCoordinateAtPosition Bottom
 
-            if (isNavigable Left) then
+            if (isLinkedAt Left) then
                 yield coordinate.NeighborCoordinateAtPosition Left
         }
 

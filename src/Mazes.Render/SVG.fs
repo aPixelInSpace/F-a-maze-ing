@@ -37,7 +37,7 @@ let private addPathColorTag (sBuilder : StringBuilder) styleClass color opacity 
     sBuilder.Append(points) |> ignore
     sBuilder.Append("\" class=\"" + styleClass + "\"/>\n") |> ignore
 
-let addPathTagByWallType (sBuilder : StringBuilder) (grid : Grid) coordinate (wallType : WallType) styleClass =
+let private addPathTagByWallType (sBuilder : StringBuilder) (grid : Grid) coordinate (wallType : WallType) styleClass =
     let cell = grid.Cell coordinate
 
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())
@@ -81,15 +81,15 @@ let addPathTagByWallType (sBuilder : StringBuilder) (grid : Grid) coordinate (wa
         appendOneCell ("M " + bottomRight.Value + (drawLine RightToLeft))
     | _ -> ()
 
-let renderWallTypes (sBuilder : StringBuilder) (grid : Grid) coordinate =
+let private renderWallTypes (sBuilder : StringBuilder) (grid : Grid) coordinate =
     addPathTagByWallType sBuilder grid coordinate Border "b"
     addPathTagByWallType sBuilder grid coordinate Normal "n"
 
-let renderFullCellPath (sBuilder : StringBuilder) coordinate =
+let private renderFullCellPath (sBuilder : StringBuilder) coordinate =
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())    
     addPathTag sBuilder "p" ("M " + topLeft.Value + (drawLine LeftToRight) + (drawLine TopToBottom) + (drawLine RightToLeft) + (drawLine BottomToTop))
 
-let renderFullCellColor (sBuilder : StringBuilder) color coordinate node maxDistance =
+let private renderFullCellColor (sBuilder : StringBuilder) color coordinate node maxDistance =
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())
 
     let opacity = Math.Round(1.0 - (float (maxDistance - node.DistanceFromRoot) / float maxDistance), 2)

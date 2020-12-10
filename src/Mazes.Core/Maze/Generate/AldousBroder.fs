@@ -3,16 +3,11 @@
 module Mazes.Core.Maze.Generate.AldousBroder
 
 open System
-open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Grid
 open Mazes.Core.Maze
 
 let createMaze rngSeed grid =
-
-    let hasEmptyWall cell =
-        (cell.Walls
-        |> Array.where(fun wall -> wall.WallType = Empty)).Length > 0
 
     let rng = Random(rngSeed)
 
@@ -22,10 +17,10 @@ let createMaze rngSeed grid =
     let unvisitedCount = ref (zonesPartOfMaze.Length - 1)
 
     while unvisitedCount.Value > 0 do
-        let nextCoordinate = grid.RandomLinkableNeighborFrom rng currentCoordinate
+        let nextCoordinate = grid.RandomNeighborFrom rng currentCoordinate
 
-        if not (hasEmptyWall (grid.Cell nextCoordinate)) then
-            grid.UpdateWallAtCoordinates currentCoordinate nextCoordinate Empty
+        if not (grid.Cell nextCoordinate).IsLinked then
+            grid.LinkCellsAtCoordinates currentCoordinate nextCoordinate
             decr unvisitedCount
 
         currentCoordinate <- nextCoordinate

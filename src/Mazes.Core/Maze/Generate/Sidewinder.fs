@@ -25,8 +25,8 @@ let private carveRow
     // dependencies    
     isPartOfMaze
     isALimitAt
-    updateWallAtPosition
-    ifNotAtLimitUpdateWallAtPosition
+    linkCellAtPosition
+    ifNotAtLimitLinkCellAtPosition
     getRandomIndex2AtPos1ForFromRange
     // params
     (position1 : Position)
@@ -63,24 +63,24 @@ let private carveRow
             match randomIndex2 with
             | Some randomIndex2 ->
                 // if there is some we remove it
-                updateWallAtPosition { coordinate with ColumnIndex = randomIndex2 } position1 Empty
+                linkCellAtPosition { coordinate with ColumnIndex = randomIndex2 } position1
             | None ->
                 // we absolutely have to ensure that the last wall on the pos 2 is empty if possible
-                ifNotAtLimitUpdateWallAtPosition { coordinate with ColumnIndex = lastIndex2WithRemovablePos2Wall } position2 Empty
+                ifNotAtLimitLinkCellAtPosition { coordinate with ColumnIndex = lastIndex2WithRemovablePos2Wall } position2
 
             runStartIndex2 <- index2 + increment
         else
 
         // if the pos 1 is a limit then we always choose remove pos 2
         if isPos1ALimit then                
-            updateWallAtPosition coordinate position2 Empty
-            ifNotAtLimitUpdateWallAtPosition coordinate position2.Opposite Empty
+            linkCellAtPosition coordinate position2
+            ifNotAtLimitLinkCellAtPosition coordinate position2.Opposite
 
             // we have to check whether there was some prior pos 1 wall to remove 
             let randomIndex2 = getRandomIndex2AtPos1ForFromRange runStartIndex2 (index2 - increment)
             match randomIndex2 with
             | Some index2ForPos1Removal ->                
-                updateWallAtPosition { coordinate with ColumnIndex = index2ForPos1Removal } position1 Empty
+                linkCellAtPosition { coordinate with ColumnIndex = index2ForPos1Removal } position1
                 lastIndex2WithRemovablePos2Wall <- index2
             | None -> ()
             
@@ -89,7 +89,7 @@ let private carveRow
 
         // if the pos 2 is a limit then we always choose to randomly remove one of the pos 1 of the run
         if isPos2ALimit then
-            updateWallAtPosition { coordinate with ColumnIndex = (rng.Next(Math.Min(runStartIndex2, index2), Math.Max(runStartIndex2, index2) + 1)) } position1 Empty
+            linkCellAtPosition { coordinate with ColumnIndex = (rng.Next(Math.Min(runStartIndex2, index2), Math.Max(runStartIndex2, index2) + 1)) } position1
             runStartIndex2 <- index2 + increment
         else
 
@@ -97,12 +97,12 @@ let private carveRow
         match rng.Next(rngTotalWeight) with
 
         // we continue carving to the pos 2
-        | rng when rng < rngPosition2Weight -> updateWallAtPosition coordinate position2 Empty
+        | rng when rng < rngPosition2Weight -> linkCellAtPosition coordinate position2
 
         // or we open to the pos 1 by choosing randomly one of the pos 1 wall
         | _ -> 
            let randomIndex2 = rng.Next(Math.Min(runStartIndex2, index2), Math.Max(runStartIndex2, index2) + 1)
-           updateWallAtPosition { coordinate with ColumnIndex = randomIndex2 } position1 Empty
+           linkCellAtPosition { coordinate with ColumnIndex = randomIndex2 } position1
            lastIndex2WithRemovablePos2Wall <- index2
            runStartIndex2 <- index2 + increment        
 
@@ -142,8 +142,8 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
 
     let isPartOfMaze coordinate = (grid.Canvas.IsZonePartOfMaze (getCoordinate coordinate))
     let isALimitAt coordinate = (grid.IsLimitAt (getCoordinate coordinate))
-    let updateWallAtPosition coordinate = (grid.UpdateWallAtPosition (getCoordinate coordinate))
-    let ifNotAtLimitUpdateWallAtPosition coordinate = (grid.IfNotAtLimitUpdateWallAtPosition (getCoordinate coordinate))
+    let linkCellAtPosition coordinate = (grid.LinkCellAtPosition (getCoordinate coordinate))
+    let ifNotAtLimitLinkCellAtPosition coordinate = (grid.IfNotAtLimitLinkCellAtPosition (getCoordinate coordinate))
     let getRandomIndex2FromRange = (getRandomColumnIndexFromRange isALimitAt rng increment position1)
 
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
@@ -155,8 +155,8 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
             // dependencies
             isPartOfMaze
             isALimitAt
-            updateWallAtPosition
-            ifNotAtLimitUpdateWallAtPosition
+            linkCellAtPosition
+            ifNotAtLimitLinkCellAtPosition
             (getRandomIndex2FromRange index1)
             // params
             position1

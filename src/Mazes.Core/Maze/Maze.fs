@@ -12,18 +12,18 @@ type Maze =
     }
 
     member this.createDijkstraMap rootCoordinate =
-        Dijkstra.Map.create this.Grid.NavigableNeighborsCoordinates this.Grid.Canvas.NumberOfRows this.Grid.Canvas.NumberOfColumns rootCoordinate
+        Dijkstra.Map.create this.Grid.LinkedNeighborsCoordinates this.Grid.Canvas.NumberOfRows this.Grid.Canvas.NumberOfColumns rootCoordinate
 
 module Maze =
 
     let createEmpty (grid : Grid) =
         grid.Cells
         |> Array2D.iteri(fun r c _ ->
-             let update = grid.IfNotAtLimitUpdateWallAtPosition { RowIndex = r; ColumnIndex = c }
-             update Top Empty
-             update Right Empty
-             update Bottom Empty
-             update Left Empty)
+             let update = grid.IfNotAtLimitLinkCellAtPosition { RowIndex = r; ColumnIndex = c }
+             update Top
+             update Right
+             update Bottom
+             update Left)
         
         { Grid = grid }
 

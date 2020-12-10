@@ -17,9 +17,9 @@ let createMaze rngSeed grid =
     let unvisited = 
         grid.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
         |> Seq.fold
-               (fun (dic : HashSet<Coordinate>) (_, coordinate) ->
-                    dic.Add(coordinate) |> ignore
-                    dic)
+               (fun (hSet : HashSet<Coordinate>) (_, coordinate) ->
+                    hSet.Add(coordinate) |> ignore
+                    hSet)
                (HashSet<Coordinate>(grid.Canvas.NumberOfRows * grid.Canvas.NumberOfColumns))
 
     let firstCoordinate = unvisited.ElementAt(rng.Next(unvisited.Count))
@@ -36,7 +36,7 @@ let createMaze rngSeed grid =
 
         while unvisited.Contains(nextCoordinate) do
 
-            nextCoordinate <- grid.RandomLinkableNeighborFrom rng nextCoordinate
+            nextCoordinate <- grid.RandomNeighborFrom rng nextCoordinate
 
             if pathTracker.ContainsKey(nextCoordinate) then
                 let index = pathTracker.Item(nextCoordinate)
@@ -48,7 +48,7 @@ let createMaze rngSeed grid =
                 pathTracker.Add(nextCoordinate, path.Count - 1)
 
         for i in 0 .. path.Count - 2 do
-            grid.UpdateWallAtCoordinates path.[i] path.[i + 1] Empty
+            grid.LinkCellsAtCoordinates path.[i] path.[i + 1]
             unvisited.Remove(path.[i]) |> ignore
 
     { Grid = grid }

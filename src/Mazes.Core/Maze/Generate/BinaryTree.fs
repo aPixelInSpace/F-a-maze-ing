@@ -32,34 +32,34 @@ let private carveRow
         let isPos1ALimit = (grid.IsLimitAt coordinate position1)
         let isPos2ALimit = (grid.IsLimitAt coordinate position2)
         
-        let ifNotAtLimitUpdateWallAtPosition = grid.IfNotAtLimitUpdateWallAtPosition coordinate
+        let ifNotAtLimitLinkCellAtPosition = grid.IfNotAtLimitLinkCellAtPosition coordinate
 
         // if we are in a corner 
         if isPos1ALimit &&  isPos2ALimit then
-            ifNotAtLimitUpdateWallAtPosition position1.Opposite Empty
-            ifNotAtLimitUpdateWallAtPosition position2.Opposite Empty
+            ifNotAtLimitLinkCellAtPosition position1.Opposite
+            ifNotAtLimitLinkCellAtPosition position2.Opposite
         else
 
-        let updateWallAtPosition = grid.UpdateWallAtPosition coordinate
+        let linkCellAtPosition = grid.LinkCellAtPosition coordinate
 
         // if the pos 1 is a limit then we always choose remove pos 2 (and the opposite pos 2 if possible)
         if isPos1ALimit then
-            updateWallAtPosition position2 Empty
-            ifNotAtLimitUpdateWallAtPosition position2.Opposite Empty
+            linkCellAtPosition position2
+            ifNotAtLimitLinkCellAtPosition position2.Opposite
         else
 
         // if the pos 2 is a limit then we always choose remove pos 1 (and the opposite pos 1 if possible)
         if isPos2ALimit then
-            updateWallAtPosition position1 Empty
-            ifNotAtLimitUpdateWallAtPosition position1.Opposite Empty
+            linkCellAtPosition position1
+            ifNotAtLimitLinkCellAtPosition position1.Opposite
         else
 
         // if pos 1 and pos 2 are both not a limit we flip a coin to decide which one we remove
         match rng.Next(rngTotalWeight) with
         | rng when rng < rngPosition1Weight ->
-            updateWallAtPosition position1 Empty
+            linkCellAtPosition position1
         | _ ->
-            updateWallAtPosition position2 Empty
+            linkCellAtPosition position2
 
 type Direction =
     | Top

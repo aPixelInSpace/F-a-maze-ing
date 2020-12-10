@@ -36,6 +36,17 @@ type Cell =
         | Bottom -> this.WallBottom.WallType
         | Left -> this.WallLeft.WallType
 
+    static member IsALink wallType =
+        wallType = Empty
+
+    member this.IsLinkedAt pos =
+        Cell.IsALink (this.WallTypeAtPosition pos)
+
+    /// Returns true if the cell has at least one link
+    member this.IsLinked =
+        (this.Walls
+        |> Array.where(fun wall -> Cell.IsALink wall.WallType)).Length > 0
+
 module Cell =    
 
     let create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =
