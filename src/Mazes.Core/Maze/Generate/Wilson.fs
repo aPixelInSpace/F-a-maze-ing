@@ -14,13 +14,11 @@ let createMaze rngSeed grid =
 
     let rng = Random(rngSeed)
 
-    let unvisited = 
+    let unvisited = HashSet<Coordinate>(grid.Canvas.NumberOfRows * grid.Canvas.NumberOfColumns)
+    unvisited.UnionWith(
         grid.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
-        |> Seq.fold
-               (fun (hSet : HashSet<Coordinate>) (_, coordinate) ->
-                    hSet.Add(coordinate) |> ignore
-                    hSet)
-               (HashSet<Coordinate>(grid.Canvas.NumberOfRows * grid.Canvas.NumberOfColumns))
+        |> Seq.map(fun (_, coordinate) -> coordinate))
+            
 
     let firstCoordinate = unvisited.ElementAt(rng.Next(unvisited.Count))
     unvisited.Remove(firstCoordinate) |> ignore

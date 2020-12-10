@@ -8,7 +8,7 @@ open Mazes.Core
 type Distance = int
 
 [<Struct>]
-type Node = {    
+type Node = {
         DistanceFromRoot : Distance
         Neighbors :  seq<Coordinate>
     }

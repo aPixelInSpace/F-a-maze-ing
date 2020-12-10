@@ -18,6 +18,9 @@
         <Compile Include="Grid\GridView.fs" />
 		<Compile Include="Maze\Generate\BinaryTree.fs" />
 		<Compile Include="Maze\Generate\Sidewinder.fs" />
+		<Compile Include="Maze\Generate\AldousBroder.fs" />
+		<Compile Include="Maze\Generate\Wilson.fs" />
+		<Compile Include="Maze\Generate\HuntAndKill.fs" />
         <Compile Include="Program.fs" />        
     </ItemGroup>
 

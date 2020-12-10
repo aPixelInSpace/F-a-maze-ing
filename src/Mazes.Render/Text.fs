@@ -224,13 +224,13 @@ let private appendColumns rowIndex lastColumnIndex append wallTypes =
         let coordinate = { RowIndex = rowIndex; ColumnIndex = columnIndex }
         append coordinate (wallTypes coordinate)
 
-let private appendRows sBuilder grid (rows : _[] List) =
+let private appendRows sBuilder grid =
     let append = append sBuilder grid
 
-    let lastRowIndex = (rows |> Seq.length) - 1
-    for rowIndex in 0 .. lastRowIndex do
+    let lastRowIndex = grid.Cells |> maxRowIndex
+    let lastColumnIndex = grid.Cells |> maxColumnIndex
 
-        let lastColumnIndex = (rows.[rowIndex] |> Seq.length) - 1
+    for rowIndex in 0 .. lastRowIndex do
         let appendColumns = appendColumns rowIndex lastColumnIndex append
 
         appendColumns (wallTypes grid)
@@ -242,9 +242,6 @@ let private appendRows sBuilder grid (rows : _[] List) =
 let renderGrid grid =
     let sBuilder = StringBuilder()
 
-    grid.Cells
-        |> extractByRows
-        |> Seq.toList
-        |> appendRows sBuilder grid
-    
+    appendRows sBuilder grid
+
     sBuilder.ToString()

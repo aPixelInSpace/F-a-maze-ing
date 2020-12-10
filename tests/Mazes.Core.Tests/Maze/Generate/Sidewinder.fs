@@ -10,6 +10,27 @@ open Mazes.Core.Canvas.Shape
 open Mazes.Core.Grid
 open Mazes.Core.Maze.Generate
 
+[<Fact>]
+let ``Creating a rectangular 5 by 10 maze generated with the sidewinder algorithm (Top, Right, rng 1) should be like the expected output`` () =
+    // arrange
+    let grid =
+        (Rectangle.create 5 10)
+        |> Grid.create
+    
+    // act
+    let maze = grid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
+        
+    // assert
+    let expectedMaze =
+        " _ _ _ _ _ _ _ _ _ _ \n" +
+        "|_ _   _   _ _     _|\n" +
+        "|       |  _ _|_|   |\n" +
+        "| | |_| |    _  | |_|\n" +
+        "| | |_ _|_| |_  |_  |\n" +
+        "|_|_ _ _ _|_ _|_ _|_|\n"
+        
+    maze.Grid.ToString |> should equal expectedMaze
+
 type SidewinderDirectionEnum =
     | Top = 1
     | Right = 2

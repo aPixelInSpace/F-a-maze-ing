@@ -38,11 +38,13 @@ let createMaze rngSeed grid =
 
             edges.Remove(nextCoordinate) |> ignore
 
-            headCoordinate <- nextCoordinate
             unlinkedNeighbors <- grid.LinkedNeighbors false nextCoordinate |> Seq.toArray
 
             edges.UnionWith(grid.LinkedNeighbors false headCoordinate)
             edges.UnionWith(unlinkedNeighbors)
+
+            headCoordinate <- nextCoordinate
+            
 
     { Grid = grid }
     

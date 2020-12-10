@@ -3,6 +3,7 @@
 namespace Mazes.Core.Grid
 
 open System
+open System.Text
 open Mazes.Core
 open Mazes.Core.Position
 open Mazes.Core.Array2D
@@ -103,6 +104,48 @@ type Grid =
             if (isLinkedAt Left) then
                 yield coordinate.NeighborCoordinateAtPosition Left
         }
+
+    member this.ToString =
+        let sBuilder = StringBuilder()
+
+        let appendRows (rows : _[] List) =
+            let appendHorizontalWall wallType =
+                match wallType with
+                    | Normal | Border -> sBuilder.Append("_") |> ignore
+                    | WallType.Empty -> sBuilder.Append(" ") |> ignore
+
+            let appendVerticalWall wallType =
+                match wallType with
+                    | Normal | Border -> sBuilder.Append("|") |> ignore
+                    | WallType.Empty -> sBuilder.Append(" ") |> ignore
+
+            // first row
+            let lastColumnIndex = this.Cells |> maxColumnIndex
+            sBuilder.Append(" ") |> ignore
+            for columnIndex in 0 .. lastColumnIndex do
+                let cell = this.Cell { RowIndex = 0; ColumnIndex = columnIndex }
+                appendHorizontalWall cell.WallTop.WallType
+                sBuilder.Append(" ") |> ignore
+            sBuilder.Append("\n") |> ignore
+
+            // every row
+            for rowIndex in 0 .. this.Cells |> maxRowIndex do
+                for columnIndex in 0 .. lastColumnIndex do
+                    let cell = this.Cell { RowIndex = rowIndex; ColumnIndex = columnIndex }
+                    appendVerticalWall cell.WallLeft.WallType
+                    appendHorizontalWall cell.WallBottom.WallType
+                    
+                    if columnIndex = lastColumnIndex then
+                        appendVerticalWall cell.WallRight.WallType
+
+                sBuilder.Append("\n") |> ignore
+
+        this.Cells
+        |> extractByRows
+        |> Seq.toList
+        |> appendRows
+
+        sBuilder.ToString()
 
 module Grid =
 

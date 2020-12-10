@@ -9,6 +9,27 @@ open Mazes.Core.Canvas.Shape
 open Mazes.Core.Grid
 open Mazes.Core.Maze.Generate.BinaryTree
 
+[<Fact>]
+let ``Creating a rectangular 5 by 10 maze generated with the binary tree algorithm (Top, Right, rng 1) should be like the expected output`` () =
+    // arrange
+    let grid =
+        (Rectangle.create 5 10)
+        |> Grid.create
+    
+    // act
+    let maze = grid |> createMaze Direction.Top Direction.Right 1 1 1
+        
+    // assert
+    let expectedMaze =
+        " _ _ _ _ _ _ _ _ _ _ \n" +
+        "|      _ _     _    |\n" +
+        "|_| | |  _ _|_|  _| |\n" +
+        "|_ _|_| |    _  |_  |\n" +
+        "|  _ _ _|_|_|  _|_  |\n" +
+        "|_|_ _ _ _ _ _|_ _ _|\n"
+        
+    maze.Grid.ToString |> should equal expectedMaze
+
 type BinaryTreeDirectionEnum =
     | Top = 1
     | Right = 2
