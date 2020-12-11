@@ -13,6 +13,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Mazes.Output\Mazes.Output.fsproj" />
       <ProjectReference Include="..\Mazes.Render\Mazes.Render.fsproj" />
+      <ProjectReference Include="..\Mazes.Utility\Mazes.Utility.fsproj" />
     </ItemGroup>
 
     <ItemGroup>

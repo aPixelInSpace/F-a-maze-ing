@@ -54,8 +54,4 @@ let create rowRadiusLength columnRadiusLength rowEnlargingFactor columnEnlarging
     let columnRadiusLengthIndex = getIndex columnRadiusLength
     let columnRadiusLengthIndexSquared = float (pown columnRadiusLengthIndex 2) + columnEnlargingFactor
 
-    let zones =
-        Array2D.init numberOfRows numberOfColumns
-            (fun rowIndex columnIndex -> Zone.create (isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex ellipseFactor side rowIndex columnIndex))
-
-    { Zones = zones; }
+    Canvas.create numberOfRows numberOfColumns (isEllipse rowRadiusLengthIndexSquared columnRadiusLengthIndexSquared centerRowIndex centerColumnIndex ellipseFactor side)

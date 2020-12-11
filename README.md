@@ -1,4 +1,5 @@
 ![build](https://github.com/apixelinspace/F-a-maze-ing/workflows/build/badge.svg)
+[![codecov](https://codecov.io/gh/aPixelInSpace/F-a-maze-ing/branch/main/graph/badge.svg?token=K6FQOQZ8BS)](https://codecov.io/gh/aPixelInSpace/F-a-maze-ing)
 
 # F-a-maze-ing
 A, simple, composable and configurable maze generator made with F#

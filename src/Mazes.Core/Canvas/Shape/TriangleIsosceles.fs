@@ -60,9 +60,5 @@ let create baseLength baseAt baseDecrement heightIncrement =
         match baseAt with
         | BaseAt.Top | BaseAt.Bottom -> baseLength
         | BaseAt.Left | BaseAt.Right -> height
-    
-    let zones =
-        Array2D.init numberOfRows numberOfColumns
-            (fun rowIndex columnIndex -> Zone.create (isCellPartOfTriangleIsosceles baseAt baseDecrement heightIncrement numberOfRows numberOfColumns rowIndex columnIndex))
 
-    { Zones = zones; }
+    Canvas.create numberOfRows numberOfColumns (isCellPartOfTriangleIsosceles baseAt baseDecrement heightIncrement numberOfRows numberOfColumns)

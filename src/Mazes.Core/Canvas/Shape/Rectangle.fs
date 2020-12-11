@@ -6,6 +6,4 @@ open Mazes.Core
 open Mazes.Core.Canvas
 
 let create numberOfRows numberOfColumns =
-    let zones = Array2D.create numberOfRows numberOfColumns (Zone.create true)
-    
-    { Zones = zones; }
+    Canvas.create numberOfRows numberOfColumns (fun _ _ -> true)

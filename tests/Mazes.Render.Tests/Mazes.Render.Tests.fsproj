@@ -16,6 +16,7 @@
 		<Compile Include="Text\Sidewinder\TriangleIsosceles.fs" />
 		<Compile Include="Text\Sidewinder\Ellipse.fs" />
 		<Compile Include="Text\Sidewinder\Composite.fs" />
+        <Folder Include="Image" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 

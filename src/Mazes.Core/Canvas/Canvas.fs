@@ -72,6 +72,12 @@ type Canvas =
         this.GetZoneByZone RowsDescendingColumnsDescending (fun zone _ -> zone.IsAPartOfMaze)
         |> Seq.head
 
+module Canvas =
+    let create numberOfRows numberOfColumns isZonePartOfMaze =
+        let zones = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> Zone.create (isZonePartOfMaze rowIndex columnIndex))
+    
+        { Zones = zones; }
+
 module Convert =
 
     let charPartOfMaze = '*'
