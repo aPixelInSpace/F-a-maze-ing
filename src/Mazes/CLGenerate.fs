@@ -21,6 +21,7 @@ type AlgoEnum =
     | AldousBroder = 2
     | Wilson = 3
     | HuntAndKill = 4
+    | RecursiveBacktracker = 5
 
 let private defaultNameOfFile = "The F Amazing Maze"
 
@@ -44,6 +45,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
            | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
            | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
            | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
+           | AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
            | _ -> failwith "Generating algorithm unknown"
 
     let nameOfMaze =
@@ -58,11 +60,11 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
 
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.create)
+    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.create)
     //let grid = (Shape.TriangleIsosceles.create 150 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Grid.create)
     //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> Grid.create)
-    let grid = (Shape.Ellipse.create 5 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> Grid.create)
+    //let grid = (Shape.Ellipse.create 5 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> Grid.create)
 
     //let canvasSave = (Shape.Rectangle.create 15 15 |> Canvas.save)
     //File.WriteAllText(filePath.Replace(".html", ".canvas.mazes"), canvasSave, Encoding.UTF8)
@@ -125,8 +127,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let htmlOutput = outputHtml maze { Name = nameOfMaze } renderedGrid
     File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
     
-    let rawTestOutput = Output.RawForTest.outputRawForTest maze renderedGrid
-    File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
+    //let rawTestOutput = Output.RawForTest.outputRawForTest maze renderedGrid
+    //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
     let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo (snd maze.Grid.Canvas.GetFirstBottomRightPartOfMazeZone)) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RowIndex = 0; ColumnIndex = 3 }) map

@@ -18,9 +18,8 @@ let createMaze rngSeed grid =
     unvisited.UnionWith(
         grid.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
         |> Seq.map(fun (_, coordinate) -> coordinate))
-            
 
-    let firstCoordinate = unvisited.ElementAt(rng.Next(unvisited.Count))
+    let firstCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
     unvisited.Remove(firstCoordinate) |> ignore
 
     while unvisited.Count > 0 do

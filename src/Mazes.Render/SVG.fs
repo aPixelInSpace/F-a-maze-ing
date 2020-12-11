@@ -85,9 +85,9 @@ let private renderWallTypes (sBuilder : StringBuilder) (grid : Grid) coordinate 
     addPathTagByWallType sBuilder grid coordinate Border "b"
     addPathTagByWallType sBuilder grid coordinate Normal "n"
 
-let private renderFullCellPath (sBuilder : StringBuilder) coordinate =
+let private renderFullCell (sBuilder : StringBuilder) styleClass coordinate =
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())    
-    addPathTag sBuilder "p" ("M " + topLeft.Value + (drawLine LeftToRight) + (drawLine TopToBottom) + (drawLine RightToLeft) + (drawLine BottomToTop))
+    addPathTag sBuilder styleClass ("M " + topLeft.Value + (drawLine LeftToRight) + (drawLine TopToBottom) + (drawLine RightToLeft) + (drawLine BottomToTop))
 
 let private renderFullCellColor (sBuilder : StringBuilder) color coordinate node maxDistance =
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())
@@ -125,6 +125,12 @@ let renderGrid grid (path : Coordinate seq) (map : Map) =
                         fill: purple;
                         fill-opacity: 0.4;
                     }
+                    .d {
+                        stroke: transparent;
+                        stroke-width: 0;
+                        fill: #70361f;
+                        fill-opacity: 0.2;
+                    }
                     .c {
                         stroke: transparent;
                         stroke-width: 0;
@@ -148,7 +154,10 @@ let renderGrid grid (path : Coordinate seq) (map : Map) =
     |> Seq.iter(fun (node, coordinate) -> renderFullCellColor sBuilder "#4287f5" coordinate node.Value map.FarthestFromRoot.Distance)
 
     path
-    |> Seq.iter(fun coordinate -> renderFullCellPath sBuilder coordinate)
+    |> Seq.iter(fun coordinate -> renderFullCell sBuilder "p" coordinate)
+
+    //map.Leaves
+    //|> Seq.iter(fun coordinate -> renderFullCell sBuilder "d" coordinate)
 
     grid.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
     |> Seq.iter(fun (_, coordinate) -> renderWallTypes sBuilder grid coordinate)

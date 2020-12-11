@@ -21,6 +21,7 @@
 		<Compile Include="Maze\Generate\AldousBroder.fs" />
 		<Compile Include="Maze\Generate\Wilson.fs" />
 		<Compile Include="Maze\Generate\HuntAndKill.fs" />
+		<Compile Include="Maze\Generate\RecursiveBacktracker.fs" />
         <Compile Include="Program.fs" />        
     </ItemGroup>
 

@@ -46,7 +46,7 @@ let maze =
     *)
 
 [<Fact>]
-let ``Given a root inside the maze, when creating a map, then it should give all the distances from the root for every node inside the maze`` () =
+let ``Given a root inside the maze, when creating a map, then it should give all the count of the connected nodes`` () =
 
     // arrange
     let rootCoordinate = snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
@@ -55,27 +55,7 @@ let ``Given a root inside the maze, when creating a map, then it should give all
     let map = maze.createDijkstraMap rootCoordinate
 
     // assert
-    let node = map.Graph.Node
     map.ConnectedNodes |> should equal 79
-
-    let topLeftNode = node { RowIndex = 0; ColumnIndex = 9 }
-    topLeftNode.IsSome |> should equal true
-    topLeftNode.Value.DistanceFromRoot |> should equal 13
-
-    let bottomLeftNode = node { RowIndex = 9; ColumnIndex = 0 }
-    bottomLeftNode.IsSome |> should equal true
-    bottomLeftNode.Value.DistanceFromRoot |> should equal 17
-
-    let bottomRightNode = node { RowIndex = 9; ColumnIndex = 8 }
-    bottomRightNode.IsSome |> should equal true
-    bottomRightNode.Value.DistanceFromRoot |> should equal 19
-
-    let centerNode = node { RowIndex = 5; ColumnIndex = 4 }
-    centerNode.IsSome |> should equal true
-    centerNode.Value.DistanceFromRoot |> should equal 15
-
-    let outsideOfTheMazeNode = node { RowIndex = 0; ColumnIndex = 1 }
-    outsideOfTheMazeNode.IsNone |> should equal true
 
 [<Fact>]
 let ``Given a root outside the maze, when creating a map, then the root is the only node of the map`` () =
@@ -144,6 +124,9 @@ let ``Given a map, when getting all the distances from the root, then it should 
     let map = maze.createDijkstraMap rootCoordinate
 
     // assert
+    let outsideOfTheMazeNode = map.Graph.Node { RowIndex = 0; ColumnIndex = 1 }
+    outsideOfTheMazeNode.IsNone |> should equal true
+    
     let distances = map.Graph.ToString
     
     let expectedDistances =
@@ -159,6 +142,25 @@ let ``Given a map, when getting all the distances from the root, then it should 
         "(17)( )(19)(18)(17)(18)(19)( )(19)( )\n"
 
     distances |> should equal expectedDistances
+
+[<Fact>]
+let ``Given a root inside the maze, when creating a map, then it should give all the dead ends (leaves) of the maze`` () =
+
+    // arrange
+    let rootCoordinate = snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
+
+    // act
+    let map = maze.createDijkstraMap rootCoordinate
+
+    // assert
+    let expectedDeadEnds =
+            [| { RowIndex = 0; ColumnIndex = 0 }; { RowIndex = 4; ColumnIndex = 4 }; { RowIndex = 2; ColumnIndex = 6 }; { RowIndex = 3; ColumnIndex = 7 }
+               { RowIndex = 0; ColumnIndex = 9 }; { RowIndex = 4; ColumnIndex = 5 }; { RowIndex = 7; ColumnIndex = 2 }; { RowIndex = 7; ColumnIndex = 1 }
+               { RowIndex = 7; ColumnIndex = 6 }; { RowIndex = 4; ColumnIndex = 8 }; { RowIndex = 6; ColumnIndex = 5 }; { RowIndex = 8; ColumnIndex = 7 }
+               { RowIndex = 9; ColumnIndex = 0 }; { RowIndex = 5; ColumnIndex = 1 }; { RowIndex = 9; ColumnIndex = 8 }; { RowIndex = 9; ColumnIndex = 6 }
+               { RowIndex = 9; ColumnIndex = 2 } |]
+
+    map.Leaves |> should equal expectedDeadEnds
 
 [<Fact>]
 let ``Given a map and a goal coordinate, when searching the shortest path between the root and the goal, then it should return the list of coordinates that forms that path`` () =

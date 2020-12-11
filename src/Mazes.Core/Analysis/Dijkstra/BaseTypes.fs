@@ -10,7 +10,7 @@ type Distance = int
 [<Struct>]
 type Node = {
         DistanceFromRoot : Distance
-        Neighbors :  seq<Coordinate>
+        Neighbors :  Coordinate seq
     }
 
 [<Struct>]

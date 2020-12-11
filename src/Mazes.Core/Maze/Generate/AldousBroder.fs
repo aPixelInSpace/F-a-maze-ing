@@ -3,18 +3,16 @@
 module Mazes.Core.Maze.Generate.AldousBroder
 
 open System
-open Mazes.Core.Array2D
 open Mazes.Core.Grid
 open Mazes.Core.Maze
 
-let createMaze rngSeed grid =
+let createMaze rngSeed (grid : Grid) =
 
     let rng = Random(rngSeed)
 
-    let zonesPartOfMaze = grid.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze) |> Seq.toArray
-    let mutable currentCoordinate = snd (zonesPartOfMaze.[rng.Next(zonesPartOfMaze.Length)])
+    let mutable currentCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
 
-    let unvisitedCount = ref (zonesPartOfMaze.Length - 1)
+    let unvisitedCount = ref (grid.Canvas.TotalOfMazeZones - 1)
 
     while unvisitedCount.Value > 0 do
         let nextCoordinate = grid.RandomNeighborFrom rng currentCoordinate

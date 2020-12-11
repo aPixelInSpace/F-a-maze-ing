@@ -21,6 +21,9 @@ type Grid =
     member this.Cell coordinate =
         get this.Cells coordinate
 
+    member this.GetCellByCell extractBy filter =
+        getItemByItem this.Cells extractBy filter
+
     member this.IsLimitAt coordinate position =
         let zone = this.Canvas.Zone coordinate
         let cell = this.Cell coordinate
@@ -72,21 +75,37 @@ type Grid =
     member this.LinkCellsAtCoordinates (coordinate : Coordinate) otherCoordinate =
         this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Empty
 
+    /// Returns the neighbors that are inside the bound of the grid
     member this.NeighborsFrom coordinate =
         this.Canvas.NeighborsPartOfMazeOf coordinate
             |> Seq.filter(fun (_, nPosition) -> not (this.IsLimitAt coordinate nPosition))
             |> Seq.map(fun (coordinate, _) -> coordinate)
 
+    /// Returns a random neighbor that is inside the bound of the grid
     member this.RandomNeighborFrom (rng : Random) coordinate =
         let neighbors = this.NeighborsFrom coordinate |> Seq.toArray
         neighbors.[rng.Next(neighbors.Length)]
 
-    member this.LinkedNeighbors isLinked coordinate =
+    /// Returns a random neighbor that is not currently linked with the coordinate
+    member this.RandomUnlinkedNeighborFrom (rng : Random) coordinate =
+        let currentCell = this.Cell coordinate
+        let neighbors =
+            this.NeighborsFrom coordinate
+            |> Seq.filter(fun nCoordinate -> not (currentCell.AreLinked coordinate nCoordinate))
+            |> Seq.toArray
+
+        if neighbors.Length > 0 then
+            Some neighbors.[rng.Next(neighbors.Length)]
+        else
+            None
+
+    /// Returns the neighbors coordinates that are linked, NOT NECESSARILY with the coordinate
+    member this.NeighborsThatAreLinked isLinked coordinate =
         let neighbors = this.NeighborsFrom coordinate
         neighbors |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked = isLinked)
 
-    /// Returns the neighbors coordinates that are linked with the parameter coordinate
-    member this.LinkedNeighborsCoordinates coordinate =
+    /// Returns the neighbors coordinates that are linked with the coordinate
+    member this.LinkedNeighborsWithCoordinates coordinate =
         let isLinkedAt pos =
             not (this.IsLimitAt coordinate pos) &&        
             (this.Cell coordinate).IsLinkedAt pos
@@ -105,45 +124,49 @@ type Grid =
                 yield coordinate.NeighborCoordinateAtPosition Left
         }
 
+    member this.RandomCoordinatePartOfMazeAndNotLinked (rng : Random) =
+        let unlinkedPartOfMazeCells =
+            this.GetCellByCell RowsAscendingColumnsAscending
+                (fun cell coordinate ->
+                    (this.Canvas.Zone coordinate).IsAPartOfMaze &&
+                    not cell.IsLinked
+                ) |> Seq.toArray
+
+        snd (unlinkedPartOfMazeCells.[rng.Next(unlinkedPartOfMazeCells.Length)])
+
     member this.ToString =
         let sBuilder = StringBuilder()
 
-        let appendRows (rows : _[] List) =
-            let appendHorizontalWall wallType =
-                match wallType with
-                    | Normal | Border -> sBuilder.Append("_") |> ignore
-                    | WallType.Empty -> sBuilder.Append(" ") |> ignore
+        let appendHorizontalWall wallType =
+            match wallType with
+                | Normal | Border -> sBuilder.Append("_") |> ignore
+                | WallType.Empty -> sBuilder.Append(" ") |> ignore
 
-            let appendVerticalWall wallType =
-                match wallType with
-                    | Normal | Border -> sBuilder.Append("|") |> ignore
-                    | WallType.Empty -> sBuilder.Append(" ") |> ignore
+        let appendVerticalWall wallType =
+            match wallType with
+                | Normal | Border -> sBuilder.Append("|") |> ignore
+                | WallType.Empty -> sBuilder.Append(" ") |> ignore
 
-            // first row
-            let lastColumnIndex = this.Cells |> maxColumnIndex
+        // first row
+        let lastColumnIndex = this.Cells |> maxColumnIndex
+        sBuilder.Append(" ") |> ignore
+        for columnIndex in 0 .. lastColumnIndex do
+            let cell = this.Cell { RowIndex = 0; ColumnIndex = columnIndex }
+            appendHorizontalWall cell.WallTop.WallType
             sBuilder.Append(" ") |> ignore
+        sBuilder.Append("\n") |> ignore
+
+        // every row
+        for rowIndex in 0 .. this.Cells |> maxRowIndex do
             for columnIndex in 0 .. lastColumnIndex do
-                let cell = this.Cell { RowIndex = 0; ColumnIndex = columnIndex }
-                appendHorizontalWall cell.WallTop.WallType
-                sBuilder.Append(" ") |> ignore
+                let cell = this.Cell { RowIndex = rowIndex; ColumnIndex = columnIndex }
+                appendVerticalWall cell.WallLeft.WallType
+                appendHorizontalWall cell.WallBottom.WallType
+                
+                if columnIndex = lastColumnIndex then
+                    appendVerticalWall cell.WallRight.WallType
+
             sBuilder.Append("\n") |> ignore
-
-            // every row
-            for rowIndex in 0 .. this.Cells |> maxRowIndex do
-                for columnIndex in 0 .. lastColumnIndex do
-                    let cell = this.Cell { RowIndex = rowIndex; ColumnIndex = columnIndex }
-                    appendVerticalWall cell.WallLeft.WallType
-                    appendHorizontalWall cell.WallBottom.WallType
-                    
-                    if columnIndex = lastColumnIndex then
-                        appendVerticalWall cell.WallRight.WallType
-
-                sBuilder.Append("\n") |> ignore
-
-        this.Cells
-        |> extractByRows
-        |> Seq.toList
-        |> appendRows
 
         sBuilder.ToString()
 

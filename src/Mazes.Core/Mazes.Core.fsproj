@@ -8,7 +8,6 @@
         <Compile Include="Position.fs" />
         <Compile Include="Coordinate.fs" />
         <Compile Include="Array2D.fs" />
-        <Compile Include="Analysis\DepthFirstSearch.fs" />
         <Compile Include="Analysis\Dijkstra\BaseTypes.fs" />
         <Compile Include="Analysis\Dijkstra\Graph.fs" />
         <Compile Include="Analysis\Dijkstra\Map.fs" />
@@ -26,7 +25,8 @@
         <Compile Include="Maze\Generate\Sidewinder.fs" />
         <Compile Include="Maze\Generate\AldousBroder.fs" />
         <Compile Include="Maze\Generate\Wilson.fs" />
-        <Compile Include="Maze\Generate\HuntAndKill.fs" />        
+        <Compile Include="Maze\Generate\HuntAndKill.fs" />
+        <Compile Include="Maze\Generate\RecursiveBacktracker.fs" />        
     </ItemGroup>
 
     <ItemGroup>

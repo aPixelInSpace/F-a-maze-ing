@@ -49,6 +49,7 @@ type Map =
         Graph : Graph
         ConnectedNodes : int
         FarthestFromRoot : FarthestFromRoot
+        Leaves : Coordinate array
     }
 
     member this.LongestPaths =
@@ -59,9 +60,11 @@ type Map =
                     yield mapFromFarthest.Graph.PathFromGoalToRoot newFarthestCoordinate
         }
 
-    static member create getNeighborsCoordinate numberOfRows numberOfColumns rootCoordinate =
+    static member create (linkedNeighbors : Coordinate -> Coordinate seq) numberOfRows numberOfColumns rootCoordinate =
 
         let coordinatesByDistance = CoordinatesByDistance.createEmpty
+
+        let leaves = ResizeArray<Coordinate>()
 
         let graph = Graph.createEmpty numberOfRows numberOfColumns
 
@@ -77,7 +80,10 @@ type Map =
             if not visited then
                 incr connectedNodes
 
-            let neighbors = getNeighborsCoordinate coordinate
+            let neighbors = linkedNeighbors coordinate |> Seq.toArray
+
+            if (neighbors |> Seq.length) = 1 then
+                leaves.Add(coordinate)
             
             let newDistance =
                 match (graph.MinDistanceNode neighbors) with
@@ -103,4 +109,5 @@ type Map =
           ConnectedNodes = connectedNodes.Value
           FarthestFromRoot =
               { Distance = coordinatesByDistance.MaxDistance
-                Coordinates = coordinatesByDistance.CoordinatesWithDistance(coordinatesByDistance.MaxDistance) } }
+                Coordinates = coordinatesByDistance.CoordinatesWithDistance(coordinatesByDistance.MaxDistance) }
+          Leaves = leaves.ToArray() }

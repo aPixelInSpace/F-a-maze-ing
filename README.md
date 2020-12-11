@@ -28,7 +28,7 @@ The SVG render can color the maze and show the path(s) between two zones that ar
 <img src="docs/CompositeMaze.svg" width="400">
 
 ### ASCII
-The text render is simpler and only displays the maze :
+The text render is simpler and only displays the maze (using the Unicode characters [link](https://en.wikipedia.org/wiki/Box-drawing_character)) :
 <div style="font-family: 'DejaVu Sans Mono', monospace">
     <pre class="maze-line">                ┏━┓            
           ┏━┯━━━┛ ┗━━━━━┓      

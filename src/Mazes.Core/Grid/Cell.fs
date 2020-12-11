@@ -42,6 +42,9 @@ type Cell =
     member this.IsLinkedAt pos =
         Cell.IsALink (this.WallTypeAtPosition pos)
 
+    member this.AreLinked (coordinate : Coordinate) (otherCoordinate : Coordinate) =
+        this.IsLinkedAt (coordinate.NeighborPositionAtCoordinate otherCoordinate)
+
     /// Returns true if the cell has at least one link
     member this.IsLinked =
         (this.Walls
