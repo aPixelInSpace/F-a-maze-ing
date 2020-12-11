@@ -9,7 +9,7 @@ open Mazes.Utility.Canvas.Convert
 [<Fact>]
 let ``Given an image with black pixels, when creating a canvas from it, then it should give the canvas that match the pixels of the image`` () =
     // arrange
-    let imagePath = "Resources\\MicrochipBlack.png"
+    let imagePath = "Resources/MicrochipBlack.png"
 
     // act
     let canvas = fromImage 0.0f imagePath
@@ -43,7 +43,7 @@ let ``Given an image with black pixels, when creating a canvas from it, then it 
 [<Fact>]
 let ``Given an image with grey pixels, when creating a canvas with tolerance from it, then it should give the canvas that match the pixels of the image`` () =
     // arrange
-    let imagePath = "Resources\\FaceGrey.png"
+    let imagePath = "Resources/FaceGrey.png"
 
     // act
     let canvas = fromImage 63.0f imagePath

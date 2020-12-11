@@ -14,7 +14,7 @@
         <Content Include="Resources\FaceGrey.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Compile Include="Tests.fs" />
+        <Compile Include="Canvas\Convert.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
