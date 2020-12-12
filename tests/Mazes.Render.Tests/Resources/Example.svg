@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" standalone="no"?>
+<!-- Copyright 2020 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->
+<svg width="430" height="370" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs>
+                <style>
+                    .n {
+                        stroke: #333;
+                        fill:transparent;
+                        stroke-width: 2;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                        //stroke-dasharray: 5;
+                    }
+                    .b {
+                        stroke: #333;
+                        fill:transparent;
+                        stroke-width: 3;
+                        stroke-linecap:round;
+                        stroke-linejoin: round;
+                        //stroke-dasharray: 5;
+                    }
+                    .p {
+                        stroke: transparent;
+                        stroke-width: 0;
+                        fill: purple;
+                        fill-opacity: 0.4;
+                    }
+                    .d {
+                        stroke: transparent;
+                        stroke-width: 0;
+                        fill: #70361f;
+                        fill-opacity: 0.2;
+                    }
+                    .c {
+                        stroke: transparent;
+                        stroke-width: 0;
+                        fill: #4287f5;
+                    }
+                </style>
+            </defs><rect width="100%" height="100%" fill="transparent"/><path fill-opacity="0"  d="M 200 20 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.09"  d="M 110 50 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.07"  d="M 140 50 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.05"  d="M 170 50 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.02"  d="M 200 50 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.05"  d="M 230 50 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.07"  d="M 260 50 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.09"  d="M 290 50 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.14"  d="M 80 80 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.11"  d="M 110 80 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.95"  d="M 140 80 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.93"  d="M 170 80 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.91"  d="M 200 80 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.89"  d="M 230 80 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.86"  d="M 260 80 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.11"  d="M 290 80 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.14"  d="M 320 80 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.18"  d="M 50 110 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.16"  d="M 80 110 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.14"  d="M 110 110 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.98"  d="M 140 110 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="1"  d="M 170 110 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.84"  d="M 200 110 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.82"  d="M 230 110 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.84"  d="M 260 110 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.73"  d="M 290 110 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.7"  d="M 320 110 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.73"  d="M 350 110 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.2"  d="M 50 140 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.18"  d="M 80 140 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.2"  d="M 110 140 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.23"  d="M 140 140 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.25"  d="M 170 140 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.8"  d="M 230 140 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.77"  d="M 260 140 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.75"  d="M 290 140 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.68"  d="M 320 140 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.7"  d="M 350 140 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.25"  d="M 20 170 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.23"  d="M 50 170 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.25"  d="M 80 170 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.27"  d="M 110 170 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.25"  d="M 140 170 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.43"  d="M 260 170 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.64"  d="M 290 170 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.66"  d="M 320 170 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.68"  d="M 350 170 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.7"  d="M 380 170 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.39"  d="M 50 200 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.32"  d="M 80 200 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.3"  d="M 110 200 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.27"  d="M 140 200 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.3"  d="M 170 200 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.43"  d="M 230 200 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.41"  d="M 260 200 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.61"  d="M 290 200 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.68"  d="M 320 200 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.66"  d="M 350 200 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.36"  d="M 50 230 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.34"  d="M 80 230 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.32"  d="M 110 230 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.3"  d="M 140 230 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.32"  d="M 170 230 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.34"  d="M 200 230 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.36"  d="M 230 230 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.39"  d="M 260 230 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.59"  d="M 290 230 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.61"  d="M 320 230 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.64"  d="M 350 230 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.36"  d="M 80 260 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.34"  d="M 110 260 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.41"  d="M 140 260 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.43"  d="M 170 260 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.45"  d="M 200 260 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.43"  d="M 230 260 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.41"  d="M 260 260 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.57"  d="M 290 260 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.59"  d="M 320 260 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.36"  d="M 110 290 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.39"  d="M 140 290 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.45"  d="M 170 290 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.48"  d="M 200 290 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.5"  d="M 230 290 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.52"  d="M 260 290 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.55"  d="M 290 290 h 30 v 30 h -30 v -30" class="c"/>
+<path fill-opacity="0.5"  d="M 200 320 h 30 v 30 h -30 v -30" class="c"/>
+<path d="M 200 20 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 200 50 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 170 50 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 140 50 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 110 50 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 110 80 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 80 80 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 80 110 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 80 140 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 110 140 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 140 140 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 140 170 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 140 200 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 140 230 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 110 230 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 110 260 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 110 290 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 140 290 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 140 260 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 170 260 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 170 290 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 200 290 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 200 320 h 30 v 30 h -30 v -30" class="p"/>
+<path d="M 230 50 v -30 h -30 v 30" class="b"/>
+<path d="M 110 80 v -30 h 30" class="b"/>
+<path d="M 140 50 h 30" class="b"/>
+<path d="M 170 80 h -30" class="n"/>
+<path d="M 170 50 h 30" class="b"/>
+<path d="M 200 80 h -30" class="n"/>
+<path d="M 230 80 h -30" class="n"/>
+<path d="M 230 50 h 30" class="b"/>
+<path d="M 260 80 h -30" class="n"/>
+<path d="M 260 50 h 30" class="b"/>
+<path d="M 290 80 h -30" class="n"/>
+<path d="M 290 50 h 30 v 30" class="b"/>
+<path d="M 80 110 v -30 h 30" class="b"/>
+<path d="M 140 110 v -30" class="n"/>
+<path d="M 140 110 v -30 h 30" class="n"/>
+<path d="M 170 80 h 30" class="n"/>
+<path d="M 200 110 h -30" class="n"/>
+<path d="M 200 80 h 30" class="n"/>
+<path d="M 230 110 h -30" class="n"/>
+<path d="M 230 80 h 30" class="n"/>
+<path d="M 260 110 h -30" class="n"/>
+<path d="M 260 80 h 30 v 30" class="n"/>
+<path d="M 290 80 v 30 h 30" class="n"/>
+<path d="M 320 80 h 30 v 30" class="b"/>
+<path d="M 350 110 h -30" class="n"/>
+<path d="M 50 140 v -30 h 30" class="b"/>
+<path d="M 110 140 v -30" class="n"/>
+<path d="M 110 110 v 30 h 30 v -30" class="n"/>
+<path d="M 140 110 v 30 h 30" class="n"/>
+<path d="M 170 110 h 30 v 30 h -30" class="n"/>
+<path d="M 230 140 h -30" class="b"/>
+<path d="M 200 140 v -30 h 30" class="n"/>
+<path d="M 230 110 h 30" class="n"/>
+<path d="M 260 140 h 30 v -30" class="n"/>
+<path d="M 290 140 v -30 h 30" class="n"/>
+<path d="M 320 110 h 30 v 30" class="n"/>
+<path d="M 350 110 h 30 v 30" class="b"/>
+<path d="M 350 110 v 30" class="n"/>
+<path d="M 50 140 v 30" class="b"/>
+<path d="M 80 170 v -30" class="n"/>
+<path d="M 80 140 v 30 h 30" class="n"/>
+<path d="M 110 140 h 30" class="n"/>
+<path d="M 140 170 h -30" class="n"/>
+<path d="M 140 140 h 30" class="n"/>
+<path d="M 170 170 h 30 v -30" class="b"/>
+<path d="M 170 140 h 30" class="n"/>
+<path d="M 230 140 v 30 h 30" class="b"/>
+<path d="M 260 140 h 30" class="n"/>
+<path d="M 290 170 h -30" class="n"/>
+<path d="M 290 170 h 30 v -30" class="n"/>
+<path d="M 320 140 v 30" class="n"/>
+<path d="M 350 170 v -30" class="n"/>
+<path d="M 380 170 v -30" class="b"/>
+<path d="M 350 140 v 30" class="n"/>
+<path d="M 50 200 h -30 v -30 h 30" class="b"/>
+<path d="M 80 200 h -30" class="n"/>
+<path d="M 80 170 h 30" class="n"/>
+<path d="M 110 200 h -30" class="n"/>
+<path d="M 110 170 h 30 v 30" class="n"/>
+<path d="M 170 200 v -30" class="b"/>
+<path d="M 140 170 v 30" class="n"/>
+<path d="M 260 170 v 30" class="b"/>
+<path d="M 260 170 h 30 v 30" class="n"/>
+<path d="M 290 200 v -30 h 30" class="n"/>
+<path d="M 320 200 h 30 v -30" class="n"/>
+<path d="M 350 170 v 30" class="n"/>
+<path d="M 380 170 h 30 v 30 h -30" class="b"/>
+<path d="M 50 200 v 30" class="b"/>
+<path d="M 50 200 h 30 v 30" class="n"/>
+<path d="M 80 230 v -30 h 30" class="n"/>
+<path d="M 110 230 h 30 v -30" class="n"/>
+<path d="M 140 200 v 30" class="n"/>
+<path d="M 170 200 h 30 v 30" class="b"/>
+<path d="M 230 230 v -30 h 30" class="b"/>
+<path d="M 260 230 h -30" class="n"/>
+<path d="M 290 230 v -30" class="n"/>
+<path d="M 290 200 v 30" class="n"/>
+<path d="M 320 230 v -30" class="n"/>
+<path d="M 350 230 h -30 v -30 h 30" class="n"/>
+<path d="M 380 230 v -30" class="b"/>
+<path d="M 50 230 v 30 h 30" class="b"/>
+<path d="M 110 260 v -30" class="n"/>
+<path d="M 110 260 v -30 h 30" class="n"/>
+<path d="M 140 260 h 30 v -30" class="n"/>
+<path d="M 170 230 v 30 h 30" class="n"/>
+<path d="M 200 230 h 30" class="b"/>
+<path d="M 230 260 h -30" class="n"/>
+<path d="M 230 230 h 30" class="n"/>
+<path d="M 260 260 h -30" class="n"/>
+<path d="M 290 260 v -30" class="n"/>
+<path d="M 290 230 v 30" class="n"/>
+<path d="M 320 260 v -30" class="n"/>
+<path d="M 320 260 v -30 h 30" class="n"/>
+<path d="M 350 260 h 30 v -30" class="b"/>
+<path d="M 80 260 v 30 h 30" class="b"/>
+<path d="M 110 290 v -30" class="n"/>
+<path d="M 110 260 v 30" class="n"/>
+<path d="M 140 290 v -30" class="n"/>
+<path d="M 140 290 v -30 h 30" class="n"/>
+<path d="M 170 260 h 30 v 30" class="n"/>
+<path d="M 230 290 h -30 v -30 h 30" class="n"/>
+<path d="M 230 260 h 30" class="n"/>
+<path d="M 260 290 h -30" class="n"/>
+<path d="M 260 290 h 30 v -30" class="n"/>
+<path d="M 290 260 v 30" class="n"/>
+<path d="M 320 290 h 30 v -30" class="b"/>
+<path d="M 110 290 v 30 h 30" class="b"/>
+<path d="M 170 320 h -30" class="b"/>
+<path d="M 170 320 v -30" class="n"/>
+<path d="M 200 320 h -30" class="b"/>
+<path d="M 170 290 v 30" class="n"/>
+<path d="M 200 290 h 30" class="n"/>
+<path d="M 260 320 h -30" class="b"/>
+<path d="M 230 290 h 30" class="n"/>
+<path d="M 290 320 h -30" class="b"/>
+<path d="M 260 290 h 30" class="n"/>
+<path d="M 290 320 h 30 v -30" class="b"/>
+<path d="M 200 320 v 30 h 30 v -30" class="b"/>
+</svg>

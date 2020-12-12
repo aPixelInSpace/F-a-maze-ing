@@ -32,8 +32,8 @@ let private addPathTag (sBuilder : StringBuilder) styleClass (points : string) =
     sBuilder.Append(points) |> ignore
     sBuilder.Append("\" class=\"" + styleClass + "\"/>\n") |> ignore
 
-let private addPathColorTag (sBuilder : StringBuilder) styleClass color opacity (points : string) =
-    sBuilder.Append("<path fill=\"" + color + "\" fill-opacity=\"" + opacity + "\"  d=\"") |> ignore
+let private addPathColorTag (sBuilder : StringBuilder) styleClass opacity (points : string) =
+    sBuilder.Append("<path fill-opacity=\"" + opacity + "\"  d=\"") |> ignore
     sBuilder.Append(points) |> ignore
     sBuilder.Append("\" class=\"" + styleClass + "\"/>\n") |> ignore
 
@@ -89,13 +89,13 @@ let private renderFullCell (sBuilder : StringBuilder) styleClass coordinate =
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())    
     addPathTag sBuilder styleClass ("M " + topLeft.Value + (drawLine LeftToRight) + (drawLine TopToBottom) + (drawLine RightToLeft) + (drawLine BottomToTop))
 
-let private renderFullCellColor (sBuilder : StringBuilder) color coordinate node maxDistance =
+let private renderFullCellColor (sBuilder : StringBuilder) coordinate node maxDistance =
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())
 
     let opacity = Math.Round(1.0 - (float (maxDistance - node.DistanceFromRoot) / float maxDistance), 2)
     let sOpacity = opacity.ToString().Replace(",", ".")
 
-    addPathColorTag sBuilder "c" color sOpacity ("M " + topLeft.Value + (drawLine LeftToRight) + (drawLine TopToBottom) + (drawLine RightToLeft) + (drawLine BottomToTop))
+    addPathColorTag sBuilder "c" sOpacity ("M " + topLeft.Value + (drawLine LeftToRight) + (drawLine TopToBottom) + (drawLine RightToLeft) + (drawLine BottomToTop))
 
 let renderGrid grid (path : Coordinate seq) (map : Map) =
     let sBuilder = StringBuilder()
@@ -134,6 +134,7 @@ let renderGrid grid (path : Coordinate seq) (map : Map) =
                     .c {
                         stroke: transparent;
                         stroke-width: 0;
+                        fill: #4287f5;
                     }
                 </style>
             </defs>"""
@@ -141,7 +142,8 @@ let renderGrid grid (path : Coordinate seq) (map : Map) =
     let width = ((grid.Canvas.NumberOfColumns) * cellWidth) + (marginWidth * 2)
     let height = ((grid.Canvas.NumberOfRows) * cellHeight) + (marginHeight * 2)
 
-    sBuilder.Append("<?xml version=\"1.0\" standalone=\"no\"?>") |> ignore
+    sBuilder.Append("<?xml version=\"1.0\" standalone=\"no\"?>\n") |> ignore
+    sBuilder.Append("<!-- Copyright 2020 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->\n") |> ignore
     sBuilder.Append("<svg width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">") |> ignore
     sBuilder.Append(svgStyle) |> ignore
     sBuilder.Append("<rect width=\"100%\" height=\"100%\" fill=\"transparent\"/>") |> ignore
@@ -151,7 +153,7 @@ let renderGrid grid (path : Coordinate seq) (map : Map) =
     // #fffef0 : very pale yellow
 
     map.Graph.GetNodeByNode RowsAscendingColumnsAscending (fun node _ -> node.IsSome)
-    |> Seq.iter(fun (node, coordinate) -> renderFullCellColor sBuilder "#4287f5" coordinate node.Value map.FarthestFromRoot.Distance)
+    |> Seq.iter(fun (node, coordinate) -> renderFullCellColor sBuilder coordinate node.Value map.FarthestFromRoot.Distance)
 
     path
     |> Seq.iter(fun coordinate -> renderFullCell sBuilder "p" coordinate)

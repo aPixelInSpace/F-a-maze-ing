@@ -64,7 +64,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.TriangleIsosceles.create 150 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Grid.create)
     //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> Grid.create)
-    //let grid = (Shape.Ellipse.create 5 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> Grid.create)
+    //let grid = (Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> Grid.create)
     //let grid = (Mazes.Utility.Canvas.Convert.fromImage 0.0f "d:\\temp\\Microchip.png" |> Grid.create)
 
     //let canvasSave = (Shape.Rectangle.create 15 15 |> Canvas.save)

@@ -8,6 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+		<Content Include="Resources\Example.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 		<Compile Include="Text\BinaryTree\Rectangle.fs" />
 		<Compile Include="Text\BinaryTree\TriangleIsosceles.fs" />
 		<Compile Include="Text\BinaryTree\Ellipse.fs" />
@@ -16,7 +19,7 @@
 		<Compile Include="Text\Sidewinder\TriangleIsosceles.fs" />
 		<Compile Include="Text\Sidewinder\Ellipse.fs" />
 		<Compile Include="Text\Sidewinder\Composite.fs" />
-        <Folder Include="Image" />
+		<Compile Include="SVG.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
