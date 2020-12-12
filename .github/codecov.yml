@@ -1,6 +1,12 @@
 # Documentation: https://docs.codecov.io/docs/codecov-yaml
 
 codecov:
+    # https://docs.codecov.io/docs/coverage-configuration
+    coverage:
+        range: 60..90
+        round: down
+        precision: 2
+
     # Avoid "Missing base report"
     # https://github.com/codecov/support/issues/363
     # https://docs.codecov.io/docs/comparing-commits
