@@ -7,7 +7,7 @@ open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 
 let private cellWidth = 30
 let private cellHeight = 30
@@ -37,7 +37,7 @@ let private addPathColorTag (sBuilder : StringBuilder) styleClass opacity (point
     sBuilder.Append(points) |> ignore
     sBuilder.Append("\" class=\"" + styleClass + "\"/>\n") |> ignore
 
-let private addPathTagByWallType (sBuilder : StringBuilder) (grid : Grid) coordinate (wallType : WallType) styleClass =
+let private addPathTagByWallType (sBuilder : StringBuilder) (grid : OrthoGrid) coordinate (wallType : WallType) styleClass =
     let cell = grid.Cell coordinate
 
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())
@@ -81,7 +81,7 @@ let private addPathTagByWallType (sBuilder : StringBuilder) (grid : Grid) coordi
         appendOneCell ("M " + bottomRight.Value + (drawLine RightToLeft))
     | _ -> ()
 
-let private renderWallTypes (sBuilder : StringBuilder) (grid : Grid) coordinate =
+let private renderWallTypes (sBuilder : StringBuilder) (grid : OrthoGrid) coordinate =
     addPathTagByWallType sBuilder grid coordinate Border "b"
     addPathTagByWallType sBuilder grid coordinate Normal "n"
 

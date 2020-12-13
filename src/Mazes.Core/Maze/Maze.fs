@@ -4,11 +4,11 @@ namespace Mazes.Core.Maze
 
 open Mazes.Core.Position
 open Mazes.Core.Analysis
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 
 type Maze =
     {    
-        Grid : Grid
+        Grid : OrthoGrid
     }
 
     member this.createDijkstraMap rootCoordinate =
@@ -16,7 +16,7 @@ type Maze =
 
 module Maze =
 
-    let createEmpty (grid : Grid) =
+    let createEmpty (grid : OrthoGrid) =
         grid.Cells
         |> Array2D.iteri(fun r c _ ->
              let update = grid.IfNotAtLimitLinkCellAtPosition { RowIndex = r; ColumnIndex = c }

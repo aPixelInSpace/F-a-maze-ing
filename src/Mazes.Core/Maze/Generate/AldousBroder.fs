@@ -3,10 +3,10 @@
 module Mazes.Core.Maze.Generate.AldousBroder
 
 open System
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
-let createMaze rngSeed (grid : Grid) =
+let createMaze rngSeed (grid : OrthoGrid) =
 
     let rng = Random(rngSeed)
 

@@ -7,7 +7,7 @@ open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Canvas
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -16,9 +16,9 @@ let ``Rendering a 3 by 3 maze generated with the binary tree algorithm (Top, Rig
     // arrange
     let maze =
         (Shape.Rectangle.create 3 3)
-        |> Grid.create
+        |> OrthoGrid.create
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
-    
+
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
         
@@ -36,7 +36,7 @@ let ``Rendering a 5 by 5 maze generated with the binary tree algorithm (Top, Rig
     // arrange
     let maze =
         (Shape.Rectangle.create 5 5)
-        |> Grid.create
+        |> OrthoGrid.create
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
     
     // act
@@ -58,7 +58,7 @@ let ``Rendering a 5 by 10 maze generated with the binary tree algorithm (Top, Ri
     // arrange
     let maze =
         (Shape.Rectangle.create 5 10)
-        |> Grid.create
+        |> OrthoGrid.create
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
     
     // act

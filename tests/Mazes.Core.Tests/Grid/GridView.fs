@@ -5,7 +5,7 @@ module Mazes.Core.Tests.Grid.GridView
 open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Shape
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 
 
 [<Fact>]
@@ -14,7 +14,7 @@ let ``Given a grid, when slicing the grid, then the sliced grid should contain a
     // arrange
     let gridRectangle =
         Rectangle.create 10 10
-        |> Grid.create
+        |> OrthoGrid.create
 
     // act
     let slicedGrid = GridView.sliceGrid gridRectangle { RowIndex = 1; ColumnIndex = 1 } { RowIndex = 4; ColumnIndex = 4 }

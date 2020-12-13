@@ -6,7 +6,7 @@ open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
 
@@ -27,7 +27,7 @@ let maze =
         Canvas.Convert.endLineTag
 
     (Canvas.Convert.fromString stringCanvas).Value    
-    |> Grid.create
+    |> OrthoGrid.create
     |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     (*
@@ -97,7 +97,7 @@ let ``Given a map with no internal walls, when getting all the distances from th
 
     let maze =
         (Canvas.Convert.fromString simpleCanvas).Value
-        |> Grid.create
+        |> OrthoGrid.create
         |> Maze.createEmpty
 
     // act
@@ -196,7 +196,7 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
 
     let maze =
         (Canvas.Convert.fromString simpleCanvas).Value    
-        |> Grid.create
+        |> OrthoGrid.create
         |> Maze.createEmpty
 
     let rootCoordinate = snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone
@@ -244,7 +244,7 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
             Canvas.Convert.endLineTag
 
         (Canvas.Convert.fromString stringCanvas).Value
-        |> Grid.create
+        |> OrthoGrid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
         (*

@@ -7,9 +7,10 @@ open System.Collections.Generic
 open System.Linq
 open Mazes.Core
 open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
-let createMaze rngSeed (grid : Grid) =
+let createMaze rngSeed (grid : Grid<OrthoGrid>) =
 
     let rng = Random(rngSeed)
 
@@ -43,4 +44,4 @@ let createMaze rngSeed (grid : Grid) =
             headCoordinate <- nextCoordinate
             
 
-    { Grid = grid }
+    { Grid = grid.ToGrid }

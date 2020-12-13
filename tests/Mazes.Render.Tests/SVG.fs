@@ -8,7 +8,7 @@ open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Canvas
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -17,7 +17,7 @@ let ``Given a maze, a path and a map, when creating an SVG, then it should match
     // arrange
     let maze =
         Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside
-        |> Grid.create
+        |> OrthoGrid.create
         |> RecursiveBacktracker.createMaze 1
 
     let map = maze.createDijkstraMap (snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone)

@@ -6,7 +6,7 @@ open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Canvas.Shape
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate.BinaryTree
 
 [<Fact>]
@@ -14,7 +14,7 @@ let ``Creating a rectangular 5 by 10 maze generated with the binary tree algorit
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> Grid.create
+        |> OrthoGrid.create
     
     // act
     let maze = grid |> createMaze Direction.Top Direction.Right 1 1 1
@@ -72,7 +72,7 @@ let ``Given a rectangular canvas, when a creating a maze with the binary tree al
     // arrange
     let gridRectangle =
         Rectangle.create numberOfRows numberOfColumns
-        |> Grid.create
+        |> OrthoGrid.create
 
     let direction1 = mapBinaryTreeDirectionEnumToBinaryTreeDirection direction1
     let direction2 = mapBinaryTreeDirectionEnumToBinaryTreeDirection direction2

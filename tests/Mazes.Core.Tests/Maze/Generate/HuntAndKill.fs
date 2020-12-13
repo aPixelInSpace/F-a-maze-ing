@@ -6,19 +6,19 @@ open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Canvas.Shape
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
 let ``Creating a rectangular 5 by 10 maze generated with the Hunt and Kill algorithm (rng 1) should be like the expected output`` () =
     // arrange
-    let grid =
+    let orthoGrid =
         (Rectangle.create 5 10)
-        |> Grid.create
+        |> OrthoGrid.create
     
     // act
-    let maze = grid |> HuntAndKill.createMaze 1
-        
+    let maze = orthoGrid.ToGrid |> HuntAndKill.createMaze 1
+
     // assert
     let expectedMaze =
         " _ _ _ _ _ _ _ _ _ _ \n" +

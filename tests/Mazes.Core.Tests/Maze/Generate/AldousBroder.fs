@@ -6,7 +6,7 @@ open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Canvas.Shape
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
@@ -14,7 +14,7 @@ let ``Creating a rectangular 5 by 10 maze generated with Aldous-Broder algorithm
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> Grid.create
+        |> OrthoGrid.create
     
     // act
     let maze = grid |> AldousBroder.createMaze 1

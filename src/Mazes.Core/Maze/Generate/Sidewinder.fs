@@ -6,7 +6,7 @@ open System
 open Mazes.Core
 open Mazes.Core.Position
 open Mazes.Core.Array2D
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
 let private getRandomColumnIndexFromRange isALimitAt (rng : Random) increment position rowIndex startColumnIndex endColumnIndex =

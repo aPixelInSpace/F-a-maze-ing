@@ -6,7 +6,7 @@ open System
 open FsUnit
 open Xunit
 open Mazes.Core
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -39,9 +39,9 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let maze =
         canvas
-        |> Grid.create
+        |> OrthoGrid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
-    
+
     // act
     let renderedMaze = maze.Grid |> Text.renderGrid
         
@@ -71,7 +71,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let maze =
         canvas
-        |> Grid.create
+        |> OrthoGrid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Left 1 1 1
     
     // act
@@ -103,7 +103,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let maze =
         canvas
-        |> Grid.create
+        |> OrthoGrid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right 1 1 1
     
     // act
@@ -135,7 +135,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let maze =
         canvas
-        |> Grid.create
+        |> OrthoGrid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Left 1 1 1
     
     // act
@@ -167,7 +167,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let maze =
         canvas
-        |> Grid.create
+        |> OrthoGrid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top 1 1 1
     
     // act
@@ -199,7 +199,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let maze =
         canvas
-        |> Grid.create
+        |> OrthoGrid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Bottom 1 1 1
     
     // act
@@ -231,7 +231,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let maze =
         canvas
-        |> Grid.create
+        |> OrthoGrid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Top 1 1 1
 
     // act
@@ -263,7 +263,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let maze =
         canvas
-        |> Grid.create
+        |> OrthoGrid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom 1 1 1
 
     // act

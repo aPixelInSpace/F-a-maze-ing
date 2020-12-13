@@ -7,7 +7,7 @@ open Xunit
 open Mazes.Core
 open Mazes.Core.Tests.Helpers
 open Mazes.Core.Canvas.Shape
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
@@ -15,7 +15,7 @@ let ``Creating a rectangular 5 by 10 maze generated with the sidewinder algorith
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> Grid.create
+        |> OrthoGrid.create
     
     // act
     let maze = grid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -73,7 +73,7 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
     // arrange
     let gridRectangle =
         Rectangle.create numberOfRows numberOfColumns
-        |> Grid.create
+        |> OrthoGrid.create
 
     let direction1 = mapSidewinderDirectionEnumToSidewinderDirection direction1
     let direction2 = mapSidewinderDirectionEnumToSidewinderDirection direction2
@@ -153,7 +153,7 @@ let ``Given a triangular canvas, when creating a maze with the sidewinder algori
     // arrange
     let gridTriangle =
         TriangleIsosceles.create baseLength baseAt baseDecrement heightIncrement
-        |> Grid.create
+        |> OrthoGrid.create
 
     let direction1 = mapSidewinderDirectionEnumToSidewinderDirection direction1
     let direction2 = mapSidewinderDirectionEnumToSidewinderDirection direction2

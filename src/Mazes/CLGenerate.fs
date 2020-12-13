@@ -8,7 +8,7 @@ open System.Text
 open CommandLine
 open Mazes.Core
 open Mazes.Core.Canvas
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
 open Mazes.Render
@@ -44,7 +44,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
            | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right rngSeed 1 1
            | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
            | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
-           | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
+           //| AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
            | AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
            | _ -> failwith "Generating algorithm unknown"
 
@@ -60,7 +60,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
 
-    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.create)
+    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> OrthoGrid.create)
     //let grid = (Shape.TriangleIsosceles.create 150 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Grid.create)
     //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> Grid.create)
@@ -119,7 +119,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    
 //    let maze = { Grid = grid }
     
-    let maze = (algo rngSeed grid)
+    //let maze = (algo rngSeed grid)
+    let maze = (grid.ToGrid |> HuntAndKill.createMaze rngSeed)
     
     let map = maze.createDijkstraMap (snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone)
 

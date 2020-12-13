@@ -6,7 +6,7 @@ open System.Text
 open Mazes.Core
 open Mazes.Core.Position
 open Mazes.Core.Array2D
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 
 let private repetitionsMiddlePart = 1
 
@@ -141,7 +141,7 @@ let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid (coordinate : Coord
     | false -> Empty
 
 let private append
-    (sBuilder : StringBuilder) (grid : Grid) coordinate
+    (sBuilder : StringBuilder) (grid : OrthoGrid) coordinate
     (intersectionWallLeft, intersectionWallTop, intersectionWallRight, intersectionWallBottom,
      middleWall,
      (lastIntersectionWallLeft : WallType Lazy), (lastIntersectionWallTop : WallType Lazy), lastIntersectionWallRight, lastIntersectionWallBottom) =
@@ -170,7 +170,7 @@ let private append
                             lastIntersectionWallBottom) |> ignore
     ()
 
-let private wallTypes (grid : Grid) coordinate =
+let private wallTypes (grid : OrthoGrid) coordinate =
     let cell = grid.Cell coordinate
     
     let ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate
@@ -195,7 +195,7 @@ let private wallTypes (grid : Grid) coordinate =
 
     (intersectionWallLeft, intersectionWallTop, intersectionWallRight, intersectionWallBottom, middleWall, lastIntersectionWallLeft, lastIntersectionWallTop, lastIntersectionWallRight, lastIntersectionWallBottom)
 
-let private wallTypesLastRow (grid : Grid) coordinate =
+let private wallTypesLastRow (grid : OrthoGrid) coordinate =
     let cell = grid.Cell coordinate    
     let ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate
     
