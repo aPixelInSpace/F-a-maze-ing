@@ -3,16 +3,17 @@
 module Mazes.Core.Maze.Generate.AldousBroder
 
 open System
+open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
-let createMaze rngSeed (grid : OrthoGrid) =
+let createMaze rngSeed (grid : Grid<OrthoGrid>) =
 
     let rng = Random(rngSeed)
 
     let mutable currentCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
 
-    let unvisitedCount = ref (grid.Canvas.TotalOfMazeZones - 1)
+    let unvisitedCount = ref (grid.TotalOfMazeCells - 1)
 
     while unvisitedCount.Value > 0 do
         let nextCoordinate = grid.RandomNeighborFrom rng currentCoordinate
@@ -23,4 +24,4 @@ let createMaze rngSeed (grid : OrthoGrid) =
 
         currentCoordinate <- nextCoordinate
 
-    { Grid = grid }
+    { Grid = grid.ToGrid }

@@ -15,11 +15,13 @@ open Mazes.Render
 [<Fact>]
 let ``Given a maze, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
-    let maze =
+    let grid =
         Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside
         |> OrthoGrid.create
-        |> RecursiveBacktracker.createMaze 1
 
+    let maze =
+        grid.ToGrid
+        |> RecursiveBacktracker.createMaze 1
     let map = maze.createDijkstraMap (snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone)
 
     // act

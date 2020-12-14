@@ -5,6 +5,7 @@ namespace Mazes.Core.Grid.Ortho
 open Mazes.Core
 open Mazes.Core.Position
 open Mazes.Core.Array2D
+open Mazes.Core.Grid
 
 [<Struct>]
 type Cell =
@@ -50,6 +51,10 @@ type Cell =
         (this.Walls
         |> Array.where(fun wall -> Cell.IsALink wall.WallType)).Length > 0
 
+    member this.ToCell =
+        {
+            IsLinked = this.IsLinked
+        }
 module Cell =    
 
     let create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =

@@ -17,7 +17,7 @@ let ``Creating a rectangular 5 by 10 maze generated with Aldous-Broder algorithm
         |> OrthoGrid.create
     
     // act
-    let maze = grid |> AldousBroder.createMaze 1
+    let maze = grid.ToGrid |> AldousBroder.createMaze 1
         
     // assert
     let expectedMaze =

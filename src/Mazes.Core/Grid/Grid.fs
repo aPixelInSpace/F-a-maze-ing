@@ -7,8 +7,12 @@ open Mazes.Core
 
 type Grid<'G> =
     {
+        TotalOfMazeCells : int
+        Cell : Coordinate -> Cell
+        CoordinatesPartOfMaze : Coordinate seq
         LinkCellsAtCoordinates : Coordinate -> Coordinate -> unit
         NeighborsThatAreLinked : bool -> Coordinate -> Coordinate seq
+        RandomNeighborFrom : Random -> Coordinate -> Coordinate
         RandomCoordinatePartOfMazeAndNotLinked : Random -> Coordinate
         ToGrid : 'G
     }

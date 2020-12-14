@@ -5,10 +5,11 @@ module Mazes.Core.Maze.Generate.RecursiveBacktracker
 open System
 open System.Collections.Generic
 open Mazes.Core
+open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
-let createMaze rngSeed (grid : OrthoGrid) =
+let createMaze rngSeed (grid : Grid<OrthoGrid>) =
 
     let rng = Random(rngSeed)
 
@@ -30,4 +31,4 @@ let createMaze rngSeed (grid : OrthoGrid) =
         else
             stack.Pop() |> ignore
 
-    { Grid = grid }
+    { Grid = grid.ToGrid }

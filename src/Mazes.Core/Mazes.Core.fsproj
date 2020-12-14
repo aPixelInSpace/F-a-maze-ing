@@ -16,6 +16,7 @@
 		<Compile Include="Canvas\Shape\Rectangle.fs" />
 		<Compile Include="Canvas\Shape\TriangleIsosceles.fs" />
 		<Compile Include="Canvas\Shape\Ellipse.fs" />
+		<Compile Include="Grid\Cell.fs" />
 		<Compile Include="Grid\Grid.fs" />
 		<Compile Include="Grid\Ortho\Wall.fs" />
 		<Compile Include="Grid\Ortho\Cell.fs" />

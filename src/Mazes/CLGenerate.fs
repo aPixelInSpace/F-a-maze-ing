@@ -42,10 +42,10 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
         match algoEnum with
            | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
            | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right rngSeed 1 1
-           | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
-           | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
+           //| AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
+           //| AlgoEnum.Wilson -> Wilson.createMaze rngSeed
            //| AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
-           | AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
+           //| AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
            | _ -> failwith "Generating algorithm unknown"
 
     let nameOfMaze =

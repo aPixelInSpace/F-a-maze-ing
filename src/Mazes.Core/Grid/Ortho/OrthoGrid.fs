@@ -5,10 +5,10 @@ namespace Mazes.Core.Grid.Ortho
 open System
 open System.Text
 open Mazes.Core
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Position
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas
-open Mazes.Core.Grid
 
 type OrthoGrid =
     {
@@ -135,6 +135,10 @@ type OrthoGrid =
 
         snd (unlinkedPartOfMazeCells.[rng.Next(unlinkedPartOfMazeCells.Length)])
 
+    member this.CoordinatesPartOfMaze =
+        this.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
+        |> Seq.map(fun (_, coordinate) -> coordinate)
+
     member this.ToString =
         let sBuilder = StringBuilder()
 
@@ -173,11 +177,15 @@ type OrthoGrid =
 
     member this.ToGrid =
         {
-            ToGrid = this
+            TotalOfMazeCells = (this.Canvas.NumberOfRows * this.Canvas.NumberOfColumns)
+            Cell = (fun coordinate -> (this.Cell coordinate).ToCell)
+            CoordinatesPartOfMaze = this.CoordinatesPartOfMaze
             LinkCellsAtCoordinates = this.LinkCellsAtCoordinates
             NeighborsThatAreLinked = this.NeighborsThatAreLinked
+            RandomNeighborFrom = this.RandomNeighborFrom
             RandomCoordinatePartOfMazeAndNotLinked = this.RandomCoordinatePartOfMazeAndNotLinked
-        }
+            ToGrid = this
+        } : Grid.Grid<OrthoGrid>
 
 module OrthoGrid =
 
