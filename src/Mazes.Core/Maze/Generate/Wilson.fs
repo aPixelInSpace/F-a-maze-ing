@@ -46,4 +46,4 @@ let createMaze rngSeed (grid : Grid<OrthoGrid>) =
             grid.LinkCellsAtCoordinates path.[i] path.[i + 1]
             unvisited.Remove(path.[i]) |> ignore
 
-    { Grid = grid.ToGrid }
+    { Grid = grid }

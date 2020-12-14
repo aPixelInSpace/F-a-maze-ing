@@ -28,4 +28,4 @@ let ``Creating a rectangular 5 by 10 maze generated with the Recursive Backtrack
         "| | |   |_  |   | | |\n" +
         "|_ _ _|_ _ _|_|_ _ _|\n"
 
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid.ToGrid.ToString |> should equal expectedMaze

@@ -24,4 +24,4 @@ let createMaze rngSeed (grid : Grid<OrthoGrid>) =
 
         currentCoordinate <- nextCoordinate
 
-    { Grid = grid.ToGrid }
+    { Grid = grid }

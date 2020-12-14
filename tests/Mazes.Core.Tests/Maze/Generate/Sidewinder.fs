@@ -18,7 +18,7 @@ let ``Creating a rectangular 5 by 10 maze generated with the sidewinder algorith
         |> OrthoGrid.create
     
     // act
-    let maze = grid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
+    let maze = grid.ToGrid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
         
     // assert
     let expectedMaze =
@@ -29,7 +29,7 @@ let ``Creating a rectangular 5 by 10 maze generated with the sidewinder algorith
         "| | |_ _|_| |_  |_  |\n" +
         "|_|_ _ _ _|_ _|_ _|_|\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid.ToGrid.ToString |> should equal expectedMaze
 
 type SidewinderDirectionEnum =
     | Top = 1
@@ -79,7 +79,7 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
     let direction2 = mapSidewinderDirectionEnumToSidewinderDirection direction2
 
     // act
-    let maze = Sidewinder.createMaze direction1 direction2 rngSeed direction1Weight direction2Weight gridRectangle
+    let maze = Sidewinder.createMaze direction1 direction2 rngSeed direction1Weight direction2Weight gridRectangle.ToGrid
 
     // we use the map to ensure that the total nodes accessible in the maze is equal to the total number of maze nodes of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
@@ -87,7 +87,7 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
     let map = maze.createDijkstraMap rootCoordinate
 
     // assert
-    map.ConnectedNodes |> should equal (maze.Grid.Canvas).TotalOfMazeZones
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Theory>]
 [<InlineData(1, TBE.Top, 1, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
@@ -159,12 +159,12 @@ let ``Given a triangular canvas, when creating a maze with the sidewinder algori
     let direction2 = mapSidewinderDirectionEnumToSidewinderDirection direction2
 
     // act
-    let maze = Sidewinder.createMaze direction1 direction2 rngSeed direction1Weight direction2Weight gridTriangle
+    let maze = Sidewinder.createMaze direction1 direction2 rngSeed direction1Weight direction2Weight gridTriangle.ToGrid
 
     // we use the map to ensure that the total nodes accessible in the maze is equal to the total number of maze zones of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
-    let rootCoordinate = snd gridTriangle.Canvas.GetFirstTopLeftPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
     let map = maze.createDijkstraMap rootCoordinate
 
     // assert
-    map.ConnectedNodes |> should equal (maze.Grid.Canvas).TotalOfMazeZones
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

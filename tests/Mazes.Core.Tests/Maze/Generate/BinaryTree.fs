@@ -17,7 +17,7 @@ let ``Creating a rectangular 5 by 10 maze generated with the binary tree algorit
         |> OrthoGrid.create
     
     // act
-    let maze = grid |> createMaze Direction.Top Direction.Right 1 1 1
+    let maze = grid.ToGrid |> createMaze Direction.Top Direction.Right 1 1 1
         
     // assert
     let expectedMaze =
@@ -28,7 +28,7 @@ let ``Creating a rectangular 5 by 10 maze generated with the binary tree algorit
         "|  _ _ _|_|_|  _|_  |\n" +
         "|_|_ _ _ _ _ _|_ _ _|\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid.ToGrid.ToString |> should equal expectedMaze
 
 type BinaryTreeDirectionEnum =
     | Top = 1
@@ -78,7 +78,7 @@ let ``Given a rectangular canvas, when a creating a maze with the binary tree al
     let direction2 = mapBinaryTreeDirectionEnumToBinaryTreeDirection direction2
 
     // act
-    let maze = createMaze direction1 direction2 rngSeed direction1Weight direction2Weight gridRectangle
+    let maze = createMaze direction1 direction2 rngSeed direction1Weight direction2Weight gridRectangle.ToGrid
 
     // we use the map to ensure that the total nodes accessible in the maze is equal to the total number of maze zones of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
@@ -86,4 +86,4 @@ let ``Given a rectangular canvas, when a creating a maze with the binary tree al
     let map = maze.createDijkstraMap rootCoordinate
 
     // assert
-    map.ConnectedNodes |> should equal (maze.Grid.Canvas).TotalOfMazeZones
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

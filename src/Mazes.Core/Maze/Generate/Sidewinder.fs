@@ -6,6 +6,7 @@ open System
 open Mazes.Core
 open Mazes.Core.Position
 open Mazes.Core.Array2D
+open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
@@ -119,7 +120,7 @@ let mapDirectionToPosition direction =
     | Bottom -> Position.Bottom
     | Left -> Position.Left
 
-let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight grid =    
+let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid<OrthoGrid>) =    
 
     let rng = Random(rngSeed)
 
@@ -132,15 +133,15 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
 
     let (extractBy, startIndex, increment, endIndex, getCoordinate) =
         match direction1, direction2 with
-        | _, Right -> (extractByRows, 0, 1, getIndex grid.Canvas.NumberOfColumns, getCoordinate true)
-        | _, Left -> (extractByRows, getIndex grid.Canvas.NumberOfColumns, -1, 0, getCoordinate true)
-        | _, Top -> (extractByColumns, getIndex grid.Canvas.NumberOfRows, -1, 0, getCoordinate false)
-        | _, Bottom -> (extractByColumns, 0, 1, getIndex grid.Canvas.NumberOfRows, getCoordinate false)
+        | _, Right -> (grid.GetCellsByRows, 0, 1, getIndex grid.NumberOfColumns, getCoordinate true)
+        | _, Left -> (grid.GetCellsByRows, getIndex grid.NumberOfColumns, -1, 0, getCoordinate true)
+        | _, Top -> (grid.GetCellsByColumns, getIndex grid.NumberOfRows, -1, 0, getCoordinate false)
+        | _, Bottom -> (grid.GetCellsByColumns, 0, 1, getIndex grid.NumberOfRows, getCoordinate false)
 
     let position1 = mapDirectionToPosition direction1
     let position2 = mapDirectionToPosition direction2
 
-    let isPartOfMaze coordinate = (grid.Canvas.IsZonePartOfMaze (getCoordinate coordinate))
+    let isPartOfMaze coordinate = (grid.IsCellPartOfMaze (getCoordinate coordinate))
     let isALimitAt coordinate = (grid.IsLimitAt (getCoordinate coordinate))
     let linkCellAtPosition coordinate = (grid.LinkCellAtPosition (getCoordinate coordinate))
     let ifNotAtLimitLinkCellAtPosition coordinate = (grid.IfNotAtLimitLinkCellAtPosition (getCoordinate coordinate))
@@ -148,8 +149,7 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
 
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
 
-    grid.Cells
-    |> extractBy
+    extractBy
     |> Seq.iteri(fun index1 _ ->
         carveRow
             // dependencies

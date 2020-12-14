@@ -37,13 +37,16 @@ let canvas =
 [<Fact>]
 let ``Rendering a customized composite canvas generated with the sidewinder algorithm (Top, Right, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         canvas
         |> OrthoGrid.create
+
+    let maze =
+        grid.ToGrid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -69,13 +72,16 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
 [<Fact>]
 let ``Rendering a customized composite canvas generated with the sidewinder algorithm (Top, Left, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         canvas
         |> OrthoGrid.create
+
+    let maze =
+        grid.ToGrid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Left 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -101,13 +107,16 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
 [<Fact>]
 let ``Rendering a customized composite canvas generated with the sidewinder algorithm (Bottom, Right, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         canvas
         |> OrthoGrid.create
+
+    let maze =
+        grid.ToGrid
         |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right 1 1 1
     
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -133,13 +142,16 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
 [<Fact>]
 let ``Rendering a customized composite canvas generated with the sidewinder algorithm (Bottom, Left, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         canvas
         |> OrthoGrid.create
+
+    let maze =
+        grid.ToGrid
         |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Left 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -165,13 +177,16 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
 [<Fact>]
 let ``Rendering a customized composite canvas generated with the sidewinder algorithm (Right, Top, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         canvas
         |> OrthoGrid.create
+
+    let maze =
+        grid.ToGrid
         |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -197,13 +212,16 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
 [<Fact>]
 let ``Rendering a customized composite canvas generated with the sidewinder algorithm (Right, Bottom, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         canvas
         |> OrthoGrid.create
+
+    let maze =
+        grid.ToGrid
         |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Bottom 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -229,13 +247,16 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
 [<Fact>]
 let ``Rendering a customized composite canvas generated with the sidewinder algorithm (Left, Top, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         canvas
         |> OrthoGrid.create
+
+    let maze =
+        grid.ToGrid
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Top 1 1 1
 
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -261,13 +282,16 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
 [<Fact>]
 let ``Rendering a customized composite canvas generated with the sidewinder algorithm (Left, Bottom, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         canvas
         |> OrthoGrid.create
+
+    let maze =
+        grid.ToGrid
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom 1 1 1
 
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

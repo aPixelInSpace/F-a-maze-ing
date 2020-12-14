@@ -8,7 +8,7 @@ open Mazes.Core.Array2D
 open Mazes.Core.Grid
 
 [<Struct>]
-type Cell =
+type OrthoCell =
     { Walls : Wall array }
 
     static member WallIndex position =
@@ -19,16 +19,16 @@ type Cell =
         | Left -> 3
 
     member this.WallTop =
-        this.Walls.[Cell.WallIndex Top]
+        this.Walls.[OrthoCell.WallIndex Top]
 
     member this.WallRight =
-        this.Walls.[Cell.WallIndex Right]
+        this.Walls.[OrthoCell.WallIndex Right]
 
     member this.WallBottom =
-        this.Walls.[Cell.WallIndex Bottom]
+        this.Walls.[OrthoCell.WallIndex Bottom]
 
     member this.WallLeft =
-        this.Walls.[Cell.WallIndex Left]
+        this.Walls.[OrthoCell.WallIndex Left]
 
     member this.WallTypeAtPosition position =
         match position with
@@ -41,7 +41,7 @@ type Cell =
         wallType = Empty
 
     member this.IsLinkedAt pos =
-        Cell.IsALink (this.WallTypeAtPosition pos)
+        OrthoCell.IsALink (this.WallTypeAtPosition pos)
 
     member this.AreLinked (coordinate : Coordinate) (otherCoordinate : Coordinate) =
         this.IsLinkedAt (coordinate.NeighborPositionAtCoordinate otherCoordinate)
@@ -49,13 +49,13 @@ type Cell =
     /// Returns true if the cell has at least one link
     member this.IsLinked =
         (this.Walls
-        |> Array.where(fun wall -> Cell.IsALink wall.WallType)).Length > 0
+        |> Array.where(fun wall -> OrthoCell.IsALink wall.WallType)).Length > 0
 
     member this.ToCell =
         {
             IsLinked = this.IsLinked
         }
-module Cell =    
+module OrthoCell =    
 
     let create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =
 

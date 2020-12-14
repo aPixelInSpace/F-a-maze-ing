@@ -4,15 +4,16 @@ namespace Mazes.Core.Maze
 
 open Mazes.Core.Position
 open Mazes.Core.Analysis
+open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 
 type Maze =
     {    
-        Grid : OrthoGrid
+        Grid : Grid<OrthoGrid>
     }
 
     member this.createDijkstraMap rootCoordinate =
-        Dijkstra.Map.create this.Grid.LinkedNeighborsWithCoordinates this.Grid.Canvas.NumberOfRows this.Grid.Canvas.NumberOfColumns rootCoordinate
+        Dijkstra.Map.create this.Grid.LinkedNeighborsWithCoordinates this.Grid.NumberOfRows this.Grid.NumberOfColumns rootCoordinate
 
 module Maze =
 
@@ -25,7 +26,7 @@ module Maze =
              update Bottom
              update Left)
         
-        { Grid = grid }
+        { Grid = grid.ToGrid }
 
 type MazeInfo = {
     Name : string

@@ -42,10 +42,10 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
         match algoEnum with
            | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
            | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right rngSeed 1 1
-           //| AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
-           //| AlgoEnum.Wilson -> Wilson.createMaze rngSeed
-           //| AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
-           //| AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
+           | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
+           | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
+           | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
+           | AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
            | _ -> failwith "Generating algorithm unknown"
 
     let nameOfMaze =
@@ -119,12 +119,11 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    
 //    let maze = { Grid = grid }
     
-    //let maze = (algo rngSeed grid)
-    let maze = (grid.ToGrid |> HuntAndKill.createMaze rngSeed)
-    
-    let map = maze.createDijkstraMap (snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone)
+    let maze = (algo rngSeed grid.ToGrid)
 
-    let renderedGrid = renderGrid maze.Grid
+    let map = maze.createDijkstraMap maze.Grid.GetFirstTopLeftPartOfMazeZone
+
+    let renderedGrid = renderGrid maze.Grid.ToGrid
     
     let htmlOutput = outputHtml maze { Name = nameOfMaze } renderedGrid
     File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
@@ -132,7 +131,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let rawTestOutput = Output.RawForTest.outputRawForTest maze renderedGrid
     //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
-    let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo (snd maze.Grid.Canvas.GetFirstBottomRightPartOfMazeZone)) map
+    let renderedGridSvg = SVG.renderGrid maze.Grid.ToGrid (map.Graph.PathFromRootTo maze.Grid.GetFirstBottomRightPartOfMazeZone) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RowIndex = 0; ColumnIndex = 3 }) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.LongestPaths |> Seq.head) map
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)

@@ -14,13 +14,16 @@ open Mazes.Render
 [<Fact>]
 let ``Rendering a 3 by 3 maze generated with the sidewinder algorithm (Top, Right, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Rectangle.create 3 3)
         |> OrthoGrid.create
+
+    let maze =
+        grid.ToGrid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -34,13 +37,16 @@ let ``Rendering a 3 by 3 maze generated with the sidewinder algorithm (Top, Righ
 [<Fact>]
 let ``Rendering a 5 by 5 maze generated with the sidewinder algorithm (Top, Right, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Rectangle.create 5 5)
         |> OrthoGrid.create
+
+    let maze =
+        grid.ToGrid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -56,13 +62,16 @@ let ``Rendering a 5 by 5 maze generated with the sidewinder algorithm (Top, Righ
 [<Fact>]
 let ``Rendering a 5 by 10 maze generated with the sidewinder algorithm (Top, Right, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Rectangle.create 5 10)
         |> OrthoGrid.create
+
+    let maze =
+        grid.ToGrid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

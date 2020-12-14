@@ -19,7 +19,7 @@
 		<Compile Include="Grid\Cell.fs" />
 		<Compile Include="Grid\Grid.fs" />
 		<Compile Include="Grid\Ortho\Wall.fs" />
-		<Compile Include="Grid\Ortho\Cell.fs" />
+		<Compile Include="Grid\Ortho\OrthoCell.fs" />
 		<Compile Include="Grid\Ortho\OrthoGrid.fs" />
 		<Compile Include="Grid\Ortho\GridView.fs" />
 		<Compile Include="Maze\Maze.fs" />

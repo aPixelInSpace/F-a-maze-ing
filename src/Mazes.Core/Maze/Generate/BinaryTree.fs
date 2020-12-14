@@ -5,6 +5,7 @@ module Mazes.Core.Maze.Generate.BinaryTree
 open System
 open Mazes.Core
 open Mazes.Core.Array2D
+open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
@@ -15,7 +16,7 @@ let private carveRow
     (rng : Random)
     rngTotalWeight    
     rngPosition1Weight
-    grid
+    (grid : Grid<OrthoGrid>)
     rowIndex
     startColumnIndex
     increment
@@ -26,7 +27,7 @@ let private carveRow
         let coordinate = { RowIndex = rowIndex; ColumnIndex = columnIndex }
         
         // if the cell is not part of the maze, we do nothing
-        if not (grid.Canvas.IsZonePartOfMaze coordinate) then ()
+        if not (grid.IsCellPartOfMaze coordinate) then ()
         else
 
         let isPos1ALimit = (grid.IsLimitAt coordinate position1)
@@ -74,22 +75,21 @@ let mapDirectionToPosition direction =
     | Bottom -> Position.Bottom
     | Left -> Position.Left
 
-let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight grid =
+let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid<OrthoGrid>) =
 
     let rng = Random(rngSeed)
 
     let (startColumnIndex, increment, endColumnIndex) =
         match direction1, direction2 with
-        | _, Left | Left, _ -> (getIndex grid.Canvas.NumberOfColumns, -1, 0)
-        | _ -> (0, 1, getIndex grid.Canvas.NumberOfColumns)
+        | _, Left | Left, _ -> (getIndex grid.NumberOfColumns, -1, 0)
+        | _ -> (0, 1, getIndex grid.NumberOfColumns)
 
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
 
     let position1 = mapDirectionToPosition direction1
     let position2 = mapDirectionToPosition direction2
 
-    grid.Cells
-    |> extractByRows
+    grid.GetCellsByRows
     |> Seq.iteri(fun rowIndex _ ->
         carveRow
             // params

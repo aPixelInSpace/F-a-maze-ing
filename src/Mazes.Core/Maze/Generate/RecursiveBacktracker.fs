@@ -31,4 +31,4 @@ let createMaze rngSeed (grid : Grid<OrthoGrid>) =
         else
             stack.Pop() |> ignore
 
-    { Grid = grid.ToGrid }
+    { Grid = grid }
