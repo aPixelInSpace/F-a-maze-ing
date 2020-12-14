@@ -10,7 +10,7 @@ open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
-let createMaze rngSeed (grid : Grid<OrthoGrid>) =
+let createMaze rngSeed (grid : Grid<'G>) =
 
     let rng = Random(rngSeed)
 

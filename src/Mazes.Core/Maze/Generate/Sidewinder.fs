@@ -120,7 +120,7 @@ let mapDirectionToPosition direction =
     | Bottom -> Position.Bottom
     | Left -> Position.Left
 
-let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid<OrthoGrid>) =    
+let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid<'G>) =    
 
     let rng = Random(rngSeed)
 

@@ -118,12 +118,12 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    [maze1; maze2; maze3; maze4] |> Async.Parallel |> Async.RunSynchronously |> ignore
 //    
 //    let maze = { Grid = grid }
-    
-    let maze = (algo rngSeed grid.ToGrid)
+
+    let maze = (algo rngSeed grid)
 
     let map = maze.createDijkstraMap maze.Grid.GetFirstTopLeftPartOfMazeZone
 
-    let renderedGrid = renderGrid maze.Grid.ToGrid
+    let renderedGrid = renderGrid  (maze.Grid.ToSpecializedGrid)
     
     let htmlOutput = outputHtml maze { Name = nameOfMaze } renderedGrid
     File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
@@ -131,7 +131,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let rawTestOutput = Output.RawForTest.outputRawForTest maze renderedGrid
     //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
-    let renderedGridSvg = SVG.renderGrid maze.Grid.ToGrid (map.Graph.PathFromRootTo maze.Grid.GetFirstBottomRightPartOfMazeZone) map
+    let renderedGridSvg = SVG.renderGrid (maze.Grid.ToSpecializedGrid) (map.Graph.PathFromRootTo maze.Grid.GetFirstBottomRightPartOfMazeZone) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RowIndex = 0; ColumnIndex = 3 }) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.LongestPaths |> Seq.head) map
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)

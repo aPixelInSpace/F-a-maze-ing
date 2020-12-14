@@ -17,7 +17,7 @@ let ``Creating a rectangular 5 by 10 maze generated with the Recursive Backtrack
         |> OrthoGrid.create
 
     // act
-    let maze = grid.ToGrid |> RecursiveBacktracker.createMaze 1
+    let maze = grid |> RecursiveBacktracker.createMaze 1
         
     // assert
     let expectedMaze =
@@ -28,4 +28,4 @@ let ``Creating a rectangular 5 by 10 maze generated with the Recursive Backtrack
         "| | |   |_  |   | | |\n" +
         "|_ _ _|_ _ _|_|_ _ _|\n"
 
-    maze.Grid.ToGrid.ToString |> should equal expectedMaze
+    maze.Grid.ToString |> should equal expectedMaze

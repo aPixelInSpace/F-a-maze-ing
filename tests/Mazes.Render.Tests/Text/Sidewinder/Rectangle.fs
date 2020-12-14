@@ -19,11 +19,11 @@ let ``Rendering a 3 by 3 maze generated with the sidewinder algorithm (Top, Righ
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -31,7 +31,7 @@ let ``Rendering a 3 by 3 maze generated with the sidewinder algorithm (Top, Righ
         "┠─╴ ╶─┨\n" +
         "┃ ┬ ╶─┨\n" +
         "┗━┷━━━┛"
-        
+
     renderedMaze |> should equal expectedRenderedMaze
 
 [<Fact>]
@@ -42,11 +42,11 @@ let ``Rendering a 5 by 5 maze generated with the sidewinder algorithm (Top, Righ
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -67,11 +67,11 @@ let ``Rendering a 5 by 10 maze generated with the sidewinder algorithm (Top, Rig
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

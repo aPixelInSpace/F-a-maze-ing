@@ -30,7 +30,7 @@ let maze =
         (Canvas.Convert.fromString stringCanvas).Value    
         |> OrthoGrid.create
 
-    grid.ToGrid
+    grid
     |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     (*
@@ -250,7 +250,7 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
         (*

@@ -19,12 +19,12 @@ let ``Rendering a 3 by 3 maze generated with the binary tree algorithm (Top, Rig
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
-        
+    let renderedMaze = maze.Grid.ToSpecializedGrid |> Text.renderGrid
+
     // assert
     let expectedRenderedMaze =
         "┏━━━━━┓\n" +
@@ -42,11 +42,11 @@ let ``Rendering a 5 by 5 maze generated with the binary tree algorithm (Top, Rig
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -67,11 +67,11 @@ let ``Rendering a 5 by 10 maze generated with the binary tree algorithm (Top, Ri
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze = maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

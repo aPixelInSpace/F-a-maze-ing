@@ -7,29 +7,6 @@ open Mazes.Core
 open Mazes.Core.Position
 
 type Grid<'G> =
-    {
-        TotalOfMazeCells : int
-        NumberOfRows : int
-        NumberOfColumns : int
-        Cell : Coordinate -> Cell
-        IsLimitAt : Coordinate -> Position -> bool
-        IsCellPartOfMaze : Coordinate -> bool
-        GetCellsByRows : Cell[] seq
-        GetCellsByColumns : Cell[] seq
-        CoordinatesPartOfMaze : Coordinate seq
-        LinkCellAtPosition : Coordinate -> Position -> unit
-        IfNotAtLimitLinkCellAtPosition : Coordinate -> Position -> unit
-        LinkCellsAtCoordinates : Coordinate -> Coordinate -> unit
-        NeighborsThatAreLinked : bool -> Coordinate -> Coordinate seq
-        LinkedNeighborsWithCoordinates : Coordinate -> Coordinate seq
-        RandomNeighborFrom : Random -> Coordinate -> Coordinate
-        RandomCoordinatePartOfMazeAndNotLinked : Random -> Coordinate
-        GetFirstTopLeftPartOfMazeZone : Coordinate
-        GetFirstBottomRightPartOfMazeZone : Coordinate
-        ToGrid : 'G
-    }
-
-type IGrid =
     abstract member TotalOfMazeCells : int
     abstract member NumberOfRows : int
     abstract member NumberOfColumns : int
@@ -49,3 +26,5 @@ type IGrid =
     abstract member RandomCoordinatePartOfMazeAndNotLinked : rng:Random -> Coordinate
     abstract member GetFirstTopLeftPartOfMazeZone : Coordinate
     abstract member GetFirstBottomRightPartOfMazeZone : Coordinate
+    abstract member ToString : string
+    abstract member ToSpecializedGrid : 'G

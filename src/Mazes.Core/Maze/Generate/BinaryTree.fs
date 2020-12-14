@@ -16,7 +16,7 @@ let private carveRow
     (rng : Random)
     rngTotalWeight    
     rngPosition1Weight
-    (grid : Grid<OrthoGrid>)
+    (grid : Grid<'G>)
     rowIndex
     startColumnIndex
     increment
@@ -75,7 +75,7 @@ let mapDirectionToPosition direction =
     | Bottom -> Position.Bottom
     | Left -> Position.Left
 
-let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid<OrthoGrid>) =
+let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid<'G>) =
 
     let rng = Random(rngSeed)
 

@@ -20,12 +20,12 @@ let ``Given a maze, a path and a map, when creating an SVG, then it should match
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> RecursiveBacktracker.createMaze 1
     let map = maze.createDijkstraMap maze.Grid.GetFirstTopLeftPartOfMazeZone
 
     // act
-    let renderedMaze = SVG.renderGrid maze.Grid.ToGrid (map.Graph.PathFromRootTo maze.Grid.GetFirstBottomRightPartOfMazeZone) map
+    let renderedMaze = SVG.renderGrid  maze.Grid.ToSpecializedGrid (map.Graph.PathFromRootTo maze.Grid.GetFirstBottomRightPartOfMazeZone) map
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/Example.svg", Encoding.UTF8)

@@ -17,7 +17,7 @@ type OrthoGrid =
         Cells : OrthoCell[,]
     }
 
-    interface IGrid with
+    interface Grid<OrthoGrid> with
 
         member self.TotalOfMazeCells =
             self.Canvas.TotalOfMazeZones
@@ -76,6 +76,12 @@ type OrthoGrid =
 
         member self.GetFirstBottomRightPartOfMazeZone =
             snd self.Canvas.GetFirstBottomRightPartOfMazeZone
+
+        member self.ToString =
+            self.ToString
+
+        member self.ToSpecializedGrid =
+            self
 
     member self.HasCells =
         self.Cells.Length > 0
@@ -235,35 +241,6 @@ type OrthoGrid =
             sBuilder.Append("\n") |> ignore
 
         sBuilder.ToString()
-
-    member self.ToGrid =
-        {
-            TotalOfMazeCells = self.Canvas.TotalOfMazeZones
-            NumberOfRows = self.Canvas.NumberOfRows
-            NumberOfColumns = self.Canvas.NumberOfColumns
-            Cell = (fun coordinate -> (self.Cell coordinate).ToCell)
-            IsLimitAt = self.IsLimitAt
-            IsCellPartOfMaze = self.Canvas.IsZonePartOfMaze
-            GetCellsByRows =
-                self.Cells
-                |> Array2D.map(fun cell -> cell.ToCell)
-                |> extractByRows
-            GetCellsByColumns =
-                self.Cells
-                |> Array2D.map(fun cell -> cell.ToCell)
-                |> extractByColumns
-            CoordinatesPartOfMaze = self.CoordinatesPartOfMaze
-            LinkCellAtPosition = self.LinkCellAtPosition
-            LinkCellsAtCoordinates = self.LinkCellsAtCoordinates
-            IfNotAtLimitLinkCellAtPosition = self.IfNotAtLimitLinkCellAtPosition
-            NeighborsThatAreLinked = self.NeighborsThatAreLinked
-            LinkedNeighborsWithCoordinates = self.LinkedNeighborsWithCoordinates
-            RandomNeighborFrom = self.RandomNeighborFrom
-            RandomCoordinatePartOfMazeAndNotLinked = self.RandomCoordinatePartOfMazeAndNotLinked
-            GetFirstTopLeftPartOfMazeZone = snd self.Canvas.GetFirstTopLeftPartOfMazeZone
-            GetFirstBottomRightPartOfMazeZone = snd self.Canvas.GetFirstBottomRightPartOfMazeZone
-            ToGrid = self
-        } : Grid.Grid<OrthoGrid>
 
 module OrthoGrid =
 

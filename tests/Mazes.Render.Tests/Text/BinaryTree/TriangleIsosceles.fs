@@ -19,11 +19,11 @@ let ``Rendering a base 11, base at bottom, triangle with a base decrement value 
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -45,11 +45,11 @@ let ``Rendering a base 11, base at top, triangle with a base decrement value of 
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -71,11 +71,11 @@ let ``Rendering a base 11, base at left, triangle with a base decrement value of
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
     
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -102,11 +102,11 @@ let ``Rendering a base 11, base at right, triangle with a base decrement value o
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -133,11 +133,11 @@ let ``Rendering a base 21, base at bottom, triangle with a base decrement value 
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -157,11 +157,11 @@ let ``Rendering a base 21, base at top, triangle with a base decrement value of 
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -181,11 +181,11 @@ let ``Rendering a base 21, base at left, triangle with a base decrement value of
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -222,11 +222,11 @@ let ``Rendering a base 21, base at right, triangle with a base decrement value o
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -263,11 +263,11 @@ let ``Rendering a base 51, base at bottom, triangle with a base decrement value 
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
     
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =        
@@ -309,11 +309,11 @@ let ``Rendering a base 51, base at bottom, triangle with a base decrement value 
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
     
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =        
@@ -335,11 +335,11 @@ let ``Rendering a base 10, base at bottom, triangle with a base decrement value 
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
     
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -370,11 +370,11 @@ let ``Rendering a base 10, base at top, triangle with a base decrement value of 
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -405,11 +405,11 @@ let ``Rendering a base 10, base at left, triangle with a base decrement value of
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -435,11 +435,11 @@ let ``Rendering a base 10, base at right, triangle with a base decrement value o
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -465,11 +465,11 @@ let ``Rendering a base 30, base at bottom, triangle with a base decrement value 
         |> OrthoGrid.create
 
     let maze =
-        grid.ToGrid
+        grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
     
     // act
-    let renderedMaze = maze.Grid.ToGrid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

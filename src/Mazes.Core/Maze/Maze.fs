@@ -7,9 +7,9 @@ open Mazes.Core.Analysis
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 
-type Maze =
+type Maze<'G> =
     {    
-        Grid : Grid<OrthoGrid>
+        Grid : Grid<'G>
     }
 
     member this.createDijkstraMap rootCoordinate =
@@ -26,7 +26,7 @@ module Maze =
              update Bottom
              update Left)
         
-        { Grid = grid.ToGrid }
+        { Grid = grid }
 
 type MazeInfo = {
     Name : string
