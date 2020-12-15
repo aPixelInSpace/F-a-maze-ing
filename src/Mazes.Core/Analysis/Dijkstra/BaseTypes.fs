@@ -14,6 +14,12 @@ type Node = {
     }
 
 [<Struct>]
+type Node2 = {
+        Coordinate :  Coordinate
+        DistanceFromRoot : Distance
+    }
+
+[<Struct>]
 type FarthestFromRoot = {
         Distance : Distance
         Coordinates : Coordinate array

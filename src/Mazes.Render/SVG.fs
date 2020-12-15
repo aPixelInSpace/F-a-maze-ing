@@ -89,7 +89,7 @@ let private renderFullCell (sBuilder : StringBuilder) styleClass coordinate =
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())    
     addPathTag sBuilder styleClass ("M " + topLeft.Value + (drawLine LeftToRight) + (drawLine TopToBottom) + (drawLine RightToLeft) + (drawLine BottomToTop))
 
-let private renderFullCellColor (sBuilder : StringBuilder) coordinate node maxDistance =
+let private renderFullCellColor (sBuilder : StringBuilder) coordinate (node : Node) maxDistance =
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())
 
     let opacity = Math.Round(1.0 - (float (maxDistance - node.DistanceFromRoot) / float maxDistance), 2)

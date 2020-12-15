@@ -25,3 +25,6 @@ type Coordinate =
         | c when c = this.NeighborCoordinateAtPosition Bottom -> Bottom
         | c when c = this.NeighborCoordinateAtPosition Left -> Left
         | _ -> failwith "Unable to match the coordinate with a position"
+
+    member this.ToString =
+        $"{this.RowIndex};{this.ColumnIndex}"
