@@ -10,6 +10,7 @@
         <Compile Include="Array2D.fs" />
         <Compile Include="Analysis\Dijkstra\ShortestPathGraph.fs" />
         <Compile Include="Analysis\Dijkstra\Map.fs" />
+        <Content Include="Analysis\Dijkstra\memo.txt" />
         <Compile Include="Canvas\Zone.fs" />
 		<Compile Include="Canvas\Canvas.fs" />
 		<Compile Include="Canvas\Shape\Rectangle.fs" />

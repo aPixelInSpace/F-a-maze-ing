@@ -154,7 +154,8 @@ let renderGrid grid (path : Coordinate seq) (map : Map) =
 
     let distance coordinate =
         match (map.ShortestPathGraph.NodeDistanceFromRoot coordinate) with
-        | Some distance -> distance
+        | Some distance when distance = 0 -> 0
+        | Some distance -> distance - 1
         | None -> 0
     map.ShortestPathGraph.Graph.Vertices
     |> Seq.iter(fun coordinate -> renderFullCellColor sBuilder coordinate (distance coordinate) (map.FarthestFromRoot.Distance - 1))

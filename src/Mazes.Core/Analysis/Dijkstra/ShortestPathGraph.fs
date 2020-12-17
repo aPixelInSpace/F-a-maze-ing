@@ -8,7 +8,6 @@ open QuikGraph
 
 type Distance = int
 
-// todo : use a AdjacencyGraph instead of BidirectionalGraph
 type ShortestPathGraph<'Node> when 'Node : equality =
     {
         RootNode : 'Node
@@ -27,42 +26,46 @@ type ShortestPathGraph<'Node> when 'Node : equality =
     member this.AddEdge source target distance =
         this.Graph.AddEdge(TaggedEdge<'Node, Distance>(source, target, distance)) |> ignore
 
-    member this.AdjacentNodes node =
-        let inNodes =
-            this.Graph.InEdges(node)
-            |> Seq.map(fun e -> e.Source)
-        let outNodes =
-            this.Graph.OutEdges(node)
-            |> Seq.map(fun e -> e.Target)
+    member this.RemoveEdge source target distance =
+        let mutable edgeRef = TaggedEdge<'Node, Distance>(source, target, distance)
+        if this.Graph.TryGetEdge(source, target, &edgeRef) then
+            this.Graph.RemoveEdge(edgeRef) |> ignore
 
-        Seq.append inNodes outNodes
-
-    member this.MinAdjacentNode node =
-        if not (this.ContainsNode node) then None
+    member this.AdjacentEdges node =
+        if not (this.ContainsNode node) then
+            None
         else
-            let inNodes = this.Graph.InEdges(node)
-            if inNodes |> Seq.isEmpty then
+            let inEdges = this.Graph.InEdges(node)
+            let outEdges = this.Graph.OutEdges(node)
+
+            if inEdges |> Seq.isEmpty && outEdges |> Seq.isEmpty then
                 None
             else
-                let minNode = (inNodes |> Seq.minBy(fun n -> n.Tag))
-                Some (minNode.Source, minNode.Tag)
+                Some (Seq.append
+                        (inEdges |> Seq.map(fun e -> (e.Source, e.Tag)))
+                        (outEdges |> Seq.map(fun e -> (e.Target, e.Tag))))
 
-    member this.MinAdjacentOutNode node =
-        if this.Graph.ContainsVertex(node) then
-            let edges = this.Graph.OutEdges(node)
-            if edges |> Seq.length > 0 then
-                Some (edges
-                |> Seq.map(fun e -> e.Tag)
-                |> Seq.min)
-            else None
-        else None
+    member this.Edge source target =
+        match (this.AdjacentEdges source) with
+        | Some edges -> edges |> Seq.tryFind(fun e -> (fst e) = target)
+        | None -> None
+        
+    member this.AdjacentNodes node =
+        match this.AdjacentEdges node with
+        | Some edges -> Some (edges |> Seq.map(fst))
+        | None -> None
+
+    member this.ClosestAdjacentNode node =
+        match this.AdjacentEdges node with
+        | Some edges -> Some (edges |> Seq.minBy(fun e -> snd e))
+        | None -> None
 
     member this.NodeDistanceFromRoot node =
         if node = this.RootNode then Some 0
         else
-            let minAdjacentNode = this.MinAdjacentNode node
+            let minAdjacentNode = this.ClosestAdjacentNode node
             match minAdjacentNode with
-            | Some minAdjacentNode -> Some (snd minAdjacentNode)
+            | Some minAdjacentNode -> Some ((snd minAdjacentNode) + 1)
             | None -> None
 
     member this.PathFromGoalToRoot goal =
@@ -73,7 +76,7 @@ type ShortestPathGraph<'Node> when 'Node : equality =
             while currentNode.IsSome do
                 let currentNodeValue = currentNode.Value 
                 yield currentNodeValue
-                match this.MinAdjacentNode currentNodeValue with
+                match this.ClosestAdjacentNode currentNodeValue with
                 | Some minNode ->
                     if snd minNode >= currentDistance then
                         currentNode <- None
@@ -87,11 +90,11 @@ type ShortestPathGraph<'Node> when 'Node : equality =
         this.PathFromGoalToRoot goal
         |> Seq.rev
 
-    member this.ToString =
+    member this.ToString sort =
         let sBuilder = StringBuilder()
 
         let mutable linebreak = 1
-        this.Graph.Edges
+        this.Graph.Edges |> Seq.sortBy(sort)
             |> Seq.iter(fun edge ->
                 sBuilder.Append($"({edge.Source.ToString()})->{edge.Tag}->({edge.Target.ToString()})") |> ignore
                 if linebreak % 5 = 0 then
