@@ -26,5 +26,5 @@ type Coordinate =
         | c when c = this.NeighborCoordinateAtPosition Left -> Left
         | _ -> failwith "Unable to match the coordinate with a position"
 
-    member this.ToString =
+    override this.ToString() =
         $"{this.RowIndex};{this.ColumnIndex}"

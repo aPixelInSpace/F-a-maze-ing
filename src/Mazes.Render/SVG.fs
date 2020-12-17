@@ -89,10 +89,10 @@ let private renderFullCell (sBuilder : StringBuilder) styleClass coordinate =
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())    
     addPathTag sBuilder styleClass ("M " + topLeft.Value + (drawLine LeftToRight) + (drawLine TopToBottom) + (drawLine RightToLeft) + (drawLine BottomToTop))
 
-let private renderFullCellColor (sBuilder : StringBuilder) coordinate (node : Node) maxDistance =
+let private renderFullCellColor (sBuilder : StringBuilder) coordinate distanceFromRoot maxDistance =
     let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())
 
-    let opacity = Math.Round(1.0 - (float (maxDistance - node.DistanceFromRoot) / float maxDistance), 2)
+    let opacity = Math.Round(1.0 - (float (maxDistance - distanceFromRoot) / float maxDistance), 2)
     let sOpacity = opacity.ToString().Replace(",", ".")
 
     addPathColorTag sBuilder "c" sOpacity ("M " + topLeft.Value + (drawLine LeftToRight) + (drawLine TopToBottom) + (drawLine RightToLeft) + (drawLine BottomToTop))
@@ -152,8 +152,12 @@ let renderGrid grid (path : Coordinate seq) (map : Map) =
     // #fffaba : pale yellow
     // #fffef0 : very pale yellow
 
-    map.Graph.GetNodeByNode RowsAscendingColumnsAscending (fun node _ -> node.IsSome)
-    |> Seq.iter(fun (node, coordinate) -> renderFullCellColor sBuilder coordinate node.Value map.FarthestFromRoot.Distance)
+    let distance coordinate =
+        match (map.ShortestPathGraph.NodeDistanceFromRoot coordinate) with
+        | Some distance -> distance
+        | None -> 0
+    map.ShortestPathGraph.Graph.Vertices
+    |> Seq.iter(fun coordinate -> renderFullCellColor sBuilder coordinate (distance coordinate) (map.FarthestFromRoot.Distance - 1))
 
     path
     |> Seq.iter(fun coordinate -> renderFullCell sBuilder "p" coordinate)

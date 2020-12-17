@@ -7,6 +7,36 @@ open System.Collections.Generic
 open Priority_Queue
 open Mazes.Core
 
+[<Struct>]
+type FarthestFromRoot = {
+        Distance : Distance
+        Coordinates : Coordinate array
+    }
+
+type private FarthestFromRootTracker =
+    {
+        mutable MaxDistance : int
+        MaxCoordinates : HashSet<Coordinate>
+    }
+
+    member this.Update distance coordinate =
+        if distance > this.MaxDistance then
+            this.MaxDistance <- distance
+            this.MaxCoordinates.Clear()
+            this.MaxCoordinates.Add(coordinate) |> ignore
+        elif distance = this.MaxDistance then
+            this.MaxCoordinates.Add(coordinate) |> ignore
+
+    member this.ToFarthestFromRoot =
+        let maxCoordinates = Array.zeroCreate<Coordinate>(this.MaxCoordinates.Count)
+        this.MaxCoordinates.CopyTo(maxCoordinates)
+
+        { Distance = this.MaxDistance
+          Coordinates = maxCoordinates }
+
+    static member createEmpty =
+        { MaxDistance = 0; MaxCoordinates = HashSet<Coordinate>() }
+
 type private Visited = bool
 
 type Tracker<'Key, 'Priority, 'Payload when 'Key : equality and 'Priority :> IComparable<'Priority>> =
@@ -45,42 +75,36 @@ type Tracker<'Key, 'Priority, 'Payload when 'Key : equality and 'Priority :> ICo
 
 type Map =
     {
-        Root : Coordinate
-        Graph : Graph
+        ShortestPathGraph : ShortestPathGraph<Coordinate>
         ConnectedNodes : int
         FarthestFromRoot : FarthestFromRoot
         Leaves : Coordinate array
-        Graph2 : QuikGraph.BidirectionalGraph<Coordinate, QuikGraph.TaggedEdge<Coordinate, Distance>>
     }
 
     member this.LongestPaths =
         seq {
             for farthestCoordinate in this.FarthestFromRoot.Coordinates do
-                let mapFromFarthest = Map.create this.Graph.NodeNeighbors this.Graph.NumberOfRows this.Graph.NumberOfColumns farthestCoordinate
+                let mapFromFarthest = Map.create this.ShortestPathGraph.AdjacentNodes this.ConnectedNodes farthestCoordinate
                 for newFarthestCoordinate in mapFromFarthest.FarthestFromRoot.Coordinates do
-                    yield mapFromFarthest.Graph.PathFromGoalToRoot newFarthestCoordinate
+                    yield mapFromFarthest.ShortestPathGraph.PathFromGoalToRoot newFarthestCoordinate
         }
 
-    static member create (linkedNeighbors : Coordinate -> Coordinate seq) numberOfRows numberOfColumns rootCoordinate =
+    static member create (linkedNeighbors : Coordinate -> Coordinate seq) totalOfMazeCells rootCoordinate =
 
-        let coordinatesByDistance = CoordinatesByDistance.createEmpty
-        let maxCoordinates = HashSet<Coordinate>()
-        let mutable maxDistance = -1
-
+        let farthest = FarthestFromRootTracker.createEmpty
         let leaves = ResizeArray<Coordinate>()
 
-        let graph = Graph.createEmpty numberOfRows numberOfColumns
-        let graph2 = QuikGraph.BidirectionalGraph<Coordinate, QuikGraph.TaggedEdge<Coordinate, Distance>>()
+        let unvisitedPrQ = Tracker<Coordinate, Distance, (Distance * Visited)>.createEmpty totalOfMazeCells
+        unvisitedPrQ.Add rootCoordinate -1 (-1, false)
 
-        let unvisited = Tracker<Coordinate, Distance, (Distance * Visited)>.createEmpty (numberOfRows * numberOfColumns)
-        unvisited.Add rootCoordinate -1 (-1, false)
-        graph2.AddVertex(rootCoordinate) |> ignore
+        let graph = ShortestPathGraph.createEmpty rootCoordinate
+        graph.AddNode(rootCoordinate)
 
         let connectedNodes = ref 0        
 
-        while unvisited.HasItems do
+        while unvisitedPrQ.HasItems do
 
-            let (coordinate, (currentDistance, visited)) = unvisited.Pop
+            let (coordinate, (currentDistance, visited)) = unvisitedPrQ.Pop
 
             if not visited then
                 incr connectedNodes
@@ -91,83 +115,33 @@ type Map =
                 leaves.Add(coordinate)
             
             let newDistance =
-                match (graph.MinDistanceNode neighbors) with
-                | Some minNeighborNode -> minNeighborNode.DistanceFromRoot + 1
+                match (graph.MinAdjacentOutNode coordinate) with
+                | Some distance -> distance + 1
                 | None -> currentDistance + 1
 
-            let newDistance2 =
-                if graph2.ContainsVertex(coordinate) then
-                    let edges = graph2.OutEdges(coordinate)
-                    if edges |> Seq.length > 0 then
-                        edges
-                        |> Seq.map(fun e -> e.Tag)
-                        |> Seq.min
-                    else
-                        currentDistance + 1
-                else
-                    currentDistance + 1
+            farthest.Update newDistance coordinate            
 
-            if newDistance2 > maxDistance then
-                maxDistance <- newDistance2
-                maxCoordinates.Clear()
-                maxCoordinates.Add(coordinate) |> ignore
-            elif newDistance2 = maxDistance then
-                maxCoordinates.Add(coordinate) |> ignore                
-
-            graph.UpdateNode coordinate (Some { DistanceFromRoot = newDistance; Neighbors = neighbors })
             for neighbor in neighbors do
-                if not (graph2.ContainsVertex(neighbor)) then
-                    unvisited.Add neighbor newDistance2 (newDistance2, true)
-                    graph2.AddVertex(neighbor) |> ignore
+                if not (graph.ContainsNode neighbor) then
+                    unvisitedPrQ.Add neighbor newDistance (newDistance, true)
+                    graph.AddNode(neighbor)
 
-                if not (graph2.ContainsEdge(neighbor, coordinate)) then
-                    graph2.AddEdge(QuikGraph.TaggedEdge<Coordinate, Distance>(coordinate, neighbor, newDistance2)) |> ignore
-                
-            coordinatesByDistance.AddUpdate newDistance coordinate            
-
-//            neighbors
-//            |> Seq.iter(fun nCoordinate ->
-//                    match (graph.Node nCoordinate) with
-//                    | Some neighborNode ->
-//                        if neighborNode.DistanceFromRoot >= newDistance then
-//                            unvisited.Add nCoordinate newDistance (newDistance, true)
-//                            coordinatesByDistance.Remove neighborNode.DistanceFromRoot nCoordinate
-//                    | None ->
-//                        unvisited.Add nCoordinate newDistance (newDistance, false))
-
+                if not (graph.ContainsEdge coordinate neighbor) then
+                    graph.AddEdge coordinate neighbor newDistance
+                //
+                // this check does not seems useful but there may be some edge case...
+                //
+                //else
+                //    let edges = graph.Graph.OutEdges(coordinate)
+                //    if not (edges |> Seq.isEmpty) then
+                //        match edges |> Seq.tryFind(fun e -> e.Target = neighbor) with
+                //        | Some nEdge ->
+                //            if nEdge.Tag > newDistance then
+                //                unvisited.Add neighbor newDistance (newDistance, true)
+                //                nEdge.Tag <- newDistance
+                //        | None -> ()
         
-        
-        
-        
-//            let edges =
-//                let edges = graph2.OutEdges(coordinate)
-//                if edges |> Seq.length > 0 then
-//                    edges
-//                else
-//                    Seq.empty
-
-//            neighbors
-//            |> Seq.iter(fun nCoordinate ->
-//                    unvisited.Add nCoordinate newDistance2 (newDistance2, true))
-                    
-                    
-//                    let nEdge = edges |> Seq.tryFind(fun e -> e.Target = coordinate)
-//                    match nEdge with
-//                    | Some nEdge ->
-//                        if nEdge.Tag >= newDistance2 then
-//                            unvisited.Add nCoordinate newDistance2 (newDistance2, true)
-//                            coordinatesByDistance.Remove nEdge.Tag nCoordinate
-//                    | None ->
-//                        unvisited.Add nCoordinate newDistance2 (newDistance2, false))
-
-        let coordinates = Array.zeroCreate<Coordinate>(maxCoordinates.Count)
-        maxCoordinates.CopyTo(coordinates)
-        
-        { Root = rootCoordinate
-          Graph = graph
-          Graph2 = graph2
-          ConnectedNodes = graph2.VertexCount
-          FarthestFromRoot =
-              { Distance = maxDistance
-                Coordinates = coordinates }
+        { ShortestPathGraph = graph
+          ConnectedNodes = graph.Graph.VertexCount
+          FarthestFromRoot = farthest.ToFarthestFromRoot
           Leaves = leaves.ToArray() }

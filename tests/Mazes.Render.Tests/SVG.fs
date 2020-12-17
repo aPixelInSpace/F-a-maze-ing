@@ -25,9 +25,9 @@ let ``Given a maze, a path and a map, when creating an SVG, then it should match
     let map = maze.createDijkstraMap maze.Grid.GetFirstTopLeftPartOfMazeZone
 
     // act
-    let renderedMaze = SVG.renderGrid  maze.Grid.ToSpecializedGrid (map.Graph.PathFromRootTo maze.Grid.GetFirstBottomRightPartOfMazeZone) map
+    let renderedMaze = SVG.renderGrid  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetFirstBottomRightPartOfMazeZone) map
         
     // assert
-    let expectedRenderedMaze = IO.File.ReadAllText("Resources/Example.svg", Encoding.UTF8)
+    let expectedRenderedMaze = IO.File.ReadAllText("Resources/Orthogrid.svg", Encoding.UTF8)
         
     renderedMaze |> should equal expectedRenderedMaze
