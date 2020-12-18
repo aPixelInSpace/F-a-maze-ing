@@ -75,7 +75,9 @@ let mapDirectionToPosition direction =
     | Bottom -> Position.Bottom
     | Left -> Position.Left
 
-let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid<'G>) =
+let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : unit -> Grid<'G>) =
+
+    let grid = grid()
 
     let rng = Random(rngSeed)
 

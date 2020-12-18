@@ -255,3 +255,6 @@ module OrthoGrid =
                     canvas.IsZonePartOfMaze)
 
         { Canvas = canvas; Cells = cells; }
+
+    let createGridFunction canvas =
+        fun () -> create canvas :> Grid<OrthoGrid>

@@ -7,6 +7,7 @@ open Xunit
 open Mazes.Core
 open Mazes.Core.Tests.Helpers
 open Mazes.Core.Canvas.Shape
+open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate
 
@@ -14,8 +15,10 @@ open Mazes.Core.Maze.Generate
 let ``Creating a rectangular 5 by 10 maze generated with the sidewinder algorithm (Top, Right, rng 1) should be like the expected output`` () =
     // arrange
     let grid =
-        (Rectangle.create 5 10)
-        |> OrthoGrid.create
+        fun () ->
+            (Rectangle.create 5 10)
+            |> OrthoGrid.create
+            :> Grid<OrthoGrid>
     
     // act
     let maze = grid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -72,8 +75,10 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
 
     // arrange
     let gridRectangle =
+        fun () ->
         Rectangle.create numberOfRows numberOfColumns
         |> OrthoGrid.create
+        :> Grid<OrthoGrid>
 
     let direction1 = mapSidewinderDirectionEnumToSidewinderDirection direction1
     let direction2 = mapSidewinderDirectionEnumToSidewinderDirection direction2
@@ -83,7 +88,7 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
 
     // we use the map to ensure that the total nodes accessible in the maze is equal to the total number of maze nodes of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
-    let rootCoordinate = snd gridRectangle.Canvas.GetFirstTopLeftPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
     let map = maze.createDijkstraMap rootCoordinate
 
     // assert
@@ -152,8 +157,10 @@ let ``Given a triangular canvas, when creating a maze with the sidewinder algori
 
     // arrange
     let gridTriangle =
+        fun () ->
         TriangleIsosceles.create baseLength baseAt baseDecrement heightIncrement
         |> OrthoGrid.create
+        :> Grid<OrthoGrid>
 
     let direction1 = mapSidewinderDirectionEnumToSidewinderDirection direction1
     let direction2 = mapSidewinderDirectionEnumToSidewinderDirection direction2

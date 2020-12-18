@@ -39,7 +39,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -74,7 +74,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -109,7 +109,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -144,7 +144,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -179,7 +179,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -214,7 +214,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -249,7 +249,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -284,7 +284,7 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid

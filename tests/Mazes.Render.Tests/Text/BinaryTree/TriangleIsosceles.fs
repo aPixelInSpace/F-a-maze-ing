@@ -16,7 +16,7 @@ let ``Rendering a base 11, base at bottom, triangle with a base decrement value 
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 11 Shape.TriangleIsosceles.BaseAt.Bottom 1 1)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -42,7 +42,7 @@ let ``Rendering a base 11, base at top, triangle with a base decrement value of 
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 11 Shape.TriangleIsosceles.BaseAt.Top 1 1)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -68,7 +68,7 @@ let ``Rendering a base 11, base at left, triangle with a base decrement value of
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 11 Shape.TriangleIsosceles.BaseAt.Left 1 1)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -99,7 +99,7 @@ let ``Rendering a base 11, base at right, triangle with a base decrement value o
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 11 Shape.TriangleIsosceles.BaseAt.Right 1 1)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -130,7 +130,7 @@ let ``Rendering a base 21, base at bottom, triangle with a base decrement value 
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 21 Shape.TriangleIsosceles.BaseAt.Bottom 3 1)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -154,7 +154,7 @@ let ``Rendering a base 21, base at top, triangle with a base decrement value of 
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 21 Shape.TriangleIsosceles.BaseAt.Top 3 1)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -178,7 +178,7 @@ let ``Rendering a base 21, base at left, triangle with a base decrement value of
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 21 Shape.TriangleIsosceles.BaseAt.Left 3 1)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -219,7 +219,7 @@ let ``Rendering a base 21, base at right, triangle with a base decrement value o
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 21 Shape.TriangleIsosceles.BaseAt.Right 3 1)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -260,7 +260,7 @@ let ``Rendering a base 51, base at bottom, triangle with a base decrement value 
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 1 1)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -306,7 +306,7 @@ let ``Rendering a base 51, base at bottom, triangle with a base decrement value 
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 51 Shape.TriangleIsosceles.BaseAt.Bottom 5 1)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -332,7 +332,7 @@ let ``Rendering a base 10, base at bottom, triangle with a base decrement value 
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 10 Shape.TriangleIsosceles.BaseAt.Bottom 1 3)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -367,7 +367,7 @@ let ``Rendering a base 10, base at top, triangle with a base decrement value of 
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 10 Shape.TriangleIsosceles.BaseAt.Top 1 3)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -402,7 +402,7 @@ let ``Rendering a base 10, base at left, triangle with a base decrement value of
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 10 Shape.TriangleIsosceles.BaseAt.Left 1 3)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -432,7 +432,7 @@ let ``Rendering a base 10, base at right, triangle with a base decrement value o
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 10 Shape.TriangleIsosceles.BaseAt.Right 1 3)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -462,7 +462,7 @@ let ``Rendering a base 30, base at bottom, triangle with a base decrement value 
     // arrange
     let grid =
         (Shape.TriangleIsosceles.create 30 Shape.TriangleIsosceles.BaseAt.Bottom 2 5)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid

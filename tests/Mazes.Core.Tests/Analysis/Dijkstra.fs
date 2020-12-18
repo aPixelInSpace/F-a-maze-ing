@@ -6,6 +6,7 @@ open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Analysis.Dijkstra
+open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
@@ -27,8 +28,10 @@ let maze =
         Canvas.Convert.endLineTag
 
     let grid =
+        fun () ->
         (Canvas.Convert.fromString stringCanvas).Value    
         |> OrthoGrid.create
+        :> Grid<OrthoGrid>
 
     grid
     |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -263,8 +266,10 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
             "*****\n" +    
             Canvas.Convert.endLineTag
 
-        (Canvas.Convert.fromString stringCanvas).Value
-        |> OrthoGrid.create
+        fun () ->
+            (Canvas.Convert.fromString stringCanvas).Value
+            |> OrthoGrid.create
+            :> Grid<OrthoGrid>
 
     let maze =
         grid

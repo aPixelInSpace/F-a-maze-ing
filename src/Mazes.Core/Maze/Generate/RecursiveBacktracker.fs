@@ -9,7 +9,9 @@ open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
-let createMaze rngSeed (grid : Grid<'G>) =
+let createMaze rngSeed (grid : unit -> Grid<'G>) =
+
+    let grid = grid()
 
     let rng = Random(rngSeed)
 

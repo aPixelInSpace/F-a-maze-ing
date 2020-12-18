@@ -16,7 +16,7 @@ let ``Rendering a 3 by 3 maze generated with the binary tree algorithm (Top, Rig
     // arrange
     let grid =
         (Shape.Rectangle.create 3 3)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -39,7 +39,7 @@ let ``Rendering a 5 by 5 maze generated with the binary tree algorithm (Top, Rig
     // arrange
     let grid =
         (Shape.Rectangle.create 5 5)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid
@@ -64,7 +64,7 @@ let ``Rendering a 5 by 10 maze generated with the binary tree algorithm (Top, Ri
     // arrange
     let grid =
         (Shape.Rectangle.create 5 10)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid

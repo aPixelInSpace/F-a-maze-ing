@@ -17,7 +17,7 @@ let ``Given a maze, a path and a map, when creating an SVG, then it should match
     // arrange
     let grid =
         Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
 
     let maze =
         grid

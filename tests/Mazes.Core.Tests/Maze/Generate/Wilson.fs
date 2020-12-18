@@ -14,7 +14,7 @@ let ``Creating a rectangular 5 by 10 maze generated with Wilson's algorithm (rng
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
     
     // act
     let maze = grid |> Wilson.createMaze 1

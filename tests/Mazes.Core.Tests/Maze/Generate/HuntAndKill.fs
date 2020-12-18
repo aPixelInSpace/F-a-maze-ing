@@ -14,7 +14,7 @@ let ``Creating a rectangular 5 by 10 maze generated with the Hunt and Kill algor
     // arrange
     let orthoGrid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.create
+        |> OrthoGrid.createGridFunction
     
     // act
     let maze = orthoGrid |> HuntAndKill.createMaze 1

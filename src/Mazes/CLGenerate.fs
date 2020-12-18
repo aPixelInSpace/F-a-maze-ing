@@ -64,13 +64,13 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let stopWatch = Stopwatch()
 
     stopWatch.Start()
-    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> OrthoGrid.create)
-    //let grid = (Shape.TriangleIsosceles.create 150 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
-    //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Grid.create)
-    //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> Grid.create)
-    //let grid = (Shape.Ellipse.create 50 70 0.0 0.0 0 0 (Some 0.2) Shape.Ellipse.Side.Inside |> OrthoGrid.create)
-    //let grid = (Mazes.Utility.Canvas.Convert.fromImage 0.0f "d:\\temp\\Microchip.png" |> Grid.create)
-    //let grid = Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> OrthoGrid.create
+    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> OrthoGrid.createGridFunction)
+    //let grid = (Shape.TriangleIsosceles.create 150 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> OrthoGrid.createGridFunction)
+    //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction)
+    //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> OrthoGrid.createGridFunction)
+    //let grid = (Shape.Ellipse.create 50 70 0.0 0.0 0 0 (Some 0.2) Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction)
+    //let grid = (Mazes.Utility.Canvas.Convert.fromImage 0.0f "d:\\temp\\Microchip.png" |> OrthoGrid.createGridFunction)
+    //let grid = Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction
 
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
