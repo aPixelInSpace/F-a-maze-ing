@@ -3,6 +3,7 @@
 module Mazes.CLGenerate
 
 open System
+open System.Diagnostics
 open System.IO
 open System.Text
 open CommandLine
@@ -60,13 +61,19 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
 
+    let stopWatch = Stopwatch()
+
+    stopWatch.Start()
     let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> OrthoGrid.create)
     //let grid = (Shape.TriangleIsosceles.create 150 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Grid.create)
     //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> Grid.create)
-    //let grid = (Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> Grid.create)
+    //let grid = (Shape.Ellipse.create 50 70 0.0 0.0 0 0 (Some 0.2) Shape.Ellipse.Side.Inside |> OrthoGrid.create)
     //let grid = (Mazes.Utility.Canvas.Convert.fromImage 0.0f "d:\\temp\\Microchip.png" |> Grid.create)
     //let grid = Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> OrthoGrid.create
+
+    stopWatch.Stop()
+    printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
 
     //let canvasSave = (Shape.Rectangle.create 15 15 |> Canvas.save)
     //File.WriteAllText(filePath.Replace(".html", ".canvas.mazes"), canvasSave, Encoding.UTF8)
@@ -89,6 +96,10 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
         match options.Value.seed with
         | Some seed -> seed
         | None -> 0
+
+    //
+
+    stopWatch.Restart()
 
     // Async
 //    let maze1 =
@@ -122,10 +133,24 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let maze = (algo rngSeed grid)
 
+    stopWatch.Stop()
+    printfn $"Created maze ({stopWatch.ElapsedMilliseconds} ms)"
+
+    //
+
+    stopWatch.Restart()
+
     let map = maze.createDijkstraMap maze.Grid.GetFirstTopLeftPartOfMazeZone
 
+    stopWatch.Stop()
+    printfn $"Created map ({stopWatch.ElapsedMilliseconds} ms)"
+
+    //
+
+    stopWatch.Restart()
+
     let renderedGrid = renderGrid  (maze.Grid.ToSpecializedGrid)
-    
+
     let htmlOutput = outputHtml maze { Name = nameOfMaze } renderedGrid
     File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
     
@@ -136,6 +161,9 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RowIndex = 0; ColumnIndex = 3 }) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
+
+    stopWatch.Stop()
+    printfn $"Render maze ({stopWatch.ElapsedMilliseconds} ms)"
 
     printfn "Mazes creation finished !"
     printfn "File location is %s" filePath

@@ -11,7 +11,7 @@ type Distance = int
 type ShortestPathGraph<'Node> when 'Node : equality =
     {
         RootNode : 'Node
-        Graph : BidirectionalGraph<'Node, TaggedEdge<'Node, Distance>>
+        Graph : UndirectedGraph<'Node, TaggedEdge<'Node, Distance>>
     }
 
     member this.ContainsNode node =
@@ -35,15 +35,17 @@ type ShortestPathGraph<'Node> when 'Node : equality =
         if not (this.ContainsNode node) then
             None
         else
-            let inEdges = this.Graph.InEdges(node)
-            let outEdges = this.Graph.OutEdges(node)
+            let adjacentEdges = this.Graph.AdjacentEdges(node)
 
-            if inEdges |> Seq.isEmpty && outEdges |> Seq.isEmpty then
+            if adjacentEdges |> Seq.isEmpty then
                 None
             else
-                Some (Seq.append
-                        (inEdges |> Seq.map(fun e -> (e.Source, e.Tag)))
-                        (outEdges |> Seq.map(fun e -> (e.Target, e.Tag))))
+                Some (adjacentEdges
+                      |> Seq.map(fun e ->
+                          if node = e.Target then
+                            (e.Source, e.Tag)
+                          else
+                            (e.Target, e.Tag)))
 
     member this.Edge source target =
         match (this.AdjacentEdges source) with
@@ -57,7 +59,7 @@ type ShortestPathGraph<'Node> when 'Node : equality =
 
     member this.ClosestAdjacentNode node =
         match this.AdjacentEdges node with
-        | Some edges -> Some (edges |> Seq.minBy(fun e -> snd e))
+        | Some edges -> Some (edges |> Seq.minBy(snd))
         | None -> None
 
     member this.NodeDistanceFromRoot node =
@@ -110,5 +112,5 @@ type ShortestPathGraph<'Node> when 'Node : equality =
     static member createEmpty rootNode =
         {
             RootNode = rootNode
-            Graph = BidirectionalGraph<'Node, TaggedEdge<'Node, Distance>>()
+            Graph = UndirectedGraph<'Node, TaggedEdge<'Node, Distance>>()
         }
