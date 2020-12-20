@@ -22,6 +22,8 @@
 		<Compile Include="Grid\Ortho\OrthoCell.fs" />
 		<Compile Include="Grid\Ortho\OrthoGrid.fs" />
 		<Compile Include="Grid\Ortho\GridView.fs" />
+		<Compile Include="Grid\Polar\PolarCell.fs" />
+		<Compile Include="Grid\Polar\PolarGrid.fs" />
 		<Compile Include="Maze\Maze.fs" />
         <Compile Include="Maze\Generate\BinaryTree.fs" />
         <Compile Include="Maze\Generate\Sidewinder.fs" />
