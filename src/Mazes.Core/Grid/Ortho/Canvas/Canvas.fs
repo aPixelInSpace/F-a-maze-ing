@@ -4,9 +4,9 @@ namespace Mazes.Core.Grid.Ortho.Canvas
 
 open System.Text
 open Mazes.Core
-open Mazes.Core.Position
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas
+open Mazes.Core.Grid.Ortho
 
 type Canvas =
     { Zones : Zone[,] }
@@ -46,20 +46,21 @@ type Canvas =
         getItemByItem this.Zones extractBy filter
 
     member this.NeighborsPartOfMazeOf (coordinate : Coordinate) =
+        let neighborCoordinateAt = OrthoCoordinate.neighborCoordinateAt coordinate 
         seq {
-            let leftCoordinate = coordinate.NeighborCoordinateAtPosition Left
+            let leftCoordinate = neighborCoordinateAt Left
             if (this.ExistAt leftCoordinate) && (this.Zone leftCoordinate).IsAPartOfMaze then
                 yield (leftCoordinate, Left)
 
-            let topCoordinate = coordinate.NeighborCoordinateAtPosition Top
+            let topCoordinate = neighborCoordinateAt Top
             if (this.ExistAt topCoordinate) && (this.Zone topCoordinate).IsAPartOfMaze then
                 yield (topCoordinate, Top)
 
-            let rightCoordinate = coordinate.NeighborCoordinateAtPosition Right
+            let rightCoordinate = neighborCoordinateAt Right
             if (this.ExistAt rightCoordinate) && (this.Zone rightCoordinate).IsAPartOfMaze then
                 yield (rightCoordinate, Right)
 
-            let bottomCoordinate = coordinate.NeighborCoordinateAtPosition Bottom
+            let bottomCoordinate = neighborCoordinateAt Bottom
             if (this.ExistAt bottomCoordinate) && (this.Zone bottomCoordinate).IsAPartOfMaze then
                 yield (bottomCoordinate, Bottom)
         }
@@ -76,7 +77,7 @@ module Canvas =
     let create numberOfRows numberOfColumns isZonePartOfMaze =
         let zones = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> Zone.create (isZonePartOfMaze rowIndex columnIndex))
     
-        { Zones = zones; }
+        { Zones = zones }
 
 module Convert =
 

@@ -70,10 +70,10 @@ type Direction =
 
 let mapDirectionToPosition direction =
     match direction with
-    | Top -> Position.Top
-    | Right -> Position.Right
-    | Bottom -> Position.Bottom
-    | Left -> Position.Left
+    | Top -> OrthoPosition.Top
+    | Right -> OrthoPosition.Right
+    | Bottom -> OrthoPosition.Bottom
+    | Left -> OrthoPosition.Left
 
 let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : unit -> Grid<'G>) =
 

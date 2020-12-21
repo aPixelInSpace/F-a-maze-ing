@@ -5,7 +5,6 @@ module Mazes.Core.Tests.Grid.Grid
 open FsUnit
 open Xunit
 open Mazes.Core
-open Mazes.Core.Position
 open Mazes.Core.Grid.Ortho
 
 [<Fact>]

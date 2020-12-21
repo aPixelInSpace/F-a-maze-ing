@@ -7,7 +7,6 @@ open System.Text
 open Mazes.Core
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
-open Mazes.Core.Position
 open Mazes.Core.Array2D
 open Mazes.Core.Grid.Ortho.Canvas
 
@@ -98,7 +97,7 @@ type OrthoGrid =
 
         let neighborCondition =
             fun () ->
-                let neighborCoordinate = coordinate.NeighborCoordinateAtPosition position
+                let neighborCoordinate = OrthoCoordinate.neighborCoordinateAt coordinate position
 
                 not ((self.Canvas.ExistAt neighborCoordinate) &&
                     (self.Canvas.Zone neighborCoordinate).IsAPartOfMaze)
@@ -107,7 +106,7 @@ type OrthoGrid =
         cell.WallTypeAtPosition position = Border ||
         neighborCondition()
 
-    member private self.UpdateWallAtPosition coordinate (position : Position) wallType =
+    member private self.UpdateWallAtPosition coordinate (position : OrthoPosition) wallType =
         let getWalls coordinate position =
             self.Cells.[coordinate.RIndex, coordinate.CIndex].Walls
             |> Array.mapi(fun index wall ->
@@ -119,7 +118,7 @@ type OrthoGrid =
 
         self.Cells.[coordinate.RIndex, coordinate.CIndex] <- { Walls = (getWalls coordinate position) }
 
-        let neighbor = coordinate.NeighborCoordinateAtPosition position        
+        let neighbor = OrthoCoordinate.neighborCoordinateAt coordinate position        
         self.Cells.[neighbor.RIndex, neighbor.CIndex] <- { Walls = (getWalls neighbor position.Opposite) }
 
     member private self.IfNotAtLimitUpdateWallAtPosition coordinate position wallType =
@@ -127,17 +126,18 @@ type OrthoGrid =
             self.UpdateWallAtPosition coordinate position wallType
 
     member self.LinkCellAtPosition coordinate position =
-        self.UpdateWallAtPosition coordinate (position : Position) WallType.Empty
+        self.UpdateWallAtPosition coordinate (position : OrthoPosition) WallType.Empty
 
     member self.IfNotAtLimitLinkCellAtPosition coordinate position =
         self.IfNotAtLimitUpdateWallAtPosition coordinate position WallType.Empty
 
     member private self.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =
+        let neighborCoordinateAt = OrthoCoordinate.neighborCoordinateAt coordinate
         match otherCoordinate with
-        | oc when oc = (coordinate.NeighborCoordinateAtPosition Left) -> self.UpdateWallAtPosition coordinate Left wallType
-        | oc when oc = (coordinate.NeighborCoordinateAtPosition Top) -> self.UpdateWallAtPosition coordinate Top wallType
-        | oc when oc = (coordinate.NeighborCoordinateAtPosition Right) -> self.UpdateWallAtPosition coordinate Right wallType
-        | oc when oc = (coordinate.NeighborCoordinateAtPosition Bottom) -> self.UpdateWallAtPosition coordinate Bottom wallType
+        | oc when oc = (neighborCoordinateAt Left) -> self.UpdateWallAtPosition coordinate Left wallType
+        | oc when oc = (neighborCoordinateAt Top) -> self.UpdateWallAtPosition coordinate Top wallType
+        | oc when oc = (neighborCoordinateAt Right) -> self.UpdateWallAtPosition coordinate Right wallType
+        | oc when oc = (neighborCoordinateAt Bottom) -> self.UpdateWallAtPosition coordinate Bottom wallType
         | _ -> failwith "UpdateWallAtCoordinates unable to find a connection between the two coordinates"
 
     member self.LinkCellsAtCoordinates (coordinate : Coordinate) otherCoordinate =
@@ -178,18 +178,19 @@ type OrthoGrid =
             not (self.IsLimitAt coordinate pos) &&        
             (self.Cell coordinate).IsLinkedAt pos
 
+        let neighborCoordinateAtPosition = OrthoCoordinate.neighborCoordinateAt coordinate
         seq {
             if (isLinkedAt Top) then
-                yield coordinate.NeighborCoordinateAtPosition Top
+                yield neighborCoordinateAtPosition Top
 
             if (isLinkedAt Right) then
-                yield coordinate.NeighborCoordinateAtPosition Right
+                yield neighborCoordinateAtPosition Right
 
             if (isLinkedAt Bottom) then
-                yield coordinate.NeighborCoordinateAtPosition Bottom
+                yield neighborCoordinateAtPosition Bottom
 
             if (isLinkedAt Left) then
-                yield coordinate.NeighborCoordinateAtPosition Left
+                yield neighborCoordinateAtPosition Left
         }
 
     member self.RandomCoordinatePartOfMazeAndNotLinked (rng : Random) =

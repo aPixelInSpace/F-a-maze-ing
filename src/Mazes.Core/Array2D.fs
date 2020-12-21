@@ -27,7 +27,7 @@ module Array2D =
         rowIndex = minRowIndex
 
     let isLastRow rowIndex numberOfRows =
-        rowIndex = (getIndex numberOfRows) 
+        rowIndex = (getIndex numberOfRows)
 
     let isFirstColumn columnIndex =
         columnIndex = minColumnIndex

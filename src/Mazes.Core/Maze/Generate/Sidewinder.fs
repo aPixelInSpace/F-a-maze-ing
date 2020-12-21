@@ -4,7 +4,6 @@ module Mazes.Core.Maze.Generate.Sidewinder
 
 open System
 open Mazes.Core
-open Mazes.Core.Position
 open Mazes.Core.Array2D
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
@@ -30,8 +29,8 @@ let private carveRow
     ifNotAtLimitLinkCellAtPosition
     getRandomIndex2AtPos1ForFromRange
     // params
-    (position1 : Position)
-    (position2 : Position)
+    (position1 : OrthoPosition)
+    (position2 : OrthoPosition)
     (rng : Random)
     rngTotalWeight    
     rngPosition2Weight
@@ -115,10 +114,10 @@ type Direction =
 
 let mapDirectionToPosition direction =
     match direction with
-    | Top -> Position.Top
-    | Right -> Position.Right
-    | Bottom -> Position.Bottom
-    | Left -> Position.Left
+    | Top -> OrthoPosition.Top
+    | Right -> OrthoPosition.Right
+    | Bottom -> OrthoPosition.Bottom
+    | Left -> OrthoPosition.Left
 
 let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : unit -> Grid<'G>) =    
 

@@ -2,7 +2,6 @@
 
 namespace Mazes.Core.Maze
 
-open Mazes.Core.Position
 open Mazes.Core.Analysis
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho

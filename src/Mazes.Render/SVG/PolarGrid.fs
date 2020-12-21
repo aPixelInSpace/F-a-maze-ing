@@ -4,7 +4,14 @@ module Mazes.Render.SVG.PolarGrid
 
 open System
 open System.Text
+open Mazes.Core
 open Mazes.Core.Grid.Polar
+
+let private getStroke wallType =
+    match wallType.WallType with
+    | Normal -> "1"
+    | Border -> "2"
+    | Empty -> "0"
 
 let render (grid : PolarGrid) =
     /// round
@@ -46,11 +53,28 @@ let render (grid : PolarGrid) =
             let topRightX = centerX + outerRadius * Math.Cos(thetaCw)
             let topRightY = centerY + outerRadius * Math.Sin(thetaCw)
 
-            sBuilder.Append($"<path d=\"M {r bottomLeftX} {r bottomLeftY} A {r innerRadius} {r innerRadius}, 0, 0, 1, {r bottomRightX} {r bottomRightY}\" fill=\"transparent\" stroke=\"#333\" stroke-width=\"1\"/>\n")
-                    .Append($"<path d=\"M {r bottomLeftX} {r bottomLeftY} L {r topLeftX} {r topLeftY} 0\" fill=\"transparent\" stroke=\"#333\" stroke-width=\"1\"/>") |> ignore
+            let cell = grid.Cell { RIndex = ringIndex; CIndex = cellIndex  }
 
-            if ringIndex = lastRingIndex then
-                sBuilder.Append($"<path d=\"M {r topLeftX} {r topLeftY} A {r outerRadius} {r outerRadius}, 0, 0, 1, {r topRightX} {r topRightY}\" fill=\"transparent\" stroke=\"#333\" stroke-width=\"1\"/>\n") |> ignore
+            let wallInward = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Inward)
+            match wallInward with
+            | Some wallInward ->
+                let stroke = getStroke wallInward
+                sBuilder.Append($"<path d=\"M {r bottomLeftX} {r bottomLeftY} A {r innerRadius} {r innerRadius}, 0, 0, 1, {r bottomRightX} {r bottomRightY}\" fill=\"transparent\" stroke=\"#333\" stroke-width=\"{stroke}\"/>\n") |> ignore
+            | None -> ()
+
+            let wallLeft = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Left)
+            match wallLeft with
+            | Some wallLeft ->
+                let stroke = getStroke wallLeft
+                sBuilder.Append($"<path d=\"M {r bottomLeftX} {r bottomLeftY} L {r topLeftX} {r topLeftY} 0\" fill=\"transparent\" stroke=\"#333\" stroke-width=\"{stroke}\"/>\n") |> ignore
+            | None -> ()
+
+            let wallOutward = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Outward)
+            match wallOutward with
+            | Some wallOutward ->
+                let stroke = getStroke wallOutward
+                sBuilder.Append($"<path d=\"M {r topLeftX} {r topLeftY} A {r outerRadius} {r outerRadius}, 0, 0, 1, {r topRightX} {r topRightY}\" fill=\"transparent\" stroke=\"#333\" stroke-width=\"{stroke}\"/>\n") |> ignore
+            | None -> ()
 
     sBuilder.Append("</svg>") |> ignore
     sBuilder.ToString()

@@ -4,7 +4,6 @@ module Mazes.Render.Text
 
 open System.Text
 open Mazes.Core
-open Mazes.Core.Position
 open Mazes.Core.Array2D
 open Mazes.Core.Grid.Ortho
 
@@ -134,7 +133,7 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
     | Border, Empty, Normal, Empty -> '╾'
 
 let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid (coordinate : Coordinate) pos1 pos2 =
-    let neighborAtPos1 = coordinate.NeighborCoordinateAtPosition pos1
+    let neighborAtPos1 = OrthoCoordinate.neighborCoordinateAt coordinate pos1
     match grid.Canvas.ExistAt neighborAtPos1 with
     | true ->
         (grid.Cell neighborAtPos1).WallTypeAtPosition pos2

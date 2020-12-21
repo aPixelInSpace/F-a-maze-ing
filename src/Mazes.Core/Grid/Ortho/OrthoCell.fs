@@ -3,13 +3,14 @@
 namespace Mazes.Core.Grid.Ortho
 
 open Mazes.Core
-open Mazes.Core.Position
 open Mazes.Core.Array2D
 open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 
 [<Struct>]
 type OrthoCell =
-    { Walls : Wall array }
+
+    { Walls : OrthoWall array }
 
     static member WallIndex position =
         match position with
@@ -44,7 +45,7 @@ type OrthoCell =
         OrthoCell.IsALink (this.WallTypeAtPosition pos)
 
     member this.AreLinked (coordinate : Coordinate) (otherCoordinate : Coordinate) =
-        this.IsLinkedAt (coordinate.NeighborPositionAtCoordinate otherCoordinate)
+        this.IsLinkedAt (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate)
 
     /// Returns true if the cell has at least one link
     member this.IsLinked =
@@ -55,29 +56,18 @@ type OrthoCell =
         {
             IsLinked = this.IsLinked
         }
-module OrthoCell =    
+module OrthoCell =
 
     let create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =
-
-        let getWallTypeForEdge isCurrentCellPartOfMaze =
-            match isCurrentCellPartOfMaze with
-            | true -> Border
-            | false -> Empty
-
-        let getWallTypeForInternal isCurrentCellPartOfMaze isOtherCellPartOfMaze =
-            match isCurrentCellPartOfMaze, isOtherCellPartOfMaze with
-            | false, false -> Empty
-            | true, true -> Normal
-            | true, false | false, true -> Border
 
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
 
         let getWallType isOnEdge position =
             if isOnEdge then
-                getWallTypeForEdge isCurrentCellPartOfMaze
+                WallType.getWallTypeForEdge isCurrentCellPartOfMaze
             else
-                let isNeighborPartOfMaze = isCellPartOfMaze (coordinate.NeighborCoordinateAtPosition position)
-                getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
+                let isNeighborPartOfMaze = isCellPartOfMaze (OrthoCoordinate.neighborCoordinateAt coordinate position)
+                WallType.getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
 
         let wallTypeTop = getWallType (isFirstRow coordinate.RIndex) Top
 

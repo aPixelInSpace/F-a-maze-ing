@@ -2,11 +2,13 @@
 
 namespace Mazes.Core.Grid.Polar
 
-open System
 open Mazes.Core.Grid
+open Mazes.Core.ArrayOfA
+open Mazes.Core.Grid.Polar.Canvas
 
 type PolarGrid =
     {
+        Canvas : Canvas
         Cells : PolarCell[][]
     }
 
@@ -71,38 +73,22 @@ type PolarGrid =
         member self.ToSpecializedGrid =
             self
 
+    member self.Cell coordinate =
+        get self.Cells coordinate
+
 module PolarGrid =
 
-    let create numberOfRings widthHeightRatio =
-
-        let ringHeight = widthHeightRatio / (float)numberOfRings 
-
-        let createRingCells ringNumber previousNumberOfCellsForTheRing numberOfCellsForTheRing =
-            [|
-                for _ in 1 .. numberOfCellsForTheRing ->
-                    { Dummy = true }
-            |]
+    let create (canvas : Canvas) =
 
         let cells =
-            [|
-                let mutable currentNumberOfCellsForTheRing = 0
+            ArrayOfA.create
+                canvas.NumberOfRings
+                canvas.WidthHeightRatio
+                canvas.NumberOfCellsForCenterRing
+                (fun rIndex cIndex -> PolarCell.create canvas { RIndex = rIndex; CIndex = cIndex } canvas.IsZonePartOfMaze )
 
-                for ringNumber in 1 .. numberOfRings ->
-                    if ringNumber = 1 then
-                        let previousNumberOfCellsForTheRing = currentNumberOfCellsForTheRing
-                        currentNumberOfCellsForTheRing <- 1
-
-                        createRingCells ringNumber previousNumberOfCellsForTheRing currentNumberOfCellsForTheRing
-                    else
-                        let radius = (float)ringNumber / (float)numberOfRings
-                        let circumference = 2.0 * Math.PI * radius
-                        let estimatedCellWidth = circumference / (float)currentNumberOfCellsForTheRing
-                        let ratio = (int)(Math.Round(estimatedCellWidth / ringHeight, 0))
-                        let previousNumberOfCellsForTheRing = currentNumberOfCellsForTheRing
-                        currentNumberOfCellsForTheRing <- currentNumberOfCellsForTheRing * ratio
-
-                        createRingCells ringNumber previousNumberOfCellsForTheRing currentNumberOfCellsForTheRing
-            |]
-
-        { Cells = cells }
+        {
+            Canvas = canvas
+            Cells = cells
+        }
             
