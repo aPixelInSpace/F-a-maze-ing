@@ -5,6 +5,7 @@ module Mazes.Core.Tests.Canvas.Canvas
 open FsUnit
 open Xunit
 open Mazes.Core
+open Mazes.Core.Grid.Ortho
 
 // fixture
 let stringFixtureCanvas =
@@ -34,8 +35,8 @@ let ``Given a string representation of a canvas, when converting it to a canvas,
 
     canvas.NumberOfRows |> should equal 10
     canvas.NumberOfColumns |> should equal 10
-    (canvas.Zone { RowIndex = 0; ColumnIndex = 0 }).IsAPartOfMaze |> should equal true
-    (canvas.Zone { RowIndex = 3; ColumnIndex = 2 }).IsAPartOfMaze |> should equal false
+    (canvas.Zone { RIndex = 0; CIndex = 0 }).IsAPartOfMaze |> should equal true
+    (canvas.Zone { RIndex = 3; CIndex = 2 }).IsAPartOfMaze |> should equal false
 
 [<Fact>]
 let ``Given a wrong string representation of a canvas, when converting it to a canvas, then it should return no canvas`` () =

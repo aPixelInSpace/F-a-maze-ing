@@ -5,7 +5,8 @@ module Mazes.Core.Tests.Canvas.Shape.Rectangle
 open FsUnit
 open Xunit
 open Mazes.Core
-open Mazes.Core.Canvas.Shape
+open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Ortho.Canvas.Shape
 
 [<Fact>]
 let ``Given a number of rows and columns, when creating a rectangle, then it should give a rectangular canvas`` () =

@@ -6,7 +6,7 @@ open System
 open System.Text
 open FsUnit
 open Xunit
-open Mazes.Core.Canvas
+open Mazes.Core.Grid.Ortho.Canvas
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Grid.Polar
 open Mazes.Core.Maze.Generate
@@ -35,7 +35,7 @@ let ``Given a maze (with an ortho grid), a path and a map, when creating an SVG,
 [<Fact>]
 let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
-    let grid = PolarGrid.create 50 6
+    let grid = PolarGrid.create 5 1.3
 
     //let maze =
     //    grid
@@ -50,3 +50,5 @@ let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, 
     //let expectedRenderedMaze = IO.File.ReadAllText("Resources/Polargrid.svg", Encoding.UTF8)
         
     //renderedMaze |> should equal expectedRenderedMaze
+
+    ()

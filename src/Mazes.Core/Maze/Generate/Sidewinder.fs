@@ -10,11 +10,11 @@ open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
-let private getRandomColumnIndexFromRange isALimitAt (rng : Random) increment position rowIndex startColumnIndex endColumnIndex =
+let private getRandomColumnIndexFromRange isALimitAt (rng : Random) increment position rIndex startColumnIndex endColumnIndex =
     let eligibleCellsWithRemovableWallAtPos = ResizeArray<int>()
 
     for columnIndex in startColumnIndex .. increment .. endColumnIndex do
-        if not (isALimitAt { RowIndex = rowIndex; ColumnIndex = columnIndex } position) then
+        if not (isALimitAt { RIndex = rIndex; CIndex = columnIndex } position) then
             eligibleCellsWithRemovableWallAtPos.Add(columnIndex)
     
     if eligibleCellsWithRemovableWallAtPos.Count > 0 then
@@ -45,7 +45,7 @@ let private carveRow
 
     for index2 in startIndex2 .. increment .. endIndex2 do
 
-        let coordinate = { RowIndex = index1; ColumnIndex = index2 }
+        let coordinate = { RIndex = index1; CIndex = index2 }
 
         // if the cell is not part of the maze, we only update the run start index
         if not (isPartOfMaze coordinate) then
@@ -64,10 +64,10 @@ let private carveRow
             match randomIndex2 with
             | Some randomIndex2 ->
                 // if there is some we remove it
-                linkCellAtPosition { coordinate with ColumnIndex = randomIndex2 } position1
+                linkCellAtPosition { coordinate with CIndex = randomIndex2 } position1
             | None ->
                 // we absolutely have to ensure that the last wall on the pos 2 is empty if possible
-                ifNotAtLimitLinkCellAtPosition { coordinate with ColumnIndex = lastIndex2WithRemovablePos2Wall } position2
+                ifNotAtLimitLinkCellAtPosition { coordinate with CIndex = lastIndex2WithRemovablePos2Wall } position2
 
             runStartIndex2 <- index2 + increment
         else
@@ -81,7 +81,7 @@ let private carveRow
             let randomIndex2 = getRandomIndex2AtPos1ForFromRange runStartIndex2 (index2 - increment)
             match randomIndex2 with
             | Some index2ForPos1Removal ->                
-                linkCellAtPosition { coordinate with ColumnIndex = index2ForPos1Removal } position1
+                linkCellAtPosition { coordinate with CIndex = index2ForPos1Removal } position1
                 lastIndex2WithRemovablePos2Wall <- index2
             | None -> ()
             
@@ -90,7 +90,7 @@ let private carveRow
 
         // if the pos 2 is a limit then we always choose to randomly remove one of the pos 1 of the run
         if isPos2ALimit then
-            linkCellAtPosition { coordinate with ColumnIndex = (rng.Next(Math.Min(runStartIndex2, index2), Math.Max(runStartIndex2, index2) + 1)) } position1
+            linkCellAtPosition { coordinate with CIndex = (rng.Next(Math.Min(runStartIndex2, index2), Math.Max(runStartIndex2, index2) + 1)) } position1
             runStartIndex2 <- index2 + increment
         else
 
@@ -103,7 +103,7 @@ let private carveRow
         // or we open to the pos 1 by choosing randomly one of the pos 1 wall
         | _ -> 
            let randomIndex2 = rng.Next(Math.Min(runStartIndex2, index2), Math.Max(runStartIndex2, index2) + 1)
-           linkCellAtPosition { coordinate with ColumnIndex = randomIndex2 } position1
+           linkCellAtPosition { coordinate with CIndex = randomIndex2 } position1
            lastIndex2WithRemovablePos2Wall <- index2
            runStartIndex2 <- index2 + increment        
 
@@ -131,7 +131,7 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
         | true ->
             coordinate
         | false ->
-            { RowIndex = coordinate.ColumnIndex; ColumnIndex = coordinate.RowIndex  }
+            { RIndex = coordinate.CIndex; CIndex = coordinate.RIndex  }
 
     let (extractBy, startIndex, increment, endIndex, getCoordinate) =
         match direction1, direction2 with

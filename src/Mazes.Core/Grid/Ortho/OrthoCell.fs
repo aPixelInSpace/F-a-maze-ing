@@ -79,13 +79,13 @@ module OrthoCell =
                 let isNeighborPartOfMaze = isCellPartOfMaze (coordinate.NeighborCoordinateAtPosition position)
                 getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
 
-        let wallTypeTop = getWallType (isFirstRow coordinate.RowIndex) Top
+        let wallTypeTop = getWallType (isFirstRow coordinate.RIndex) Top
 
-        let wallTypeRight = getWallType (isLastColumn coordinate.ColumnIndex numberOfColumns) Right
+        let wallTypeRight = getWallType (isLastColumn coordinate.CIndex numberOfColumns) Right
 
-        let wallTypeBottom = getWallType (isLastRow coordinate.RowIndex numberOfRows) Bottom
+        let wallTypeBottom = getWallType (isLastRow coordinate.RIndex numberOfRows) Bottom
 
-        let wallTypeLeft = getWallType (isFirstColumn coordinate.ColumnIndex) Left                
+        let wallTypeLeft = getWallType (isFirstColumn coordinate.CIndex) Left                
 
         {
             Walls =

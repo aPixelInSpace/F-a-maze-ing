@@ -4,6 +4,7 @@ module Tests
 
 open FsUnit
 open Xunit
+open Mazes.Core.Grid.Ortho
 open Mazes.Utility.Canvas.Convert
 
 [<Fact>]
@@ -38,7 +39,7 @@ let ``Given an image with black pixels, when creating a canvas from it, then it 
         "****************\n" +
         ".*.*.*.**.*.*.*.\n" +
         "end"
-    Mazes.Core.Canvas.Convert.toString canvas |> should equal expectedCanvasLayout
+    Canvas.Convert.toString canvas |> should equal expectedCanvasLayout
 
 [<Fact>]
 let ``Given an image with grey pixels, when creating a canvas with tolerance from it, then it should give the canvas that match the pixels of the image`` () =
@@ -72,4 +73,4 @@ let ``Given an image with grey pixels, when creating a canvas with tolerance fro
         "..************..\n" +
         ".....******.....\n" +
         "end"
-    Mazes.Core.Canvas.Convert.toString canvas |> should equal expectedCanvasLayout
+    Canvas.Convert.toString canvas |> should equal expectedCanvasLayout

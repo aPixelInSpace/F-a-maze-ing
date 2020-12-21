@@ -162,7 +162,7 @@ let private append
                             Empty) |> ignore)
 
     // last part only on the last column
-    if (coordinate.ColumnIndex = grid.Canvas.MaxColumnIndex) then
+    if (coordinate.CIndex = grid.Canvas.MaxColumnIndex) then
         sBuilder.Append(getPieceOfWall
                             lastIntersectionWallLeft.Value
                             lastIntersectionWallTop.Value
@@ -221,7 +221,7 @@ let private wallTypesLastRow (grid : OrthoGrid) coordinate =
 
 let private appendColumns rowIndex lastColumnIndex append wallTypes =
     for columnIndex in 0 .. lastColumnIndex do
-        let coordinate = { RowIndex = rowIndex; ColumnIndex = columnIndex }
+        let coordinate = { RIndex = rowIndex; CIndex = columnIndex }
         append coordinate (wallTypes coordinate)
 
 let private appendRows sBuilder grid =

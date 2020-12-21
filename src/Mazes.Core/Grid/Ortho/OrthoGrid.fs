@@ -9,7 +9,7 @@ open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Position
 open Mazes.Core.Array2D
-open Mazes.Core.Canvas
+open Mazes.Core.Grid.Ortho.Canvas
 
 type OrthoGrid =
     {
@@ -109,7 +109,7 @@ type OrthoGrid =
 
     member private self.UpdateWallAtPosition coordinate (position : Position) wallType =
         let getWalls coordinate position =
-            self.Cells.[coordinate.RowIndex, coordinate.ColumnIndex].Walls
+            self.Cells.[coordinate.RIndex, coordinate.CIndex].Walls
             |> Array.mapi(fun index wall ->
                 if index = (OrthoCell.WallIndex position) then
                     { WallType = wallType; WallPosition = position }
@@ -117,10 +117,10 @@ type OrthoGrid =
                     wall
                 )
 
-        self.Cells.[coordinate.RowIndex, coordinate.ColumnIndex] <- { Walls = (getWalls coordinate position) }
+        self.Cells.[coordinate.RIndex, coordinate.CIndex] <- { Walls = (getWalls coordinate position) }
 
         let neighbor = coordinate.NeighborCoordinateAtPosition position        
-        self.Cells.[neighbor.RowIndex, neighbor.ColumnIndex] <- { Walls = (getWalls neighbor position.Opposite) }
+        self.Cells.[neighbor.RIndex, neighbor.CIndex] <- { Walls = (getWalls neighbor position.Opposite) }
 
     member private self.IfNotAtLimitUpdateWallAtPosition coordinate position wallType =
         if not (self.IsLimitAt coordinate position) then
@@ -223,7 +223,7 @@ type OrthoGrid =
         let lastColumnIndex = self.Cells |> maxColumnIndex
         sBuilder.Append(" ") |> ignore
         for columnIndex in 0 .. lastColumnIndex do
-            let cell = self.Cell { RowIndex = 0; ColumnIndex = columnIndex }
+            let cell = self.Cell { RIndex = 0; CIndex = columnIndex }
             appendHorizontalWall cell.WallTop.WallType
             sBuilder.Append(" ") |> ignore
         sBuilder.Append("\n") |> ignore
@@ -231,7 +231,7 @@ type OrthoGrid =
         // every row
         for rowIndex in 0 .. self.Cells |> maxRowIndex do
             for columnIndex in 0 .. lastColumnIndex do
-                let cell = self.Cell { RowIndex = rowIndex; ColumnIndex = columnIndex }
+                let cell = self.Cell { RIndex = rowIndex; CIndex = columnIndex }
                 appendVerticalWall cell.WallLeft.WallType
                 appendHorizontalWall cell.WallBottom.WallType
                 
@@ -251,7 +251,7 @@ module OrthoGrid =
                 OrthoCell.create
                     canvas.NumberOfRows
                     canvas.NumberOfColumns
-                    { RowIndex = rowIndex; ColumnIndex = columnIndex }
+                    { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
         { Canvas = canvas; Cells = cells; }

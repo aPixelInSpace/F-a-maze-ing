@@ -4,9 +4,8 @@ module Mazes.Core.Tests.Maze.Generate.Sidewinder
 
 open FsUnit
 open Xunit
-open Mazes.Core
 open Mazes.Core.Tests.Helpers
-open Mazes.Core.Canvas.Shape
+open Mazes.Core.Grid.Ortho.Canvas.Shape
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate

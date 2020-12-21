@@ -67,7 +67,7 @@ let ``Given a root inside the maze, when creating a map, then it should give all
 let ``Given a root outside the maze, when creating a map, then the root is the only node of the map`` () =
 
     // arrange
-    let outsideOfTheMazeNode = { RowIndex = 0; ColumnIndex = 1 }
+    let outsideOfTheMazeNode = { RIndex = 0; CIndex = 1 }
 
     // act
     let map = maze.createMap outsideOfTheMazeNode
@@ -79,19 +79,19 @@ let ``Given a root outside the maze, when creating a map, then the root is the o
     hasNode outsideOfTheMazeNode |> should equal true
     map.ShortestPathGraph.NodeDistanceFromRoot outsideOfTheMazeNode |> should equal (Some 0)
 
-    let topLeftNode = { RowIndex = 0; ColumnIndex = 9 }
+    let topLeftNode = { RIndex = 0; CIndex = 9 }
     hasNode topLeftNode |> should equal false
     map.ShortestPathGraph.NodeDistanceFromRoot topLeftNode |> should equal None
 
-    let bottomLeftNode = { RowIndex = 9; ColumnIndex = 0 }
+    let bottomLeftNode = { RIndex = 9; CIndex = 0 }
     hasNode bottomLeftNode |> should equal false
     map.ShortestPathGraph.NodeDistanceFromRoot bottomLeftNode |> should equal None
 
-    let bottomRightNode = { RowIndex = 9; ColumnIndex = 8 }
+    let bottomRightNode = { RIndex = 9; CIndex = 8 }
     hasNode bottomRightNode |> should equal false
     map.ShortestPathGraph.NodeDistanceFromRoot bottomRightNode |> should equal None
 
-    let centerNode = { RowIndex = 5; ColumnIndex = 4 }
+    let centerNode = { RIndex = 5; CIndex = 4 }
     hasNode centerNode |> should equal false
     map.ShortestPathGraph.NodeDistanceFromRoot centerNode |> should equal None
 
@@ -139,7 +139,7 @@ let ``Given a map, when getting all the distances from the root, then it should 
     let map = maze.createMap rootCoordinate
 
     // assert
-    let outsideOfTheMazeNode = { RowIndex = 0; ColumnIndex = 1 }
+    let outsideOfTheMazeNode = { RIndex = 0; CIndex = 1 }
     map.ShortestPathGraph.ContainsNode outsideOfTheMazeNode |> should equal false
     
     let graph = map.ShortestPathGraph.ToString (fun e -> e.Source, e.Tag, e.Target)
@@ -175,11 +175,11 @@ let ``Given a root inside the maze, when creating a map, then it should give all
 
     // assert
     let expectedDeadEnds =
-            [| { RowIndex = 0; ColumnIndex = 0 }; { RowIndex = 4; ColumnIndex = 4 }; { RowIndex = 2; ColumnIndex = 6 }; { RowIndex = 3; ColumnIndex = 7 }
-               { RowIndex = 0; ColumnIndex = 9 }; { RowIndex = 4; ColumnIndex = 5 }; { RowIndex = 7; ColumnIndex = 2 }; { RowIndex = 7; ColumnIndex = 1 }
-               { RowIndex = 7; ColumnIndex = 6 }; { RowIndex = 4; ColumnIndex = 8 }; { RowIndex = 6; ColumnIndex = 5 }; { RowIndex = 8; ColumnIndex = 7 }
-               { RowIndex = 9; ColumnIndex = 0 }; { RowIndex = 5; ColumnIndex = 1 }; { RowIndex = 9; ColumnIndex = 8 }; { RowIndex = 9; ColumnIndex = 6 }
-               { RowIndex = 9; ColumnIndex = 2 } |]
+            [| { RIndex = 0; CIndex = 0 }; { RIndex = 4; CIndex = 4 }; { RIndex = 2; CIndex = 6 }; { RIndex = 3; CIndex = 7 }
+               { RIndex = 0; CIndex = 9 }; { RIndex = 4; CIndex = 5 }; { RIndex = 7; CIndex = 2 }; { RIndex = 7; CIndex = 1 }
+               { RIndex = 7; CIndex = 6 }; { RIndex = 4; CIndex = 8 }; { RIndex = 6; CIndex = 5 }; { RIndex = 8; CIndex = 7 }
+               { RIndex = 9; CIndex = 0 }; { RIndex = 5; CIndex = 1 }; { RIndex = 9; CIndex = 8 }; { RIndex = 9; CIndex = 6 }
+               { RIndex = 9; CIndex = 2 } |]
 
     map.Leaves.Length |> should equal expectedDeadEnds.Length
     (map.Leaves |> Array.sort) |> should equal (expectedDeadEnds |> Array.sort)
@@ -192,15 +192,15 @@ let ``Given a map and a goal coordinate, when searching the shortest path betwee
     let map = maze.createMap rootCoordinate
 
     // act
-    let path = map.ShortestPathGraph.PathFromRootTo { RowIndex = 9; ColumnIndex = 8 }
+    let path = map.ShortestPathGraph.PathFromRootTo { RIndex = 9; CIndex = 8 }
 
     // assert
     let expectedPath =
-            [| { RowIndex = 0; ColumnIndex = 0 }; { RowIndex = 1; ColumnIndex = 0 }; { RowIndex = 2; ColumnIndex = 0 }; { RowIndex = 2; ColumnIndex = 1 }
-               { RowIndex = 2; ColumnIndex = 2 }; { RowIndex = 1; ColumnIndex = 2 }; { RowIndex = 1; ColumnIndex = 3 }; { RowIndex = 2; ColumnIndex = 3 }
-               { RowIndex = 2; ColumnIndex = 4 }; { RowIndex = 3; ColumnIndex = 4 }; { RowIndex = 3; ColumnIndex = 5 }; { RowIndex = 3; ColumnIndex = 6 }
-               { RowIndex = 4; ColumnIndex = 6 }; { RowIndex = 5; ColumnIndex = 6 }; { RowIndex = 6; ColumnIndex = 6 }; { RowIndex = 6; ColumnIndex = 7 }
-               { RowIndex = 7; ColumnIndex = 7 }; { RowIndex = 7; ColumnIndex = 8 }; { RowIndex = 8; ColumnIndex = 8 }; { RowIndex = 9; ColumnIndex = 8 } |]
+            [| { RIndex = 0; CIndex = 0 }; { RIndex = 1; CIndex = 0 }; { RIndex = 2; CIndex = 0 }; { RIndex = 2; CIndex = 1 }
+               { RIndex = 2; CIndex = 2 }; { RIndex = 1; CIndex = 2 }; { RIndex = 1; CIndex = 3 }; { RIndex = 2; CIndex = 3 }
+               { RIndex = 2; CIndex = 4 }; { RIndex = 3; CIndex = 4 }; { RIndex = 3; CIndex = 5 }; { RIndex = 3; CIndex = 6 }
+               { RIndex = 4; CIndex = 6 }; { RIndex = 5; CIndex = 6 }; { RIndex = 6; CIndex = 6 }; { RIndex = 6; CIndex = 7 }
+               { RIndex = 7; CIndex = 7 }; { RIndex = 7; CIndex = 8 }; { RIndex = 8; CIndex = 8 }; { RIndex = 9; CIndex = 8 } |]
 
     path |> Seq.toArray |> should equal expectedPath
 
@@ -230,9 +230,9 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
     map.ConnectedNodes |> should equal 8
     map.FarthestFromRoot.Distance |> should equal 4
     
-    map.ShortestPathGraph.NodeDistanceFromRoot { RowIndex = 0; ColumnIndex = 0 } |> should equal (Some 0)
-    map.ShortestPathGraph.NodeDistanceFromRoot { RowIndex = 2; ColumnIndex = 0 } |> should equal (Some 2)
-    map.ShortestPathGraph.NodeDistanceFromRoot { RowIndex = 0; ColumnIndex = 2 } |> should equal (Some 2)
+    map.ShortestPathGraph.NodeDistanceFromRoot { RIndex = 0; CIndex = 0 } |> should equal (Some 0)
+    map.ShortestPathGraph.NodeDistanceFromRoot { RIndex = 2; CIndex = 0 } |> should equal (Some 2)
+    map.ShortestPathGraph.NodeDistanceFromRoot { RIndex = 0; CIndex = 2 } |> should equal (Some 2)
 
 [<Fact>]
 let ``Given a map, when getting the farthest coordinates, then it should return the infos of the farthest coordinates from the root`` () =
@@ -246,10 +246,10 @@ let ``Given a map, when getting the farthest coordinates, then it should return 
     // assert
     map.FarthestFromRoot.Distance |> should equal 19    
     
-    let expectedFarthestCoordinates = [| { RowIndex = 6; ColumnIndex = 9 }; { RowIndex = 9; ColumnIndex = 2 }; { RowIndex = 9; ColumnIndex = 6 }; { RowIndex = 9; ColumnIndex = 8 } |]
+    let expectedFarthestCoordinates = [| { RIndex = 6; CIndex = 9 }; { RIndex = 9; CIndex = 2 }; { RIndex = 9; CIndex = 6 }; { RIndex = 9; CIndex = 8 } |]
 
     map.FarthestFromRoot.Coordinates
-    |> Array.sortBy(fun c -> c.RowIndex, c.ColumnIndex)
+    |> Array.sortBy(fun c -> c.RIndex, c.CIndex)
     |> should equal expectedFarthestCoordinates
 
 [<Fact>]
@@ -300,10 +300,10 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
     longestPath |> Seq.length |> should equal 13
 
     let expectedLongestPath =
-        [| { RowIndex = 4; ColumnIndex = 4 } ; { RowIndex = 3; ColumnIndex = 4 } ; { RowIndex = 2; ColumnIndex = 4 } ; { RowIndex = 2; ColumnIndex = 3 }
-           { RowIndex = 1; ColumnIndex = 3 } ; { RowIndex = 1; ColumnIndex = 2 } ; { RowIndex = 1; ColumnIndex = 1 } ; { RowIndex = 1; ColumnIndex = 0 }
-           { RowIndex = 2; ColumnIndex = 0 } ; { RowIndex = 3; ColumnIndex = 0 } ; { RowIndex = 4; ColumnIndex = 0 } ; { RowIndex = 4; ColumnIndex = 1 }
-           { RowIndex = 4; ColumnIndex = 2 } |]
+        [| { RIndex = 4; CIndex = 4 } ; { RIndex = 3; CIndex = 4 } ; { RIndex = 2; CIndex = 4 } ; { RIndex = 2; CIndex = 3 }
+           { RIndex = 1; CIndex = 3 } ; { RIndex = 1; CIndex = 2 } ; { RIndex = 1; CIndex = 1 } ; { RIndex = 1; CIndex = 0 }
+           { RIndex = 2; CIndex = 0 } ; { RIndex = 3; CIndex = 0 } ; { RIndex = 4; CIndex = 0 } ; { RIndex = 4; CIndex = 1 }
+           { RIndex = 4; CIndex = 2 } |]
 
     longestPath |> Seq.toArray |> should equal expectedLongestPath
 

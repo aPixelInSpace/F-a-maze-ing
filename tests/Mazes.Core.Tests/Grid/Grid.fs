@@ -196,7 +196,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     let threeByThreeCanvas = Canvas.Convert.fromString threeByThreeStringCanvas
     let grid = threeByThreeCanvas.Value |> OrthoGrid.create
 
-    let coordinate11 = { RowIndex = 1; ColumnIndex = 1 }
+    let coordinate11 = { RIndex = 1; CIndex = 1 }
 
     // act + assert
     

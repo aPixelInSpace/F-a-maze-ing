@@ -12,12 +12,12 @@
         <Compile Include="Analysis\Dijkstra\Map.fs" />
         <Content Include="Analysis\Dijkstra\memo.txt" />
         <Compile Include="Canvas\Zone.fs" />
-		<Compile Include="Canvas\Canvas.fs" />
-		<Compile Include="Canvas\Shape\Rectangle.fs" />
-		<Compile Include="Canvas\Shape\TriangleIsosceles.fs" />
-		<Compile Include="Canvas\Shape\Ellipse.fs" />
 		<Compile Include="Grid\Cell.fs" />
 		<Compile Include="Grid\Grid.fs" />
+		<Compile Include="Grid\Ortho\Canvas\Canvas.fs" />
+		<Compile Include="Grid\Ortho\Canvas\Shape\Rectangle.fs" />
+		<Compile Include="Grid\Ortho\Canvas\Shape\TriangleIsosceles.fs" />
+		<Compile Include="Grid\Ortho\Canvas\Shape\Ellipse.fs" />
 		<Compile Include="Grid\Ortho\Wall.fs" />
 		<Compile Include="Grid\Ortho\OrthoCell.fs" />
 		<Compile Include="Grid\Ortho\OrthoGrid.fs" />

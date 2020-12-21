@@ -3,7 +3,7 @@
 namespace Mazes.Utility.Canvas
 
 open SixLabors.ImageSharp
-open Mazes.Core.Canvas
+open Mazes.Core.Grid.Ortho.Canvas
 
 module Convert =
     let fromImage tolerance (imagePath : string) =

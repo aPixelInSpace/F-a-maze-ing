@@ -73,9 +73,9 @@ type PolarGrid =
 
 module PolarGrid =
 
-    let create numberOfRings baseNumberOfCells =
+    let create numberOfRings widthHeightRatio =
 
-        let ringHeight = 1.0 / (float)numberOfRings 
+        let ringHeight = widthHeightRatio / (float)numberOfRings 
 
         let createRingCells ringNumber previousNumberOfCellsForTheRing numberOfCellsForTheRing =
             [|

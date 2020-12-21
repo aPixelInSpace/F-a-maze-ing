@@ -17,14 +17,14 @@ let private carveRow
     rngTotalWeight    
     rngPosition1Weight
     (grid : Grid<'G>)
-    rowIndex
+    rIndex
     startColumnIndex
     increment
     endColumnIndex =    
     
     for columnIndex in startColumnIndex .. increment .. endColumnIndex do
 
-        let coordinate = { RowIndex = rowIndex; ColumnIndex = columnIndex }
+        let coordinate = { RIndex = rIndex; CIndex = columnIndex }
         
         // if the cell is not part of the maze, we do nothing
         if not (grid.IsCellPartOfMaze coordinate) then ()
@@ -92,7 +92,7 @@ let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2We
     let position2 = mapDirectionToPosition direction2
 
     grid.GetCellsByRows
-    |> Seq.iteri(fun rowIndex _ ->
+    |> Seq.iteri(fun rIndex _ ->
         carveRow
             // params
             position1
@@ -101,7 +101,7 @@ let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2We
             rngTotalWeight
             rngDirection1Weight
             grid
-            rowIndex
+            rIndex
             startColumnIndex
             increment
             endColumnIndex)    

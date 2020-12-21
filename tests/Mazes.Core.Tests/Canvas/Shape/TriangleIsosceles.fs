@@ -5,7 +5,8 @@ module Mazes.Core.Tests.Canvas.Shape.TriangleIsosceles
 open FsUnit
 open Xunit
 open Mazes.Core
-open Mazes.Core.Canvas.Shape
+open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Ortho.Canvas.Shape
 
 [<Fact>]
 let ``Given a base length of 9, a base at bottom, a base decrement of 1 and a height increment of 1, when creating a triangle isosceles, then it should give a triangle canvas that is like the representation`` () =

@@ -40,9 +40,9 @@ let private addPathColorTag (sBuilder : StringBuilder) styleClass opacity (point
 let private addPathTagByWallType (sBuilder : StringBuilder) (grid : OrthoGrid) coordinate (wallType : WallType) styleClass =
     let cell = grid.Cell coordinate
 
-    let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())
-    let bottomLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + (((coordinate.RowIndex + 1) * cellHeight) + marginHeight).ToString())
-    let bottomRight = lazy ((((coordinate.ColumnIndex + 1) * cellWidth) + marginWidth).ToString() + " " + (((coordinate.RowIndex + 1) * cellHeight) + marginHeight).ToString())
+    let topLeft = lazy (((coordinate.CIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RIndex * cellHeight) + marginHeight).ToString())
+    let bottomLeft = lazy (((coordinate.CIndex * cellWidth) + marginWidth).ToString() + " " + (((coordinate.RIndex + 1) * cellHeight) + marginHeight).ToString())
+    let bottomRight = lazy ((((coordinate.CIndex + 1) * cellWidth) + marginWidth).ToString() + " " + (((coordinate.RIndex + 1) * cellHeight) + marginHeight).ToString())
 
     let appendOneCell = addPathTag sBuilder styleClass
 
@@ -86,11 +86,11 @@ let private renderWallTypes (sBuilder : StringBuilder) (grid : OrthoGrid) coordi
     addPathTagByWallType sBuilder grid coordinate Normal "n"
 
 let private renderFullCell (sBuilder : StringBuilder) styleClass coordinate =
-    let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())    
+    let topLeft = lazy (((coordinate.CIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RIndex * cellHeight) + marginHeight).ToString())    
     addPathTag sBuilder styleClass ("M " + topLeft.Value + (drawLine LeftToRight) + (drawLine TopToBottom) + (drawLine RightToLeft) + (drawLine BottomToTop))
 
 let private renderFullCellColor (sBuilder : StringBuilder) coordinate distanceFromRoot maxDistance =
-    let topLeft = lazy (((coordinate.ColumnIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RowIndex * cellHeight) + marginHeight).ToString())
+    let topLeft = lazy (((coordinate.CIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RIndex * cellHeight) + marginHeight).ToString())
 
     let opacity = Math.Round(1.0 - (float (maxDistance - distanceFromRoot) / float maxDistance), 2)
     let sOpacity = opacity.ToString().Replace(",", ".")

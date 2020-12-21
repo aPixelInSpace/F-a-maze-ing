@@ -7,8 +7,7 @@ open System.Diagnostics
 open System.IO
 open System.Text
 open CommandLine
-open Mazes.Core
-open Mazes.Core.Canvas
+open Mazes.Core.Grid.Ortho.Canvas
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
@@ -104,27 +103,27 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     // Async
 //    let maze1 =
 //        async {
-//                let gridSliced1 = GridView.sliceGrid grid { RowIndex = 0; ColumnIndex = 0 } { RowIndex = 9; ColumnIndex = 9 }
+//                let gridSliced1 = GridView.sliceGrid grid { RIndex = 0; CIndex = 0 } { RIndex = 9; CIndex = 9 }
 //                let maze = (algo (rngSeed) gridSliced1)
-//                GridView.mergeGrid maze.Grid grid { RowIndex = 0; ColumnIndex = 0 }
+//                GridView.mergeGrid maze.Grid grid { RIndex = 0; CIndex = 0 }
 //            }
 //    let maze2 =
 //        async {
-//                let gridSliced2 = GridView.sliceGrid grid { RowIndex = 0; ColumnIndex = 10 } { RowIndex = 8; ColumnIndex = 19 }
+//                let gridSliced2 = GridView.sliceGrid grid { RIndex = 0; CIndex = 10 } { RIndex = 8; CIndex = 19 }
 //                let maze = (algo (rngSeed + 1) gridSliced2)
-//                GridView.mergeGrid maze.Grid grid { RowIndex = 0; ColumnIndex = 10 }
+//                GridView.mergeGrid maze.Grid grid { RIndex = 0; CIndex = 10 }
 //            }
 //    let maze3 =
 //        async {
-//                let gridSliced3 = GridView.sliceGrid grid { RowIndex = 10; ColumnIndex = 0 } { RowIndex = 19; ColumnIndex = 9 }
+//                let gridSliced3 = GridView.sliceGrid grid { RIndex = 10; CIndex = 0 } { RIndex = 19; CIndex = 9 }
 //                let maze = (algo (rngSeed + 2) gridSliced3)
-//                GridView.mergeGrid maze.Grid grid { RowIndex = 10; ColumnIndex = 0 }
+//                GridView.mergeGrid maze.Grid grid { RIndex = 10; CIndex = 0 }
 //            }
 //    let maze4 =
 //        async {
-//                let gridSliced4 = GridView.sliceGrid grid { RowIndex = 9; ColumnIndex = 10 } { RowIndex = 19; ColumnIndex = 19 }
+//                let gridSliced4 = GridView.sliceGrid grid { RIndex = 9; CIndex = 10 } { RIndex = 19; CIndex = 19 }
 //                let maze = (algo (rngSeed + 3) gridSliced4)
-//                GridView.mergeGrid maze.Grid grid { RowIndex = 9; ColumnIndex = 10 }
+//                GridView.mergeGrid maze.Grid grid { RIndex = 9; CIndex = 10 }
 //            }
 //    
 //    [maze1; maze2; maze3; maze4] |> Async.Parallel |> Async.RunSynchronously |> ignore
@@ -158,7 +157,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
     let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetFirstBottomRightPartOfMazeZone) map
-    //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RowIndex = 0; ColumnIndex = 3 }) map
+    //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
 

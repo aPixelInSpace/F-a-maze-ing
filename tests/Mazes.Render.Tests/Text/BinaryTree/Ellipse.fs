@@ -5,8 +5,7 @@ module Mazes.Render.Tests.Text.BinaryTree.Ellipse
 open System
 open FsUnit
 open Xunit
-open Mazes.Core
-open Mazes.Core.Canvas
+open Mazes.Core.Grid.Ortho.Canvas
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate
 open Mazes.Render

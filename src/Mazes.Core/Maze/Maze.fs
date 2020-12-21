@@ -20,7 +20,7 @@ module Maze =
     let createEmpty (grid : OrthoGrid) =
         grid.Cells
         |> Array2D.iteri(fun r c _ ->
-             let update = grid.IfNotAtLimitLinkCellAtPosition { RowIndex = r; ColumnIndex = c }
+             let update = grid.IfNotAtLimitLinkCellAtPosition { RIndex = r; CIndex = c }
              update Top
              update Right
              update Bottom
