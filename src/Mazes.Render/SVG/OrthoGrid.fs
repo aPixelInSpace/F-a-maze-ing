@@ -1,6 +1,6 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Render.SVG
+module Mazes.Render.SVG.OrthoGrid
 
 open System
 open System.Text
@@ -97,7 +97,7 @@ let private renderFullCellColor (sBuilder : StringBuilder) coordinate distanceFr
 
     addPathColorTag sBuilder "c" sOpacity ("M " + topLeft.Value + (drawLine LeftToRight) + (drawLine TopToBottom) + (drawLine RightToLeft) + (drawLine BottomToTop))
 
-let renderGrid grid (path : Coordinate seq) (map : Map) =
+let render grid (path : Coordinate seq) (map : Map) =
     let sBuilder = StringBuilder()
 
     let svgStyle =

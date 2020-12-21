@@ -12,7 +12,7 @@ type Maze<'G> =
         Grid : Grid<'G>
     }
 
-    member this.createDijkstraMap rootCoordinate =
+    member this.createMap rootCoordinate =
         Dijkstra.Map.create this.Grid.LinkedNeighborsWithCoordinates rootCoordinate
 
 module Maze =

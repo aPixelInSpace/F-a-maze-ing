@@ -88,7 +88,7 @@ let ``Given a rectangular canvas, when a creating a maze with the binary tree al
     // we use the map to ensure that the total nodes accessible in the maze is equal to the total number of maze zones of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
     let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
-    let map = maze.createDijkstraMap rootCoordinate
+    let map = maze.createMap rootCoordinate
 
     // assert
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

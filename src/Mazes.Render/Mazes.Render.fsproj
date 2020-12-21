@@ -6,8 +6,9 @@
 
     <ItemGroup>
       <Compile Include="Text.fs" />
-      <Compile Include="SVG.fs" />
       <Compile Include="Image.fs" />
+      <Compile Include="SVG\OrthoGrid.fs" />
+      <Compile Include="SVG\PolarGrid.fs" />
     </ItemGroup>
 
     <ItemGroup>

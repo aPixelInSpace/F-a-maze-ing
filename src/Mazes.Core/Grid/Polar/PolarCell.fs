@@ -1,9 +1,9 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Grid.Polar.PolarCell
+namespace Mazes.Core.Grid.Polar
 
 
 type PolarCell =
     {
-        Neighbors : PolarCell[]
+        Dummy : bool
     }

@@ -58,7 +58,7 @@ let ``Given a root inside the maze, when creating a map, then it should give all
     let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
 
     // act
-    let map = maze.createDijkstraMap rootCoordinate
+    let map = maze.createMap rootCoordinate
 
     // assert
     map.ConnectedNodes |> should equal 79
@@ -70,7 +70,7 @@ let ``Given a root outside the maze, when creating a map, then the root is the o
     let outsideOfTheMazeNode = { RowIndex = 0; ColumnIndex = 1 }
 
     // act
-    let map = maze.createDijkstraMap outsideOfTheMazeNode
+    let map = maze.createMap outsideOfTheMazeNode
 
     // assert
     let hasNode = map.ShortestPathGraph.ContainsNode
@@ -113,7 +113,7 @@ let ``Given a map with no internal walls, when getting all the distances from th
         |> Maze.createEmpty
 
     // act
-    let map = maze.createDijkstraMap maze.Grid.GetFirstTopLeftPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstTopLeftPartOfMazeZone
 
     // assert
     let graph = map.ShortestPathGraph.ToString (fun e -> e.Source, e.Tag, e.Target)
@@ -136,7 +136,7 @@ let ``Given a map, when getting all the distances from the root, then it should 
     let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
 
     // act
-    let map = maze.createDijkstraMap rootCoordinate
+    let map = maze.createMap rootCoordinate
 
     // assert
     let outsideOfTheMazeNode = { RowIndex = 0; ColumnIndex = 1 }
@@ -171,7 +171,7 @@ let ``Given a root inside the maze, when creating a map, then it should give all
     let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
 
     // act
-    let map = maze.createDijkstraMap rootCoordinate
+    let map = maze.createMap rootCoordinate
 
     // assert
     let expectedDeadEnds =
@@ -189,7 +189,7 @@ let ``Given a map and a goal coordinate, when searching the shortest path betwee
 
     // arrange
     let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
-    let map = maze.createDijkstraMap rootCoordinate
+    let map = maze.createMap rootCoordinate
 
     // act
     let path = map.ShortestPathGraph.PathFromRootTo { RowIndex = 9; ColumnIndex = 8 }
@@ -224,7 +224,7 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
     let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
 
     // act
-    let map = maze.createDijkstraMap rootCoordinate
+    let map = maze.createMap rootCoordinate
 
     // assert
     map.ConnectedNodes |> should equal 8
@@ -241,7 +241,7 @@ let ``Given a map, when getting the farthest coordinates, then it should return 
     let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
 
     // act
-    let map = maze.createDijkstraMap rootCoordinate
+    let map = maze.createMap rootCoordinate
 
     // assert
     map.FarthestFromRoot.Distance |> should equal 19    
@@ -286,7 +286,7 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
         *)
 
     let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
-    let map = maze.createDijkstraMap rootCoordinate
+    let map = maze.createMap rootCoordinate
 
     // act
     let longestPaths = map.LongestPaths
