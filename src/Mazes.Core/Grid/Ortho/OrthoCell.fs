@@ -56,6 +56,7 @@ type OrthoCell =
         {
             IsLinked = this.IsLinked
         }
+
 module OrthoCell =
 
     let create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =

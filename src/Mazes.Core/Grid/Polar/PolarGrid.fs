@@ -2,6 +2,7 @@
 
 namespace Mazes.Core.Grid.Polar
 
+open Mazes.Core
 open Mazes.Core.Grid
 open Mazes.Core.ArrayOfA
 open Mazes.Core.Grid.Polar.Canvas
@@ -75,6 +76,38 @@ type PolarGrid =
 
     member self.Cell coordinate =
         get self.Cells coordinate
+
+    member self.IsLimitAt coordinate position =
+        let zone = self.Canvas.Zone coordinate
+        let cell = self.Cell coordinate
+
+        let neighborCondition =
+            fun () ->
+                let neighborsCoordinates = PolarCoordinate.neighborsCoordinateAt self.Canvas.Zones coordinate position
+                if neighborsCoordinates |> Seq.isEmpty then
+                    true
+                else
+                    let existCoordinate =
+                        neighborsCoordinates
+                        |> Seq.tryFind(fun neighborCoordinate -> (self.Canvas.Zone neighborCoordinate).IsAPartOfMaze)
+                    match existCoordinate with
+                    | Some _ -> true
+                    | None -> false
+
+        not zone.IsAPartOfMaze ||
+        cell.WallTypeAtPosition position = Border ||
+        neighborCondition()
+
+    /// Returns the neighbors that are inside the bound of the grid
+    member self.NeighborsFrom coordinate =
+        self.Canvas.NeighborsPartOfMazeOf coordinate
+            |> Seq.filter(fun (_, nPosition) -> not (self.IsLimitAt coordinate nPosition))
+            |> Seq.map(fun (coordinate, _) -> coordinate)
+
+    /// Returns the neighbors coordinates that are linked, NOT NECESSARILY with the coordinate
+    member self.NeighborsThatAreLinked isLinked coordinate =
+        let neighbors = self.NeighborsFrom coordinate
+        neighbors |> Seq.filter(fun nCoordinate -> (self.Cell nCoordinate).IsLinked self.Cells coordinate = isLinked)
 
 module PolarGrid =
 

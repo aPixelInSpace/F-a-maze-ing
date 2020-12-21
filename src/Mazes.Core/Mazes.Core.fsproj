@@ -26,10 +26,10 @@
 		<Compile Include="Grid\Ortho\OrthoGrid.fs" />
 		<Compile Include="Grid\Ortho\GridView.fs" />
 		<Compile Include="Grid\Polar\ArrayOfA.fs" />
-		<Compile Include="Grid\Polar\Canvas\Canvas.fs" />
-		<Compile Include="Grid\Polar\Canvas\Shape\Disc.fs" />
 		<Compile Include="Grid\Polar\PolarPosition.fs" />
 		<Compile Include="Grid\Polar\PolarCoordinate.fs" />
+		<Compile Include="Grid\Polar\Canvas\Canvas.fs" />
+		<Compile Include="Grid\Polar\Canvas\Shape\Disc.fs" />
 		<Compile Include="Grid\Polar\PolarWall.fs" />
 		<Compile Include="Grid\Polar\PolarCell.fs" />
 		<Compile Include="Grid\Polar\PolarGrid.fs" />

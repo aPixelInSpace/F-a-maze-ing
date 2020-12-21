@@ -37,14 +37,17 @@ let ``Given a maze (with an ortho grid), a path and a map, when creating an SVG,
 let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let canvas = Canvas.Shape.Disc.create 6 1.0 6
-    canvas.Zones.[1].[0] <- Zone.Empty
-    canvas.Zones.[1].[1] <- Zone.Empty
-    canvas.Zones.[2].[0] <- Zone.Empty
-    canvas.Zones.[3].[0] <- Zone.Empty
+    //canvas.Zones.[1].[0] <- Zone.Empty
+    //canvas.Zones.[1].[1] <- Zone.Empty
+    //canvas.Zones.[2].[0] <- Zone.Empty
+    //canvas.Zones.[3].[0] <- Zone.Empty
 
     let grid =
         canvas
         |> PolarGrid.create
+
+    let neighborsLinked = grid.NeighborsThatAreLinked true { RIndex = 0; CIndex = 0 }
+    neighborsLinked |> Seq.isEmpty |> should equal true
 
     //let maze =
     //    grid

@@ -3,13 +3,45 @@
 namespace Mazes.Core.Grid.Polar
 
 open Mazes.Core
+open Mazes.Core.Grid
 open Mazes.Core.Grid.Polar.ArrayOfA
 open Mazes.Core.Grid.Polar.Canvas
 
 [<Struct>]
 type PolarCell =
-    { Walls : PolarWall array }
+    {
+        Walls : PolarWall array
+    }
 
+    member this.WallTypeAtPosition position =
+        (this.Walls |> Array.find(fun w -> w.WallPosition = position)).WallType
+
+    static member IsALink wallType =
+        wallType = Empty
+
+    /// Returns true if the cell has at least one link
+    member this.IsLinked (cells : PolarCell[][]) coordinate =
+        let wallCondition =
+            (this.Walls
+            |> Array.where(fun wall -> PolarCell.IsALink wall.WallType)).Length > 0
+
+        let outwardCondition =
+            let outwardNeighbors = PolarCoordinate.neighborsCoordinateAt cells coordinate Outward
+            if not (outwardNeighbors |> Seq.isEmpty) then
+                outwardNeighbors
+                |> Seq.map(fun n ->
+                    cells.[n.RIndex].[n.CIndex].Walls |> Array.find(fun w -> w.WallPosition = Inward && PolarCell.IsALink w.WallType))
+                |> Seq.length > 0
+            else
+                false
+            
+
+        wallCondition || outwardCondition
+
+    member this.ToCell cells coordinate =
+        {
+            IsLinked = this.IsLinked cells coordinate
+        }
 module PolarCell =
 
     let create canvas (coordinate : Coordinate) isCellPartOfMaze =

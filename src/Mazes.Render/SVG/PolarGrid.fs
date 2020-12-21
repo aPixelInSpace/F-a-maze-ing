@@ -55,6 +55,7 @@ let render (grid : PolarGrid) =
 
             let cell = grid.Cell { RIndex = ringIndex; CIndex = cellIndex  }
 
+            // todo : put a parameter for cobweb style : 0, 0, 1, -> 0, 0, 0,
             let wallInward = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Inward)
             match wallInward with
             | Some wallInward ->
