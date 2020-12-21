@@ -55,7 +55,7 @@ let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, 
     let renderedMaze = SVG.PolarGrid.render grid
         
     // assert
-    System.IO.File.WriteAllText("\\\\192.168.1.190\\Data\\Project\\F#\\Mazes - Doc\\svg\\testGrid.svg", renderedMaze)
+    
     //let expectedRenderedMaze = IO.File.ReadAllText("Resources/Polargrid.svg", Encoding.UTF8)
         
     //renderedMaze |> should equal expectedRenderedMaze
