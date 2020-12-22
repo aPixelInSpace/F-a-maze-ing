@@ -2,6 +2,7 @@
 
 namespace Mazes.Core.Grid.Polar
 
+open System
 open Mazes.Core
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Polar.ArrayOfA
@@ -29,12 +30,13 @@ type PolarCell =
             let outwardNeighbors = PolarCoordinate.neighborsCoordinateAt cells coordinate Outward
             if not (outwardNeighbors |> Seq.isEmpty) then
                 outwardNeighbors
-                |> Seq.map(fun n ->
-                    cells.[n.RIndex].[n.CIndex].Walls |> Array.find(fun w -> w.WallPosition = Inward && PolarCell.IsALink w.WallType))
+                |> Seq.filter(fun n ->
+                    cells.[n.RIndex].[n.CIndex].Walls
+                    |> Array.where(fun w -> w.WallPosition = Inward && PolarCell.IsALink w.WallType)
+                    |> Array.length > 0)
                 |> Seq.length > 0
             else
                 false
-            
 
         wallCondition || outwardCondition
 

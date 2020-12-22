@@ -30,8 +30,8 @@ type OrthoGrid =
         member self.Cell coordinate =
             (self.Cell coordinate).ToCell
 
-        member self.IsLimitAt coordinate position =
-            self.IsLimitAt coordinate position
+        member self.IsLimitAt coordinate otherCoordinate =
+            self.IsLimitAt coordinate (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate)
 
         member self.IsCellPartOfMaze coordinate =
             self.Canvas.IsZonePartOfMaze coordinate
@@ -49,14 +49,11 @@ type OrthoGrid =
         member self.CoordinatesPartOfMaze =
             self.CoordinatesPartOfMaze
 
-        member self.LinkCellAtPosition coordinate position =
-            self.LinkCellAtPosition coordinate position
+        member self.LinkCells coordinate otherCoordinate =
+            self.LinkCells coordinate otherCoordinate
 
-        member self.IfNotAtLimitLinkCellAtPosition coordinate position =
-            self.IfNotAtLimitLinkCellAtPosition coordinate position
-
-        member self.LinkCellsAtCoordinates coordinate otherCoordinate =
-            self.LinkCellsAtCoordinates coordinate otherCoordinate
+        member self.IfNotAtLimitLinkCells coordinate otherCoordinate =
+            self.IfNotAtLimitLinkCells coordinate otherCoordinate
 
         member self.NeighborsThatAreLinked isLinked coordinate =
             self.NeighborsThatAreLinked isLinked coordinate
@@ -125,11 +122,11 @@ type OrthoGrid =
         if not (self.IsLimitAt coordinate position) then
             self.UpdateWallAtPosition coordinate position wallType
 
-    member self.LinkCellAtPosition coordinate position =
-        self.UpdateWallAtPosition coordinate (position : OrthoPosition) WallType.Empty
+    member self.LinkCells coordinate otherCoordinate =
+        self.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Empty
 
-    member self.IfNotAtLimitLinkCellAtPosition coordinate position =
-        self.IfNotAtLimitUpdateWallAtPosition coordinate position WallType.Empty
+    member self.IfNotAtLimitLinkCells coordinate otherCoordinate =
+        self.IfNotAtLimitUpdateWallAtPosition coordinate (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate) WallType.Empty
 
     member private self.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =
         let neighborCoordinateAt = OrthoCoordinate.neighborCoordinateAt coordinate
@@ -140,14 +137,11 @@ type OrthoGrid =
         | oc when oc = (neighborCoordinateAt Bottom) -> self.UpdateWallAtPosition coordinate Bottom wallType
         | _ -> failwith "UpdateWallAtCoordinates unable to find a connection between the two coordinates"
 
-    member self.LinkCellsAtCoordinates (coordinate : Coordinate) otherCoordinate =
-        self.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Empty
-
     /// Returns the neighbors that are inside the bound of the grid
     member self.NeighborsFrom coordinate =
         self.Canvas.NeighborsPartOfMazeOf coordinate
             |> Seq.filter(fun (_, nPosition) -> not (self.IsLimitAt coordinate nPosition))
-            |> Seq.map(fun (coordinate, _) -> coordinate)
+            |> Seq.map(fst)
 
     /// Returns a random neighbor that is inside the bound of the grid
     member self.RandomNeighborFrom (rng : Random) coordinate =

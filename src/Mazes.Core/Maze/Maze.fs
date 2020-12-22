@@ -19,11 +19,12 @@ module Maze =
     let createEmpty (grid : OrthoGrid) =
         grid.Cells
         |> Array2D.iteri(fun r c _ ->
-             let update = grid.IfNotAtLimitLinkCellAtPosition { RIndex = r; CIndex = c }
-             update Top
-             update Right
-             update Bottom
-             update Left)
+             let update = grid.IfNotAtLimitLinkCells { RIndex = r; CIndex = c }
+             let position = (OrthoCoordinate.neighborCoordinateAt { RIndex = r; CIndex = c })
+             update (position Top)
+             update (position Right)
+             update (position Bottom)
+             update (position Left))
         
         { Grid = grid }
 

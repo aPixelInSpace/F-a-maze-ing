@@ -21,15 +21,21 @@ type ShortestPathGraph<'Node> when 'Node : equality =
         this.Graph.AddVertex(node) |> ignore
 
     member this.ContainsEdge source target =
-        this.Graph.ContainsEdge(source, target)
+        this.Graph.ContainsEdge(source, target) || this.Graph.ContainsEdge(target, source)
 
     member this.AddEdge source target distance =
         this.Graph.AddEdge(TaggedEdge<'Node, Distance>(source, target, distance)) |> ignore
 
-    member this.RemoveEdge source target distance =
-        let mutable edgeRef = TaggedEdge<'Node, Distance>(source, target, distance)
-        if this.Graph.TryGetEdge(source, target, &edgeRef) then
-            this.Graph.RemoveEdge(edgeRef) |> ignore
+    member this.UpdateEdge source target distance =
+        let update node1 node2 =
+            if this.Graph.ContainsEdge(node1, node2) then
+                let mutable edgeRef = TaggedEdge<'Node, Distance>(node1, node2, distance)
+                //edgeRef.Tag <- distance
+                if this.Graph.TryGetEdge(node1, node2, &edgeRef) then
+                    this.Graph.RemoveEdge(edgeRef) |> ignore
+
+        update source target
+        update target source
 
     member this.AdjacentEdges node =
         if not (this.ContainsNode node) then

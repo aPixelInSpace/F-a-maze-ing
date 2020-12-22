@@ -23,6 +23,9 @@ module ArrayOfA =
     let maxD1Index (arrayOfA : 'A[][]) =
         getIndex arrayOfA.Length
 
+    let getD1LengthAt (arrayOfA : 'A[][]) =
+        arrayOfA.Length
+
     let getD2LengthAt (arrayOfA : 'A[][]) d1Index =
         arrayOfA.[d1Index].Length
 
@@ -39,4 +42,5 @@ module ArrayOfA =
         arrayOfA.[coordinate.RIndex].[coordinate.CIndex]
 
     let existAt (arrayOfA : 'A[][]) coordinate =
-        getIndex arrayOfA.Length < coordinate.RIndex && getIndex arrayOfA.[coordinate.RIndex].Length < coordinate.CIndex
+        coordinate.RIndex >= minD1Index && coordinate.CIndex >= minD2Index &&
+        coordinate.RIndex <= maxD1Index arrayOfA && coordinate.CIndex <= maxD2Index arrayOfA coordinate.RIndex

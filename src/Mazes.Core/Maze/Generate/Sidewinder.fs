@@ -142,10 +142,11 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
     let position1 = mapDirectionToPosition direction1
     let position2 = mapDirectionToPosition direction2
 
+    let toOtherCoordinate coordinate position = (OrthoCoordinate.neighborCoordinateAt (getCoordinate coordinate) position)
     let isPartOfMaze coordinate = (grid.IsCellPartOfMaze (getCoordinate coordinate))
-    let isALimitAt coordinate = (grid.IsLimitAt (getCoordinate coordinate))
-    let linkCellAtPosition coordinate = (grid.LinkCellAtPosition (getCoordinate coordinate))
-    let ifNotAtLimitLinkCellAtPosition coordinate = (grid.IfNotAtLimitLinkCellAtPosition (getCoordinate coordinate))
+    let isALimitAt coordinate position = (grid.IsLimitAt (getCoordinate coordinate) (toOtherCoordinate coordinate position))
+    let linkCellAtPosition coordinate position = (grid.LinkCells (getCoordinate coordinate) (toOtherCoordinate coordinate position))
+    let ifNotAtLimitLinkCellAtPosition coordinate position = (grid.IfNotAtLimitLinkCells (getCoordinate coordinate) (toOtherCoordinate coordinate position))
     let getRandomIndex2FromRange = (getRandomColumnIndexFromRange isALimitAt rng increment position1)
 
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight

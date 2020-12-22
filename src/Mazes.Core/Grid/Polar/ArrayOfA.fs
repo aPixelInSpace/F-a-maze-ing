@@ -23,6 +23,9 @@ let minRingIndex =
 let minCellIndex =
     minD2Index
 
+let numberOfRings (arrayOfA : 'A[][]) =
+    getD1LengthAt arrayOfA
+
 let maxRingIndex arrayOfA =
     maxD1Index arrayOfA
 

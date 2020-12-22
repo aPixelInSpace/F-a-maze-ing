@@ -15,7 +15,7 @@ let neighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
                 let ratio = currentRingNumberOfCells / inwardRingNumberOfCells
                 yield { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex / ratio }
         | Outward ->
-            if not (isLastRing coordinate.RIndex (maxRingIndex arrayOfA)) then
+            if not (isLastRing coordinate.RIndex (numberOfRings arrayOfA)) then
                 let currentRingNumberOfCells = getNumberOfCellsAt arrayOfA coordinate.RIndex
                 let outwardRingNumberOfCells = getNumberOfCellsAt arrayOfA (coordinate.RIndex + 1)
                 let ratio = outwardRingNumberOfCells / currentRingNumberOfCells
@@ -32,3 +32,12 @@ let neighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
             else
                 yield { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }   
     }
+
+let neighborPositionAt (arrayOfA : 'A[][]) coordinate otherCoordinate =
+        let neighborCoordinateAt = neighborsCoordinateAt arrayOfA coordinate
+        match otherCoordinate with
+        | c when c = (neighborCoordinateAt Left |> Seq.head) -> Left
+        | c when c = (neighborCoordinateAt Right |> Seq.head) -> Right
+        | c when (neighborCoordinateAt Outward |> Seq.tryFind(fun n -> c = n)).IsSome -> Outward
+        | c when (neighborCoordinateAt Inward |> Seq.tryFind(fun n -> c = n)).IsSome -> Inward
+        | _ -> failwith "Unable to match the polar coordinates with a position"

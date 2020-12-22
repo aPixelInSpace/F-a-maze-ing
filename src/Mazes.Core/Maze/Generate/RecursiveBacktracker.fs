@@ -28,7 +28,7 @@ let createMaze rngSeed (grid : unit -> Grid<'G>) =
 
         if unlinkedNeighbors.Length > 0 then
             let nextCoordinate = unlinkedNeighbors.[rng.Next(unlinkedNeighbors.Length)]
-            grid.LinkCellsAtCoordinates currentCoordinate nextCoordinate
+            grid.LinkCells currentCoordinate nextCoordinate
             stack.Push(nextCoordinate)
         else
             stack.Pop() |> ignore

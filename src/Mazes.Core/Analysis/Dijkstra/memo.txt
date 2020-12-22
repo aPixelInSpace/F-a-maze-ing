@@ -5,15 +5,12 @@ type Tracker<'Key, 'Priority when 'Key : equality and 'Priority :> IComparable<'
         PriorityQueue : Dictionary<'Key, 'Priority>
     }
     
-    member private this.AddQueue key priority =
+    member this.Add key priority =
         if this.PriorityQueue.ContainsKey(key) then
             //this.PriorityQueue.UpdatePriority(key, priority)
             ()
         else
             this.PriorityQueue.Add(key, priority)
-
-    member this.Add key priority =
-        this.AddQueue key priority
 
     member this.HasItems =
         this.PriorityQueue.Count > 0

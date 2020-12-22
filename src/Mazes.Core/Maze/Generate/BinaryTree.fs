@@ -11,8 +11,8 @@ open Mazes.Core.Maze
 
 let private carveRow
     // params
-    position1
-    position2
+    (position1 : OrthoPosition)
+    (position2 : OrthoPosition)
     (rng : Random)
     rngTotalWeight    
     rngPosition1Weight
@@ -25,42 +25,43 @@ let private carveRow
     for columnIndex in startColumnIndex .. increment .. endColumnIndex do
 
         let coordinate = { RIndex = rIndex; CIndex = columnIndex }
+        let toOtherCoordinate = OrthoCoordinate.neighborCoordinateAt coordinate
         
         // if the cell is not part of the maze, we do nothing
         if not (grid.IsCellPartOfMaze coordinate) then ()
         else
 
-        let isPos1ALimit = (grid.IsLimitAt coordinate position1)
-        let isPos2ALimit = (grid.IsLimitAt coordinate position2)
+        let isPos1ALimit = (grid.IsLimitAt coordinate (toOtherCoordinate position1))
+        let isPos2ALimit = (grid.IsLimitAt coordinate (toOtherCoordinate position2))
         
-        let ifNotAtLimitLinkCellAtPosition = grid.IfNotAtLimitLinkCellAtPosition coordinate
+        let ifNotAtLimitLinkCellAtPosition = grid.IfNotAtLimitLinkCells coordinate
 
         // if we are in a corner 
         if isPos1ALimit &&  isPos2ALimit then
-            ifNotAtLimitLinkCellAtPosition position1.Opposite
-            ifNotAtLimitLinkCellAtPosition position2.Opposite
+            ifNotAtLimitLinkCellAtPosition (toOtherCoordinate position1.Opposite)
+            ifNotAtLimitLinkCellAtPosition (toOtherCoordinate position2.Opposite)
         else
 
-        let linkCellAtPosition = grid.LinkCellAtPosition coordinate
+        let linkCellAtPosition = grid.LinkCells coordinate
 
         // if the pos 1 is a limit then we always choose remove pos 2 (and the opposite pos 2 if possible)
         if isPos1ALimit then
-            linkCellAtPosition position2
-            ifNotAtLimitLinkCellAtPosition position2.Opposite
+            linkCellAtPosition (toOtherCoordinate position2)
+            ifNotAtLimitLinkCellAtPosition (toOtherCoordinate position2.Opposite)
         else
 
         // if the pos 2 is a limit then we always choose remove pos 1 (and the opposite pos 1 if possible)
         if isPos2ALimit then
-            linkCellAtPosition position1
-            ifNotAtLimitLinkCellAtPosition position1.Opposite
+            linkCellAtPosition (toOtherCoordinate position1)
+            ifNotAtLimitLinkCellAtPosition (toOtherCoordinate position1.Opposite)
         else
 
         // if pos 1 and pos 2 are both not a limit we flip a coin to decide which one we remove
         match rng.Next(rngTotalWeight) with
         | rng when rng < rngPosition1Weight ->
-            linkCellAtPosition position1
+            linkCellAtPosition (toOtherCoordinate position1)
         | _ ->
-            linkCellAtPosition position2
+            linkCellAtPosition (toOtherCoordinate position2)
 
 type Direction =
     | Top

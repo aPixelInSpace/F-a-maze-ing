@@ -36,7 +36,7 @@ let ``Given a maze (with an ortho grid), a path and a map, when creating an SVG,
 [<Fact>]
 let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
-    let canvas = Canvas.Shape.Disc.create 6 1.0 6
+    let canvas = Canvas.Shape.Disc.create 10 1.0 5
     //canvas.Zones.[1].[0] <- Zone.Empty
     //canvas.Zones.[1].[1] <- Zone.Empty
     //canvas.Zones.[2].[0] <- Zone.Empty
@@ -44,21 +44,23 @@ let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, 
 
     let grid =
         canvas
-        |> PolarGrid.create
+        |> PolarGrid.createGridFunction
 
-    let neighborsLinked = grid.NeighborsThatAreLinked true { RIndex = 0; CIndex = 0 }
-    neighborsLinked |> Seq.isEmpty |> should equal true
+    //grid.LinkCells { RIndex = 1; CIndex = 0 } { RIndex = 2; CIndex = 0 }
+    
+    //let neighborsLinked = grid.NeighborsThatAreLinked false { RIndex = 2; CIndex = 1 }
+    //neighborsLinked |> Seq.isEmpty |> should equal false
 
-    //let maze =
-    //    grid
-    //    |> RecursiveBacktracker.createMaze 1
+    let maze =
+        grid
+        |> RecursiveBacktracker.createMaze 1
     //let map = maze.createMap maze.Grid.GetFirstTopLeftPartOfMazeZone
 
     // act
-    let renderedMaze = SVG.PolarGrid.render grid
+    let renderedMaze = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid
         
     // assert
-    
+    //
     //let expectedRenderedMaze = IO.File.ReadAllText("Resources/Polargrid.svg", Encoding.UTF8)
         
     //renderedMaze |> should equal expectedRenderedMaze

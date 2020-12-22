@@ -18,21 +18,25 @@ type CoordinatesByDistance =
         Container : Dictionary<Distance, HashSet<Coordinate>>
     }
 
-    member this.Remove distance coordinate =
+    member private this.RemoveBase distance coordinate =
         if this.Container.ContainsKey(distance) then
             let distanceArray = this.Container.Item(distance)
             if distanceArray.Remove(coordinate) then
                 if distanceArray.Count = 0 then
                     this.Container.Remove(distance) |> ignore
 
+    member this.Remove distance coordinate =
+        this.RemoveBase distance coordinate
+        this.RemoveBase (distance + 1) coordinate
+
     member this.AddUpdate distance coordinate =
         if this.Container.ContainsKey(distance) then
-            let distanceArray = this.Container.Item(distance)
-            distanceArray.Add(coordinate) |> ignore
+            let distanceSet = this.Container.Item(distance)
+            distanceSet.Add(coordinate) |> ignore
         else
-            let distanceArray = HashSet<Coordinate>()
-            distanceArray.Add(coordinate) |> ignore
-            this.Container.Add(distance, distanceArray)
+            let distanceSet = HashSet<Coordinate>()
+            distanceSet.Add(coordinate) |> ignore
+            this.Container.Add(distance, distanceSet)
 
     member this.MaxDistance =
         this.Container.Keys |> Seq.max
@@ -129,10 +133,7 @@ type Map =
                     unvisitedPrQ.Add neighbor newDistance
                     graph.AddNode(neighbor)
 
-                let containsEdgeCoordinateNeighbor = graph.ContainsEdge coordinate neighbor
-                let containsEdgeNeighborCoordinate = graph.ContainsEdge neighbor coordinate
-
-                if not containsEdgeCoordinateNeighbor && not containsEdgeNeighborCoordinate then
+                if not (graph.ContainsEdge coordinate neighbor) then
                     graph.AddEdge coordinate neighbor newDistance
                 else
                     let edge = graph.Edge coordinate neighbor
@@ -141,18 +142,15 @@ type Map =
                         if newDistance < distance then
                             unvisitedPrQ.Add neighbor newDistance
                             coordinatesByDistance.Remove distance neighbor
-                            if containsEdgeCoordinateNeighbor then
-                                graph.RemoveEdge coordinate neighbor distance
-                            else
-                                graph.RemoveEdge neighbor coordinate distance
 
+                            graph.UpdateEdge coordinate neighbor distance
                             graph.AddEdge coordinate neighbor newDistance
                     | None -> ()
         
-        let leavesSet = Array.zeroCreate<Coordinate>(leaves.Count)
-        leaves.CopyTo(leavesSet)
+        let leavesArray = Array.zeroCreate<Coordinate>(leaves.Count)
+        leaves.CopyTo(leavesArray)
 
         { ShortestPathGraph = graph
           ConnectedNodes = graph.Graph.VertexCount
           FarthestFromRoot = coordinatesByDistance.ToFarthestFromRoot
-          Leaves = leavesSet }
+          Leaves = leavesArray }

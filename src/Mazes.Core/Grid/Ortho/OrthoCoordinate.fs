@@ -20,4 +20,4 @@ module OrthoCoordinate =
         | c when c = neighborCoordinateAt Right -> Right
         | c when c = neighborCoordinateAt Bottom -> Bottom
         | c when c = neighborCoordinateAt Left -> Left
-        | _ -> failwith "Unable to match the coordinate with a position"
+        | _ -> failwith "Unable to match the ortho coordinates with a position"

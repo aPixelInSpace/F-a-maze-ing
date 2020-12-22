@@ -4,21 +4,19 @@ namespace Mazes.Core.Grid
 
 open System
 open Mazes.Core
-open Mazes.Core.Grid.Ortho
 
 type Grid<'G> =
     abstract member TotalOfMazeCells : int
     abstract member NumberOfRows : int
     abstract member NumberOfColumns : int
     abstract member Cell : coordinate:Coordinate -> Cell
-    abstract member IsLimitAt : coordinate:Coordinate -> position:OrthoPosition -> bool
+    abstract member IsLimitAt : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
     abstract member IsCellPartOfMaze : coordinate:Coordinate -> bool
     abstract member GetCellsByRows : Cell[] seq
     abstract member GetCellsByColumns : Cell[] seq
     abstract member CoordinatesPartOfMaze : Coordinate seq
-    abstract member LinkCellAtPosition : coordinate:Coordinate -> position:OrthoPosition -> unit
-    abstract member IfNotAtLimitLinkCellAtPosition : coordinate:Coordinate -> position:OrthoPosition -> unit
-    abstract member LinkCellsAtCoordinates : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
+    abstract member LinkCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
+    abstract member IfNotAtLimitLinkCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
     /// Returns the neighbors coordinates that are linked, NOT NECESSARILY WITH the coordinate
     abstract member NeighborsThatAreLinked : isLinked:bool -> coordinate:Coordinate -> Coordinate seq
     abstract member LinkedNeighborsWithCoordinates : coordinate:Coordinate -> Coordinate seq

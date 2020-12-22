@@ -21,7 +21,7 @@ let createMaze rngSeed (grid : unit -> Grid<'G>) =
         let nextCoordinate = grid.RandomNeighborFrom rng currentCoordinate
 
         if not (grid.Cell nextCoordinate).IsLinked then
-            grid.LinkCellsAtCoordinates currentCoordinate nextCoordinate
+            grid.LinkCells currentCoordinate nextCoordinate
             decr unvisitedCount
 
         currentCoordinate <- nextCoordinate

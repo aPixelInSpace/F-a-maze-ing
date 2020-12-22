@@ -203,7 +203,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     grid.Cells.[1, 1].WallTop |> should equal { WallPosition = Top; WallType = Normal }
     grid.Cells.[0, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal }
     
-    grid.LinkCellAtPosition coordinate11 Top
+    grid.LinkCells coordinate11 (OrthoCoordinate.neighborCoordinateAt coordinate11 Top)
     
     // assert top
     grid.Cells.[1, 1].WallTop |> should equal { WallPosition = Top; WallType = Empty }
@@ -215,7 +215,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     grid.Cells.[1, 1].WallRight |> should equal { WallPosition = Right; WallType = Normal }
     grid.Cells.[1, 2].WallLeft |> should equal { WallPosition = Left; WallType = Normal }
     
-    grid.LinkCellAtPosition coordinate11 Right
+    grid.LinkCells coordinate11 (OrthoCoordinate.neighborCoordinateAt coordinate11 Right)
     
     // assert right
     grid.Cells.[1, 1].WallRight |> should equal { WallPosition = Right; WallType = Empty }
@@ -227,7 +227,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     grid.Cells.[1, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal }
     grid.Cells.[2, 1].WallTop |> should equal { WallPosition = Top; WallType = Normal }
     
-    grid.LinkCellAtPosition coordinate11 Bottom
+    grid.LinkCells coordinate11 (OrthoCoordinate.neighborCoordinateAt coordinate11 Bottom)
     
     // assert bottom
     grid.Cells.[1, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Empty }
@@ -239,7 +239,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     grid.Cells.[1, 1].WallLeft |> should equal { WallPosition = Left; WallType = Normal }
     grid.Cells.[1, 0].WallRight |> should equal { WallPosition = Right; WallType = Normal }
     
-    grid.LinkCellAtPosition coordinate11 Left
+    grid.LinkCells coordinate11 (OrthoCoordinate.neighborCoordinateAt coordinate11 Left)
     
     // assert left
     grid.Cells.[1, 1].WallLeft |> should equal { WallPosition = Left; WallType = Empty }
