@@ -40,6 +40,17 @@ type PolarCell =
 
         wallCondition || outwardCondition
 
+    member this.IsLinkedAt pos =
+        PolarCell.IsALink (this.WallTypeAtPosition pos)
+
+    member this.AreLinked (cells : PolarCell[][]) (coordinate : Coordinate) (otherCoordinate : Coordinate) =
+        let neighborPosition = PolarCoordinate.neighborPositionAt cells coordinate otherCoordinate
+        if neighborPosition <> Outward then
+            this.IsLinkedAt neighborPosition
+        else
+            let neighborCell = getCell cells otherCoordinate
+            neighborCell.IsLinkedAt Inward
+
     member this.ToCell cells coordinate =
         {
             IsLinked = this.IsLinked cells coordinate

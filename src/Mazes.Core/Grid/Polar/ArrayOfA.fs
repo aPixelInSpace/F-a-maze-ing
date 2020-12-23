@@ -32,6 +32,9 @@ let maxRingIndex arrayOfA =
 let maxCellsIndex (arrayOfA : 'A[][]) ringIndex =
     maxD2Index arrayOfA ringIndex
 
+let getCell (arrayOfA : 'A[][]) coordinate =
+    get arrayOfA coordinate
+
 let getNumberOfCellsAt (arrayOfA : 'A[][]) ringIndex =
     getD2LengthAt arrayOfA ringIndex
 

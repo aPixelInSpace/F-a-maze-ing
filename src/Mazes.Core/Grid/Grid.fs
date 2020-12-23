@@ -22,7 +22,7 @@ type Grid<'G> =
     abstract member LinkedNeighborsWithCoordinates : coordinate:Coordinate -> Coordinate seq
     abstract member RandomNeighborFrom : rng:Random -> coordinate:Coordinate -> Coordinate
     abstract member RandomCoordinatePartOfMazeAndNotLinked : rng:Random -> Coordinate
-    abstract member GetFirstTopLeftPartOfMazeZone : Coordinate
-    abstract member GetFirstBottomRightPartOfMazeZone : Coordinate
+    abstract member GetFirstPartOfMazeZone : Coordinate
+    abstract member GetLastPartOfMazeZone : Coordinate
     abstract member ToString : string
     abstract member ToSpecializedGrid : 'G

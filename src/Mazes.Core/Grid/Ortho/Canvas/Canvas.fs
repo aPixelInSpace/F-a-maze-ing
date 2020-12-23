@@ -65,11 +65,11 @@ type Canvas =
                 yield (bottomCoordinate, Bottom)
         }
 
-    member this.GetFirstTopLeftPartOfMazeZone =
+    member this.GetFirstPartOfMazeZone =
         this.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
         |> Seq.head
 
-    member this.GetFirstBottomRightPartOfMazeZone =
+    member this.GetLastPartOfMazeZone =
         this.GetZoneByZone RowsDescendingColumnsDescending (fun zone _ -> zone.IsAPartOfMaze)
         |> Seq.head
 

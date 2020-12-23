@@ -55,7 +55,7 @@ let maze =
 let ``Given a root inside the maze, when creating a map, then it should give all the count of the connected nodes`` () =
 
     // arrange
-    let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
 
     // act
     let map = maze.createMap rootCoordinate
@@ -113,7 +113,7 @@ let ``Given a map with no internal walls, when getting all the distances from th
         |> Maze.createEmpty
 
     // act
-    let map = maze.createMap maze.Grid.GetFirstTopLeftPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
 
     // assert
     let graph = map.ShortestPathGraph.ToString (fun e -> e.Source, e.Tag, e.Target)
@@ -133,7 +133,7 @@ let ``Given a map with no internal walls, when getting all the distances from th
 let ``Given a map, when getting all the distances from the root, then it should match the expected distances`` () =
 
     // arrange
-    let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
 
     // act
     let map = maze.createMap rootCoordinate
@@ -168,7 +168,7 @@ let ``Given a map, when getting all the distances from the root, then it should 
 let ``Given a root inside the maze, when creating a map, then it should give all the dead ends (leaves) of the maze`` () =
 
     // arrange
-    let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
 
     // act
     let map = maze.createMap rootCoordinate
@@ -188,7 +188,7 @@ let ``Given a root inside the maze, when creating a map, then it should give all
 let ``Given a map and a goal coordinate, when searching the shortest path between the root and the goal, then it should return the list of coordinates that forms that path`` () =
 
     // arrange
-    let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
     let map = maze.createMap rootCoordinate
 
     // act
@@ -221,7 +221,7 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
         |> OrthoGrid.create
         |> Maze.createEmpty
 
-    let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
 
     // act
     let map = maze.createMap rootCoordinate
@@ -238,7 +238,7 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
 let ``Given a map, when getting the farthest coordinates, then it should return the infos of the farthest coordinates from the root`` () =
 
     // arrange
-    let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
 
     // act
     let map = maze.createMap rootCoordinate
@@ -285,7 +285,7 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
             ┗━━━━━┷━┷━┛
         *)
 
-    let rootCoordinate = maze.Grid.GetFirstTopLeftPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
     let map = maze.createMap rootCoordinate
 
     // act

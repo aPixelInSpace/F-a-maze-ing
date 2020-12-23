@@ -48,6 +48,14 @@ type Canvas =
                 yield (outwardCoordinates.[i], Outward)
         }
 
+    member this.GetFirstPartOfMazeZone =
+        getItemByItem this.Zones (fun zone _ -> zone.IsAPartOfMaze)
+        |> Seq.head
+
+    member this.GetLastPartOfMazeZone =
+        getItemByItemDesc this.Zones (fun zone _ -> zone.IsAPartOfMaze)
+        |> Seq.head
+
 module Canvas =
     let create numberOfRings widthHeightRatio numberOfCellsForCenterRing isZonePartOfMaze =
         let zones = ArrayOfA.create numberOfRings widthHeightRatio numberOfCellsForCenterRing (fun rIndex cIndex -> Zone.create (isZonePartOfMaze rIndex cIndex))

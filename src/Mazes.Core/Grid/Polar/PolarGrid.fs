@@ -41,7 +41,7 @@ type PolarGrid =
             failwith "Not implemented"
 
         member self.CoordinatesPartOfMaze =
-            failwith "Not implemented"
+            self.CoordinatesPartOfMaze
 
         member self.LinkCells coordinate otherCoordinate =
             self.LinkCells coordinate otherCoordinate
@@ -53,7 +53,7 @@ type PolarGrid =
             self.NeighborsThatAreLinked isLinked coordinate
 
         member self.LinkedNeighborsWithCoordinates coordinate =
-            failwith "Not implemented"
+            self.LinkedNeighborsWithCoordinates coordinate
 
         member self.RandomNeighborFrom rng coordinate =
             failwith "Not implemented"
@@ -61,11 +61,11 @@ type PolarGrid =
         member self.RandomCoordinatePartOfMazeAndNotLinked rng =
             self.RandomCoordinatePartOfMazeAndNotLinked rng
 
-        member self.GetFirstTopLeftPartOfMazeZone =
-            failwith "Not implemented"
+        member self.GetFirstPartOfMazeZone =
+            snd self.Canvas.GetFirstPartOfMazeZone
 
-        member self.GetFirstBottomRightPartOfMazeZone =
-            failwith "Not implemented"
+        member self.GetLastPartOfMazeZone =
+            snd self.Canvas.GetLastPartOfMazeZone
 
         member self.ToString =
             failwith "Not implemented"
@@ -131,6 +131,18 @@ type PolarGrid =
         let neighbors = self.NeighborsFrom coordinate
         neighbors |> Seq.filter(fun nCoordinate -> (self.Cell nCoordinate).IsLinked self.Cells nCoordinate = isLinked)
 
+    member self.LinkedNeighborsWithCoordinates coordinate =
+        let isLinkedAt otherCoordinate =
+            not (self.IsLimitAt coordinate otherCoordinate) &&        
+            (self.Cell coordinate).AreLinked self.Cells coordinate otherCoordinate
+
+        seq {
+            let neighborsCoordinates = self.NeighborsFrom coordinate
+            for neighborCoordinate in neighborsCoordinates do   
+                if (isLinkedAt neighborCoordinate) then
+                    yield neighborCoordinate
+        }
+
     member self.RandomCoordinatePartOfMazeAndNotLinked (rng : Random) =
         let getCellByCell =
             seq {
@@ -144,6 +156,13 @@ type PolarGrid =
         
         let unlinkedPartOfMazeCells = getCellByCell |> Seq.toArray
         unlinkedPartOfMazeCells.[rng.Next(unlinkedPartOfMazeCells.Length)]
+
+    member self.CoordinatesPartOfMaze =
+        seq {
+            for ringIndex in 0 .. maxRingIndex self.Cells do
+                for cellIndex in 0 .. maxCellsIndex self.Cells ringIndex do
+                    yield { RIndex = ringIndex; CIndex = cellIndex }
+        }
 
 module PolarGrid =
 

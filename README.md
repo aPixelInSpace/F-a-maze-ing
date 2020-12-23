@@ -8,25 +8,31 @@ A, simple, composable and configurable maze generator made with F#
 
 ### SVG
 The SVG render can color the maze and show the path(s) between two zones that are the most distant :
+#### Polar
+* Circular
+
+<img src="docs/Polar/SVG/CircleMaze.svg" width="400">
+
+#### Orthogonal
 * Rectangular
 
-<img src="docs/RectangularMaze.svg" width="400">
+<img src="docs/Ortho/SVG/RectangularMaze.svg" width="400">
 
 * Triangular
 
-<img src="docs/TriangularMaze.svg" width="400">
+<img src="docs/Ortho/SVG/TriangularMaze.svg" width="400">
 
 * Ellipse
 
-<img src="docs/EllipseMaze.svg" width="400">
+<img src="docs/Ortho/SVG/EllipseMaze.svg" width="400">
 
 * Doughnut
 
-<img src="docs/DoughnutMaze.svg" width="400">
+<img src="docs/Ortho/SVG/DoughnutMaze.svg" width="400">
 
 * Composite
 
-<img src="docs/CompositeMaze.svg" width="400">
+<img src="docs/Ortho/SVG/CompositeMaze.svg" width="400">
 
 ### ASCII
 The text render is simpler and only displays the maze (using the Unicode characters [link](https://en.wikipedia.org/wiki/Box-drawing_character)) :

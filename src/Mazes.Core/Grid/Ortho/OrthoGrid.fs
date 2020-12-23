@@ -67,11 +67,11 @@ type OrthoGrid =
         member self.RandomCoordinatePartOfMazeAndNotLinked rng =
             self.RandomCoordinatePartOfMazeAndNotLinked rng
 
-        member self.GetFirstTopLeftPartOfMazeZone =
-            snd self.Canvas.GetFirstTopLeftPartOfMazeZone
+        member self.GetFirstPartOfMazeZone =
+            snd self.Canvas.GetFirstPartOfMazeZone
 
-        member self.GetFirstBottomRightPartOfMazeZone =
-            snd self.Canvas.GetFirstBottomRightPartOfMazeZone
+        member self.GetLastPartOfMazeZone =
+            snd self.Canvas.GetLastPartOfMazeZone
 
         member self.ToString =
             self.ToString
@@ -168,23 +168,16 @@ type OrthoGrid =
 
     /// Returns the neighbors coordinates that are linked with the coordinate
     member self.LinkedNeighborsWithCoordinates coordinate =
-        let isLinkedAt pos =
-            not (self.IsLimitAt coordinate pos) &&        
-            (self.Cell coordinate).IsLinkedAt pos
+        let isLinkedAt otherCoordinate =
+            not (self.IsLimitAt coordinate (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate)) &&        
+            (self.Cell coordinate).AreLinked coordinate otherCoordinate
 
-        let neighborCoordinateAtPosition = OrthoCoordinate.neighborCoordinateAt coordinate
+        let neighborsCoordinates = self.NeighborsFrom coordinate
+
         seq {
-            if (isLinkedAt Top) then
-                yield neighborCoordinateAtPosition Top
-
-            if (isLinkedAt Right) then
-                yield neighborCoordinateAtPosition Right
-
-            if (isLinkedAt Bottom) then
-                yield neighborCoordinateAtPosition Bottom
-
-            if (isLinkedAt Left) then
-                yield neighborCoordinateAtPosition Left
+            for neighborCoordinate in neighborsCoordinates do   
+                if (isLinkedAt neighborCoordinate) then
+                    yield neighborCoordinate
         }
 
     member self.RandomCoordinatePartOfMazeAndNotLinked (rng : Random) =
