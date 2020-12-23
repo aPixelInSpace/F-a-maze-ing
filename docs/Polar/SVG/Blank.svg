@@ -36,7 +36,10 @@
                         fill: #4287f5;
                     }
                 </style>
-            </defs><rect width="100%" height="100%" fill="transparent"/><path d="M 470 470 L 479.35 481.73" class="n"/>
+            </defs><rect width="100%" height="100%" fill="transparent"/>
+<text x="470" y="470" class="small" fill="green">F</text>
+<text x="62" y="652" class="small" fill="orangered">S</text>
+<path d="M 470 470 L 479.35 481.73" class="n"/>
 <path d="M 470 470 L 456.49 476.51" class="n"/>
 <path d="M 479.35 481.73 L 488.7 493.45" class="n"/>
 <path d="M 466.66 484.62 L 463.32 499.25" class="n"/>
