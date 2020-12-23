@@ -26,7 +26,7 @@ let ``Given a maze (with an ortho grid), a path and a map, when creating an SVG,
     let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
 
     // act
-    let renderedMaze = SVG.OrthoGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetFirstPartOfMazeZone) map
+    let renderedMaze = SVG.OrthoGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/Orthogrid.svg", Encoding.UTF8)
