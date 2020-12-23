@@ -27,7 +27,7 @@ module Array2D =
         rowIndex = minRowIndex
 
     let isLastRow rowIndex numberOfRows =
-        rowIndex = (getIndex numberOfRows) 
+        rowIndex = (getIndex numberOfRows)
 
     let isFirstColumn columnIndex =
         columnIndex = minColumnIndex
@@ -42,13 +42,13 @@ module Array2D =
         getIndex (array2d |> Array2D.length2)
 
     let existAt array2d coordinate =
-        minRowIndex <= coordinate.RowIndex &&
-        coordinate.RowIndex <= maxRowIndex array2d &&
-        minColumnIndex <= coordinate.ColumnIndex &&
-        coordinate.ColumnIndex <= maxColumnIndex array2d
+        minRowIndex <= coordinate.RIndex &&
+        coordinate.RIndex <= maxRowIndex array2d &&
+        minColumnIndex <= coordinate.CIndex &&
+        coordinate.CIndex <= maxColumnIndex array2d
 
     let get (array2d : 't[,]) coordinate =
-        array2d.[coordinate.RowIndex, coordinate.ColumnIndex]
+        array2d.[coordinate.RIndex, coordinate.CIndex]
 
     let extractByRows array2d =
         let numberRowsIndex = maxRowIndex array2d
@@ -70,10 +70,10 @@ module Array2D =
             match extractBy with
             | RowsAscendingColumnsAscending | RowsAscendingColumnsDescending
             | RowsDescendingColumnsAscending | RowsDescendingColumnsDescending
-             -> { RowIndex = dimension1Index; ColumnIndex = dimension2Index }
+             -> { RIndex = dimension1Index; CIndex = dimension2Index }
             | ColumnsAscendingRowsAscending | ColumnsAscendingRowsDescending
             | ColumnsDescendingRowsAscending | ColumnsDescendingRowsDescending
-             -> { RowIndex = dimension2Index; ColumnIndex = dimension1Index }
+             -> { RIndex = dimension2Index; CIndex = dimension1Index }
 
         let (minDimension1Index, maxDimension1Index, incrementDimension1,
              minDimension2Index, maxDimension2Index, incrementDimension2) =

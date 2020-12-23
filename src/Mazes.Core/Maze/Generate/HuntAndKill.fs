@@ -7,9 +7,12 @@ open System.Collections.Generic
 open System.Linq
 open Mazes.Core
 open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
-let createMaze rngSeed (grid : Grid) =
+let createMaze rngSeed (grid : unit -> Grid<'G>) =
+
+    let grid = grid()
 
     let rng = Random(rngSeed)
 
@@ -26,14 +29,14 @@ let createMaze rngSeed (grid : Grid) =
         let headLinkedNeighbors = grid.NeighborsThatAreLinked true headCoordinate |> Seq.toArray
         if headLinkedNeighbors.Length > 0 then
             let randomLinkedNeighbor = headLinkedNeighbors.[rng.Next(headLinkedNeighbors.Length)]
-            grid.LinkCellsAtCoordinates headCoordinate randomLinkedNeighbor
+            grid.LinkCells headCoordinate randomLinkedNeighbor
 
         let mutable unlinkedNeighbors = grid.NeighborsThatAreLinked false headCoordinate |> Seq.toArray
 
         while unlinkedNeighbors.Length > 0 do
             let nextCoordinate = unlinkedNeighbors.[rng.Next(unlinkedNeighbors.Length)]
 
-            grid.LinkCellsAtCoordinates headCoordinate nextCoordinate
+            grid.LinkCells headCoordinate nextCoordinate
             edges.Remove(nextCoordinate) |> ignore
 
             unlinkedNeighbors <- grid.NeighborsThatAreLinked false nextCoordinate |> Seq.toArray

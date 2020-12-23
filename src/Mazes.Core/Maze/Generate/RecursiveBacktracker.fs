@@ -6,9 +6,12 @@ open System
 open System.Collections.Generic
 open Mazes.Core
 open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
-let createMaze rngSeed (grid : Grid) =
+let createMaze rngSeed (grid : unit -> Grid<'G>) =
+
+    let grid = grid()
 
     let rng = Random(rngSeed)
 
@@ -25,7 +28,7 @@ let createMaze rngSeed (grid : Grid) =
 
         if unlinkedNeighbors.Length > 0 then
             let nextCoordinate = unlinkedNeighbors.[rng.Next(unlinkedNeighbors.Length)]
-            grid.LinkCellsAtCoordinates currentCoordinate nextCoordinate
+            grid.LinkCells currentCoordinate nextCoordinate
             stack.Push(nextCoordinate)
         else
             stack.Pop() |> ignore

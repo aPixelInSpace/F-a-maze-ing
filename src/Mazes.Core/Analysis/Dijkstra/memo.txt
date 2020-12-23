@@ -1,0 +1,26 @@
+﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+
+type Tracker<'Key, 'Priority when 'Key : equality and 'Priority :> IComparable<'Priority>> =
+    {
+        PriorityQueue : Dictionary<'Key, 'Priority>
+    }
+    
+    member this.Add key priority =
+        if this.PriorityQueue.ContainsKey(key) then
+            //this.PriorityQueue.UpdatePriority(key, priority)
+            ()
+        else
+            this.PriorityQueue.Add(key, priority)
+
+    member this.HasItems =
+        this.PriorityQueue.Count > 0
+
+    member this.Pop =
+        let key = this.PriorityQueue |> Seq.head
+        //let priority = this.PriorityQueue.GetPriority(key)
+        //this.PriorityQueue.Dequeue() |> ignore
+        this.PriorityQueue.Remove(key.Key) |> ignore
+        (key.Key, key.Value)
+
+    static member createEmpty =
+        { PriorityQueue = Dictionary<'Key, 'Priority>() }

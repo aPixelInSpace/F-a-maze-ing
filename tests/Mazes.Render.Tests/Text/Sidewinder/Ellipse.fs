@@ -5,22 +5,24 @@ module Mazes.Render.Tests.Text.Sidewinder.Ellipse
 open System
 open FsUnit
 open Xunit
-open Mazes.Core
-open Mazes.Core.Canvas
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho.Canvas
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
 [<Fact>]
 let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze generated with the sidewinder algorithm (Top, Right, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> Grid.create
+        |> OrthoGrid.createGridFunction
+
+    let maze =
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -30,20 +32,23 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
         "┗━┓ ┬ │ ┬ ╭─╯ ╰─┲━┛\n" +
         "  ┗━┷━┷━┪ ┢━━━━━┛  \n" +
         "        ┗━┛        "
-        
+
     renderedMaze |> should equal expectedRenderedMaze
 
 [<Fact>]
 let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze generated with the sidewinder algorithm (Top, Left, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> Grid.create
+        |> OrthoGrid.createGridFunction
+
+    let maze =
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Left 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
-        
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+
     // assert
     let expectedRenderedMaze =
         "        ┏━┓        \n" +
@@ -58,13 +63,16 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
 [<Fact>]
 let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze generated with the sidewinder algorithm (Bottom, Right, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> Grid.create
+        |> OrthoGrid.createGridFunction
+
+    let maze =
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -80,13 +88,16 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
 [<Fact>]
 let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze generated with the sidewinder algorithm (Bottom, Left, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> Grid.create
+        |> OrthoGrid.createGridFunction
+
+    let maze =
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Left 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -102,13 +113,16 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
 [<Fact>]
 let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze generated with the sidewinder algorithm (Right, Top, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> Grid.create
+        |> OrthoGrid.createGridFunction
+
+    let maze =
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -124,13 +138,16 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
 [<Fact>]
 let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze generated with the sidewinder algorithm (Left, Top, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> Grid.create
+        |> OrthoGrid.createGridFunction
+
+    let maze =
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Top 1 1 1
     
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -146,13 +163,16 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
 [<Fact>]
 let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze generated with the sidewinder algorithm (Left, Bottom, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> Grid.create
+        |> OrthoGrid.createGridFunction
+
+    let maze =
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -168,14 +188,17 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
 [<Fact>]
 let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze generated with the sidewinder algorithm (Right, Bottom, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> Grid.create
+        |> OrthoGrid.createGridFunction
+
+    let maze =
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Bottom 1 1 1
-    
+
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
-        
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+
     // assert
     let expectedRenderedMaze =
         "        ┏━┓        \n" +
@@ -190,13 +213,16 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
 [<Fact>]
 let ``Rendering a row radius 15, column radius 25, row translation factor 14, in outside mode ellipse maze generated with the sidewinder algorithm (Bottom, Right, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Ellipse.create 15 25 0.0 0.0 14 0 None Shape.Ellipse.Side.Outside)
-        |> Grid.create
+        |> OrthoGrid.createGridFunction
+
+    let maze =
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -236,13 +262,16 @@ let ``Rendering a row radius 15, column radius 25, row translation factor 14, in
 [<Fact>]
 let ``Rendering a row radius 15, column radius 25, row translation factor 14, in outside mode ellipse maze generated with the sidewinder algorithm (Left, Bottom, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Ellipse.create 15 25 0.0 0.0 14 0 None Shape.Ellipse.Side.Outside)
-        |> Grid.create
+        |> OrthoGrid.createGridFunction
+
+    let maze =
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom 1 1 1
     
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -282,13 +311,16 @@ let ``Rendering a row radius 15, column radius 25, row translation factor 14, in
 [<Fact>]
 let ``Rendering a row radius 25, column radius 15, column translation factor 14, in outside mode ellipse maze generated with the sidewinder algorithm (Top, Right, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Ellipse.create 25 15 0.0 0.0 0 14 None Shape.Ellipse.Side.Outside)
-        |> Grid.create
+        |> OrthoGrid.createGridFunction
+
+    let maze =
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
     
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -348,13 +380,16 @@ let ``Rendering a row radius 25, column radius 15, column translation factor 14,
 [<Fact>]
 let ``Rendering a row radius 25, column radius 15, column translation factor 14, in outside mode ellipse maze generated with the sidewinder algorithm (Left, Bottom, rng 1) should be like the expected output`` () =
     // arrange
-    let maze =
+    let grid =
         (Shape.Ellipse.create 25 15 0.0 0.0 0 14 None Shape.Ellipse.Side.Outside)
-        |> Grid.create
+        |> OrthoGrid.createGridFunction
+
+    let maze =
+        grid
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom 1 1 1
     
     // act
-    let renderedMaze = maze.Grid |> Text.renderGrid
+    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

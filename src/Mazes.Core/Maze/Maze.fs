@@ -2,28 +2,29 @@
 
 namespace Mazes.Core.Maze
 
-open Mazes.Core.Position
 open Mazes.Core.Analysis
 open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 
-type Maze =
+type Maze<'G> =
     {    
-        Grid : Grid
+        Grid : Grid<'G>
     }
 
-    member this.createDijkstraMap rootCoordinate =
-        Dijkstra.Map.create this.Grid.LinkedNeighborsWithCoordinates this.Grid.Canvas.NumberOfRows this.Grid.Canvas.NumberOfColumns rootCoordinate
+    member this.createMap rootCoordinate =
+        Dijkstra.Map.create this.Grid.LinkedNeighborsWithCoordinates rootCoordinate
 
 module Maze =
 
-    let createEmpty (grid : Grid) =
+    let createEmpty (grid : OrthoGrid) =
         grid.Cells
         |> Array2D.iteri(fun r c _ ->
-             let update = grid.IfNotAtLimitLinkCellAtPosition { RowIndex = r; ColumnIndex = c }
-             update Top
-             update Right
-             update Bottom
-             update Left)
+             let update = grid.IfNotAtLimitLinkCells { RIndex = r; CIndex = c }
+             let position = (OrthoCoordinate.neighborCoordinateAt { RIndex = r; CIndex = c })
+             update (position Top)
+             update (position Right)
+             update (position Bottom)
+             update (position Left))
         
         { Grid = grid }
 

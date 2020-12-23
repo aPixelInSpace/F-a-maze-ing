@@ -5,21 +5,34 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Position.fs" />
         <Compile Include="Coordinate.fs" />
+        <Compile Include="WallType.fs" />
+        <Compile Include="ArrayOfA.fs" />
         <Compile Include="Array2D.fs" />
-        <Compile Include="Analysis\Dijkstra\BaseTypes.fs" />
-        <Compile Include="Analysis\Dijkstra\Graph.fs" />
+        <Compile Include="Analysis\Dijkstra\ShortestPathGraph.fs" />
         <Compile Include="Analysis\Dijkstra\Map.fs" />
+        <Content Include="Analysis\Dijkstra\memo.txt" />
         <Compile Include="Canvas\Zone.fs" />
-		<Compile Include="Canvas\Canvas.fs" />
-		<Compile Include="Canvas\Shape\Rectangle.fs" />
-		<Compile Include="Canvas\Shape\TriangleIsosceles.fs" />
-		<Compile Include="Canvas\Shape\Ellipse.fs" />
-		<Compile Include="Grid\Wall.fs" />
 		<Compile Include="Grid\Cell.fs" />
 		<Compile Include="Grid\Grid.fs" />
-		<Compile Include="Grid\GridView.fs" />
+		<Compile Include="Grid\Ortho\OrthoPosition.fs" />
+		<Compile Include="Grid\Ortho\OrthoCoordinate.fs" />
+		<Compile Include="Grid\Ortho\Canvas\Canvas.fs" />
+		<Compile Include="Grid\Ortho\Canvas\Shape\Rectangle.fs" />
+		<Compile Include="Grid\Ortho\Canvas\Shape\TriangleIsosceles.fs" />
+		<Compile Include="Grid\Ortho\Canvas\Shape\Ellipse.fs" />
+		<Compile Include="Grid\Ortho\OrthoWall.fs" />
+		<Compile Include="Grid\Ortho\OrthoCell.fs" />
+		<Compile Include="Grid\Ortho\OrthoGrid.fs" />
+		<Compile Include="Grid\Ortho\GridView.fs" />
+		<Compile Include="Grid\Polar\ArrayOfA.fs" />
+		<Compile Include="Grid\Polar\PolarPosition.fs" />
+		<Compile Include="Grid\Polar\PolarCoordinate.fs" />
+		<Compile Include="Grid\Polar\Canvas\Canvas.fs" />
+		<Compile Include="Grid\Polar\Canvas\Shape\Disc.fs" />
+		<Compile Include="Grid\Polar\PolarWall.fs" />
+		<Compile Include="Grid\Polar\PolarCell.fs" />
+		<Compile Include="Grid\Polar\PolarGrid.fs" />
 		<Compile Include="Maze\Maze.fs" />
         <Compile Include="Maze\Generate\BinaryTree.fs" />
         <Compile Include="Maze\Generate\Sidewinder.fs" />
@@ -31,6 +44,7 @@
 
     <ItemGroup>
       <PackageReference Include="OptimizedPriorityQueue" Version="5.0.0" />
+      <PackageReference Include="QuikGraph" Version="2.2.0" />
     </ItemGroup>
 
 </Project>

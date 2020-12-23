@@ -4,9 +4,8 @@ module Mazes.Core.Tests.Maze.Generate.RecursiveBacktracker
 
 open FsUnit
 open Xunit
-open Mazes.Core
-open Mazes.Core.Canvas.Shape
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho.Canvas.Shape
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
@@ -14,8 +13,8 @@ let ``Creating a rectangular 5 by 10 maze generated with the Recursive Backtrack
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> Grid.create
-    
+        |> OrthoGrid.createGridFunction
+
     // act
     let maze = grid |> RecursiveBacktracker.createMaze 1
         

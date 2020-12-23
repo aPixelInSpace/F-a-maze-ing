@@ -6,18 +6,18 @@ open System
 open System.Collections.Generic
 open System.Linq
 open Mazes.Core
-open Mazes.Core.Array2D
 open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
-let createMaze rngSeed grid =
+let createMaze rngSeed (grid : unit -> Grid<'G>) =
+
+    let grid = grid()
 
     let rng = Random(rngSeed)
 
-    let unvisited = HashSet<Coordinate>(grid.Canvas.NumberOfRows * grid.Canvas.NumberOfColumns)
-    unvisited.UnionWith(
-        grid.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
-        |> Seq.map(fun (_, coordinate) -> coordinate))
+    let unvisited = HashSet<Coordinate>(grid.TotalOfMazeCells)
+    unvisited.UnionWith(grid.CoordinatesPartOfMaze)
 
     let firstCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
     unvisited.Remove(firstCoordinate) |> ignore
@@ -45,7 +45,7 @@ let createMaze rngSeed grid =
                 pathTracker.Add(nextCoordinate, path.Count - 1)
 
         for i in 0 .. path.Count - 2 do
-            grid.LinkCellsAtCoordinates path.[i] path.[i + 1]
+            grid.LinkCells path.[i] path.[i + 1]
             unvisited.Remove(path.[i]) |> ignore
 
     { Grid = grid }

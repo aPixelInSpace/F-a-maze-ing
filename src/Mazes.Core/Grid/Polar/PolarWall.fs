@@ -1,16 +1,12 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid
+namespace Mazes.Core.Grid.Polar
 
-open Mazes.Core.Position
-
-type WallType =
-    | Normal
-    | Border
-    | Empty
+open Mazes.Core
+open Mazes.Core.Grid.Ortho
 
 [<Struct>]
-type Wall = {
+type PolarWall = {
     WallType : WallType
-    WallPosition : Position
+    WallPosition : PolarPosition
 }

@@ -4,9 +4,8 @@ module Mazes.Render.Text
 
 open System.Text
 open Mazes.Core
-open Mazes.Core.Position
 open Mazes.Core.Array2D
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 
 let private repetitionsMiddlePart = 1
 
@@ -134,14 +133,14 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
     | Border, Empty, Normal, Empty -> '╾'
 
 let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid (coordinate : Coordinate) pos1 pos2 =
-    let neighborAtPos1 = coordinate.NeighborCoordinateAtPosition pos1
+    let neighborAtPos1 = OrthoCoordinate.neighborCoordinateAt coordinate pos1
     match grid.Canvas.ExistAt neighborAtPos1 with
     | true ->
         (grid.Cell neighborAtPos1).WallTypeAtPosition pos2
     | false -> Empty
 
 let private append
-    (sBuilder : StringBuilder) (grid : Grid) coordinate
+    (sBuilder : StringBuilder) (grid : OrthoGrid) coordinate
     (intersectionWallLeft, intersectionWallTop, intersectionWallRight, intersectionWallBottom,
      middleWall,
      (lastIntersectionWallLeft : WallType Lazy), (lastIntersectionWallTop : WallType Lazy), lastIntersectionWallRight, lastIntersectionWallBottom) =
@@ -162,7 +161,7 @@ let private append
                             Empty) |> ignore)
 
     // last part only on the last column
-    if (coordinate.ColumnIndex = grid.Canvas.MaxColumnIndex) then
+    if (coordinate.CIndex = grid.Canvas.MaxColumnIndex) then
         sBuilder.Append(getPieceOfWall
                             lastIntersectionWallLeft.Value
                             lastIntersectionWallTop.Value
@@ -170,7 +169,7 @@ let private append
                             lastIntersectionWallBottom) |> ignore
     ()
 
-let private wallTypes (grid : Grid) coordinate =
+let private wallTypes (grid : OrthoGrid) coordinate =
     let cell = grid.Cell coordinate
     
     let ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate
@@ -195,7 +194,7 @@ let private wallTypes (grid : Grid) coordinate =
 
     (intersectionWallLeft, intersectionWallTop, intersectionWallRight, intersectionWallBottom, middleWall, lastIntersectionWallLeft, lastIntersectionWallTop, lastIntersectionWallRight, lastIntersectionWallBottom)
 
-let private wallTypesLastRow (grid : Grid) coordinate =
+let private wallTypesLastRow (grid : OrthoGrid) coordinate =
     let cell = grid.Cell coordinate    
     let ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate
     
@@ -221,7 +220,7 @@ let private wallTypesLastRow (grid : Grid) coordinate =
 
 let private appendColumns rowIndex lastColumnIndex append wallTypes =
     for columnIndex in 0 .. lastColumnIndex do
-        let coordinate = { RowIndex = rowIndex; ColumnIndex = columnIndex }
+        let coordinate = { RIndex = rowIndex; CIndex = columnIndex }
         append coordinate (wallTypes coordinate)
 
 let private appendRows sBuilder grid =

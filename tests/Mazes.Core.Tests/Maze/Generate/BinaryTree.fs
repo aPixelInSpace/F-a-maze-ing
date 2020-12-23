@@ -4,17 +4,19 @@ module Mazes.Core.Tests.Maze.Generate.BinaryTree
 
 open FsUnit
 open Xunit
-open Mazes.Core
-open Mazes.Core.Canvas.Shape
+open Mazes.Core.Grid.Ortho.Canvas.Shape
 open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate.BinaryTree
 
 [<Fact>]
 let ``Creating a rectangular 5 by 10 maze generated with the binary tree algorithm (Top, Right, rng 1) should be like the expected output`` () =
     // arrange
     let grid =
-        (Rectangle.create 5 10)
-        |> Grid.create
+        fun () ->
+            (Rectangle.create 5 10)
+            |> OrthoGrid.create
+            :> Grid<OrthoGrid>
     
     // act
     let maze = grid |> createMaze Direction.Top Direction.Right 1 1 1
@@ -71,8 +73,10 @@ let ``Given a rectangular canvas, when a creating a maze with the binary tree al
 
     // arrange
     let gridRectangle =
-        Rectangle.create numberOfRows numberOfColumns
-        |> Grid.create
+        fun () ->
+            Rectangle.create numberOfRows numberOfColumns
+            |> OrthoGrid.create
+            :> Grid<OrthoGrid>
 
     let direction1 = mapBinaryTreeDirectionEnumToBinaryTreeDirection direction1
     let direction2 = mapBinaryTreeDirectionEnumToBinaryTreeDirection direction2
@@ -82,8 +86,8 @@ let ``Given a rectangular canvas, when a creating a maze with the binary tree al
 
     // we use the map to ensure that the total nodes accessible in the maze is equal to the total number of maze zones of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
-    let rootCoordinate = snd gridRectangle.Canvas.GetFirstTopLeftPartOfMazeZone
-    let map = maze.createDijkstraMap rootCoordinate
+    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap rootCoordinate
 
     // assert
-    map.ConnectedNodes |> should equal (maze.Grid.Canvas).TotalOfMazeZones
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

@@ -7,12 +7,55 @@ open System.Collections.Generic
 open Priority_Queue
 open Mazes.Core
 
-type private Visited = bool
+[<Struct>]
+type FarthestFromRoot = {
+        Distance : Distance
+        Coordinates : Coordinate array
+    }
 
-type Tracker<'Key, 'Priority, 'Payload when 'Key : equality and 'Priority :> IComparable<'Priority>> =
+type CoordinatesByDistance =
+    {
+        Container : Dictionary<Distance, HashSet<Coordinate>>
+    }
+
+    member private this.RemoveBase distance coordinate =
+        if this.Container.ContainsKey(distance) then
+            let distanceArray = this.Container.Item(distance)
+            if distanceArray.Remove(coordinate) then
+                if distanceArray.Count = 0 then
+                    this.Container.Remove(distance) |> ignore
+
+    member this.Remove distance coordinate =
+        this.RemoveBase distance coordinate
+        this.RemoveBase (distance + 1) coordinate
+
+    member this.AddUpdate distance coordinate =
+        if this.Container.ContainsKey(distance) then
+            let distanceSet = this.Container.Item(distance)
+            distanceSet.Add(coordinate) |> ignore
+        else
+            let distanceSet = HashSet<Coordinate>()
+            distanceSet.Add(coordinate) |> ignore
+            this.Container.Add(distance, distanceSet)
+
+    member this.MaxDistance =
+        this.Container.Keys |> Seq.max
+
+    member this.CoordinatesWithDistance distance =
+        let coordinates = Array.zeroCreate<Coordinate>(this.Container.Item(distance).Count)
+        this.Container.Item(distance).CopyTo(coordinates)
+
+        coordinates
+
+    member this.ToFarthestFromRoot =
+        { Distance = this.MaxDistance; Coordinates = this.CoordinatesWithDistance(this.MaxDistance) }
+
+    static member createEmpty =
+        { Container = Dictionary<Distance, HashSet<Coordinate>>() }
+
+type Tracker<'Key, 'Priority when 'Key : equality and 'Priority :> IComparable<'Priority>> =
     {
         PriorityQueue : SimplePriorityQueue<'Key, 'Priority>
-        Payloads : Dictionary<'Key, 'Payload>
     }
     
     member private this.AddQueue key priority =
@@ -21,32 +64,24 @@ type Tracker<'Key, 'Priority, 'Payload when 'Key : equality and 'Priority :> ICo
         else
             this.PriorityQueue.Enqueue(key, priority)
 
-    member private this.AddPayload key payload =        
-        if this.Payloads.ContainsKey(key) then
-            this.Payloads.Item(key) <- payload
-        else
-            this.Payloads.Add(key, payload)
-
-    member this.Add key priority payload =
+    member this.Add key priority =
         this.AddQueue key priority
-        this.AddPayload key payload
 
     member this.HasItems =
         this.PriorityQueue.Count > 0
 
     member this.Pop =
-        let key = this.PriorityQueue.Dequeue()
-        let payload = this.Payloads.Item(key)
-        (key, payload)
+        let key = this.PriorityQueue.First
+        let priority = this.PriorityQueue.GetPriority(key)
+        this.PriorityQueue.Dequeue() |> ignore
+        (key, priority)
 
-    static member createEmpty (numberOfElements : int) =
-        { PriorityQueue = SimplePriorityQueue<'Key, 'Priority>()
-          Payloads = Dictionary<'Key, 'Payload>(numberOfElements) }
+    static member createEmpty =
+        { PriorityQueue = SimplePriorityQueue<'Key, 'Priority>() }
 
 type Map =
     {
-        Root : Coordinate
-        Graph : Graph
+        ShortestPathGraph : ShortestPathGraph<Coordinate>
         ConnectedNodes : int
         FarthestFromRoot : FarthestFromRoot
         Leaves : Coordinate array
@@ -54,60 +89,68 @@ type Map =
 
     member this.LongestPaths =
         seq {
+            let adjacentNodes node =
+                    match this.ShortestPathGraph.AdjacentNodes node with
+                    | Some nodes -> nodes
+                    | None -> Seq.empty
+
             for farthestCoordinate in this.FarthestFromRoot.Coordinates do
-                let mapFromFarthest = Map.create this.Graph.NodeNeighbors this.Graph.NumberOfRows this.Graph.NumberOfColumns farthestCoordinate
+                let mapFromFarthest = Map.create adjacentNodes farthestCoordinate
                 for newFarthestCoordinate in mapFromFarthest.FarthestFromRoot.Coordinates do
-                    yield mapFromFarthest.Graph.PathFromGoalToRoot newFarthestCoordinate
+                    yield mapFromFarthest.ShortestPathGraph.PathFromGoalToRoot newFarthestCoordinate
         }
 
-    static member create (linkedNeighbors : Coordinate -> Coordinate seq) numberOfRows numberOfColumns rootCoordinate =
+    static member create (linkedNeighbors : Coordinate -> Coordinate seq) rootCoordinate =
 
         let coordinatesByDistance = CoordinatesByDistance.createEmpty
 
-        let leaves = ResizeArray<Coordinate>()
+        let leaves = HashSet<Coordinate>()
 
-        let graph = Graph.createEmpty numberOfRows numberOfColumns
+        let unvisitedPrQ = Tracker<Coordinate, Distance>.createEmpty
+        unvisitedPrQ.Add rootCoordinate -1
 
-        let unvisited = Tracker<Coordinate, Distance, (Distance * Visited)>.createEmpty (numberOfRows * numberOfColumns)
-        unvisited.Add rootCoordinate -1 (-1, false)        
+        let graph = ShortestPathGraph.createEmpty rootCoordinate
+        graph.AddNode(rootCoordinate)
 
-        let connectedNodes = ref 0        
+        while unvisitedPrQ.HasItems do
 
-        while unvisited.HasItems do
-
-            let (coordinate, (currentDistance, visited)) = unvisited.Pop
-
-            if not visited then
-                incr connectedNodes
+            let (coordinate, currentDistance) = unvisitedPrQ.Pop
 
             let neighbors = linkedNeighbors coordinate |> Seq.toArray
 
             if (neighbors |> Seq.length) = 1 then
-                leaves.Add(coordinate)
+                leaves.Add(coordinate) |> ignore
             
             let newDistance =
-                match (graph.MinDistanceNode neighbors) with
-                | Some minNeighborNode -> minNeighborNode.DistanceFromRoot + 1
+                match (graph.NodeDistanceFromRoot coordinate) with
+                | Some distance -> distance
                 | None -> currentDistance + 1
-
-            graph.UpdateNode coordinate (Some { DistanceFromRoot = newDistance; Neighbors = neighbors })
 
             coordinatesByDistance.AddUpdate newDistance coordinate
 
-            neighbors
-            |> Seq.iter(fun nCoordinate ->
-                    match (graph.Node nCoordinate) with
-                    | Some neighborNode ->
-                        if neighborNode.DistanceFromRoot >= newDistance then
-                            unvisited.Add nCoordinate newDistance (newDistance, true)
-                            coordinatesByDistance.Remove neighborNode.DistanceFromRoot nCoordinate
-                    | None ->
-                        unvisited.Add nCoordinate newDistance (newDistance, false))
+            for neighbor in neighbors do
+                if not (graph.ContainsNode neighbor) then
+                    unvisitedPrQ.Add neighbor newDistance
+                    graph.AddNode(neighbor)
 
-        { Root = rootCoordinate
-          Graph = graph
-          ConnectedNodes = connectedNodes.Value
-          FarthestFromRoot =
-              { Distance = coordinatesByDistance.MaxDistance
-                Coordinates = coordinatesByDistance.CoordinatesWithDistance(coordinatesByDistance.MaxDistance) }
-          Leaves = leaves.ToArray() }
+                if not (graph.ContainsEdge coordinate neighbor) then
+                    graph.AddEdge coordinate neighbor newDistance
+                else
+                    let edge = graph.Edge coordinate neighbor
+                    match edge with
+                    | Some (_, distance) ->
+                        if newDistance < distance then
+                            unvisitedPrQ.Add neighbor newDistance
+                            coordinatesByDistance.Remove distance neighbor
+
+                            graph.UpdateEdge coordinate neighbor distance
+                            graph.AddEdge coordinate neighbor newDistance
+                    | None -> ()
+        
+        let leavesArray = Array.zeroCreate<Coordinate>(leaves.Count)
+        leaves.CopyTo(leavesArray)
+
+        { ShortestPathGraph = graph
+          ConnectedNodes = graph.Graph.VertexCount
+          FarthestFromRoot = coordinatesByDistance.ToFarthestFromRoot
+          Leaves = leavesArray }

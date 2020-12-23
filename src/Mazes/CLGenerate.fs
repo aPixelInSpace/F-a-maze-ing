@@ -3,15 +3,17 @@
 module Mazes.CLGenerate
 
 open System
+open System.Diagnostics
 open System.IO
 open System.Text
 open CommandLine
-open Mazes.Core
-open Mazes.Core.Canvas
-open Mazes.Core.Grid
+open Mazes.Core.Grid.Ortho.Canvas
+open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Polar
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
 open Mazes.Render
+open Mazes.Render.SVG
 open Mazes.Render.Text
 open Mazes.Output.Html
 
@@ -60,12 +62,20 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let filePath = Path.Combine(directory, nameOfMaze + ".html")
 
-    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.create)
-    //let grid = (Shape.TriangleIsosceles.create 150 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> Grid.create)
-    //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Grid.create)
-    //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> Grid.create)
-    //let grid = (Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> Grid.create)
-    //let grid = (Mazes.Utility.Canvas.Convert.fromImage 0.0f "d:\\temp\\Microchip.png" |> Grid.create)
+    let stopWatch = Stopwatch()
+
+    stopWatch.Start()
+    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> OrthoGrid.createGridFunction)
+    //let grid = (Shape.TriangleIsosceles.create 150 Shape.TriangleIsosceles.BaseAt.Bottom 3 2 |> OrthoGrid.createGridFunction)
+    //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction)
+    //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> OrthoGrid.createGridFunction)
+    //let grid = (Shape.Ellipse.create 50 70 0.0 0.0 0 0 (Some 0.2) Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction)
+    //let grid = (Mazes.Utility.Canvas.Convert.fromImage 0.0f "d:\\temp\\Microchip.png" |> OrthoGrid.createGridFunction)
+    //let grid = Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction
+    let grid = Canvas.Shape.Disc.create options.Value.rows 1.0 5 |> PolarGrid.createGridFunction
+
+    stopWatch.Stop()
+    printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
 
     //let canvasSave = (Shape.Rectangle.create 15 15 |> Canvas.save)
     //File.WriteAllText(filePath.Replace(".html", ".canvas.mazes"), canvasSave, Encoding.UTF8)
@@ -89,52 +99,75 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
         | Some seed -> seed
         | None -> 0
 
+    //
+
+    stopWatch.Restart()
+
     // Async
 //    let maze1 =
 //        async {
-//                let gridSliced1 = GridView.sliceGrid grid { RowIndex = 0; ColumnIndex = 0 } { RowIndex = 9; ColumnIndex = 9 }
+//                let gridSliced1 = GridView.sliceGrid grid { RIndex = 0; CIndex = 0 } { RIndex = 9; CIndex = 9 }
 //                let maze = (algo (rngSeed) gridSliced1)
-//                GridView.mergeGrid maze.Grid grid { RowIndex = 0; ColumnIndex = 0 }
+//                GridView.mergeGrid maze.Grid grid { RIndex = 0; CIndex = 0 }
 //            }
 //    let maze2 =
 //        async {
-//                let gridSliced2 = GridView.sliceGrid grid { RowIndex = 0; ColumnIndex = 10 } { RowIndex = 8; ColumnIndex = 19 }
+//                let gridSliced2 = GridView.sliceGrid grid { RIndex = 0; CIndex = 10 } { RIndex = 8; CIndex = 19 }
 //                let maze = (algo (rngSeed + 1) gridSliced2)
-//                GridView.mergeGrid maze.Grid grid { RowIndex = 0; ColumnIndex = 10 }
+//                GridView.mergeGrid maze.Grid grid { RIndex = 0; CIndex = 10 }
 //            }
 //    let maze3 =
 //        async {
-//                let gridSliced3 = GridView.sliceGrid grid { RowIndex = 10; ColumnIndex = 0 } { RowIndex = 19; ColumnIndex = 9 }
+//                let gridSliced3 = GridView.sliceGrid grid { RIndex = 10; CIndex = 0 } { RIndex = 19; CIndex = 9 }
 //                let maze = (algo (rngSeed + 2) gridSliced3)
-//                GridView.mergeGrid maze.Grid grid { RowIndex = 10; ColumnIndex = 0 }
+//                GridView.mergeGrid maze.Grid grid { RIndex = 10; CIndex = 0 }
 //            }
 //    let maze4 =
 //        async {
-//                let gridSliced4 = GridView.sliceGrid grid { RowIndex = 9; ColumnIndex = 10 } { RowIndex = 19; ColumnIndex = 19 }
+//                let gridSliced4 = GridView.sliceGrid grid { RIndex = 9; CIndex = 10 } { RIndex = 19; CIndex = 19 }
 //                let maze = (algo (rngSeed + 3) gridSliced4)
-//                GridView.mergeGrid maze.Grid grid { RowIndex = 9; ColumnIndex = 10 }
+//                GridView.mergeGrid maze.Grid grid { RIndex = 9; CIndex = 10 }
 //            }
 //    
 //    [maze1; maze2; maze3; maze4] |> Async.Parallel |> Async.RunSynchronously |> ignore
 //    
 //    let maze = { Grid = grid }
-    
-    let maze = (algo rngSeed grid)
-    
-    let map = maze.createDijkstraMap (snd maze.Grid.Canvas.GetFirstTopLeftPartOfMazeZone)
 
-    let renderedGrid = renderGrid maze.Grid
-    
-    let htmlOutput = outputHtml maze { Name = nameOfMaze } renderedGrid
-    File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
+    let maze = (algo rngSeed grid)
+
+    stopWatch.Stop()
+    printfn $"Created maze ({stopWatch.ElapsedMilliseconds} ms)"
+
+    //
+
+    stopWatch.Restart()
+
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+
+    stopWatch.Stop()
+    printfn $"Created map ({stopWatch.ElapsedMilliseconds} ms)"
+
+    //
+
+    stopWatch.Restart()
+
+    //let renderedGrid = renderGrid  (maze.Grid.ToSpecializedGrid)
+
+    //let htmlOutput = outputHtml maze { Name = nameOfMaze } renderedGrid
+    //File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
     
     //let rawTestOutput = Output.RawForTest.outputRawForTest maze renderedGrid
     //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
-    let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo (snd maze.Grid.Canvas.GetFirstBottomRightPartOfMazeZone)) map
-    //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RowIndex = 0; ColumnIndex = 3 }) map
-    //let renderedGridSvg = SVG.renderGrid maze.Grid (map.LongestPaths |> Seq.head) map
+    //let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetFirstBottomRightPartOfMazeZone) map
+    //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
+    //let renderedGridSvg = SVG.renderGrid maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
+    
+    let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
+
+    stopWatch.Stop()
+    printfn $"Render maze ({stopWatch.ElapsedMilliseconds} ms)"
 
     printfn "Mazes creation finished !"
     printfn "File location is %s" filePath
