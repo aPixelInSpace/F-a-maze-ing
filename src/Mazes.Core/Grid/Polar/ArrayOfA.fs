@@ -38,6 +38,9 @@ let getCell (arrayOfA : 'A[][]) coordinate =
 let getNumberOfCellsAt (arrayOfA : 'A[][]) ringIndex =
     getD2LengthAt arrayOfA ringIndex
 
+let getCellByCell (arrayOfA : 'A[][]) filter =
+    getItemByItem arrayOfA filter
+
 let create numberOfRings widthHeightRatio numberOfCellsForCenterRing (constructor : int -> int -> 'T) =
     let ringHeight = widthHeightRatio / (float)numberOfRings 
 

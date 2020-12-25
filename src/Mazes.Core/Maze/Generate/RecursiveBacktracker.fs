@@ -24,7 +24,10 @@ let createMaze rngSeed (grid : unit -> Grid<'G>) =
 
         let currentCoordinate = stack.Peek()
 
-        let unlinkedNeighbors = grid.NeighborsThatAreLinked false currentCoordinate |> Seq.toArray
+        let unlinkedNeighbors =
+            currentCoordinate
+            |> grid.NeighborsThatAreLinked false
+            |> Seq.toArray
 
         if unlinkedNeighbors.Length > 0 then
             let nextCoordinate = unlinkedNeighbors.[rng.Next(unlinkedNeighbors.Length)]

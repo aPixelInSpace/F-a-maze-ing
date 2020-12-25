@@ -30,14 +30,8 @@ type Canvas =
         get this.Zones coordinate
 
     member this.TotalOfMazeZones =
-        let counter = 0
-
-        this.Zones
-        |> fold (fun _ _ counter zone ->
-                 match zone.IsAPartOfMaze with
-                 | true -> counter + 1
-                 | _ -> counter)
-                counter
+        this.GetZoneByZone RowsAscendingColumnsAscending (fun (zone : Zone) _ -> zone.IsAPartOfMaze)
+        |> Seq.length
 
     member this.IsZonePartOfMaze coordinate =
         (this.Zone coordinate).IsAPartOfMaze

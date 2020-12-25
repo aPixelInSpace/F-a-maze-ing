@@ -35,7 +35,7 @@ The SVG render can color the maze and show the path(s) between two zones that ar
 <img src="docs/Ortho/SVG/CompositeMaze.svg" width="400">
 
 ### ASCII
-The text render is simpler and only displays the maze (using the Unicode characters [link](https://en.wikipedia.org/wiki/Box-drawing_character)) :
+The text render is simpler and only displays orthogonal mazes (using the Unicode characters [link](https://en.wikipedia.org/wiki/Box-drawing_character)) :
 <div style="font-family: 'DejaVu Sans Mono', monospace">
     <pre class="maze-line">                ┏━┓            
           ┏━┯━━━┛ ┗━━━━━┓      
@@ -67,6 +67,7 @@ mazes
                      - AldousBroder
                      - Wilson
                      - HuntAndKill
+                     - RecursiveBackTracker
 
   -s, --seed         The seed number to use for the random number generator. If empty, a random seed is picked.
 

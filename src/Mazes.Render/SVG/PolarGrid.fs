@@ -99,7 +99,7 @@ let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
     //|> appendPath path (wholeCellLines grid (centerX, centerY, ringHeight))
     |> appendPathWithAnimation path (wholeCellLines grid (centerX, centerY, ringHeight))
     //|> appendLeaves map.Leaves (wholeCellLines grid (centerX, centerY, ringHeight))
-    |> appendWalls grid.CoordinatesPartOfMaze (appendWallsType grid (centerX, centerY, ringHeight))
+    |> appendWalls (grid.GetCellByCell (fun _ _ -> true) |> Seq.map(snd)) (appendWallsType grid (centerX, centerY, ringHeight))
     |> appendFooter
     |> ignore
 

@@ -16,6 +16,7 @@ type Grid<'G> =
     abstract member GetCellsByColumns : Cell[] seq
     abstract member CoordinatesPartOfMaze : Coordinate seq
     abstract member LinkCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
+    abstract member PutBorderBetweenCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
     abstract member IfNotAtLimitLinkCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
     /// Returns the neighbors coordinates that are linked, NOT NECESSARILY WITH the coordinate
     abstract member NeighborsThatAreLinked : isLinked:bool -> coordinate:Coordinate -> Coordinate seq

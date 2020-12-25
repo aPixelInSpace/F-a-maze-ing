@@ -52,6 +52,9 @@ type OrthoGrid =
         member self.LinkCells coordinate otherCoordinate =
             self.LinkCells coordinate otherCoordinate
 
+        member self.PutBorderBetweenCells coordinate otherCoordinate =
+            self.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Border
+
         member self.IfNotAtLimitLinkCells coordinate otherCoordinate =
             self.IfNotAtLimitLinkCells coordinate otherCoordinate
 

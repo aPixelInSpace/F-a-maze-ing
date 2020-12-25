@@ -43,10 +43,24 @@ let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, 
     //canvas.Zones.[3].[0] <- Zone.Empty
     //let head :: tail = canvas.Zones.[0]
 
-//    for c in 1 .. canvas.Zones.[5].Length - 1 do
-//        canvas.Zones.[5].[c] <- Zone.Empty
-//    for c in 1 .. canvas.Zones.[15].Length - 1 do
-//        canvas.Zones.[15].[c] <- Zone.Empty
+//    for i in [5; 15] do
+//        for c in 1 .. canvas.Zones.[i].Length - 1 do
+//            canvas.Zones.[i].[c] <- Zone.Empty
+
+    let emptyByModulo ringIndexes modulo =
+        for i in ringIndexes do
+            let maxC = canvas.Zones.[i].Length - 1
+            for c in 0 .. maxC do
+                if c % modulo = 0 then
+                    canvas.Zones.[i].[c] <- Zone.Empty
+
+    emptyByModulo [15] 2
+    //emptyByModulo [5; 15] 3
+    //emptyByModulo [5; 15] 4
+    emptyByModulo [15] 5
+    //emptyByModulo [29; 20] 2
+    //emptyByModulo [27] 3
+    //emptyByModulo [26; 25] 4
 
 //    for c in 0 .. canvas.Zones.[0].Length - 1 do
 //        canvas.Zones.[0].[c] <- Zone.Empty
@@ -59,14 +73,19 @@ let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, 
         canvas
         |> PolarGrid.createGridFunction
 
-    //grid.LinkCells { RIndex = 1; CIndex = 0 } { RIndex = 2; CIndex = 0 }
+    let changedGrid = grid()
+//    changedGrid.PutBorderBetweenCells { RIndex = 7; CIndex = 0 } { RIndex = 8; CIndex = 0 }
+//    changedGrid.PutBorderBetweenCells { RIndex = 8; CIndex = 0 } { RIndex = 9; CIndex = 0 }
+//    changedGrid.PutBorderBetweenCells { RIndex = 8; CIndex = 0 } { RIndex = 8; CIndex = 1 }
+//    changedGrid.PutBorderBetweenCells { RIndex = 7; CIndex = 0 } { RIndex = 7; CIndex = 1 }
+//    changedGrid.PutBorderBetweenCells { RIndex = 7; CIndex = 1 } { RIndex = 8; CIndex = 1 }
     
     //let neighborsLinked = grid.NeighborsThatAreLinked false { RIndex = 2; CIndex = 1 }
     //neighborsLinked |> Seq.isEmpty |> should equal false
 
     let maze =
-        grid
-        |> RecursiveBacktracker.createMaze 2
+        (fun () -> changedGrid)
+        |> HuntAndKill.createMaze 2
     let map = maze.createMap { RIndex = 0; CIndex = 0 } //maze.Grid.GetFirstTopLeftPartOfMazeZone
 
     // act
@@ -75,6 +94,7 @@ let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, 
                            //(map.ShortestPathGraph.PathFromRootTo { RIndex = 29; CIndex = 2 }) map
         
     // assert
+    //System.IO.File.WriteAllText("\\\\192.168.1.190\\Data\\Project\\F#\\Mazes - Doc\\maze.svg", renderedMaze)
     //let expectedRenderedMaze = IO.File.ReadAllText("Resources/Polargrid.svg", Encoding.UTF8)
     //renderedMaze |> should equal expectedRenderedMaze
 

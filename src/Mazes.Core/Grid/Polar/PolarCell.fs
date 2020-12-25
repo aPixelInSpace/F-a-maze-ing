@@ -55,6 +55,7 @@ type PolarCell =
         {
             IsLinked = this.IsLinked cells coordinate
         }
+
 module PolarCell =
 
     let create canvas (coordinate : Coordinate) isCellPartOfMaze =

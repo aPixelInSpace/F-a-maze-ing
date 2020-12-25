@@ -23,8 +23,15 @@ type Canvas =
     member this.Zone coordinate =
         get this.Zones coordinate
 
+    member this.TotalOfMazeZones =
+        this.GetZoneByZone (fun (zone : Zone) _ -> zone.IsAPartOfMaze)
+        |> Seq.length
+
     member this.IsZonePartOfMaze coordinate =
         (this.Zone coordinate).IsAPartOfMaze
+
+    member this.GetZoneByZone filter =
+        getItemByItem this.Zones filter
 
     member this.NeighborsPartOfMazeOf (coordinate : Coordinate) =
         let neighborCoordinateAt = PolarCoordinate.neighborsCoordinateAt this.Zones coordinate 
