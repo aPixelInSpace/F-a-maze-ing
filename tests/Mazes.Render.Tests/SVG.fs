@@ -76,7 +76,6 @@ let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, 
         
     // assert
     //let expectedRenderedMaze = IO.File.ReadAllText("Resources/Polargrid.svg", Encoding.UTF8)
-        
     //renderedMaze |> should equal expectedRenderedMaze
 
     ()

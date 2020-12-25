@@ -12,11 +12,17 @@ open Mazes.Core.Analysis.Dijkstra
 // #fffef0 : very pale yellow
 
 [<Literal>]
+let elementIdPrefix = "p"
+[<Literal>]
+let animationIdPrefix = "a"
+[<Literal>]
 let normalWallClass = "n"
 [<Literal>]
 let borderWallClass = "b"
 [<Literal>]
 let pathClass = "p"
+[<Literal>]
+let pathAnimatedClass = "pa"
 [<Literal>]
 let leaveClass = "l"
 [<Literal>]
@@ -48,6 +54,12 @@ let svgStyle =
                         fill: purple;
                         fill-opacity: 0.4;
                     }
+                    ." + pathAnimatedClass + " {
+                        stroke: transparent;
+                        stroke-width: 0;
+                        fill: purple;
+                        fill-opacity: 0.0;
+                    }
                     ." + leaveClass + " {
                         stroke: transparent;
                         stroke-width: 0;
@@ -68,7 +80,7 @@ let round (f : float) =
 let appendHeader width height (sBuilder : StringBuilder) =
     sBuilder.Append("<?xml version=\"1.0\" standalone=\"no\"?>\n")
             .Append("<!-- Copyright 2020 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->\n")
-            .Append("<svg width=\"" + width + "\" height=\"" + height + "\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">")
+            .Append("<svg width=\"" + width + "\" height=\"" + height + "\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">")
 
 let appendStyle (sBuilder : StringBuilder) =
     sBuilder.Append(svgStyle)
@@ -76,11 +88,31 @@ let appendStyle (sBuilder : StringBuilder) =
 let appendBackground (color : string) (sBuilder : StringBuilder) =
     sBuilder.Append($"<rect width=\"100%%\" height=\"100%%\" fill=\"{color}\"/>")
 
-let addPath (sBuilder : StringBuilder) styleClass (lines : string) =
-    sBuilder.Append($"<path d=\"{lines}\" class=\"{styleClass}\"/>\n")
+let appendPathElement (sBuilder : StringBuilder) id styleClass lines =
+    sBuilder.Append("<path ") |> ignore
 
-let addPathColor (sBuilder : StringBuilder) styleClass opacity (lines : string) =
+    match id with
+    | Some id -> sBuilder.Append($"id=\"{elementIdPrefix}{id}\" ") |> ignore
+    | None -> ()
+
+    sBuilder.Append($"d=\"{lines}\" class=\"{styleClass}\"/>\n")
+
+let appendPathElementColor (sBuilder : StringBuilder) styleClass opacity (lines : string) =
     sBuilder.Append($"<path d=\"{lines}\" class=\"{styleClass}\" fill-opacity=\"{opacity}\"/>\n")
+
+let appendAnimationElement (sBuilder : StringBuilder) id relatedId =
+    let elementId = elementIdPrefix + id
+    let animationId = animationIdPrefix + elementId
+
+    sBuilder.Append($"<animate id=\"{animationId}\" xlink:href=\"#{elementId}\" attributeName=\"fill-opacity\" fill=\"freeze\" from=\"0\" to=\"0.4\" dur=\"0.02s\" ") |> ignore
+
+    match relatedId with
+    | Some relatedId ->
+        let relatedAnimationId = animationIdPrefix + elementIdPrefix + relatedId
+        sBuilder.Append($"begin=\"{relatedAnimationId}.end\"") |> ignore
+    | None -> ()
+
+    sBuilder.Append($"/>\n")
 
 let appendFooter (sBuilder : StringBuilder) =
     sBuilder.Append("</svg>")
@@ -89,7 +121,7 @@ let appendCellColorWithDynamicOpacity lines distanceFromRoot maxDistance (sBuild
     let opacity = round (1.0 - (float (maxDistance - distanceFromRoot) / float maxDistance))
     let sOpacity = opacity.ToString().Replace(",", ".")
 
-    addPathColor sBuilder colorClass sOpacity lines
+    appendPathElementColor sBuilder colorClass sOpacity lines
 
 let appendMazeColoration map wholeCellLines (sBuilder : StringBuilder) =
     let distanceFromRoot coordinate =
@@ -104,18 +136,28 @@ let appendMazeColoration map wholeCellLines (sBuilder : StringBuilder) =
 
 let appendPath path wholeCellLines (sBuilder : StringBuilder) =
     path
-    |> Seq.iter(fun coordinate -> addPath sBuilder pathClass (wholeCellLines coordinate) |> ignore)
+    |> Seq.iter(fun coordinate -> appendPathElement sBuilder None pathClass (wholeCellLines coordinate) |> ignore)
+
+    sBuilder
+
+let appendPathWithAnimation  path wholeCellLines (sBuilder : StringBuilder) =
+    path
+    |> Seq.iteri(
+        fun i coordinate ->
+            appendPathElement sBuilder (Some i) pathAnimatedClass (wholeCellLines coordinate) |> ignore
+            let related = if i > 0 then Some ((i - 1).ToString()) else None 
+            appendAnimationElement sBuilder (i.ToString()) related |> ignore)
 
     sBuilder
 
 let appendLeaves leaves wholeCellLines (sBuilder : StringBuilder) =
     leaves
-    |> Seq.iter(fun coordinate -> addPath sBuilder leaveClass (wholeCellLines coordinate) |> ignore)
+    |> Seq.iter(fun coordinate -> appendPathElement sBuilder None leaveClass (wholeCellLines coordinate) |> ignore)
 
     sBuilder
 
-let appendWalls cells appendWalls (sBuilder : StringBuilder) =
+let appendWalls cells walls (sBuilder : StringBuilder) =
     cells
-    |> Seq.iter(fun coordinate -> sBuilder |> appendWalls coordinate |> ignore)
+    |> Seq.iter(fun coordinate -> sBuilder |> walls coordinate |> ignore)
 
     sBuilder

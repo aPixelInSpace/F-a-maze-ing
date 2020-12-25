@@ -11,22 +11,22 @@ open Mazes.Render.SVG.Base
 
 let private appendWall (sBuilder : StringBuilder) lines (wallType : WallType) =
     match wallType with
-    | Normal -> addPath sBuilder normalWallClass lines
-    | Border -> addPath sBuilder borderWallClass lines
+    | Normal -> appendPathElement sBuilder None normalWallClass lines
+    | Border -> appendPathElement sBuilder None borderWallClass lines
     | Empty -> sBuilder
 
 let private calculatePoints (grid : PolarGrid) (centerX, centerY, ringHeight) coordinate =
     let ringIndex = coordinate.RIndex
     let cellIndex = coordinate.CIndex
 
-    // these depend on the ring index but are recalculated for every cell
+    // these depends on the ring index but are recalculated for every cell
     // maybe find a way to pass them once for a given ring
     let ring = grid.Cells.[ringIndex]
     let theta = (2.0 * Math.PI) / (float)ring.Length
     let innerRadius = (float)(ringIndex * ringHeight)
     let outerRadius = (float)((ringIndex + 1) * ringHeight)
 
-    // these depend on the cell index, so it's fine
+    // these depends on the cell index, so it's fine
     let thetaCcw = (float)cellIndex * theta
     let thetaCw = ((float)(cellIndex + 1)) * theta
 
@@ -96,7 +96,8 @@ let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
     |> appendStyle
     |> appendBackground "transparent"
     |> appendMazeColoration map (wholeCellLines grid (centerX, centerY, ringHeight))
-    |> appendPath path (wholeCellLines grid (centerX, centerY, ringHeight))
+    //|> appendPath path (wholeCellLines grid (centerX, centerY, ringHeight))
+    |> appendPathWithAnimation path (wholeCellLines grid (centerX, centerY, ringHeight))
     //|> appendLeaves map.Leaves (wholeCellLines grid (centerX, centerY, ringHeight))
     |> appendWalls grid.CoordinatesPartOfMaze (appendWallsType grid (centerX, centerY, ringHeight))
     |> appendFooter

@@ -35,7 +35,7 @@ let private appendWall (sBuilder : StringBuilder) (grid : OrthoGrid) coordinate 
     let bottomLeft = lazy (((coordinate.CIndex * cellWidth) + marginWidth).ToString() + " " + (((coordinate.RIndex + 1) * cellHeight) + marginHeight).ToString())
     let bottomRight = lazy ((((coordinate.CIndex + 1) * cellWidth) + marginWidth).ToString() + " " + (((coordinate.RIndex + 1) * cellHeight) + marginHeight).ToString())
 
-    let addP = addPath sBuilder styleClass
+    let addP = appendPathElement sBuilder None styleClass
 
     match cell.WallLeft.WallType, cell.WallTop.WallType, cell.WallRight.WallType, cell.WallBottom.WallType with
     | (l, t, r, b) when l = wallType && t = wallType && r = wallType && b = wallType ->
@@ -91,7 +91,8 @@ let render grid (path : Coordinate seq) (map : Map) =
     |> appendStyle
     |> appendBackground "transparent"
     |> appendMazeColoration map wholeCellLines
-    |> appendPath path wholeCellLines
+    //|> appendPath path wholeCellLines
+    |> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves wholeCellLines
     |> appendWalls grid.CoordinatesPartOfMaze (appendWallsType grid)
     |> appendFooter

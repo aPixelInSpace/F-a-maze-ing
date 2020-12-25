@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" standalone="no"?>
 <!-- Copyright 2020 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->
-<svg width="1030" height="640" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs>
+<svg width="1030" height="640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs>
                 <style>
                     .n {
                         stroke: #333;
@@ -23,6 +23,12 @@
                         stroke-width: 0;
                         fill: purple;
                         fill-opacity: 0.4;
+                    }
+                    .pa {
+                        stroke: transparent;
+                        stroke-width: 0;
+                        fill: purple;
+                        fill-opacity: 0.0;
                     }
                     .l {
                         stroke: transparent;
@@ -696,88 +702,170 @@
 <path d="M 800 170 h 30 v 30 h -30 v -30" class="c" fill-opacity="0.98"/>
 <path d="M 830 170 h 30 v 30 h -30 v -30" class="c" fill-opacity="0.99"/>
 <path d="M 860 170 h 30 v 30 h -30 v -30" class="c" fill-opacity="1"/>
-<path d="M 20 20 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 20 50 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 20 80 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 50 80 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 50 110 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 20 110 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 20 140 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 50 140 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 50 170 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 50 200 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 50 230 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 80 230 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 80 260 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 80 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 80 320 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 110 320 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 140 320 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 140 350 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 140 380 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 110 380 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 110 410 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 140 410 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 140 440 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 170 440 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 170 470 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 200 470 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 230 470 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 230 440 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 230 410 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 200 410 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 200 380 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 200 350 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 230 350 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 230 380 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 260 380 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 260 350 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 260 320 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 290 320 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 320 320 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 320 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 350 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 380 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 380 260 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 410 260 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 410 230 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 440 230 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 470 230 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 470 260 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 470 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 470 320 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 500 320 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 500 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 530 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 560 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 590 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 590 260 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 620 260 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 650 260 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 650 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 680 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 710 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 740 290 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 740 320 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 740 350 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 740 380 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 740 410 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 770 410 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 800 410 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 800 440 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 800 470 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 800 500 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 830 500 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 830 470 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 860 470 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 860 500 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 890 500 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 920 500 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 920 530 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 950 530 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 950 560 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 980 560 h 30 v 30 h -30 v -30" class="p"/>
-<path d="M 980 590 h 30 v 30 h -30 v -30" class="p"/>
+<path id="p0" d="M 20 20 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap0" xlink:href="#p0" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" />
+<path id="p1" d="M 20 50 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap1" xlink:href="#p1" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap0.end"/>
+<path id="p2" d="M 20 80 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap2" xlink:href="#p2" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap1.end"/>
+<path id="p3" d="M 50 80 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap3" xlink:href="#p3" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap2.end"/>
+<path id="p4" d="M 50 110 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap4" xlink:href="#p4" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap3.end"/>
+<path id="p5" d="M 20 110 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap5" xlink:href="#p5" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap4.end"/>
+<path id="p6" d="M 20 140 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap6" xlink:href="#p6" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap5.end"/>
+<path id="p7" d="M 50 140 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap7" xlink:href="#p7" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap6.end"/>
+<path id="p8" d="M 50 170 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap8" xlink:href="#p8" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap7.end"/>
+<path id="p9" d="M 50 200 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap9" xlink:href="#p9" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap8.end"/>
+<path id="p10" d="M 50 230 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap10" xlink:href="#p10" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap9.end"/>
+<path id="p11" d="M 80 230 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap11" xlink:href="#p11" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap10.end"/>
+<path id="p12" d="M 80 260 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap12" xlink:href="#p12" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap11.end"/>
+<path id="p13" d="M 80 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap13" xlink:href="#p13" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap12.end"/>
+<path id="p14" d="M 80 320 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap14" xlink:href="#p14" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap13.end"/>
+<path id="p15" d="M 110 320 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap15" xlink:href="#p15" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap14.end"/>
+<path id="p16" d="M 140 320 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap16" xlink:href="#p16" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap15.end"/>
+<path id="p17" d="M 140 350 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap17" xlink:href="#p17" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap16.end"/>
+<path id="p18" d="M 140 380 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap18" xlink:href="#p18" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap17.end"/>
+<path id="p19" d="M 110 380 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap19" xlink:href="#p19" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap18.end"/>
+<path id="p20" d="M 110 410 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap20" xlink:href="#p20" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap19.end"/>
+<path id="p21" d="M 140 410 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap21" xlink:href="#p21" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap20.end"/>
+<path id="p22" d="M 140 440 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap22" xlink:href="#p22" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap21.end"/>
+<path id="p23" d="M 170 440 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap23" xlink:href="#p23" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap22.end"/>
+<path id="p24" d="M 170 470 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap24" xlink:href="#p24" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap23.end"/>
+<path id="p25" d="M 200 470 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap25" xlink:href="#p25" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap24.end"/>
+<path id="p26" d="M 230 470 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap26" xlink:href="#p26" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap25.end"/>
+<path id="p27" d="M 230 440 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap27" xlink:href="#p27" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap26.end"/>
+<path id="p28" d="M 230 410 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap28" xlink:href="#p28" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap27.end"/>
+<path id="p29" d="M 200 410 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap29" xlink:href="#p29" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap28.end"/>
+<path id="p30" d="M 200 380 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap30" xlink:href="#p30" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap29.end"/>
+<path id="p31" d="M 200 350 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap31" xlink:href="#p31" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap30.end"/>
+<path id="p32" d="M 230 350 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap32" xlink:href="#p32" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap31.end"/>
+<path id="p33" d="M 230 380 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap33" xlink:href="#p33" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap32.end"/>
+<path id="p34" d="M 260 380 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap34" xlink:href="#p34" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap33.end"/>
+<path id="p35" d="M 260 350 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap35" xlink:href="#p35" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap34.end"/>
+<path id="p36" d="M 260 320 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap36" xlink:href="#p36" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap35.end"/>
+<path id="p37" d="M 290 320 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap37" xlink:href="#p37" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap36.end"/>
+<path id="p38" d="M 320 320 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap38" xlink:href="#p38" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap37.end"/>
+<path id="p39" d="M 320 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap39" xlink:href="#p39" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap38.end"/>
+<path id="p40" d="M 350 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap40" xlink:href="#p40" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap39.end"/>
+<path id="p41" d="M 380 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap41" xlink:href="#p41" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap40.end"/>
+<path id="p42" d="M 380 260 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap42" xlink:href="#p42" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap41.end"/>
+<path id="p43" d="M 410 260 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap43" xlink:href="#p43" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap42.end"/>
+<path id="p44" d="M 410 230 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap44" xlink:href="#p44" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap43.end"/>
+<path id="p45" d="M 440 230 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap45" xlink:href="#p45" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap44.end"/>
+<path id="p46" d="M 470 230 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap46" xlink:href="#p46" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap45.end"/>
+<path id="p47" d="M 470 260 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap47" xlink:href="#p47" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap46.end"/>
+<path id="p48" d="M 470 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap48" xlink:href="#p48" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap47.end"/>
+<path id="p49" d="M 470 320 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap49" xlink:href="#p49" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap48.end"/>
+<path id="p50" d="M 500 320 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap50" xlink:href="#p50" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap49.end"/>
+<path id="p51" d="M 500 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap51" xlink:href="#p51" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap50.end"/>
+<path id="p52" d="M 530 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap52" xlink:href="#p52" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap51.end"/>
+<path id="p53" d="M 560 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap53" xlink:href="#p53" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap52.end"/>
+<path id="p54" d="M 590 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap54" xlink:href="#p54" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap53.end"/>
+<path id="p55" d="M 590 260 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap55" xlink:href="#p55" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap54.end"/>
+<path id="p56" d="M 620 260 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap56" xlink:href="#p56" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap55.end"/>
+<path id="p57" d="M 650 260 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap57" xlink:href="#p57" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap56.end"/>
+<path id="p58" d="M 650 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap58" xlink:href="#p58" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap57.end"/>
+<path id="p59" d="M 680 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap59" xlink:href="#p59" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap58.end"/>
+<path id="p60" d="M 710 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap60" xlink:href="#p60" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap59.end"/>
+<path id="p61" d="M 740 290 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap61" xlink:href="#p61" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap60.end"/>
+<path id="p62" d="M 740 320 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap62" xlink:href="#p62" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap61.end"/>
+<path id="p63" d="M 740 350 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap63" xlink:href="#p63" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap62.end"/>
+<path id="p64" d="M 740 380 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap64" xlink:href="#p64" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap63.end"/>
+<path id="p65" d="M 740 410 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap65" xlink:href="#p65" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap64.end"/>
+<path id="p66" d="M 770 410 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap66" xlink:href="#p66" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap65.end"/>
+<path id="p67" d="M 800 410 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap67" xlink:href="#p67" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap66.end"/>
+<path id="p68" d="M 800 440 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap68" xlink:href="#p68" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap67.end"/>
+<path id="p69" d="M 800 470 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap69" xlink:href="#p69" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap68.end"/>
+<path id="p70" d="M 800 500 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap70" xlink:href="#p70" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap69.end"/>
+<path id="p71" d="M 830 500 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap71" xlink:href="#p71" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap70.end"/>
+<path id="p72" d="M 830 470 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap72" xlink:href="#p72" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap71.end"/>
+<path id="p73" d="M 860 470 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap73" xlink:href="#p73" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap72.end"/>
+<path id="p74" d="M 860 500 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap74" xlink:href="#p74" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap73.end"/>
+<path id="p75" d="M 890 500 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap75" xlink:href="#p75" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap74.end"/>
+<path id="p76" d="M 920 500 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap76" xlink:href="#p76" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap75.end"/>
+<path id="p77" d="M 920 530 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap77" xlink:href="#p77" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap76.end"/>
+<path id="p78" d="M 950 530 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap78" xlink:href="#p78" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap77.end"/>
+<path id="p79" d="M 950 560 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap79" xlink:href="#p79" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap78.end"/>
+<path id="p80" d="M 980 560 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap80" xlink:href="#p80" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap79.end"/>
+<path id="p81" d="M 980 590 h 30 v 30 h -30 v -30" class="pa"/>
+<animate id="ap81" xlink:href="#p81" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="ap80.end"/>
 <path d="M 20 50 v -30 h 30" class="b"/>
 <path d="M 50 20 h 30" class="b"/>
 <path d="M 50 50 h 30 v -30" class="n"/>
