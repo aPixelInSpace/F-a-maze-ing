@@ -11,8 +11,7 @@ codecov:
         project:
             default:
                 # basic
-                target: number
-                threshold: 75%
+                target: 75%
 
     # Avoid "Missing base report"
     # https://github.com/codecov/support/issues/363
