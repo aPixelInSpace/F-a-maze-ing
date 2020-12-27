@@ -2,6 +2,8 @@
 
 namespace Mazes.Core.Grid.Polar
 
+open Mazes.Core
+
 type PolarPosition =
     | Inward
     | Outward
@@ -14,3 +16,12 @@ type PolarPosition =
         | Outward -> Inward
         | Left -> Right
         | Right -> Left
+
+module PolarPosition =
+
+    let map position =
+        match position with
+        | Position.Top -> Outward
+        | Position.Right -> Right
+        | Position.Bottom -> Inward
+        | Position.Left -> Left

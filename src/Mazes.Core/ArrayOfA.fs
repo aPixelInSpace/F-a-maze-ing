@@ -41,6 +41,13 @@ module ArrayOfA =
     let get (arrayOfA : 'A[][]) coordinate =
         arrayOfA.[coordinate.RIndex].[coordinate.CIndex]
 
+    let getRIndexes (arrayOfA : 'A[][]) =
+        let numberRIndex = maxD1Index arrayOfA
+        seq {
+            for i in 0 .. numberRIndex do
+                yield i
+        }
+
     let getItemByItem (arrayOfA : 'A[][]) filter =
         seq {
             for rIndex in 0 .. maxD1Index arrayOfA do

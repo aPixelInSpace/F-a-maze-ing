@@ -6,6 +6,7 @@
 
     <ItemGroup>
         <Compile Include="Coordinate.fs" />
+        <Compile Include="Position.fs" />
         <Compile Include="WallType.fs" />
         <Compile Include="ArrayOfA.fs" />
         <Compile Include="Array2D.fs" />

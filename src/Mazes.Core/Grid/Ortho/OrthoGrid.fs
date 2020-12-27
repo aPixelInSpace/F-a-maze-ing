@@ -27,6 +27,9 @@ type OrthoGrid =
         member self.NumberOfColumns =
             self.Canvas.NumberOfColumns
 
+        member self.Dimension2Length _ =
+            self.Canvas.NumberOfColumns
+
         member self.IsCellLinked coordinate =
             (self.Cell coordinate).IsLinked
 
@@ -50,6 +53,9 @@ type OrthoGrid =
 
         member self.PutBorderBetweenCells coordinate otherCoordinate =
             self.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Border
+
+        member self.Neighbor coordinate position =
+            Some (self.Neighbor coordinate (OrthoPosition.map position))
 
         member self.IfNotAtLimitLinkCells coordinate otherCoordinate =
             self.IfNotAtLimitLinkCells coordinate otherCoordinate
@@ -114,15 +120,12 @@ type OrthoGrid =
         let neighbor = OrthoCoordinate.neighborCoordinateAt coordinate position        
         self.Cells.[neighbor.RIndex, neighbor.CIndex] <- { Walls = (getWalls neighbor position.Opposite) }
 
-    member private self.IfNotAtLimitUpdateWallAtPosition coordinate position wallType =
-        if not (self.IsLimitAt coordinate position) then
-            self.UpdateWallAtPosition coordinate position wallType
-
     member self.LinkCells coordinate otherCoordinate =
         self.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Empty
 
     member self.IfNotAtLimitLinkCells coordinate otherCoordinate =
-        self.IfNotAtLimitUpdateWallAtPosition coordinate (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate) WallType.Empty
+        if not (self.IsLimitAt coordinate (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate)) then
+            self.LinkCells coordinate otherCoordinate
 
     member private self.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =
         let neighborCoordinateAt = OrthoCoordinate.neighborCoordinateAt coordinate
@@ -132,6 +135,9 @@ type OrthoGrid =
         | oc when oc = (neighborCoordinateAt Right) -> self.UpdateWallAtPosition coordinate Right wallType
         | oc when oc = (neighborCoordinateAt Bottom) -> self.UpdateWallAtPosition coordinate Bottom wallType
         | _ -> failwith "UpdateWallAtCoordinates unable to find a connection between the two coordinates"
+
+    member self.Neighbor coordinate position =
+        OrthoCoordinate.neighborCoordinateAt coordinate position
 
     /// Returns the neighbors that are inside the bound of the grid
     member self.Neighbors coordinate =
