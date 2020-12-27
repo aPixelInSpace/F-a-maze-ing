@@ -12,6 +12,7 @@ codecov:
             default:
                 # basic
                 target: 75%
+                threshold: 100%
 
     # Avoid "Missing base report"
     # https://github.com/codecov/support/issues/363
