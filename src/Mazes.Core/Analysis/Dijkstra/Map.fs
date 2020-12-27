@@ -55,29 +55,26 @@ type CoordinatesByDistance =
 
 type Tracker<'Key, 'Priority when 'Key : equality and 'Priority :> IComparable<'Priority>> =
     {
-        PriorityQueue : SimplePriorityQueue<'Key, 'Priority>
+        Queue : SimplePriorityQueue<'Key, 'Priority>
     }
     
-    member private this.AddQueue key priority =
-        if this.PriorityQueue.Contains(key) then
-            this.PriorityQueue.UpdatePriority(key, priority)
-        else
-            this.PriorityQueue.Enqueue(key, priority)
-
     member this.Add key priority =
-        this.AddQueue key priority
+        if this.Queue.Contains(key) then
+            this.Queue.UpdatePriority(key, priority)
+        else
+            this.Queue.Enqueue(key, priority)
 
     member this.HasItems =
-        this.PriorityQueue.Count > 0
+        this.Queue.Count > 0
 
     member this.Pop =
-        let key = this.PriorityQueue.First
-        let priority = this.PriorityQueue.GetPriority(key)
-        this.PriorityQueue.Dequeue() |> ignore
+        let key = this.Queue.First
+        let priority = this.Queue.GetPriority(key)
+        this.Queue.Dequeue() |> ignore
         (key, priority)
 
     static member createEmpty =
-        { PriorityQueue = SimplePriorityQueue<'Key, 'Priority>() }
+        { Queue = SimplePriorityQueue<'Key, 'Priority>() }
 
 type Map =
     {
@@ -106,15 +103,15 @@ type Map =
 
         let leaves = HashSet<Coordinate>()
 
-        let unvisitedPrQ = Tracker<Coordinate, Distance>.createEmpty
-        unvisitedPrQ.Add rootCoordinate -1
+        let unvisited = Tracker<Coordinate, Distance>.createEmpty
+        unvisited.Add rootCoordinate -1
 
         let graph = ShortestPathGraph.createEmpty rootCoordinate
         graph.AddNode(rootCoordinate)
 
-        while unvisitedPrQ.HasItems do
+        while unvisited.HasItems do
 
-            let (coordinate, currentDistance) = unvisitedPrQ.Pop
+            let (coordinate, currentDistance) = unvisited.Pop
 
             let neighbors = linkedNeighbors coordinate |> Seq.toArray
 
@@ -130,7 +127,7 @@ type Map =
 
             for neighbor in neighbors do
                 if not (graph.ContainsNode neighbor) then
-                    unvisitedPrQ.Add neighbor newDistance
+                    unvisited.Add neighbor newDistance
                     graph.AddNode(neighbor)
 
                 if not (graph.ContainsEdge coordinate neighbor) then
@@ -140,7 +137,7 @@ type Map =
                     match edge with
                     | Some (_, distance) ->
                         if newDistance < distance then
-                            unvisitedPrQ.Add neighbor newDistance
+                            unvisited.Add neighbor newDistance
                             coordinatesByDistance.Remove distance neighbor
 
                             graph.UpdateEdge coordinate neighbor distance

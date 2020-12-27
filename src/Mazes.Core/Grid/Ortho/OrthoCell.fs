@@ -52,11 +52,6 @@ type OrthoCell =
         (this.Walls
         |> Array.where(fun wall -> OrthoCell.IsALink wall.WallType)).Length > 0
 
-    member this.ToCell =
-        {
-            IsLinked = this.IsLinked
-        }
-
 module OrthoCell =
 
     let create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =

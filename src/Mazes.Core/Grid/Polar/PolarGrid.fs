@@ -3,10 +3,11 @@
 namespace Mazes.Core.Grid.Polar
 
 open System
+open System.Text
 open Mazes.Core
 open Mazes.Core.Grid
 open Mazes.Core.ArrayOfA
-open Mazes.Core.Grid.Polar.ArrayOfA
+open Mazes.Core.Grid.Polar.PolarArrayOfA
 open Mazes.Core.Grid.Polar.Canvas
 
 type PolarGrid =
@@ -25,8 +26,8 @@ type PolarGrid =
         member self.NumberOfColumns =
             failwith "Not implemented"
 
-        member self.Cell coordinate =
-            (self.Cell coordinate).ToCell self.Cells coordinate
+        member self.IsCellLinked coordinate =
+            (self.Cell coordinate).IsLinked self.Cells coordinate
 
         member self.IsLimitAt coordinate otherCoordinate =
             failwith "Not implemented"
@@ -34,10 +35,10 @@ type PolarGrid =
         member self.IsCellPartOfMaze coordinate =
             failwith "Not implemented"
 
-        member self.GetCellsByRows =
+        member self.GetRIndexes =
             failwith "Not implemented"
 
-        member self.GetCellsByColumns =
+        member self.GetCIndexes =
             failwith "Not implemented"
 
         member self.CoordinatesPartOfMaze =
@@ -56,11 +57,11 @@ type PolarGrid =
         member self.NeighborsThatAreLinked isLinked coordinate =
             self.NeighborsThatAreLinked isLinked coordinate
 
-        member self.LinkedNeighborsWithCoordinates coordinate =
-            self.LinkedNeighborsWithCoordinates coordinate
+        member self.LinkedNeighbors coordinate =
+            self.LinkedNeighbors coordinate
 
-        member self.RandomNeighborFrom rng coordinate =
-            self.RandomNeighborFrom rng coordinate
+        member self.RandomNeighbor rng coordinate =
+            self.RandomNeighbor rng coordinate
 
         member self.RandomCoordinatePartOfMazeAndNotLinked rng =
             self.RandomCoordinatePartOfMazeAndNotLinked rng
@@ -72,7 +73,7 @@ type PolarGrid =
             snd self.Canvas.GetLastPartOfMazeZone
 
         member self.ToString =
-            failwith "Not implemented"
+            self.ToString
 
         member self.ToSpecializedGrid =
             self
@@ -136,7 +137,7 @@ type PolarGrid =
         |> Seq.map(fst)
 
     /// Returns a random neighbor that is inside the bound of the grid
-    member self.RandomNeighborFrom (rng : Random) coordinate =
+    member self.RandomNeighbor (rng : Random) coordinate =
         let neighbors = self.NeighborsFrom coordinate |> Seq.toArray
         neighbors.[rng.Next(neighbors.Length)]
 
@@ -145,7 +146,7 @@ type PolarGrid =
         self.NeighborsFrom coordinate
         |> Seq.filter(fun nCoordinate -> (self.Cell nCoordinate).IsLinked self.Cells nCoordinate = isLinked)
 
-    member self.LinkedNeighborsWithCoordinates coordinate =
+    member self.LinkedNeighbors coordinate =
         let isLinkedAt otherCoordinate =
             not (self.IsLimitAt coordinate otherCoordinate) &&        
             (self.Cell coordinate).AreLinked self.Cells coordinate otherCoordinate
@@ -167,12 +168,50 @@ type PolarGrid =
         self.Canvas.GetZoneByZone (fun zone _ -> zone.IsAPartOfMaze)
         |> Seq.map(fun (_, coordinate) -> coordinate)
 
+    member self.ToString =
+        let sBuilder = StringBuilder()
+
+        let appendHorizontalWall wallType =
+            match wallType with
+                | Normal | Border -> sBuilder.Append("_ ") |> ignore
+                | WallType.Empty -> sBuilder.Append("  ") |> ignore
+
+        let appendVerticalWall wallType =
+            match wallType with
+                | Normal | Border -> sBuilder.Append("| ") |> ignore
+                | WallType.Empty -> sBuilder.Append("  ") |> ignore
+
+        let appendRow appendWallType position (cellsRow : PolarCell array) =
+            cellsRow
+            |> Array.iter(fun cell -> appendWallType  (cell.WallTypeAtPosition position))
+            sBuilder.Append("\n") |> ignore
+
+        // first ring
+        getRingByRing self.Cells
+        |> Seq.head
+        |> appendRow appendVerticalWall Left
+
+        // every other rings
+        getRingByRing self.Cells
+        |> Seq.iteri(fun ringIndex cells ->
+            if ringIndex > 0 then
+                sBuilder.Append(" ") |> ignore
+                cells |> appendRow appendHorizontalWall Inward
+                cells |> appendRow appendVerticalWall Left)
+
+        sBuilder.Append(" ") |> ignore
+        getRingByRing self.Cells
+        |> Seq.last
+        |> appendRow appendHorizontalWall Outward
+
+        sBuilder.ToString()
+
 module PolarGrid =
 
     let create (canvas : Canvas) =
 
         let cells =
-            ArrayOfA.create
+            PolarArrayOfA.create
                 canvas.NumberOfRings
                 canvas.WidthHeightRatio
                 canvas.NumberOfCellsForCenterRing

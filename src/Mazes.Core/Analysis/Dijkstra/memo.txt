@@ -2,25 +2,22 @@
 
 type Tracker<'Key, 'Priority when 'Key : equality and 'Priority :> IComparable<'Priority>> =
     {
-        PriorityQueue : Dictionary<'Key, 'Priority>
+        Queue : Dictionary<'Key, 'Priority>
     }
     
     member this.Add key priority =
-        if this.PriorityQueue.ContainsKey(key) then
-            //this.PriorityQueue.UpdatePriority(key, priority)
+        if this.Queue.ContainsKey(key) then
             ()
         else
-            this.PriorityQueue.Add(key, priority)
+            this.Queue.Add(key, priority)
 
     member this.HasItems =
-        this.PriorityQueue.Count > 0
+        this.Queue.Count > 0
 
     member this.Pop =
-        let key = this.PriorityQueue |> Seq.head
-        //let priority = this.PriorityQueue.GetPriority(key)
-        //this.PriorityQueue.Dequeue() |> ignore
-        this.PriorityQueue.Remove(key.Key) |> ignore
+        let key = this.Queue |> Seq.head
+        this.Queue.Remove(key.Key) |> ignore
         (key.Key, key.Value)
 
     static member createEmpty =
-        { PriorityQueue = Dictionary<'Key, 'Priority>() }
+        { Queue = Dictionary<'Key, 'Priority>() }

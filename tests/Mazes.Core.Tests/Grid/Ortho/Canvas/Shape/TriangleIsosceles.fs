@@ -1,6 +1,6 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Tests.Canvas.Shape.TriangleIsosceles
+module Mazes.Core.Tests.Grid.Ortho.Canvas.Shape.TriangleIsosceles
 
 open FsUnit
 open Xunit

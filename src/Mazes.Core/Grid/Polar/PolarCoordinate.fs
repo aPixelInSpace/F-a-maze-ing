@@ -3,7 +3,7 @@
 module Mazes.Core.Grid.Polar.PolarCoordinate
 
 open Mazes.Core
-open Mazes.Core.Grid.Polar.ArrayOfA
+open Mazes.Core.Grid.Polar.PolarArrayOfA
 
 let neighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
     seq {

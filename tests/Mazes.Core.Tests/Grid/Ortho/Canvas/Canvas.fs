@@ -1,6 +1,6 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Tests.Canvas.Canvas
+module Mazes.Core.Tests.Grid.Ortho.Canvas.Canvas
 
 open FsUnit
 open Xunit

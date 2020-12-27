@@ -134,10 +134,10 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
 
     let (extractBy, startIndex, increment, endIndex, getCoordinate) =
         match direction1, direction2 with
-        | _, Right -> (grid.GetCellsByRows, 0, 1, getIndex grid.NumberOfColumns, getCoordinate true)
-        | _, Left -> (grid.GetCellsByRows, getIndex grid.NumberOfColumns, -1, 0, getCoordinate true)
-        | _, Top -> (grid.GetCellsByColumns, getIndex grid.NumberOfRows, -1, 0, getCoordinate false)
-        | _, Bottom -> (grid.GetCellsByColumns, 0, 1, getIndex grid.NumberOfRows, getCoordinate false)
+        | _, Right -> (grid.GetRIndexes, 0, 1, getIndex grid.NumberOfColumns, getCoordinate true)
+        | _, Left -> (grid.GetRIndexes, getIndex grid.NumberOfColumns, -1, 0, getCoordinate true)
+        | _, Top -> (grid.GetCIndexes, getIndex grid.NumberOfRows, -1, 0, getCoordinate false)
+        | _, Bottom -> (grid.GetCIndexes, 0, 1, getIndex grid.NumberOfRows, getCoordinate false)
 
     let position1 = mapDirectionToPosition direction1
     let position2 = mapDirectionToPosition direction2
@@ -152,7 +152,7 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
 
     extractBy
-    |> Seq.iteri(fun index1 _ ->
+    |> Seq.iter(fun index1 ->
         carveRow
             // dependencies
             isPartOfMaze

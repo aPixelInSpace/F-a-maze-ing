@@ -41,11 +41,9 @@ let private calculatePoints (grid : PolarGrid) (centerX, centerY, ringHeight) co
 
     ((innerRadius, outerRadius), (bottomLeftX, bottomLeftY), (topLeftX, topLeftY), (bottomRightX, bottomRightY), (topRightX, topRightY))
 
-let private appendWallsType (grid : PolarGrid) (centerX, centerY, ringHeight) coordinate (sBuilder : StringBuilder) =
+let private appendWallsType (grid : PolarGrid) (centerX, centerY, ringHeight) (cell, coordinate) (sBuilder : StringBuilder) =
     let ((innerRadius, outerRadius), (bottomLeftX, bottomLeftY), (topLeftX, topLeftY), (bottomRightX, bottomRightY), (topRightX, topRightY)) =
         calculatePoints grid (centerX, centerY, ringHeight) coordinate
-
-    let cell = grid.Cell coordinate
 
     let appendWall = appendWall sBuilder
 
@@ -99,7 +97,7 @@ let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
     //|> appendPath path (wholeCellLines grid (centerX, centerY, ringHeight))
     |> appendPathWithAnimation path (wholeCellLines grid (centerX, centerY, ringHeight))
     //|> appendLeaves map.Leaves (wholeCellLines grid (centerX, centerY, ringHeight))
-    |> appendWalls (grid.GetCellByCell (fun _ _ -> true) |> Seq.map(snd)) (appendWallsType grid (centerX, centerY, ringHeight))
+    |> appendWalls (grid.GetCellByCell (fun _ _ -> true)) (appendWallsType grid (centerX, centerY, ringHeight))
     |> appendFooter
     |> ignore
 

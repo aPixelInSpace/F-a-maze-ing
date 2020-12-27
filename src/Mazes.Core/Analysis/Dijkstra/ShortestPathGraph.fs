@@ -30,7 +30,6 @@ type ShortestPathGraph<'Node> when 'Node : equality =
         let update node1 node2 =
             if this.Graph.ContainsEdge(node1, node2) then
                 let mutable edgeRef = TaggedEdge<'Node, Distance>(node1, node2, distance)
-                //edgeRef.Tag <- distance
                 if this.Graph.TryGetEdge(node1, node2, &edgeRef) then
                     this.Graph.RemoveEdge(edgeRef) |> ignore
 

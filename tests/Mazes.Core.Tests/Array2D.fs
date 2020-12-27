@@ -2,6 +2,7 @@
 
 module Mazes.Core.Tests.Array2D
 
+open System.Text
 open FsUnit
 open Xunit
 open Mazes.Core
@@ -38,7 +39,7 @@ let mapExtractByEnumToExtractBy extractByEnum =
 [<InlineData(ExtractByEnum.ColumnsAscendingRowsDescending, "2,0; 1,0; 0,0; 2,1; 1,1; 0,1; 2,2; 1,2; 0,2")>]
 [<InlineData(ExtractByEnum.ColumnsDescendingRowsAscending, "0,2; 1,2; 2,2; 0,1; 1,1; 2,1; 0,0; 1,0; 2,0")>]
 [<InlineData(ExtractByEnum.ColumnsDescendingRowsDescending, "2,2; 1,2; 0,2; 2,1; 1,1; 0,1; 2,0; 1,0; 0,0")>]
-let ``Given a 2d array, when getting item by item, then it should it should return the items in the order specified``
+let ``Given a 2d array, when getting item by item, then it should return the items in the order specified``
     (extractByEnum, expectedResult) =
 
     // arrange
@@ -54,3 +55,17 @@ let ``Given a 2d array, when getting item by item, then it should it should retu
         i)
     |> String.concat "; "
     |> should equal expectedResult
+
+[<Fact>]
+let ``Given a 2d array, when folding, then it should return the correct state`` () =
+
+    // arrange
+    let array2d = Array2D.init 2 2 (fun r c -> r.ToString() + "," + c.ToString())
+
+    // act
+    let state =
+        array2d
+        |> Array2D.fold (fun r c (state : StringBuilder) item -> state.Append($"{item}; ")) (StringBuilder())
+
+    // assert
+    state.ToString() |> should equal "0,0; 0,1; 1,0; 1,1; "

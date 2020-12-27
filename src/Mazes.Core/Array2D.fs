@@ -64,6 +64,20 @@ module Array2D =
                 yield array2d.[*, i]
         }
 
+    let getRIndexes array2d =
+        let numberRowsIndex = maxRowIndex array2d
+        seq {
+            for i in 0 .. numberRowsIndex do
+                yield i
+        }
+
+    let getCIndexes array2d =
+        let numberColumnsIndex = maxColumnIndex array2d
+        seq {
+            for i in 0 .. numberColumnsIndex do
+                yield i
+        }
+
     let getItemByItem (array2d: 'T[,]) extractBy filter =
 
         let getCoordinate dimension1Index dimension2Index =

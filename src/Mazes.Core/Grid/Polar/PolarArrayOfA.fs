@@ -1,6 +1,6 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Grid.Polar.ArrayOfA
+module Mazes.Core.Grid.Polar.PolarArrayOfA
 
 open System
 open Mazes.Core.ArrayOfA
@@ -40,6 +40,12 @@ let getNumberOfCellsAt (arrayOfA : 'A[][]) ringIndex =
 
 let getCellByCell (arrayOfA : 'A[][]) filter =
     getItemByItem arrayOfA filter
+
+let getRingByRing (arrayOfA : 'A[][]) =
+    seq {
+        for rIndex in 0 .. maxD1Index arrayOfA do
+            yield arrayOfA.[rIndex]
+    }
 
 let create numberOfRings widthHeightRatio numberOfCellsForCenterRing (constructor : int -> int -> 'T) =
     let ringHeight = widthHeightRatio / (float)numberOfRings 

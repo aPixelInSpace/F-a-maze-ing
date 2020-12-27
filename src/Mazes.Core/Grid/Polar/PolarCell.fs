@@ -5,7 +5,7 @@ namespace Mazes.Core.Grid.Polar
 open System
 open Mazes.Core
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Polar.ArrayOfA
+open Mazes.Core.Grid.Polar.PolarArrayOfA
 open Mazes.Core.Grid.Polar.Canvas
 
 [<Struct>]
@@ -50,11 +50,6 @@ type PolarCell =
         else
             let neighborCell = getCell cells otherCoordinate
             neighborCell.IsLinkedAt Inward
-
-    member this.ToCell cells coordinate =
-        {
-            IsLinked = this.IsLinked cells coordinate
-        }
 
 module PolarCell =
 

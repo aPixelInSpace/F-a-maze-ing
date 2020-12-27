@@ -13,7 +13,6 @@
         <Compile Include="Analysis\Dijkstra\Map.fs" />
         <Content Include="Analysis\Dijkstra\memo.txt" />
         <Compile Include="Canvas\Zone.fs" />
-		<Compile Include="Grid\Cell.fs" />
 		<Compile Include="Grid\Grid.fs" />
 		<Compile Include="Grid\Ortho\OrthoPosition.fs" />
 		<Compile Include="Grid\Ortho\OrthoCoordinate.fs" />
@@ -25,7 +24,7 @@
 		<Compile Include="Grid\Ortho\OrthoCell.fs" />
 		<Compile Include="Grid\Ortho\OrthoGrid.fs" />
 		<Compile Include="Grid\Ortho\GridView.fs" />
-		<Compile Include="Grid\Polar\ArrayOfA.fs" />
+		<Compile Include="Grid\Polar\PolarArrayOfA.fs" />
 		<Compile Include="Grid\Polar\PolarPosition.fs" />
 		<Compile Include="Grid\Polar\PolarCoordinate.fs" />
 		<Compile Include="Grid\Polar\Canvas\Canvas.fs" />

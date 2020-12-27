@@ -65,7 +65,7 @@ type Canvas =
 
 module Canvas =
     let create numberOfRings widthHeightRatio numberOfCellsForCenterRing isZonePartOfMaze =
-        let zones = ArrayOfA.create numberOfRings widthHeightRatio numberOfCellsForCenterRing (fun rIndex cIndex -> Zone.create (isZonePartOfMaze rIndex cIndex))
+        let zones = PolarArrayOfA.create numberOfRings widthHeightRatio numberOfCellsForCenterRing (fun rIndex cIndex -> Zone.create (isZonePartOfMaze rIndex cIndex))
     
         {
             WidthHeightRatio = widthHeightRatio

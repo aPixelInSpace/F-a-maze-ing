@@ -33,7 +33,7 @@ let createMaze rngSeed (grid : unit -> Grid<'G>) =
 
         while unvisited.Contains(nextCoordinate) do
 
-            nextCoordinate <- grid.RandomNeighborFrom rng nextCoordinate
+            nextCoordinate <- grid.RandomNeighbor rng nextCoordinate
 
             if pathTracker.ContainsKey(nextCoordinate) then
                 let index = pathTracker.Item(nextCoordinate)

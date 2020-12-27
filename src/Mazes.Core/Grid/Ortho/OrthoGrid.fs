@@ -27,8 +27,8 @@ type OrthoGrid =
         member self.NumberOfColumns =
             self.Canvas.NumberOfColumns
 
-        member self.Cell coordinate =
-            (self.Cell coordinate).ToCell
+        member self.IsCellLinked coordinate =
+            (self.Cell coordinate).IsLinked
 
         member self.IsLimitAt coordinate otherCoordinate =
             self.IsLimitAt coordinate (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate)
@@ -36,15 +36,11 @@ type OrthoGrid =
         member self.IsCellPartOfMaze coordinate =
             self.Canvas.IsZonePartOfMaze coordinate
 
-        member self.GetCellsByRows =
-            self.Cells
-                |> Array2D.map(fun cell -> cell.ToCell)
-                |> extractByRows
+        member self.GetRIndexes =
+            self.Cells |> getRIndexes
 
-        member self.GetCellsByColumns =
-            self.Cells
-                |> Array2D.map(fun cell -> cell.ToCell)
-                |> extractByColumns
+        member self.GetCIndexes =
+            self.Cells |> getCIndexes
 
         member self.CoordinatesPartOfMaze =
             self.CoordinatesPartOfMaze
@@ -61,11 +57,11 @@ type OrthoGrid =
         member self.NeighborsThatAreLinked isLinked coordinate =
             self.NeighborsThatAreLinked isLinked coordinate
 
-        member self.LinkedNeighborsWithCoordinates coordinate =
-            self.LinkedNeighborsWithCoordinates coordinate
+        member self.LinkedNeighbors coordinate =
+            self.LinkedNeighbors coordinate
 
-        member self.RandomNeighborFrom rng coordinate =
-            self.RandomNeighborFrom rng coordinate
+        member self.RandomNeighbor rng coordinate =
+            self.RandomNeighbor rng coordinate
 
         member self.RandomCoordinatePartOfMazeAndNotLinked rng =
             self.RandomCoordinatePartOfMazeAndNotLinked rng
@@ -81,9 +77,6 @@ type OrthoGrid =
 
         member self.ToSpecializedGrid =
             self
-
-    member self.HasCells =
-        self.Cells.Length > 0
 
     member self.Cell coordinate =
         get self.Cells coordinate
@@ -141,41 +134,25 @@ type OrthoGrid =
         | _ -> failwith "UpdateWallAtCoordinates unable to find a connection between the two coordinates"
 
     /// Returns the neighbors that are inside the bound of the grid
-    member self.NeighborsFrom coordinate =
+    member self.Neighbors coordinate =
         self.Canvas.NeighborsPartOfMazeOf coordinate
             |> Seq.filter(fun (_, nPosition) -> not (self.IsLimitAt coordinate nPosition))
             |> Seq.map(fst)
 
-    /// Returns a random neighbor that is inside the bound of the grid
-    member self.RandomNeighborFrom (rng : Random) coordinate =
-        let neighbors = self.NeighborsFrom coordinate |> Seq.toArray
+    member self.RandomNeighbor (rng : Random) coordinate =
+        let neighbors = self.Neighbors coordinate |> Seq.toArray
         neighbors.[rng.Next(neighbors.Length)]
 
-    /// Returns a random neighbor that is not currently linked with the coordinate
-    member self.RandomUnlinkedNeighborFrom (rng : Random) coordinate =
-        let currentCell = self.Cell coordinate
-        let neighbors =
-            self.NeighborsFrom coordinate
-            |> Seq.filter(fun nCoordinate -> not (currentCell.AreLinked coordinate nCoordinate))
-            |> Seq.toArray
-
-        if neighbors.Length > 0 then
-            Some neighbors.[rng.Next(neighbors.Length)]
-        else
-            None
-
-    /// Returns the neighbors coordinates that are linked, NOT NECESSARILY with the coordinate
     member self.NeighborsThatAreLinked isLinked coordinate =
-        let neighbors = self.NeighborsFrom coordinate
+        let neighbors = self.Neighbors coordinate
         neighbors |> Seq.filter(fun nCoordinate -> (self.Cell nCoordinate).IsLinked = isLinked)
 
-    /// Returns the neighbors coordinates that are linked with the coordinate
-    member self.LinkedNeighborsWithCoordinates coordinate =
+    member self.LinkedNeighbors coordinate =
         let isLinkedAt otherCoordinate =
             not (self.IsLimitAt coordinate (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate)) &&        
             (self.Cell coordinate).AreLinked coordinate otherCoordinate
 
-        let neighborsCoordinates = self.NeighborsFrom coordinate
+        let neighborsCoordinates = self.Neighbors coordinate
 
         seq {
             for neighborCoordinate in neighborsCoordinates do   

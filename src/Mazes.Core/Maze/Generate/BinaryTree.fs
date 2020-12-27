@@ -92,8 +92,8 @@ let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2We
     let position1 = mapDirectionToPosition direction1
     let position2 = mapDirectionToPosition direction2
 
-    grid.GetCellsByRows
-    |> Seq.iteri(fun rIndex _ ->
+    grid.GetRIndexes
+    |> Seq.iter(fun rIndex ->
         carveRow
             // params
             position1
