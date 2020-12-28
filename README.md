@@ -2,7 +2,15 @@
 [![codecov](https://codecov.io/gh/aPixelInSpace/F-a-maze-ing/branch/main/graph/badge.svg?token=K6FQOQZ8BS)](https://codecov.io/gh/aPixelInSpace/F-a-maze-ing)
 
 # F-a-maze-ing
-A, simple, composable and configurable maze generator made with F#
+A simple, composable and configurable maze generator made with F#
+
+This project is inspired by working through the book [Mazes for Programmers](https://pragprog.com/book/jbmaze/mazes-for-programmers) by Jamis Buck.
+
+<img src="resources/Book/mazes-for-programmers.jpg" width="300">
+
+The code in the book is written in Ruby and leans on Object-Oriented design.
+
+My goal is two fold : give the project a functional spin and learn F# in the process. To do so, I freely changed or adapted much of the original code.
 
 ## Examples
 
@@ -11,28 +19,28 @@ The SVG render can color the maze and show the path(s) between two zones that ar
 #### Polar
 * Circular
 
-<img src="docs/Polar/SVG/CircleMaze.svg" width="400">
+<img src="resources/Examples/Polar/SVG/CircleMaze.svg" width="400">
 
 #### Orthogonal
 * Rectangular
 
-<img src="docs/Ortho/SVG/RectangularMaze.svg" width="400">
+<img src="resources/Examples/Ortho/SVG/RectangularMaze.svg" width="400">
 
 * Triangular
 
-<img src="docs/Ortho/SVG/TriangularMaze.svg" width="400">
+<img src="resources/Examples/Ortho/SVG/TriangularMaze.svg" width="400">
 
 * Ellipse
 
-<img src="docs/Ortho/SVG/EllipseMaze.svg" width="400">
+<img src="resources/Examples/Ortho/SVG/EllipseMaze.svg" width="400">
 
 * Doughnut
 
-<img src="docs/Ortho/SVG/DoughnutMaze.svg" width="400">
+<img src="resources/Examples/Ortho/SVG/DoughnutMaze.svg" width="400">
 
 * Composite
 
-<img src="docs/Ortho/SVG/CompositeMaze.svg" width="400">
+<img src="resources/Examples/Ortho/SVG/CompositeMaze.svg" width="400">
 
 ### ASCII
 The text render is simpler and only displays orthogonal mazes (using the Unicode characters [link](https://en.wikipedia.org/wiki/Box-drawing_character)) :

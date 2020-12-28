@@ -50,43 +50,40 @@ let private carveRow
             match (grid.Neighbor coordinate position) with
             | Some neighbor -> neighbor
             | None -> failwith "Binary Tree, unable to find the neighbor coordinate"
-        let notExistNeighborCoordinate position = (grid.Neighbor coordinate position).IsNone
+
+        let isPosALimit position = ((grid.Neighbor coordinate position).IsNone) || (grid.IsLimitAt coordinate (neighborCoordinate position))
         
         // if the cell is not part of the maze, we do nothing
         if not (grid.IsCellPartOfMaze coordinate) then ()
         else
 
-        let isPos1ALimit = (notExistNeighborCoordinate direction1.Position) || (grid.IsLimitAt coordinate (neighborCoordinate direction1.Position))
-        let isPos2ALimit = (notExistNeighborCoordinate direction2.Position) || (grid.IsLimitAt coordinate (neighborCoordinate direction2.Position))
-        
-        let ifNotAtLimitLinkCellAtPosition = grid.IfNotAtLimitLinkCells coordinate
+        let isPos1ALimit = isPosALimit direction1.Position
+        let isPos2ALimit = isPosALimit direction2.Position
 
         // if we are in a corner 
         if isPos1ALimit &&  isPos2ALimit then
-            ifNotAtLimitLinkCellAtPosition (neighborCoordinate direction1.Opposite.Position)
-            ifNotAtLimitLinkCellAtPosition (neighborCoordinate direction2.Opposite.Position)
+            grid.IfNotAtLimitLinkCells coordinate (neighborCoordinate direction1.Opposite.Position)
+            grid.IfNotAtLimitLinkCells coordinate (neighborCoordinate direction2.Opposite.Position)
         else
-
-        let linkCellAtPosition = grid.LinkCells coordinate
 
         // if the pos 1 is a limit then we always choose remove pos 2 (and the opposite pos 2 if possible)
         if isPos1ALimit then
-            linkCellAtPosition (neighborCoordinate direction2.Position)
-            ifNotAtLimitLinkCellAtPosition (neighborCoordinate direction2.Opposite.Position)
+            grid.LinkCells coordinate (neighborCoordinate direction2.Position)
+            grid.IfNotAtLimitLinkCells coordinate (neighborCoordinate direction2.Opposite.Position)
         else
 
         // if the pos 2 is a limit then we always choose remove pos 1 (and the opposite pos 1 if possible)
         if isPos2ALimit then
-            linkCellAtPosition (neighborCoordinate direction1.Position)
-            ifNotAtLimitLinkCellAtPosition (neighborCoordinate direction1.Opposite.Position)
+            grid.LinkCells coordinate (neighborCoordinate direction1.Position)
+            grid.IfNotAtLimitLinkCells coordinate (neighborCoordinate direction1.Opposite.Position)
         else
 
         // if pos 1 and pos 2 are both not a limit we flip a coin to decide which one we remove
         match rng.Next(rngTotalWeight) with
         | rng when rng < rngPosition1Weight ->
-            linkCellAtPosition (neighborCoordinate direction1.Position)
+            grid.LinkCells coordinate (neighborCoordinate direction1.Position)
         | _ ->
-            linkCellAtPosition (neighborCoordinate direction2.Position)
+            grid.LinkCells coordinate (neighborCoordinate direction2.Position)
 
 let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : unit -> Grid<'G>) =
 
