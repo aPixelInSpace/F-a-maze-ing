@@ -10,7 +10,7 @@ This project is inspired by working through the book [Mazes for Programmers](htt
 
 The code in the book is written in Ruby and leans on Object-Oriented design.
 
-My goal is two fold : give the project a functional spin and learn F# in the process. To do so, I freely changed or adapted much of the original code.
+My goal is two fold : give the project a functional spin and learn F# in the process. To do so, I freely change or adapt much of the original code.
 
 ## Examples
 
