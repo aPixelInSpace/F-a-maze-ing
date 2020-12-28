@@ -16,6 +16,7 @@
         <Compile Include="Grid\Ortho\Canvas\Canvas.fs" />
         <Compile Include="Grid\Ortho\Canvas\Shape\Rectangle.fs" />
         <Compile Include="Grid\Ortho\Canvas\Shape\TriangleIsosceles.fs" />
+        <Compile Include="Grid\Polar\Grid.fs" />
 		<Compile Include="Maze\Generate\BinaryTree.fs" />
 		<Compile Include="Maze\Generate\Sidewinder.fs" />
 		<Compile Include="Maze\Generate\AldousBroder.fs" />

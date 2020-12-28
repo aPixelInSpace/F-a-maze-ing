@@ -18,10 +18,10 @@ let ``Given an empty canvas, when creating a grid, then the grid should also be 
     let emptyCanvas = Canvas.Convert.fromString emptyStringCanvas
 
     // act
-    let sut = emptyCanvas.Value |> OrthoGrid.create
+    let grid = emptyCanvas.Value |> OrthoGrid.create
 
     // assert
-    sut.Cells.Length |> should equal 0
+    grid.Cells.Length |> should equal 0
 
 [<Fact>]  
 let ``Given a canvas with a single zone part of the maze, when creating a grid, then the grid should contain a single cell with only borders`` () =
@@ -35,15 +35,15 @@ let ``Given a canvas with a single zone part of the maze, when creating a grid, 
     let singleZoneCanvas = Canvas.Convert.fromString singleZoneStringCanvas
 
     // act
-    let sut = singleZoneCanvas.Value |> OrthoGrid.create
+    let grid = singleZoneCanvas.Value |> OrthoGrid.create
     
     // assert
-    sut.Cells.Length |> should equal 1
+    grid.Cells.Length |> should equal 1
     
-    sut.Cells.[0, 0].WallTop |> should equal { WallPosition = Top; WallType = Border  }
-    sut.Cells.[0, 0].WallRight |> should equal { WallPosition = Right; WallType = Border  }
-    sut.Cells.[0, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
-    sut.Cells.[0, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
+    grid.Cells.[0, 0].WallTop |> should equal { WallPosition = Top; WallType = Border  }
+    grid.Cells.[0, 0].WallRight |> should equal { WallPosition = Right; WallType = Border  }
+    grid.Cells.[0, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
+    grid.Cells.[0, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
 
 [<Fact>]  
 let ``Given a canvas with two zones part of the maze side by side horizontally, when creating a grid, then the grid should contain two cells with normal wall in the middle`` () =
@@ -57,21 +57,21 @@ let ``Given a canvas with two zones part of the maze side by side horizontally, 
     let twoZonesCanvas = Canvas.Convert.fromString twoZonesStringCanvas
 
     // act
-    let sut = twoZonesCanvas.Value |> OrthoGrid.create
+    let grid = twoZonesCanvas.Value |> OrthoGrid.create
     
     // assert
-    sut.Cells.Length |> should equal 2
-    sut.Cells.[0, *].Length |> should equal 2
+    grid.Cells.Length |> should equal 2
+    grid.Cells.[0, *].Length |> should equal 2
     
-    sut.Cells.[0, 0].WallTop |> should equal { WallPosition = Top; WallType = Border  }
-    sut.Cells.[0, 0].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
-    sut.Cells.[0, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
-    sut.Cells.[0, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
+    grid.Cells.[0, 0].WallTop |> should equal { WallPosition = Top; WallType = Border  }
+    grid.Cells.[0, 0].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
+    grid.Cells.[0, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
+    grid.Cells.[0, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
     
-    sut.Cells.[0, 1].WallTop |> should equal { WallPosition = Top; WallType = Border  }
-    sut.Cells.[0, 1].WallRight |> should equal { WallPosition = Right; WallType = Border  }
-    sut.Cells.[0, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
-    sut.Cells.[0, 1].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
+    grid.Cells.[0, 1].WallTop |> should equal { WallPosition = Top; WallType = Border  }
+    grid.Cells.[0, 1].WallRight |> should equal { WallPosition = Right; WallType = Border  }
+    grid.Cells.[0, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
+    grid.Cells.[0, 1].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
 
 [<Fact>]  
 let ``Given a canvas with two zones part of the maze side by side vertically, when creating a grid, then the grid should contain two cells with normal wall in the middle`` () =
@@ -86,21 +86,21 @@ let ``Given a canvas with two zones part of the maze side by side vertically, wh
     let twoZonesCanvas = Canvas.Convert.fromString twoZonesStringCanvas
 
     // act
-    let sut = twoZonesCanvas.Value |> OrthoGrid.create
+    let grid = twoZonesCanvas.Value |> OrthoGrid.create
 
     // assert
-    sut.Cells.Length |> should equal 2
-    sut.Cells.[*, 0].Length |> should equal 2
+    grid.Cells.Length |> should equal 2
+    grid.Cells.[*, 0].Length |> should equal 2
     
-    sut.Cells.[0, 0].WallTop |> should equal { WallPosition = Top; WallType = Border  }
-    sut.Cells.[0, 0].WallRight |> should equal { WallPosition = Right; WallType = Border  }
-    sut.Cells.[0, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
-    sut.Cells.[0, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
+    grid.Cells.[0, 0].WallTop |> should equal { WallPosition = Top; WallType = Border  }
+    grid.Cells.[0, 0].WallRight |> should equal { WallPosition = Right; WallType = Border  }
+    grid.Cells.[0, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
+    grid.Cells.[0, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
     
-    sut.Cells.[1, 0].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
-    sut.Cells.[1, 0].WallRight |> should equal { WallPosition = Right; WallType = Border  }
-    sut.Cells.[1, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
-    sut.Cells.[1, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
+    grid.Cells.[1, 0].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
+    grid.Cells.[1, 0].WallRight |> should equal { WallPosition = Right; WallType = Border  }
+    grid.Cells.[1, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
+    grid.Cells.[1, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
     
 [<Fact>]  
 let ``Given a 3x3 canvas, when creating a grid, then it should have 3x3 cells with border walls on the edge and normal walls inside`` () =
@@ -116,71 +116,71 @@ let ``Given a 3x3 canvas, when creating a grid, then it should have 3x3 cells wi
     let threeByThreeCanvas = Canvas.Convert.fromString threeByThreeStringCanvas
 
     // act
-    let sut = threeByThreeCanvas.Value |> OrthoGrid.create
+    let grid = threeByThreeCanvas.Value |> OrthoGrid.create
 
     // assert
-    sut.Cells.Length |> should equal 9
-    sut.Cells.[0, *].Length |> should equal 3
-    sut.Cells.[1, *].Length |> should equal 3
-    sut.Cells.[2, *].Length |> should equal 3
-    sut.Cells.[*, 0].Length |> should equal 3
-    sut.Cells.[*, 1].Length |> should equal 3
-    sut.Cells.[*, 2].Length |> should equal 3
-    
+    grid.Cells.Length |> should equal 9
+    grid.Cells.[0, *].Length |> should equal 3
+    grid.Cells.[1, *].Length |> should equal 3
+    grid.Cells.[2, *].Length |> should equal 3
+    grid.Cells.[*, 0].Length |> should equal 3
+    grid.Cells.[*, 1].Length |> should equal 3
+    grid.Cells.[*, 2].Length |> should equal 3
+
     // 1
-    sut.Cells.[0, 0].WallTop |> should equal { WallPosition = Top; WallType = Border  }
-    sut.Cells.[0, 0].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
-    sut.Cells.[0, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
-    sut.Cells.[0, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
+    grid.Cells.[0, 0].WallTop |> should equal { WallPosition = Top; WallType = Border  }
+    grid.Cells.[0, 0].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
+    grid.Cells.[0, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
+    grid.Cells.[0, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
     
     // 2
-    sut.Cells.[1, 0].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
-    sut.Cells.[1, 0].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
-    sut.Cells.[1, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
-    sut.Cells.[1, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
+    grid.Cells.[1, 0].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
+    grid.Cells.[1, 0].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
+    grid.Cells.[1, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
+    grid.Cells.[1, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
     
     // 3
-    sut.Cells.[2, 0].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
-    sut.Cells.[2, 0].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
-    sut.Cells.[2, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
-    sut.Cells.[2, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
+    grid.Cells.[2, 0].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
+    grid.Cells.[2, 0].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
+    grid.Cells.[2, 0].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
+    grid.Cells.[2, 0].WallLeft |> should equal { WallPosition = Left; WallType = Border  }
     
     // 4
-    sut.Cells.[0, 1].WallTop |> should equal { WallPosition = Top; WallType = Border  }
-    sut.Cells.[0, 1].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
-    sut.Cells.[0, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
-    sut.Cells.[0, 1].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
+    grid.Cells.[0, 1].WallTop |> should equal { WallPosition = Top; WallType = Border  }
+    grid.Cells.[0, 1].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
+    grid.Cells.[0, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
+    grid.Cells.[0, 1].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
     
     // 5
-    sut.Cells.[1, 1].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
-    sut.Cells.[1, 1].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
-    sut.Cells.[1, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
-    sut.Cells.[1, 1].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
+    grid.Cells.[1, 1].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
+    grid.Cells.[1, 1].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
+    grid.Cells.[1, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
+    grid.Cells.[1, 1].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
     
     // 6
-    sut.Cells.[2, 1].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
-    sut.Cells.[2, 1].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
-    sut.Cells.[2, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
-    sut.Cells.[2, 1].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
+    grid.Cells.[2, 1].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
+    grid.Cells.[2, 1].WallRight |> should equal { WallPosition = Right; WallType = Normal  }
+    grid.Cells.[2, 1].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
+    grid.Cells.[2, 1].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
     
     // 7
-    sut.Cells.[0, 2].WallTop |> should equal { WallPosition = Top; WallType = Border  }
-    sut.Cells.[0, 2].WallRight |> should equal { WallPosition = Right; WallType = Border  }
-    sut.Cells.[0, 2].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
-    sut.Cells.[0, 2].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
+    grid.Cells.[0, 2].WallTop |> should equal { WallPosition = Top; WallType = Border  }
+    grid.Cells.[0, 2].WallRight |> should equal { WallPosition = Right; WallType = Border  }
+    grid.Cells.[0, 2].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
+    grid.Cells.[0, 2].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
     
     // 8
-    sut.Cells.[1, 2].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
-    sut.Cells.[1, 2].WallRight |> should equal { WallPosition = Right; WallType = Border  }
-    sut.Cells.[1, 2].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
-    sut.Cells.[1, 2].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
+    grid.Cells.[1, 2].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
+    grid.Cells.[1, 2].WallRight |> should equal { WallPosition = Right; WallType = Border  }
+    grid.Cells.[1, 2].WallBottom |> should equal { WallPosition = Bottom; WallType = Normal  }
+    grid.Cells.[1, 2].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
     
     // 9
-    sut.Cells.[2, 2].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
-    sut.Cells.[2, 2].WallRight |> should equal { WallPosition = Right; WallType = Border  }
-    sut.Cells.[2, 2].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
-    sut.Cells.[2, 2].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
-    
+    grid.Cells.[2, 2].WallTop |> should equal { WallPosition = Top; WallType = Normal  }
+    grid.Cells.[2, 2].WallRight |> should equal { WallPosition = Right; WallType = Border  }
+    grid.Cells.[2, 2].WallBottom |> should equal { WallPosition = Bottom; WallType = Border  }
+    grid.Cells.[2, 2].WallLeft |> should equal { WallPosition = Left; WallType = Normal  }
+
 [<Fact>]  
 let ``Given a grid, when linking a cell, then the neighbors walls should be empty at the positions`` () =
 

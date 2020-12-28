@@ -31,26 +31,26 @@ let ``Creating a orthogonal rectangular 5 by 10 maze generated with Aldous-Brode
         
     maze.Grid.ToString |> should equal expectedMaze
 
-//[<Fact>]
-//let ``Creating a polar disc 5 rings maze generated with Aldous-Broder algorithm (rng 1) should be like the expected output`` () =
-//    // arrange
-//    let grid =
-//        (Disc.create 5 1.0 3)
-//        |> PolarGrid.createGridFunction
-//    
-//    // act
-//    let maze = grid |> AldousBroder.createMaze 1
-//        
-//    // assert
-//    let expectedMaze =
-//        "| |___  _\n" +
-//        "|||| |\n" +
-//        " __  _  _  _\n" +
-//        "  ||  || ||\n" + 
-//        "_ __ _ ___   ______ _ __\n" +
-//        "|     ||   ||      |\n" +    
-//        "___  _ _ _  __ _ __ _  _\n" +
-//        "|   | | || |   | |  | |\n" + 
-//        "________________________"
-//        
-//    maze.Grid.ToString |> should equal expectedMaze
+[<Fact>]
+let ``Creating a polar disc 5 rings maze generated with Aldous-Broder algorithm (rng 1) should be like the expected output`` () =
+    // arrange
+    let grid =
+        (Disc.create 5 1.0 3)
+        |> PolarGrid.createGridFunction
+    
+    // act
+    let maze = grid |> AldousBroder.createMaze 1
+
+    // assert
+    let expectedMaze =
+        "| ¦ | |\n" +
+        "|‾|‾|‾|¨¦¨|‾|\n" +
+        "¦¨¦‾|‾|¨¦¨¦‾|¨|¨¦‾|¨|¨¦‾¦\n" +
+        "|‾¦¨¦‾¦‾¦¨¦‾|¨|‾¦‾¦‾¦¨|¨|¨¦‾¦‾¦‾¦‾¦‾¦‾|¨¦‾¦¨¦‾¦‾|\n" +
+        "|‾¦‾¦‾¦¨|¨¦‾|¨¦‾|¨|‾¦¨|¨¦‾¦‾¦¨|‾¦¨|‾¦‾¦¨|‾¦¨|¨¦‾|\n" +
+        " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
+        
+    maze.Grid.ToString |> should equal expectedMaze
+
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

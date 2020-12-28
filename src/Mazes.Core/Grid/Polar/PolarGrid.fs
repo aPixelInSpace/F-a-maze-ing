@@ -198,38 +198,69 @@ type PolarGrid =
     member this.ToString =
         let sBuilder = StringBuilder()
 
-        let appendHorizontalWall wallType =
+        let appendHorizontalWall wallType (sBuilder : StringBuilder) =
             match wallType with
-                | Normal | Border -> sBuilder.Append("_ ") |> ignore
-                | WallType.Empty -> sBuilder.Append("  ") |> ignore
+                | Normal | Border -> sBuilder.Append("‾")
+                | WallType.Empty -> sBuilder.Append("¨")
 
-        let appendVerticalWall wallType =
+        let appendVerticalWall wallType (sBuilder : StringBuilder) =
             match wallType with
-                | Normal | Border -> sBuilder.Append("| ") |> ignore
-                | WallType.Empty -> sBuilder.Append("  ") |> ignore
+                | Normal | Border -> sBuilder.Append("|")
+                | WallType.Empty -> sBuilder.Append("¦")
 
-        let appendRow appendWallType position (cellsRow : PolarCell array) =
+        let appendWhiteSpace (sBuilder : StringBuilder) =
+            sBuilder.Append(" ")
+
+        let appendRing appendCell appendLastCell (cellsRow : PolarCell array) =
             cellsRow
-            |> Array.iter(fun cell -> appendWallType  (cell.WallTypeAtPosition position))
+            |> Array.iter(appendCell)
+
+            cellsRow
+            |> Array.last
+            |> appendLastCell
+
             sBuilder.Append("\n") |> ignore
 
-        // first ring
+        let lastCell (lastCell : PolarCell) =
+            sBuilder
+            |> appendVerticalWall (lastCell.WallTypeAtPosition Right) |> ignore
+
+        // first
+        let firstRing (cell : PolarCell) =
+            sBuilder
+            |> appendVerticalWall (cell.WallTypeAtPosition Left)
+            |> appendWhiteSpace
+            |> ignore
+
         getRingByRing this.Cells
         |> Seq.head
-        |> appendRow appendVerticalWall Left
+        |> appendRing firstRing lastCell
 
-        // every other rings
+        // others
+        let everyOtherRing (cell : PolarCell) =
+            sBuilder
+            |> appendVerticalWall (cell.WallTypeAtPosition Left)
+            |> appendHorizontalWall (cell.WallTypeAtPosition Inward)
+            |> ignore
+
         getRingByRing this.Cells
         |> Seq.iteri(fun ringIndex cells ->
             if ringIndex > 0 then
-                sBuilder.Append(" ") |> ignore
-                cells |> appendRow appendHorizontalWall Inward
-                cells |> appendRow appendVerticalWall Left)
+                cells
+                |> appendRing everyOtherRing lastCell
+            else
+                ())
 
-        sBuilder.Append(" ") |> ignore
+        // last
+        let lastRing (cell : PolarCell) =
+            sBuilder
+            |> appendWhiteSpace
+            |> appendHorizontalWall (cell.WallTypeAtPosition Outward)
+            |> ignore
+
         getRingByRing this.Cells
         |> Seq.last
-        |> appendRow appendHorizontalWall Outward
+        |> appendRing lastRing (fun _ -> ())
 
         sBuilder.ToString()
 
