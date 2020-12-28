@@ -8,11 +8,12 @@ open Mazes.Core.Position
 
 type Grid<'G> =
     abstract member TotalOfMazeCells : int
-    abstract member NumberOfRows : int
-    abstract member NumberOfColumns : int
-    abstract member Dimension2Length : dimension1Index:int -> int
+    abstract member Dimension1Boundaries : dimension2Index:int -> (int * int)
+    abstract member Dimension2Boundaries : dimension1Index:int -> (int * int)
+    abstract member NeighborAbstractCoordinate : coordinate:Coordinate -> position:Position -> Coordinate
     /// Returns true if the cell has at least one link to another cell, false otherwise
     abstract member IsCellLinked : coordinate:Coordinate -> bool
+    abstract member ExistAt : coordinate:Coordinate -> bool
     /// Returns true if it is not possible to navigate from a coordinate to another coordinate (for example if there is a border between the two cells) 
     abstract member IsLimitAt : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
     /// Indicate if the cell is part of maze

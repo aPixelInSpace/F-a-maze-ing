@@ -33,6 +33,13 @@ let neighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
                 yield { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }   
     }
 
+let neighborBaseCoordinateAt coordinate position =    
+        match position with
+        | Outward ->  { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
+        | Right -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
+        | Inward -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
+        | Left -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
+
 let neighborPositionAt (arrayOfA : 'A[][]) coordinate otherCoordinate =
         let neighborCoordinateAt = neighborsCoordinateAt arrayOfA coordinate
         match otherCoordinate with

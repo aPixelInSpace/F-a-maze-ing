@@ -17,95 +17,107 @@ type PolarGrid =
     }
 
     interface Grid<PolarGrid> with
-        member self.TotalOfMazeCells =
-            self.Canvas.TotalOfMazeZones
+        member this.TotalOfMazeCells =
+            this.Canvas.TotalOfMazeZones
 
-        member self.NumberOfRows =
-            failwith "Not implemented"
+        member this.Dimension1Boundaries cellIndex =
+            let startIndex =
+                this.Cells
+                |> Array.findIndex(fun ring -> cellIndex <= (getIndex ring.Length))
 
-        member self.NumberOfColumns =
-            failwith "Not implemented"
+            let length =
+                this.Cells
+                |> Array.where(fun ring -> cellIndex <= (getIndex ring.Length))
+                |> Array.length
 
-        member self.Dimension2Length ringIndex =
-            self.Cells.[ringIndex].Length
+            (startIndex, length)
 
-        member self.IsCellLinked coordinate =
-            (self.Cell coordinate).IsLinked self.Cells coordinate
+        member this.Dimension2Boundaries ringIndex =
+            (0, this.Cells.[ringIndex].Length)
 
-        member self.IsLimitAt coordinate otherCoordinate =
-            self.IsLimitAt coordinate otherCoordinate
+        member this.NeighborAbstractCoordinate coordinate position =
+            (PolarCoordinate.neighborBaseCoordinateAt coordinate (PolarPosition.map position))
 
-        member self.IsCellPartOfMaze coordinate =
-            self.Canvas.IsZonePartOfMaze coordinate
+        member this.IsCellLinked coordinate =
+            (this.Cell coordinate).IsLinked this.Cells coordinate
 
-        member self.GetRIndexes =
-            self.Cells |> getRIndexes
+        member this.ExistAt coordinate =
+            existAt this.Cells coordinate
 
-        member self.GetCIndexes =
-            failwith "Not implemented"
+        member this.IsLimitAt coordinate otherCoordinate =
+            this.IsLimitAt coordinate otherCoordinate
 
-        member self.CoordinatesPartOfMaze =
-            self.CoordinatesPartOfMaze
+        member this.IsCellPartOfMaze coordinate =
+            this.Canvas.IsZonePartOfMaze coordinate
 
-        member self.LinkCells coordinate otherCoordinate =
-            self.LinkCells coordinate otherCoordinate
+        member this.GetRIndexes =
+            this.Cells |> getRIndexes
 
-        member self.PutBorderBetweenCells coordinate otherCoordinate =
-            let neighborPosition = PolarCoordinate.neighborPositionAt self.Cells coordinate otherCoordinate
-            self.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Border
+        member this.GetCIndexes =
+            this.Cells |> getCIndexes
 
-        member self.Neighbor coordinate position =
-            self.Neighbor coordinate (PolarPosition.map position)
+        member this.CoordinatesPartOfMaze =
+            this.CoordinatesPartOfMaze
 
-        member self.IfNotAtLimitLinkCells coordinate otherCoordinate =
-            self.IfNotAtLimitLinkCells coordinate otherCoordinate
+        member this.LinkCells coordinate otherCoordinate =
+            this.LinkCells coordinate otherCoordinate
 
-        member self.NeighborsThatAreLinked isLinked coordinate =
-            self.NeighborsThatAreLinked isLinked coordinate
+        member this.PutBorderBetweenCells coordinate otherCoordinate =
+            let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
+            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Border
 
-        member self.LinkedNeighbors coordinate =
-            self.LinkedNeighbors coordinate
+        member this.Neighbor coordinate position =
+            this.Neighbor coordinate (PolarPosition.map position)
 
-        member self.RandomNeighbor rng coordinate =
-            self.RandomNeighbor rng coordinate
+        member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
+            this.IfNotAtLimitLinkCells coordinate otherCoordinate
 
-        member self.RandomCoordinatePartOfMazeAndNotLinked rng =
-            self.RandomCoordinatePartOfMazeAndNotLinked rng
+        member this.NeighborsThatAreLinked isLinked coordinate =
+            this.NeighborsThatAreLinked isLinked coordinate
 
-        member self.GetFirstPartOfMazeZone =
-            snd self.Canvas.GetFirstPartOfMazeZone
+        member this.LinkedNeighbors coordinate =
+            this.LinkedNeighbors coordinate
 
-        member self.GetLastPartOfMazeZone =
-            snd self.Canvas.GetLastPartOfMazeZone
+        member this.RandomNeighbor rng coordinate =
+            this.RandomNeighbor rng coordinate
 
-        member self.ToString =
-            self.ToString
+        member this.RandomCoordinatePartOfMazeAndNotLinked rng =
+            this.RandomCoordinatePartOfMazeAndNotLinked rng
 
-        member self.ToSpecializedGrid =
-            self
+        member this.GetFirstPartOfMazeZone =
+            snd this.Canvas.GetFirstPartOfMazeZone
 
-    member self.Cell coordinate =
-        get self.Cells coordinate
+        member this.GetLastPartOfMazeZone =
+            snd this.Canvas.GetLastPartOfMazeZone
 
-    member self.GetCellByCell filter =
-        getItemByItem self.Cells filter
+        member this.ToString =
+            this.ToString
 
-    member self.IsLimitAt coordinate otherCoordinate =
-        let zone = self.Canvas.Zone coordinate
+        member this.ToSpecializedGrid =
+            this
+
+    member this.Cell coordinate =
+        get this.Cells coordinate
+
+    member this.GetCellByCell filter =
+        getItemByItem this.Cells filter
+
+    member this.IsLimitAt coordinate otherCoordinate =
+        let zone = this.Canvas.Zone coordinate
 
         let neighborCondition =
-            let neighborPosition = PolarCoordinate.neighborPositionAt self.Cells coordinate otherCoordinate
-            let neighborCell = self.Cell otherCoordinate
+            let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
+            let neighborCell = this.Cell otherCoordinate
 
             if neighborPosition <> Inward then
-                not (self.Canvas.ExistAt otherCoordinate) ||
-                not (self.Canvas.Zone otherCoordinate).IsAPartOfMaze ||
+                not (this.Canvas.ExistAt otherCoordinate) ||
+                not (this.Canvas.Zone otherCoordinate).IsAPartOfMaze ||
                 neighborCell.WallTypeAtPosition neighborPosition.Opposite = Border                
             else
-                let cell = self.Cell coordinate
+                let cell = this.Cell coordinate
                 if not (isFirstRing coordinate.RIndex) then
-                    not (self.Canvas.ExistAt otherCoordinate) ||
-                    not (self.Canvas.Zone otherCoordinate).IsAPartOfMaze ||
+                    not (this.Canvas.ExistAt otherCoordinate) ||
+                    not (this.Canvas.Zone otherCoordinate).IsAPartOfMaze ||
                     cell.WallTypeAtPosition neighborPosition = Border
                 else
                     true
@@ -113,9 +125,9 @@ type PolarGrid =
         (not zone.IsAPartOfMaze) ||
         neighborCondition
 
-    member private self.UpdateWallAtPosition coordinate neighborCoordinate (neighborPosition : PolarPosition) wallType =
+    member private this.UpdateWallAtPosition coordinate neighborCoordinate (neighborPosition : PolarPosition) wallType =
         let getWalls coordinate position =
-            self.Cells.[coordinate.RIndex].[coordinate.CIndex].Walls
+            this.Cells.[coordinate.RIndex].[coordinate.CIndex].Walls
             |> Array.map(fun wall ->
                 if wall.WallPosition = position then
                     { WallType = wallType; WallPosition = position }
@@ -125,65 +137,65 @@ type PolarGrid =
 
         match neighborPosition with
         | Left | Right ->
-            self.Cells.[coordinate.RIndex].[coordinate.CIndex] <- { Walls = (getWalls coordinate neighborPosition) }
-            self.Cells.[neighborCoordinate.RIndex].[neighborCoordinate.CIndex] <- { Walls = (getWalls neighborCoordinate neighborPosition.Opposite) }
+            this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- { Walls = (getWalls coordinate neighborPosition) }
+            this.Cells.[neighborCoordinate.RIndex].[neighborCoordinate.CIndex] <- { Walls = (getWalls neighborCoordinate neighborPosition.Opposite) }
         | Inward ->
-            self.Cells.[coordinate.RIndex].[coordinate.CIndex] <- { Walls = (getWalls coordinate neighborPosition) }
+            this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- { Walls = (getWalls coordinate neighborPosition) }
         | Outward ->
-            self.Cells.[neighborCoordinate.RIndex].[neighborCoordinate.CIndex] <- { Walls = (getWalls neighborCoordinate neighborPosition.Opposite) }
+            this.Cells.[neighborCoordinate.RIndex].[neighborCoordinate.CIndex] <- { Walls = (getWalls neighborCoordinate neighborPosition.Opposite) }
 
-    member self.LinkCells coordinate otherCoordinate =
-        let neighborPosition = PolarCoordinate.neighborPositionAt self.Cells coordinate otherCoordinate
-        self.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Empty
+    member this.LinkCells coordinate otherCoordinate =
+        let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
+        this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Empty
 
-    member self.IfNotAtLimitLinkCells coordinate otherCoordinate =
-        if not (self.IsLimitAt coordinate otherCoordinate) then
-            self.LinkCells coordinate otherCoordinate
+    member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
+        if not (this.IsLimitAt coordinate otherCoordinate) then
+            this.LinkCells coordinate otherCoordinate
 
-    member self.Neighbor coordinate position =
-        let neighbors = PolarCoordinate.neighborsCoordinateAt self.Cells coordinate position
+    member this.Neighbor coordinate position =
+        let neighbors = PolarCoordinate.neighborsCoordinateAt this.Cells coordinate position
         if neighbors |> Seq.isEmpty then
             None
         else
             Some (neighbors |> Seq.last)
 
     /// Returns the neighbors that are inside the bound of the grid
-    member self.NeighborsFrom coordinate =
-        self.Canvas.NeighborsPartOfMazeOf coordinate
-        |> Seq.filter(fun (nCoordinate, _) -> not (self.IsLimitAt coordinate nCoordinate))
+    member this.NeighborsFrom coordinate =
+        this.Canvas.NeighborsPartOfMazeOf coordinate
+        |> Seq.filter(fun (nCoordinate, _) -> not (this.IsLimitAt coordinate nCoordinate))
         |> Seq.map(fst)
 
-    member self.RandomNeighbor (rng : Random) coordinate =
-        let neighbors = self.NeighborsFrom coordinate |> Seq.toArray
+    member this.RandomNeighbor (rng : Random) coordinate =
+        let neighbors = this.NeighborsFrom coordinate |> Seq.toArray
         neighbors.[rng.Next(neighbors.Length)]
 
-    member self.NeighborsThatAreLinked isLinked coordinate =
-        self.NeighborsFrom coordinate
-        |> Seq.filter(fun nCoordinate -> (self.Cell nCoordinate).IsLinked self.Cells nCoordinate = isLinked)
+    member this.NeighborsThatAreLinked isLinked coordinate =
+        this.NeighborsFrom coordinate
+        |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked this.Cells nCoordinate = isLinked)
 
-    member self.LinkedNeighbors coordinate =
+    member this.LinkedNeighbors coordinate =
         let isLinkedAt otherCoordinate =
-            not (self.IsLimitAt coordinate otherCoordinate) &&        
-            (self.Cell coordinate).AreLinked self.Cells coordinate otherCoordinate
+            not (this.IsLimitAt coordinate otherCoordinate) &&        
+            (this.Cell coordinate).AreLinked this.Cells coordinate otherCoordinate
 
         seq {
-            let neighborsCoordinates = self.NeighborsFrom coordinate
+            let neighborsCoordinates = this.NeighborsFrom coordinate
             for neighborCoordinate in neighborsCoordinates do   
                 if (isLinkedAt neighborCoordinate) then
                     yield neighborCoordinate
         }
 
-    member self.RandomCoordinatePartOfMazeAndNotLinked (rng : Random) =
+    member this.RandomCoordinatePartOfMazeAndNotLinked (rng : Random) =
         let unlinkedPartOfMazeCells =
-            self.GetCellByCell (fun cell coordinate -> (self.Canvas.Zone coordinate).IsAPartOfMaze && not (cell.IsLinked self.Cells coordinate))
+            this.GetCellByCell (fun cell coordinate -> (this.Canvas.Zone coordinate).IsAPartOfMaze && not (cell.IsLinked this.Cells coordinate))
             |> Seq.toArray
         snd unlinkedPartOfMazeCells.[rng.Next(unlinkedPartOfMazeCells.Length)]
 
-    member self.CoordinatesPartOfMaze =
-        self.Canvas.GetZoneByZone (fun zone _ -> zone.IsAPartOfMaze)
+    member this.CoordinatesPartOfMaze =
+        this.Canvas.GetZoneByZone (fun zone _ -> zone.IsAPartOfMaze)
         |> Seq.map(fun (_, coordinate) -> coordinate)
 
-    member self.ToString =
+    member this.ToString =
         let sBuilder = StringBuilder()
 
         let appendHorizontalWall wallType =
@@ -202,12 +214,12 @@ type PolarGrid =
             sBuilder.Append("\n") |> ignore
 
         // first ring
-        getRingByRing self.Cells
+        getRingByRing this.Cells
         |> Seq.head
         |> appendRow appendVerticalWall Left
 
         // every other rings
-        getRingByRing self.Cells
+        getRingByRing this.Cells
         |> Seq.iteri(fun ringIndex cells ->
             if ringIndex > 0 then
                 sBuilder.Append(" ") |> ignore
@@ -215,7 +227,7 @@ type PolarGrid =
                 cells |> appendRow appendVerticalWall Left)
 
         sBuilder.Append(" ") |> ignore
-        getRingByRing self.Cells
+        getRingByRing this.Cells
         |> Seq.last
         |> appendRow appendHorizontalWall Outward
 

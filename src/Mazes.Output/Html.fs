@@ -5,6 +5,7 @@ module Mazes.Output.Html
 open System.IO
 open System.Text
 open Mazes.Core.Array2D
+open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
 let private columnsAxis (columnsAxisHtml : string) numberOfRows numberOfColumns =
@@ -53,7 +54,7 @@ let private rowNumber numberOfRows rowIndex =
         String.replicate (rowIndex.ToString().Length) " "
         + " "
 
-let outputHtml maze mazeInfo (textRenderedMaze : string) =
+let outputHtml (maze : Maze<OrthoGrid>) mazeInfo (textRenderedMaze : string) =
     let resourcesDir = Path.Combine(Directory.GetCurrentDirectory(), "Output.Resources/")
 
     let mainHtml = File.ReadAllText(Path.Combine(resourcesDir, "Main.html-template"))
@@ -66,10 +67,10 @@ let outputHtml maze mazeInfo (textRenderedMaze : string) =
     |> Array.iteri(fun rowIndex mazeTextRow ->
                     let row = mazeLineHtml
                                   .Replace("{{MazeRow}}", mazeTextRow)
-                                  .Replace("{{MazeRowNumber}}", rowNumber maze.Grid.NumberOfRows rowIndex)
+                                  .Replace("{{MazeRowNumber}}", rowNumber maze.Grid.ToSpecializedGrid.NumberOfRows rowIndex)
                     sbMaze.Append(row) |> ignore)
 
-    let columnsAxisHtml = columnsAxis columnsAxisHtml (getIndex maze.Grid.NumberOfRows) (getIndex maze.Grid.NumberOfColumns)
+    let columnsAxisHtml = columnsAxis columnsAxisHtml (getIndex maze.Grid.ToSpecializedGrid.NumberOfRows) (getIndex maze.Grid.ToSpecializedGrid.NumberOfColumns)
 
     let mainHtml = mainHtml
                        .Replace("{{Name}}", mazeInfo.Name)

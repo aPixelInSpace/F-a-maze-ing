@@ -92,9 +92,10 @@ let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2We
     let rng = Random(rngSeed)
 
     let getRowInfo rowIndex =
+        let (startIndex, length) = grid.Dimension2Boundaries rowIndex
         match direction1, direction2 with
-        | _, Left | Left, _ -> (getIndex (grid.Dimension2Length rowIndex), -1, 0)
-        | _ -> (0, 1, getIndex (grid.Dimension2Length rowIndex))
+        | _, Left | Left, _ -> (getIndex length , -1, startIndex)
+        | _ -> (startIndex, 1, getIndex length)
 
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
 

@@ -48,6 +48,13 @@ module ArrayOfA =
                 yield i
         }
 
+    let getCIndexes (arrayOfA : 'A[][]) =
+        let last = arrayOfA |> Array.last
+        seq {
+            for i in 0 .. (getIndex last.Length) do
+                yield i
+        }
+
     let getItemByItem (arrayOfA : 'A[][]) filter =
         seq {
             for rIndex in 0 .. maxD1Index arrayOfA do
