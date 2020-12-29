@@ -15,7 +15,7 @@ My goal is two fold : give the project a functional spin and learn F# in the pro
 ## Examples
 
 ### SVG
-The SVG render can color the maze and show the path(s) between two zones that are the most distant :
+The SVG render can color the maze and show the path(s) between two zones :
 #### Polar
 * Circular
 

@@ -47,7 +47,7 @@ type CoordinatesByDistance =
 
         coordinates
 
-    member this.ToFarthestFromRoot =
+    member this.Farthest =
         { Distance = this.MaxDistance; Coordinates = this.CoordinatesWithDistance(this.MaxDistance) }
 
     static member createEmpty =
@@ -140,7 +140,7 @@ type Map =
                             unvisited.Add neighbor newDistance
                             coordinatesByDistance.Remove distance neighbor
 
-                            graph.UpdateEdge coordinate neighbor distance
+                            graph.RemoveEdge coordinate neighbor distance
                             graph.AddEdge coordinate neighbor newDistance
                     | None -> ()
         
@@ -149,5 +149,5 @@ type Map =
 
         { ShortestPathGraph = graph
           ConnectedNodes = graph.Graph.VertexCount
-          FarthestFromRoot = coordinatesByDistance.ToFarthestFromRoot
+          FarthestFromRoot = coordinatesByDistance.Farthest
           Leaves = leavesArray }

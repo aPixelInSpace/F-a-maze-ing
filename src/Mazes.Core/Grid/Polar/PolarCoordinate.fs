@@ -30,7 +30,7 @@ let neighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
             if isLastCellOfRing arrayOfA coordinate.RIndex coordinate.CIndex then
                 yield { RIndex = coordinate.RIndex; CIndex = minCellIndex }
             else
-                yield { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }   
+                yield { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
     }
 
 let neighborBaseCoordinateAt coordinate position =    

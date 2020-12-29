@@ -5,13 +5,15 @@ module Mazes.Core.Tests.Maze.Generate.Sidewinder
 open FsUnit
 open Xunit
 open Mazes.Core.Tests.Helpers
-open Mazes.Core.Grid.Ortho.Canvas.Shape
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Ortho.Canvas.Shape
+open Mazes.Core.Grid.Polar
+open Mazes.Core.Grid.Polar.Canvas.Shape
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
-let ``Creating a rectangular 5 by 10 maze generated with the sidewinder algorithm (Top, Right, rng 1) should be like the expected output`` () =
+let ``Given a ortho grid 5 by 10, when generating a maze with the Sidewinder algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let grid =
         fun () ->
@@ -79,11 +81,10 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
         |> OrthoGrid.create
         :> Grid<OrthoGrid>
 
-    let direction1 = mapSidewinderDirectionEnumToSidewinderDirection direction1
-    let direction2 = mapSidewinderDirectionEnumToSidewinderDirection direction2
+    let map = mapSidewinderDirectionEnumToSidewinderDirection
 
     // act
-    let maze = Sidewinder.createMaze direction1 direction2 rngSeed direction1Weight direction2Weight gridRectangle
+    let maze = Sidewinder.createMaze (map direction1) (map direction2) rngSeed direction1Weight direction2Weight gridRectangle
 
     // we use the map to ensure that the total nodes accessible in the maze is equal to the total number of maze nodes of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
@@ -146,7 +147,7 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
 [<InlineData(10, TBE.Left, 2, 1, SDE.Left, SDE.Bottom, 1, 1, 1)>]
 
 [<InlineData(30, TBE.Left, 2, 3, SDE.Left, SDE.Bottom, 1, 1, 1)>]
-let ``Given a triangular canvas, when creating a maze with the sidewinder algorithm, then the maze should have every cell accessible``
+let ``Given a triangular ortho grid, when creating a maze with the sidewinder algorithm, then the maze should have every cell accessible``
     (baseLength, baseAt, baseDecrement, heightIncrement,
      direction1, direction2,
      rngSeed,
@@ -161,11 +162,10 @@ let ``Given a triangular canvas, when creating a maze with the sidewinder algori
         |> OrthoGrid.create
         :> Grid<OrthoGrid>
 
-    let direction1 = mapSidewinderDirectionEnumToSidewinderDirection direction1
-    let direction2 = mapSidewinderDirectionEnumToSidewinderDirection direction2
+    let map = mapSidewinderDirectionEnumToSidewinderDirection
 
     // act
-    let maze = Sidewinder.createMaze direction1 direction2 rngSeed direction1Weight direction2Weight gridTriangle
+    let maze = Sidewinder.createMaze (map direction1) (map direction2) rngSeed direction1Weight direction2Weight gridTriangle
 
     // we use the map to ensure that the total nodes accessible in the maze is equal to the total number of maze zones of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
@@ -173,4 +173,78 @@ let ``Given a triangular canvas, when creating a maze with the sidewinder algori
     let map = maze.createMap rootCoordinate
 
     // assert
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+
+[<Fact>]
+let ``Given a polar disc grid with 5 rings, when generating a maze with the Sidewinder algorithm (rng 1), then the output should be like the expected output`` () =
+    // arrange
+    let grid =
+        (Disc.create 5 1.0 3)
+        |> PolarGrid.createGridFunction
+    
+    // act
+    let maze = grid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
+
+    // assert
+    let expectedMaze =
+        "¦ ¦ ¦ ¦\n" +
+        "|‾¦¨¦‾¦‾¦‾¦‾|\n" +
+        "|¨|¨¦‾|¨|¨¦‾¦‾¦‾¦‾¦‾¦‾¦‾|\n" +
+        "|¨|‾¦¨|¨|¨¦‾¦‾¦‾|¨|¨|¨|¨¦‾¦‾¦‾¦‾¦‾¦‾¦‾¦‾¦‾¦‾¦‾¦‾|\n" +
+        "|¨|¨|¨|‾¦¨|‾¦‾¦¨|¨¦‾¦‾¦‾|¨¦‾|¨¦‾|¨|¨|‾¦¨¦‾¦‾¦‾|¨|\n" +
+        " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
+        
+    maze.Grid.ToString |> should equal expectedMaze
+
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+
+[<Theory>]
+[<InlineData(1, 1.0, 1, SDE.Top, SDE.Left, 1, 1, 1)>]
+[<InlineData(3, 1.0, 1, SDE.Top, SDE.Left, 1, 1, 1)>]
+
+[<InlineData(3, 1.0, 3, SDE.Top, SDE.Left, 1, 1, 1)>]
+[<InlineData(3, 1.0, 3, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(3, 1.0, 3, SDE.Bottom, SDE.Left, 1, 1, 1)>]
+[<InlineData(3, 1.0, 3, SDE.Bottom, SDE.Right, 1, 1, 1)>]
+[<InlineData(3, 1.0, 3, SDE.Left, SDE.Top, 1, 1, 1)>]
+[<InlineData(3, 1.0, 3, SDE.Left, SDE.Bottom, 1, 1, 1)>]
+[<InlineData(3, 1.0, 3, SDE.Right, SDE.Top, 1, 1, 1)>]
+[<InlineData(3, 1.0, 3, SDE.Right, SDE.Bottom, 1, 1, 1)>]
+
+[<InlineData(10, 1.0, 4, SDE.Top, SDE.Left, 1, 1, 1)>]
+[<InlineData(10, 1.0, 4, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(10, 1.0, 4, SDE.Bottom, SDE.Left, 1, 1, 1)>]
+[<InlineData(10, 1.0, 4, SDE.Bottom, SDE.Right, 1, 1, 1)>]
+[<InlineData(10, 1.0, 4, SDE.Left, SDE.Top, 1, 1, 1)>]
+[<InlineData(10, 1.0, 4, SDE.Left, SDE.Bottom, 1, 1, 1)>]
+[<InlineData(10, 1.0, 4, SDE.Right, SDE.Top, 1, 1, 1)>]
+[<InlineData(10, 1.0, 4, SDE.Right, SDE.Bottom, 1, 1, 1)>]
+
+[<InlineData(27, 1.0, 2, SDE.Top, SDE.Left, 1, 1, 1)>]
+[<InlineData(2, 1.0, 2, SDE.Top, SDE.Left, 1, 1, 1)>]
+[<InlineData(15, 1.0, 4, SDE.Top, SDE.Right, 1, 1, 1)>]
+[<InlineData(24, 1.0, 5, SDE.Bottom, SDE.Left, 1, 1, 1)>]
+[<InlineData(12, 1.0, 3, SDE.Bottom, SDE.Right, 1, 1, 1)>]
+[<InlineData(8, 1.0, 4, SDE.Left, SDE.Top, 1, 1, 1)>]
+[<InlineData(23, 1.0, 3, SDE.Left, SDE.Bottom, 1, 1, 1)>]
+[<InlineData(17, 1.0, 2, SDE.Right, SDE.Top, 1, 1, 1)>]
+[<InlineData(11, 1.0, 1, SDE.Right, SDE.Bottom, 1, 1, 1)>]
+let ``Given a disc polar grid, when creating a maze with the sidewinder algorithm, then the maze should have every cell accessible``
+    (numberOfRings, widthHeightRatio, numberOfCellsForCenterRing,
+     direction1, direction2,
+     rngSeed,
+     direction1Weight, direction2Weight) =
+
+    // arrange
+    let map = mapSidewinderDirectionEnumToSidewinderDirection
+    let grid =
+        (Disc.create numberOfRings widthHeightRatio numberOfCellsForCenterRing)
+        |> PolarGrid.createGridFunction
+    
+    // act
+    let maze = grid |> Sidewinder.createMaze (map direction1) (map direction2) rngSeed direction1Weight direction2Weight
+
+    // assert
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

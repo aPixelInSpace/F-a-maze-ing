@@ -41,6 +41,7 @@ let private getRandomIndex2AtPos1ForFromRange isALimitAt (rng : Random) incremen
     else
         None
 
+// todo : refactor to make it simpler and more understandable
 let private carveRow
     // dependencies
     getDimension1Limits    
@@ -133,19 +134,31 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
 
     let rng = Random(rngSeed)
 
-    let (extractBy, getCoordinate, increment) =
+    let getTraverseCoordinate isByRows coordinate =
+        (match isByRows with
+        | true ->
+            coordinate
+        | false ->
+            { RIndex = coordinate.CIndex; CIndex = coordinate.RIndex })
+
+    let (extractBy, getCoordinate, getTraverseCoordinate, increment, isByRows) =
+        let isByRows =
+            match direction1, direction2 with
+            | _, Right -> true
+            | _, Left -> true
+            | _, Top -> false
+            | _, Bottom -> false
+        
         let getCoordinate isByRows coordinate =
             match isByRows with
-            | true ->
-                coordinate
-            | false ->
-                { RIndex = coordinate.CIndex; CIndex = coordinate.RIndex  }
+            | true -> getTraverseCoordinate isByRows coordinate
+            | false -> grid.GetAdjustedCoordinate (getTraverseCoordinate isByRows coordinate)
 
         match direction1, direction2 with
-         | _, Right -> (grid.GetRIndexes), (getCoordinate true), 1
-         | _, Left -> (grid.GetRIndexes), (getCoordinate true), -1
-         | _, Top -> (grid.GetCIndexes), (getCoordinate false), -1
-         | _, Bottom -> (grid.GetCIndexes), (getCoordinate false), 1
+         | _, Right -> (grid.GetRIndexes), (getCoordinate isByRows), (getTraverseCoordinate isByRows), 1, isByRows
+         | _, Left -> (grid.GetRIndexes), (getCoordinate isByRows), (getTraverseCoordinate isByRows), -1, isByRows
+         | _, Top -> (grid.GetCIndexes), (getCoordinate isByRows), (getTraverseCoordinate isByRows), -1, isByRows
+         | _, Bottom -> (grid.GetCIndexes), (getCoordinate isByRows), (getTraverseCoordinate isByRows), 1, isByRows
 
     let getDimension1Limits dimensionIndex =
          match direction1, direction2 with
@@ -168,10 +181,23 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
             | None -> failwith "Sidewinder, unable to find the neighbor coordinate"
 
     let isPartOfMaze coordinate = (grid.IsCellPartOfMaze (getCoordinate coordinate))
+    
+    let isInsideGridBoundary coordinate (direction : Direction) =
+        let coordinate = getTraverseCoordinate coordinate
+        let existAt =
+            match isByRows with
+            | true -> grid.ExistAt
+            | false -> grid.GetAdjustedExistAt
+        match direction with
+        | Left -> existAt { coordinate with CIndex = coordinate.CIndex - 1 }
+        | Top -> existAt { coordinate with RIndex = coordinate.RIndex - 1 }
+        | Right -> existAt { coordinate with CIndex = coordinate.CIndex + 1 }
+        | Bottom -> existAt { coordinate with RIndex = coordinate.RIndex + 1 }
+    
     let isALimitAt coordinate (direction : Direction) =
-        ((grid.Neighbor (getCoordinate coordinate) direction.Position).IsNone ||
-         (grid.IsLimitAt (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))) //||
-        //not (grid.ExistAt ((grid.NeighborAbstractCoordinate (getCoordinate coordinate) direction.Position)))
+        (grid.Neighbor (getCoordinate coordinate) direction.Position).IsNone ||
+        (grid.IsLimitAt (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position)) ||
+        (not (isInsideGridBoundary coordinate direction))
 
     let linkCellAtPosition coordinate (direction : Direction) = (grid.LinkCells (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))
     let ifNotAtLimitLinkCellAtPosition coordinate (direction : Direction) =

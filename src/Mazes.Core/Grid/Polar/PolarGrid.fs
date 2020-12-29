@@ -21,14 +21,15 @@ type PolarGrid =
             this.Canvas.TotalOfMazeZones
 
         member this.Dimension1Boundaries cellIndex =
+            let maxCellsInLastRing = this.Cells.[maxD1Index this.Cells].Length
+
             let startIndex =
                 this.Cells
-                |> Array.findIndex(fun ring -> cellIndex <= (getIndex ring.Length))
+                |> Array.findIndex(fun ring ->
+                    let steps = maxCellsInLastRing / ring.Length
+                    cellIndex % steps = 0)
 
-            let length =
-                this.Cells
-                |> Array.where(fun ring -> cellIndex <= (getIndex ring.Length))
-                |> Array.length
+            let length = this.Cells.Length - startIndex
 
             (startIndex, length)
 
@@ -44,6 +45,12 @@ type PolarGrid =
         member this.ExistAt coordinate =
             existAt this.Cells coordinate
 
+        member this.GetAdjustedExistAt coordinate =
+            let maxCellsInLastRing = this.Cells.[maxD1Index this.Cells].Length
+            let ringLength = this.Cells.[coordinate.RIndex].Length
+            let ratio = maxCellsInLastRing / ringLength
+            coordinate.CIndex % ratio = 0
+
         member this.IsLimitAt coordinate otherCoordinate =
             this.IsLimitAt coordinate otherCoordinate
 
@@ -55,6 +62,14 @@ type PolarGrid =
 
         member this.GetCIndexes =
             this.Cells |> getCIndexes
+
+        member this.GetAdjustedCoordinate coordinate =
+            let maxCellsInLastRing = this.Cells.[maxD1Index this.Cells].Length
+            let ringLength = this.Cells.[coordinate.RIndex].Length
+
+            let ratio = maxCellsInLastRing / ringLength
+
+            { coordinate with CIndex = coordinate.CIndex / ratio }
 
         member this.CoordinatesPartOfMaze =
             this.CoordinatesPartOfMaze
@@ -132,13 +147,15 @@ type PolarGrid =
                 if wall.WallPosition = position then
                     { WallType = wallType; WallPosition = position }
                 else
-                    wall
-                )
+                    wall)
 
         match neighborPosition with
         | Left | Right ->
             this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- { Walls = (getWalls coordinate neighborPosition) }
             this.Cells.[neighborCoordinate.RIndex].[neighborCoordinate.CIndex] <- { Walls = (getWalls neighborCoordinate neighborPosition.Opposite) }
+            if (PolarCoordinate.neighborsCoordinateAt this.Cells coordinate neighborPosition.Opposite) |> Seq.head = neighborCoordinate then
+                this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- { Walls = (getWalls coordinate neighborPosition.Opposite) }
+                this.Cells.[neighborCoordinate.RIndex].[neighborCoordinate.CIndex] <- { Walls = (getWalls neighborCoordinate neighborPosition) }            
         | Inward ->
             this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- { Walls = (getWalls coordinate neighborPosition) }
         | Outward ->

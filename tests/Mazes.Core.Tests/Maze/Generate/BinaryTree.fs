@@ -3,14 +3,17 @@
 module Mazes.Core.Tests.Maze.Generate.BinaryTree
 
 open FsUnit
+open Mazes.Core.Maze.Generate
 open Xunit
-open Mazes.Core.Grid.Ortho.Canvas.Shape
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Ortho.Canvas.Shape
+open Mazes.Core.Grid.Polar
+open Mazes.Core.Grid.Polar.Canvas.Shape
 open Mazes.Core.Maze.Generate.BinaryTree
 
 [<Fact>]
-let ``Creating a rectangular 5 by 10 maze generated with the binary tree algorithm (Top, Right, rng 1) should be like the expected output`` () =
+let ``Given a ortho grid 5 by 10, when generating a maze with the Binary Tree algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let grid =
         fun () ->
@@ -90,4 +93,28 @@ let ``Given a rectangular canvas, when a creating a maze with the binary tree al
     let map = maze.createMap rootCoordinate
 
     // assert
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+
+[<Fact>]
+let ``Given a polar disc grid with 5 rings, when generating a maze with the Binary Tree algorithm (rng 1), then the output should be like the expected output`` () =
+    // arrange
+    let grid =
+        (Disc.create 5 1.0 3)
+        |> PolarGrid.createGridFunction
+    
+    // act
+    let maze = grid |> createMaze Direction.Top Direction.Right 1 1 1
+
+    // assert
+    let expectedMaze =
+        "¦ ¦ ¦ ¦\n" +
+        "|¨|¨|¨|‾¦‾¦¨|\n" +
+        "¦¨|‾¦¨|‾¦¨|¨|¨|‾¦‾¦‾¦¨|‾¦\n" +
+        "¦‾¦‾¦‾¦¨|¨|¨|‾¦¨|‾¦¨|‾¦‾¦‾¦‾¦‾¦¨|‾¦‾¦‾¦¨|‾¦‾¦¨|‾¦\n" +
+        "|‾¦¨|¨|‾¦‾¦¨|¨|¨|‾¦¨|¨|‾¦¨|¨|‾¦¨|‾¦¨|‾¦¨|¨|¨|¨|¨|\n" +
+        " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
+        
+    maze.Grid.ToString |> should equal expectedMaze
+
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

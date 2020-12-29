@@ -21,7 +21,7 @@ module PolarPosition =
 
     let map position =
         match position with
-        | Position.Top -> Outward
+        | Position.Top -> Inward
         | Position.Right -> Right
-        | Position.Bottom -> Inward
+        | Position.Bottom -> Outward
         | Position.Left -> Left

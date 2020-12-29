@@ -6,6 +6,7 @@ open System
 open Mazes.Core
 open Mazes.Core.Position
 
+// todo : clean the interface and remove the unnecessary functions
 type Grid<'G> =
     abstract member TotalOfMazeCells : int
     abstract member Dimension1Boundaries : dimension2Index:int -> (int * int)
@@ -14,12 +15,14 @@ type Grid<'G> =
     /// Returns true if the cell has at least one link to another cell, false otherwise
     abstract member IsCellLinked : coordinate:Coordinate -> bool
     abstract member ExistAt : coordinate:Coordinate -> bool
+    abstract member GetAdjustedExistAt : coordinate:Coordinate -> bool
     /// Returns true if it is not possible to navigate from a coordinate to another coordinate (for example if there is a border between the two cells) 
     abstract member IsLimitAt : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
     /// Indicate if the cell is part of maze
     abstract member IsCellPartOfMaze : coordinate:Coordinate -> bool
     abstract member GetRIndexes : int seq
     abstract member GetCIndexes : int seq
+    abstract member GetAdjustedCoordinate : coordinate:Coordinate -> Coordinate
     /// Returns every cell that are part of the maze
     abstract member CoordinatesPartOfMaze : Coordinate seq
     /// Links two cells together (allows a passage between them)

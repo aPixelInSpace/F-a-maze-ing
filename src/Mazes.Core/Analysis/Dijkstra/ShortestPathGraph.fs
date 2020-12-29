@@ -26,7 +26,7 @@ type ShortestPathGraph<'Node> when 'Node : equality =
     member this.AddEdge source target distance =
         this.Graph.AddEdge(TaggedEdge<'Node, Distance>(source, target, distance)) |> ignore
 
-    member this.UpdateEdge source target distance =
+    member this.RemoveEdge source target distance =
         let update node1 node2 =
             if this.Graph.ContainsEdge(node1, node2) then
                 let mutable edgeRef = TaggedEdge<'Node, Distance>(node1, node2, distance)

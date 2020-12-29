@@ -35,7 +35,10 @@ type OrthoGrid =
 
         member this.ExistAt coordinate =
             existAt this.Cells coordinate
-            
+
+        member this.GetAdjustedExistAt coordinate =
+            existAt this.Cells coordinate
+
         member this.IsLimitAt coordinate otherCoordinate =
             this.IsLimitAt coordinate (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate)
 
@@ -47,6 +50,9 @@ type OrthoGrid =
 
         member this.GetCIndexes =
             this.Cells |> getCIndexes
+
+        member this.GetAdjustedCoordinate coordinate =
+            coordinate
 
         member this.CoordinatesPartOfMaze =
             this.CoordinatesPartOfMaze

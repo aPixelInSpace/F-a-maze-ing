@@ -4,14 +4,14 @@ module Mazes.Core.Tests.Maze.Generate.AldousBroder
 
 open FsUnit
 open Xunit
-open Mazes.Core.Grid.Ortho.Canvas.Shape
 open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Ortho.Canvas.Shape
 open Mazes.Core.Grid.Polar
 open Mazes.Core.Grid.Polar.Canvas.Shape
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
-let ``Creating a orthogonal rectangular 5 by 10 maze generated with Aldous-Broder algorithm (rng 1) should be like the expected output`` () =
+let ``Given a ortho grid 5 by 10, when generating a maze with Aldous-Broder algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let grid =
         (Rectangle.create 5 10)
@@ -32,7 +32,7 @@ let ``Creating a orthogonal rectangular 5 by 10 maze generated with Aldous-Brode
     maze.Grid.ToString |> should equal expectedMaze
 
 [<Fact>]
-let ``Creating a polar disc 5 rings maze generated with Aldous-Broder algorithm (rng 1) should be like the expected output`` () =
+let ``Given a polar disc grid with 5 rings, when generating a maze with the Aldous-Broder algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let grid =
         (Disc.create 5 1.0 3)
