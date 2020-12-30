@@ -3,7 +3,7 @@
 codecov:
     # https://docs.codecov.io/docs/coverage-configuration
     coverage:
-        range: 60..90
+        range: 60..85
         round: down
         precision: 2
 
