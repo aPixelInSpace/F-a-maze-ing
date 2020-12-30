@@ -12,6 +12,10 @@ codecov:
             default:
                 # basic
                 target: 0% #75%
+        patch:
+            default:
+                # basic
+                target: 0% #75%
 
     # Avoid "Missing base report"
     # https://github.com/codecov/support/issues/363
