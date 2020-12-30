@@ -7,21 +7,21 @@ open Mazes.Core
 type PolarPosition =
     | Inward
     | Outward
-    | Left
-    | Right
+    | Ccw // counter-clockwise
+    | Cw // clockwise
 
     member this.Opposite =
         match this with
         | Inward -> Outward
         | Outward -> Inward
-        | Left -> Right
-        | Right -> Left
+        | Ccw -> Cw
+        | Cw -> Ccw
 
 module PolarPosition =
 
     let map position =
         match position with
         | Position.Top -> Inward
-        | Position.Right -> Right
+        | Position.Right -> Cw
         | Position.Bottom -> Outward
-        | Position.Left -> Left
+        | Position.Left -> Ccw

@@ -54,7 +54,7 @@ let private appendWallsType (grid : PolarGrid) (centerX, centerY, ringHeight) (c
         appendWall $"M {round bottomLeftX} {round bottomLeftY} A {round innerRadius} {round innerRadius}, 0, 0, 1, {round bottomRightX} {round bottomRightY}" wallInward.WallType |> ignore
     | None -> ()
 
-    let wallLeft = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Left)
+    let wallLeft = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Ccw)
     match wallLeft with
     | Some wallLeft ->
         appendWall $"M {round bottomLeftX} {round bottomLeftY} L {round topLeftX} {round topLeftY}" wallLeft.WallType |> ignore

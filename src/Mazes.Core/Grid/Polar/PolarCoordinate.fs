@@ -21,12 +21,12 @@ let neighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
                 let ratio = outwardRingNumberOfCells / currentRingNumberOfCells
                 for ratioIndex in 0 .. ratio - 1 do
                     yield { RIndex = coordinate.RIndex + 1; CIndex = (coordinate.CIndex * ratio) + ratioIndex }
-        | Left ->
+        | Ccw ->
             if isFirstCellOfRing coordinate.CIndex then
                 yield { RIndex = coordinate.RIndex; CIndex = maxCellsIndex arrayOfA coordinate.RIndex }
             else
                 yield { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
-        | Right ->
+        | Cw ->
             if isLastCellOfRing arrayOfA coordinate.RIndex coordinate.CIndex then
                 yield { RIndex = coordinate.RIndex; CIndex = minCellIndex }
             else
@@ -36,15 +36,15 @@ let neighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
 let neighborBaseCoordinateAt coordinate position =    
         match position with
         | Outward ->  { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
-        | Right -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
+        | Cw -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
         | Inward -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
-        | Left -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
+        | Ccw -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
 
 let neighborPositionAt (arrayOfA : 'A[][]) coordinate otherCoordinate =
         let neighborCoordinateAt = neighborsCoordinateAt arrayOfA coordinate
         match otherCoordinate with
-        | c when c = (neighborCoordinateAt Left |> Seq.head) -> Left
-        | c when c = (neighborCoordinateAt Right |> Seq.head) -> Right
+        | c when c = (neighborCoordinateAt Ccw |> Seq.head) -> Ccw
+        | c when c = (neighborCoordinateAt Cw |> Seq.head) -> Cw
         | c when (neighborCoordinateAt Outward |> Seq.tryFind(fun n -> c = n)).IsSome -> Outward
         | c when (neighborCoordinateAt Inward |> Seq.tryFind(fun n -> c = n)).IsSome -> Inward
         | _ -> failwith "Unable to match the polar coordinates with a position"

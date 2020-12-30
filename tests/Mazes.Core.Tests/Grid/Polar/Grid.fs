@@ -37,8 +37,8 @@ let ``Given a canvas with one ring and a single zone part of the maze, when crea
     grid.Cells.[0].[0].Walls.Length |> should equal 3
 
     grid.Cells.[0].[0].WallTypeAtPosition Outward |> should equal Border
-    grid.Cells.[0].[0].WallTypeAtPosition Left |> should equal Normal
-    grid.Cells.[0].[0].WallTypeAtPosition Right |> should equal Normal
+    grid.Cells.[0].[0].WallTypeAtPosition Ccw |> should equal Normal
+    grid.Cells.[0].[0].WallTypeAtPosition Cw |> should equal Normal
 
 [<Fact>]  
 let ``Given a canvas with one ring and two zone part of the maze, when creating a grid, then the grid should contain a two cells with a border outward and normal walls on left and right`` () =
@@ -58,13 +58,13 @@ let ``Given a canvas with one ring and two zone part of the maze, when creating 
     grid.Cells.[0].[0].Walls.Length |> should equal 3
 
     grid.Cells.[0].[0].WallTypeAtPosition Outward |> should equal Border
-    grid.Cells.[0].[0].WallTypeAtPosition Left |> should equal Normal
-    grid.Cells.[0].[0].WallTypeAtPosition Right |> should equal Normal
+    grid.Cells.[0].[0].WallTypeAtPosition Ccw |> should equal Normal
+    grid.Cells.[0].[0].WallTypeAtPosition Cw |> should equal Normal
 
     grid.Cells.[0].[1].Walls.Length |> should equal 3
     grid.Cells.[0].[1].WallTypeAtPosition Outward |> should equal Border
-    grid.Cells.[0].[1].WallTypeAtPosition Left |> should equal Normal
-    grid.Cells.[0].[1].WallTypeAtPosition Right |> should equal Normal
+    grid.Cells.[0].[1].WallTypeAtPosition Ccw |> should equal Normal
+    grid.Cells.[0].[1].WallTypeAtPosition Cw |> should equal Normal
 
 [<Fact>]  
 let ``Given a canvas with three rings and three zone part of the maze for the first ring, when creating a grid, then the grid should contain a  cells with a border outward and normal walls on left and right`` () =
@@ -85,21 +85,21 @@ let ``Given a canvas with three rings and three zone part of the maze for the fi
 
     for cIndex in 0 .. grid.Cells.[0].Length - 1 do
         grid.Cells.[0].[cIndex].Walls.Length |> should equal 2
-        grid.Cells.[0].[cIndex].WallTypeAtPosition Left |> should equal Normal
-        grid.Cells.[0].[cIndex].WallTypeAtPosition Right |> should equal Normal
+        grid.Cells.[0].[cIndex].WallTypeAtPosition Ccw |> should equal Normal
+        grid.Cells.[0].[cIndex].WallTypeAtPosition Cw |> should equal Normal
 
     for cIndex in 0 .. grid.Cells.[1].Length - 1 do
         grid.Cells.[1].[cIndex].Walls.Length |> should equal 3
         grid.Cells.[1].[cIndex].WallTypeAtPosition Inward |> should equal Normal
-        grid.Cells.[1].[cIndex].WallTypeAtPosition Left |> should equal Normal
-        grid.Cells.[1].[cIndex].WallTypeAtPosition Right |> should equal Normal
+        grid.Cells.[1].[cIndex].WallTypeAtPosition Ccw |> should equal Normal
+        grid.Cells.[1].[cIndex].WallTypeAtPosition Cw |> should equal Normal
 
     for cIndex in 0 .. grid.Cells.[2].Length - 1 do
         grid.Cells.[2].[cIndex].Walls.Length |> should equal 4
         grid.Cells.[2].[cIndex].WallTypeAtPosition Outward |> should equal Border
         grid.Cells.[2].[cIndex].WallTypeAtPosition Inward |> should equal Normal
-        grid.Cells.[2].[cIndex].WallTypeAtPosition Left |> should equal Normal
-        grid.Cells.[2].[cIndex].WallTypeAtPosition Right |> should equal Normal
+        grid.Cells.[2].[cIndex].WallTypeAtPosition Ccw |> should equal Normal
+        grid.Cells.[2].[cIndex].WallTypeAtPosition Cw |> should equal Normal
 
 [<Fact>]  
 let ``Given a grid, when linking a cell, then the neighbors walls should be linked`` () =

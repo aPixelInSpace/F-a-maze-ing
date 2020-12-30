@@ -36,13 +36,13 @@ type Canvas =
     member this.NeighborsPartOfMazeOf (coordinate : Coordinate) =
         let neighborCoordinateAt = PolarCoordinate.neighborsCoordinateAt this.Zones coordinate 
         seq {
-            let leftCoordinate = neighborCoordinateAt Left |> Seq.head
+            let leftCoordinate = neighborCoordinateAt Ccw |> Seq.head
             if (this.Zone leftCoordinate).IsAPartOfMaze then
-                yield (leftCoordinate, Left)
+                yield (leftCoordinate, Ccw)
 
-            let rightCoordinate = neighborCoordinateAt Right |> Seq.head
+            let rightCoordinate = neighborCoordinateAt Cw |> Seq.head
             if (this.Zone rightCoordinate).IsAPartOfMaze then
-                yield (rightCoordinate, Right)
+                yield (rightCoordinate, Cw)
 
             let inwardCoordinate = neighborCoordinateAt Inward
             if not (inwardCoordinate |> Seq.isEmpty) then

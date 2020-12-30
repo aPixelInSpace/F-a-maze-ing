@@ -155,7 +155,7 @@ type PolarGrid =
                     wall)
 
         match neighborPosition with
-        | Left | Right ->
+        | Ccw | Cw ->
             this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- { Walls = (getWalls coordinate neighborPosition) }
             this.Cells.[neighborCoordinate.RIndex].[neighborCoordinate.CIndex] <- { Walls = (getWalls neighborCoordinate neighborPosition.Opposite) }
             if (PolarCoordinate.neighborsCoordinateAt this.Cells coordinate neighborPosition.Opposite) |> Seq.head = neighborCoordinate then
@@ -251,12 +251,12 @@ type PolarGrid =
 
         let lastCell (lastCell : PolarCell) =
             sBuilder
-            |> appendVerticalWall (lastCell.WallTypeAtPosition Right) |> ignore
+            |> appendVerticalWall (lastCell.WallTypeAtPosition Cw) |> ignore
 
         // first
         let firstRing (cell : PolarCell) =
             sBuilder
-            |> appendVerticalWall (cell.WallTypeAtPosition Left)
+            |> appendVerticalWall (cell.WallTypeAtPosition Ccw)
             |> appendWhiteSpace
             |> ignore
 
@@ -267,7 +267,7 @@ type PolarGrid =
         // others
         let everyOtherRing (cell : PolarCell) =
             sBuilder
-            |> appendVerticalWall (cell.WallTypeAtPosition Left)
+            |> appendVerticalWall (cell.WallTypeAtPosition Ccw)
             |> appendHorizontalWall (cell.WallTypeAtPosition Inward)
             |> ignore
 
