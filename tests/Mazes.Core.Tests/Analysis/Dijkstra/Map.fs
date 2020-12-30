@@ -51,6 +51,21 @@ let maze =
         ┗━┛ ┗━━━━━━━━━┛ ┗━┛  
     *)
 
+let grid5x5 =
+    let stringCanvas =
+        Canvas.Convert.startLineTag + "\n" +
+        "*****\n" +
+        "*****\n" +
+        "*****\n" +
+        "*****\n" +
+        "*****\n" +    
+        Canvas.Convert.endLineTag
+
+    fun () ->
+        (Canvas.Convert.fromString stringCanvas).Value
+        |> OrthoGrid.create
+        :> Grid<OrthoGrid>
+
 [<Fact>]
 let ``Given a root inside the maze, when creating a map, then it should give all the count of the connected nodes`` () =
 
@@ -96,7 +111,7 @@ let ``Given a root outside the maze, when creating a map, then the root is the o
     map.ShortestPathGraph.NodeDistanceFromRoot centerNode |> should equal None
 
 [<Fact>]
-let ``Given a map with no internal walls, when getting all the distances from the root, then it should match the expected distances`` () =
+let ``Given a maze with no internal walls, when creating a map and getting all the distances from the root, then it should match the expected distances`` () =
 
     // arrange
     let simpleCanvas =
@@ -130,19 +145,23 @@ let ``Given a map with no internal walls, when getting all the distances from th
     graph |> should equal expectedGraph
 
 [<Fact>]
-let ``Given a map, when getting all the distances from the root, then it should match the expected distances`` () =
+let ``Given a maze, when creating a map and getting all the distances from the root, then it should match the expected distances`` () =
 
     // arrange
     let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
 
     // act
     let map = maze.createMap rootCoordinate
+    let mapNotUsingAPriorityQueue = Mazes.Core.Analysis.Dijkstra.Map.create maze.Grid.LinkedNeighbors Tracker.SimpleTracker.createEmpty rootCoordinate
 
     // assert
     let outsideOfTheMazeNode = { RIndex = 0; CIndex = 1 }
+
     map.ShortestPathGraph.ContainsNode outsideOfTheMazeNode |> should equal false
+    mapNotUsingAPriorityQueue.ShortestPathGraph.ContainsNode outsideOfTheMazeNode |> should equal false
     
     let graph = map.ShortestPathGraph.ToString (fun e -> e.Source, e.Tag, e.Target)
+    let graphNotUsingAPriorityQueue = mapNotUsingAPriorityQueue.ShortestPathGraph.ToString (fun e -> e.Source, e.Tag, e.Target)
     
     let expectedGraph =
         "(0;0)->0->(1;0) (0;2)->6->(0;3) (0;3)->7->(0;4) (0;4)->8->(0;5) (0;5)->9->(0;6)\n\
@@ -163,6 +182,7 @@ let ``Given a map, when getting all the distances from the root, then it should 
          (8;8)->18->(9;8) (9;3)->18->(9;2) (9;4)->17->(9;3) (9;4)->17->(9;5) (9;5)->18->(9;6)\n"
 
     graph |> should equal expectedGraph
+    graphNotUsingAPriorityQueue |> should equal expectedGraph
 
 [<Fact>]
 let ``Given a root inside the maze, when creating a map, then it should give all the dead ends (leaves) of the maze`` () =
@@ -256,23 +276,8 @@ let ``Given a map, when getting the farthest coordinates, then it should return 
 let ``Given a map, when getting the longest paths in the map, then it should return the coordinates that forms the longest paths`` () =
 
     // arrange
-    let grid =
-        let stringCanvas =
-            Canvas.Convert.startLineTag + "\n" +
-            "*****\n" +
-            "*****\n" +
-            "*****\n" +
-            "*****\n" +
-            "*****\n" +    
-            Canvas.Convert.endLineTag
-
-        fun () ->
-            (Canvas.Convert.fromString stringCanvas).Value
-            |> OrthoGrid.create
-            :> Grid<OrthoGrid>
-
     let maze =
-        grid
+        grid5x5
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
         (*
@@ -306,6 +311,43 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
            { RIndex = 4; CIndex = 2 } |]
 
     longestPath |> Seq.toArray |> should equal expectedLongestPath
+
+[<Fact>]
+let ``Given a maze with teleports, when getting all the distances from the root, then it should match the expected distances`` () =
+
+    // arrange
+    let maze =
+        grid5x5
+        |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
+
+        (*
+            the above maze looks like this
+            ┏━━━━━━━━━┓
+            ┠───╴ ╶─╮ ┃
+            ┃ ╶─╮ ┬ ╰─┨
+            ┃ ┬ │ │ ┬ ┃
+            ┃ ╰─┴─┤ │ ┃
+            ┗━━━━━┷━┷━┛
+        *)
+
+    maze.Grid.AddTwoWayTeleport { RIndex = 0; CIndex = 0 } { RIndex = 3; CIndex = 1 }
+
+    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+
+    // act
+    let map = maze.createMap rootCoordinate
+
+    // assert    
+    let graph = map.ShortestPathGraph.ToString (fun e -> e.Source, e.Tag, e.Target)
+    
+    let expectedGraph =
+        "(0;0)->0->(0;1) (0;0)->0->(3;1) (0;1)->1->(0;2) (0;2)->2->(0;3) (0;2)->2->(1;2)\n" +
+        "(0;3)->3->(0;4) (0;4)->4->(1;4) (1;1)->4->(1;0) (1;2)->3->(1;1) (1;2)->3->(1;3)\n" +
+        "(1;2)->3->(2;2) (1;3)->4->(2;3) (2;0)->3->(1;0) (2;0)->3->(3;0) (2;1)->2->(2;0)\n" +
+        "(2;2)->4->(3;2) (2;3)->5->(2;4) (2;3)->5->(3;3) (2;4)->6->(3;4) (3;0)->4->(4;0)\n" +
+        "(3;1)->1->(2;1) (3;3)->6->(4;3) (3;4)->7->(4;4) (4;0)->5->(4;1) (4;1)->6->(4;2)\n"
+
+    graph |> should equal expectedGraph
 
 //[<Fact>]
 //let ``Big maze`` () =

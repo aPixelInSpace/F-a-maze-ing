@@ -6,6 +6,7 @@ open System
 open System.Text
 open Mazes.Core
 open Mazes.Core.Grid
+open Mazes.Core.Grid.Teleport
 open Mazes.Core.ArrayOfA
 open Mazes.Core.Grid.Polar.PolarArrayOfA
 open Mazes.Core.Grid.Polar.Canvas
@@ -14,6 +15,7 @@ type PolarGrid =
     {
         Canvas : Canvas
         Cells : PolarCell[][]
+        Teleports : Teleports
     }
 
     interface Grid<PolarGrid> with
@@ -89,6 +91,9 @@ type PolarGrid =
 
         member this.NeighborsThatAreLinked isLinked coordinate =
             this.NeighborsThatAreLinked isLinked coordinate
+
+        member this.AddTwoWayTeleport fromCoordinate toCoordinate =
+            this.AddTwoWayTeleport fromCoordinate toCoordinate
 
         member this.LinkedNeighbors coordinate =
             this.LinkedNeighbors coordinate
@@ -190,6 +195,9 @@ type PolarGrid =
         this.NeighborsFrom coordinate
         |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked this.Cells nCoordinate = isLinked)
 
+    member this.AddTwoWayTeleport fromCoordinate toCoordinate =
+        this.Teleports.AddTwoWayTeleport fromCoordinate toCoordinate
+
     member this.LinkedNeighbors coordinate =
         let isLinkedAt otherCoordinate =
             not (this.IsLimitAt coordinate otherCoordinate) &&        
@@ -200,6 +208,9 @@ type PolarGrid =
             for neighborCoordinate in neighborsCoordinates do   
                 if (isLinkedAt neighborCoordinate) then
                     yield neighborCoordinate
+
+            for teleport in this.Teleports.Teleports coordinate do
+                yield teleport
         }
 
     member this.RandomCoordinatePartOfMazeAndNotLinked (rng : Random) =
@@ -295,6 +306,7 @@ module PolarGrid =
         {
             Canvas = canvas
             Cells = cells
+            Teleports = Teleports.createEmpty
         }
 
     let createGridFunction canvas =

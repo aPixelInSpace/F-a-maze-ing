@@ -3,6 +3,7 @@
 module Mazes.Core.Grid.Ortho.GridView
 
 open Mazes.Core
+open Mazes.Core.Grid.Teleport
 open Mazes.Core.Grid.Ortho.Canvas
 
 let sliceGrid (grid : OrthoGrid) (startCoordinate : Coordinate) (endCoordinate : Coordinate) =
@@ -10,7 +11,7 @@ let sliceGrid (grid : OrthoGrid) (startCoordinate : Coordinate) (endCoordinate :
     let canvas = { Zones = zones }
     
     let cells = grid.Cells.[startCoordinate.RIndex .. endCoordinate.RIndex, startCoordinate.CIndex .. endCoordinate.CIndex]
-    let grid = { Canvas = canvas; Cells = cells }
+    let grid = { Canvas = canvas; Cells = cells; Teleports = Teleports.createEmpty }
     
     grid
 

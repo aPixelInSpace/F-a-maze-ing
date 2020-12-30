@@ -35,6 +35,7 @@ type Grid<'G> =
     abstract member Neighbor : coordinate:Coordinate -> position:Position -> Coordinate option
     /// Returns the neighbors coordinates that are linked, NOT NECESSARILY WITH the coordinate
     abstract member NeighborsThatAreLinked : isLinked:bool -> coordinate:Coordinate -> Coordinate seq
+    abstract member AddTwoWayTeleport : Coordinate -> Coordinate -> unit
     /// Returns the neighbors coordinates that are linked WITH the coordinate
     abstract member LinkedNeighbors : coordinate:Coordinate -> Coordinate seq
     /// Returns a random neighbor that is inside the bound of the grid (doesn't check if the neighbor is linked or not)

@@ -3,6 +3,7 @@
 namespace Mazes.Core.Maze
 
 open Mazes.Core.Analysis
+open Mazes.Core.Analysis.Dijkstra.Tracker
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 
@@ -12,7 +13,7 @@ type Maze<'G> =
     }
 
     member this.createMap rootCoordinate =
-        Dijkstra.Map.create this.Grid.LinkedNeighbors rootCoordinate
+        Dijkstra.Map.create this.Grid.LinkedNeighbors PriorityQueueTracker.createEmpty rootCoordinate
 
 module Maze =
 

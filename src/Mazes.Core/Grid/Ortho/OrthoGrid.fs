@@ -6,6 +6,7 @@ open System
 open System.Text
 open Mazes.Core
 open Mazes.Core.Grid
+open Mazes.Core.Grid.Teleport
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Array2D
 open Mazes.Core.Grid.Ortho.Canvas
@@ -14,6 +15,7 @@ type OrthoGrid =
     {
         Canvas : Canvas
         Cells : OrthoCell[,]
+        Teleports : Teleports
     }
 
     interface Grid<OrthoGrid> with
@@ -71,6 +73,9 @@ type OrthoGrid =
 
         member this.NeighborsThatAreLinked isLinked coordinate =
             this.NeighborsThatAreLinked isLinked coordinate
+
+        member this.AddTwoWayTeleport fromCoordinate toCoordinate =
+            this.AddTwoWayTeleport fromCoordinate toCoordinate
 
         member this.LinkedNeighbors coordinate =
             this.LinkedNeighbors coordinate
@@ -168,6 +173,9 @@ type OrthoGrid =
         let neighbors = this.Neighbors coordinate
         neighbors |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked = isLinked)
 
+    member this.AddTwoWayTeleport fromCoordinate toCoordinate =
+        this.Teleports.AddTwoWayTeleport fromCoordinate toCoordinate
+
     member this.LinkedNeighbors coordinate =
         let isLinkedAt otherCoordinate =
             not (this.IsLimitAt coordinate (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate)) &&        
@@ -179,6 +187,9 @@ type OrthoGrid =
             for neighborCoordinate in neighborsCoordinates do   
                 if (isLinkedAt neighborCoordinate) then
                     yield neighborCoordinate
+
+            for teleport in this.Teleports.Teleports coordinate do
+                yield teleport
         }
 
     member this.RandomCoordinatePartOfMazeAndNotLinked (rng : Random) =
@@ -243,7 +254,7 @@ module OrthoGrid =
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
-        { Canvas = canvas; Cells = cells; }
+        { Canvas = canvas; Cells = cells; Teleports = Teleports.createEmpty }
 
     let createGridFunction canvas =
         fun () -> create canvas :> Grid<OrthoGrid>

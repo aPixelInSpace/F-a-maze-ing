@@ -11,9 +11,10 @@
         <Compile Include="ArrayOfA.fs" />
         <Compile Include="Array2D.fs" />
         <Compile Include="Analysis\Dijkstra\ShortestPathGraph.fs" />
+        <Compile Include="Analysis\Dijkstra\Tracker.fs" />
         <Compile Include="Analysis\Dijkstra\Map.fs" />
-        <Content Include="Analysis\Dijkstra\memo.txt" />
         <Compile Include="Canvas\Zone.fs" />
+        <Compile Include="Grid\Teleport.fs" />
 		<Compile Include="Grid\Grid.fs" />
 		<Compile Include="Grid\Ortho\OrthoPosition.fs" />
 		<Compile Include="Grid\Ortho\OrthoCoordinate.fs" />

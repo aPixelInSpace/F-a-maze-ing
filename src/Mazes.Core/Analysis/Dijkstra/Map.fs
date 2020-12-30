@@ -2,10 +2,9 @@
 
 namespace Mazes.Core.Analysis.Dijkstra
 
-open System
 open System.Collections.Generic
-open Priority_Queue
 open Mazes.Core
+open Mazes.Core.Analysis.Dijkstra.Tracker
 
 [<Struct>]
 type FarthestFromRoot = {
@@ -53,29 +52,6 @@ type CoordinatesByDistance =
     static member createEmpty =
         { Container = Dictionary<Distance, HashSet<Coordinate>>() }
 
-type Tracker<'Key, 'Priority when 'Key : equality and 'Priority :> IComparable<'Priority>> =
-    {
-        Queue : SimplePriorityQueue<'Key, 'Priority>
-    }
-    
-    member this.Add key priority =
-        if this.Queue.Contains(key) then
-            this.Queue.UpdatePriority(key, priority)
-        else
-            this.Queue.Enqueue(key, priority)
-
-    member this.HasItems =
-        this.Queue.Count > 0
-
-    member this.Pop =
-        let key = this.Queue.First
-        let priority = this.Queue.GetPriority(key)
-        this.Queue.Dequeue() |> ignore
-        (key, priority)
-
-    static member createEmpty =
-        { Queue = SimplePriorityQueue<'Key, 'Priority>() }
-
 type Map =
     {
         ShortestPathGraph : ShortestPathGraph<Coordinate>
@@ -92,26 +68,25 @@ type Map =
                     | None -> Seq.empty
 
             for farthestCoordinate in this.FarthestFromRoot.Coordinates do
-                let mapFromFarthest = Map.create adjacentNodes farthestCoordinate
+                let mapFromFarthest = Map.create adjacentNodes PriorityQueueTracker.createEmpty farthestCoordinate
                 for newFarthestCoordinate in mapFromFarthest.FarthestFromRoot.Coordinates do
                     yield mapFromFarthest.ShortestPathGraph.PathFromGoalToRoot newFarthestCoordinate
         }
 
-    static member create (linkedNeighbors : Coordinate -> Coordinate seq) rootCoordinate =
+    static member create (linkedNeighbors : Coordinate -> Coordinate seq) (unvisitedTracker : Tracker<Coordinate, Distance>) rootCoordinate =
 
         let coordinatesByDistance = CoordinatesByDistance.createEmpty
 
         let leaves = HashSet<Coordinate>()
 
-        let unvisited = Tracker<Coordinate, Distance>.createEmpty
-        unvisited.Add rootCoordinate -1
+        unvisitedTracker.Add rootCoordinate -1
 
         let graph = ShortestPathGraph.createEmpty rootCoordinate
         graph.AddNode(rootCoordinate)
 
-        while unvisited.HasItems do
+        while unvisitedTracker.HasItems do
 
-            let (coordinate, currentDistance) = unvisited.Pop
+            let (coordinate, currentDistance) = unvisitedTracker.Pop
 
             let neighbors = linkedNeighbors coordinate |> Seq.toArray
 
@@ -127,7 +102,7 @@ type Map =
 
             for neighbor in neighbors do
                 if not (graph.ContainsNode neighbor) then
-                    unvisited.Add neighbor newDistance
+                    unvisitedTracker.Add neighbor newDistance
                     graph.AddNode(neighbor)
 
                 if not (graph.ContainsEdge coordinate neighbor) then
@@ -137,7 +112,7 @@ type Map =
                     match edge with
                     | Some (_, distance) ->
                         if newDistance < distance then
-                            unvisited.Add neighbor newDistance
+                            unvisitedTracker.Add neighbor newDistance
                             coordinatesByDistance.Remove distance neighbor
 
                             graph.RemoveEdge coordinate neighbor distance
