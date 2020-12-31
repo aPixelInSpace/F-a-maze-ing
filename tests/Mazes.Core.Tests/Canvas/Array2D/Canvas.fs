@@ -1,15 +1,15 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Tests.Grid.Ortho.Canvas.Canvas
+module Mazes.Core.Tests.Canvas.Array2D.Canvas
 
 open FsUnit
 open Xunit
 open Mazes.Core
-open Mazes.Core.Grid.Ortho
+open Mazes.Core.Canvas.Array2D
 
 // fixture
 let stringFixtureCanvas =
-    Canvas.Convert.startLineTag + "\n" +
+    Convert.startLineTag + "\n" +
     "*.********\n" +
     "*.**.***..\n" +
     "**********\n" +
@@ -20,13 +20,13 @@ let stringFixtureCanvas =
     "**********\n" +
     "*...*****.\n" +
     "*.*****.*.\n" +    
-    Canvas.Convert.endLineTag
+    Convert.endLineTag
 
 [<Fact>]
 let ``Given a string representation of a canvas, when converting it to a canvas, then it should give a correct canvas`` () =
 
     // act
-    let sut = Canvas.Convert.fromString stringFixtureCanvas
+    let sut = Convert.fromString stringFixtureCanvas
 
     // assert
     sut.IsSome |> should be True
@@ -45,7 +45,7 @@ let ``Given a wrong string representation of a canvas, when converting it to a c
     let wrongStringCanvas = "foo"
 
     // act
-    let sut = Canvas.Convert.fromString wrongStringCanvas
+    let sut = Convert.fromString wrongStringCanvas
 
     // assert
     sut.IsNone |> should be True
@@ -55,11 +55,11 @@ let ``Given an empty string representation of a canvas, when converting it to a 
 
     // arrange
     let emptyStringCanvas =
-        Canvas.Convert.startLineTag + "\n" +
-        Canvas.Convert.endLineTag
+        Convert.startLineTag + "\n" +
+        Convert.endLineTag
 
     // act
-    let sut = Canvas.Convert.fromString emptyStringCanvas
+    let sut = Convert.fromString emptyStringCanvas
 
     // assert
     sut.IsSome |> should be True
@@ -73,10 +73,10 @@ let ``Given an empty string representation of a canvas, when converting it to a 
 let ``Given a canvas, when converting it to a string, then it should give a correct string representation`` () =
 
     // arrange
-    let canvas = Canvas.Convert.fromString stringFixtureCanvas
+    let canvas = Convert.fromString stringFixtureCanvas
 
     // act
-    let sut = Canvas.Convert.toString canvas.Value
+    let sut = Convert.toString canvas.Value
 
     // assert
     sut |> should equal stringFixtureCanvas
@@ -85,7 +85,7 @@ let ``Given a canvas, when converting it to a string, then it should give a corr
 let ``Given a canvas, when counting the number of zones that are part of the maze, then it should give the correct count of zones of the maze`` () =
 
     // arrange
-    let canvas = Canvas.Convert.fromString stringFixtureCanvas
+    let canvas = Convert.fromString stringFixtureCanvas
 
     // act
     let sut = canvas.Value.TotalOfMazeZones

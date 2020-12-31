@@ -1,10 +1,10 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Grid.Ortho.Canvas.Shape.Ellipse
+module Mazes.Core.Canvas.Array2D.Shape.Ellipse
 
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Grid.Ortho.Canvas
+open Mazes.Core.Canvas.Array2D
 
 type Side =
     | Inside

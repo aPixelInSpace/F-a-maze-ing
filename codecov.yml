@@ -11,11 +11,11 @@ codecov:
         project:
             default:
                 # basic
-                target: 1% #75%
+                target: 70%
         patch:
             default:
                 # basic
-                target: 1% #75%
+                target: 70%
 
     # Avoid "Missing base report"
     # https://github.com/codecov/support/issues/363

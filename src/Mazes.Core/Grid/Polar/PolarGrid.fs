@@ -5,11 +5,11 @@ namespace Mazes.Core.Grid.Polar
 open System
 open System.Text
 open Mazes.Core
+open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Teleport
 open Mazes.Core.ArrayOfA
 open Mazes.Core.Grid.Polar.PolarArrayOfA
-open Mazes.Core.Grid.Polar.Canvas
 
 type PolarGrid =
     {
@@ -183,7 +183,14 @@ type PolarGrid =
 
     /// Returns the neighbors that are inside the bound of the grid
     member this.NeighborsFrom coordinate =
-        this.Canvas.NeighborsPartOfMazeOf coordinate
+        let listOfNeighborCoordinate =
+            let neighborsCoordinateAt = PolarCoordinate.neighborsCoordinateAt this.Cells coordinate
+            seq {
+                for position in PolarPosition.values do
+                    for coordinate in neighborsCoordinateAt position do
+                        yield (coordinate, position)
+            }
+        this.Canvas.NeighborsPartOfMazeOf listOfNeighborCoordinate
         |> Seq.filter(fun (nCoordinate, _) -> not (this.IsLimitAt coordinate nCoordinate))
         |> Seq.map(fst)
 
@@ -297,7 +304,7 @@ module PolarGrid =
     let create (canvas : Canvas) =
 
         let cells =
-            create
+            createPolar
                 canvas.NumberOfRings
                 canvas.WidthHeightRatio
                 canvas.NumberOfCellsForCenterRing

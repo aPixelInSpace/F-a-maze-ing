@@ -1,8 +1,8 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Grid.Polar.Canvas.Shape.Disc
+module Mazes.Core.Canvas.ArrayOfA.Shape.Disc
 
-open Mazes.Core.Grid.Polar.Canvas
+open Mazes.Core.Canvas.ArrayOfA
 
 let create numberOfRings widthHeightRatio numberOfCellsForCenterRing =
-    Canvas.create numberOfRings widthHeightRatio numberOfCellsForCenterRing (fun _ _ -> true)
+    Canvas.createPolar numberOfRings widthHeightRatio numberOfCellsForCenterRing (fun _ _ -> true)

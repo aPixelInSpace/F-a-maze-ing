@@ -5,6 +5,7 @@ module Mazes.Core.Tests.Analysis.Dijkstra.Map
 open FsUnit
 open Xunit
 open Mazes.Core
+open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
@@ -14,7 +15,7 @@ open Mazes.Core.Maze.Generate
 // fixture
 let maze =    
     let stringCanvas =
-        Canvas.Convert.startLineTag + "\n" +
+        Convert.startLineTag + "\n" +
         "*.********\n" +
         "*.**.***..\n" +
         "**********\n" +
@@ -25,11 +26,11 @@ let maze =
         "**********\n" +
         "*...*****.\n" +
         "*.*****.*.\n" +    
-        Canvas.Convert.endLineTag
+        Convert.endLineTag
 
     let grid =
         fun () ->
-        (Canvas.Convert.fromString stringCanvas).Value    
+        (Convert.fromString stringCanvas).Value    
         |> OrthoGrid.create
         :> Grid<OrthoGrid>
 
@@ -53,16 +54,16 @@ let maze =
 
 let grid5x5 =
     let stringCanvas =
-        Canvas.Convert.startLineTag + "\n" +
+        Convert.startLineTag + "\n" +
         "*****\n" +
         "*****\n" +
         "*****\n" +
         "*****\n" +
         "*****\n" +    
-        Canvas.Convert.endLineTag
+        Convert.endLineTag
 
     fun () ->
-        (Canvas.Convert.fromString stringCanvas).Value
+        (Convert.fromString stringCanvas).Value
         |> OrthoGrid.create
         :> Grid<OrthoGrid>
 
@@ -115,15 +116,15 @@ let ``Given a maze with no internal walls, when creating a map and getting all t
 
     // arrange
     let simpleCanvas =
-        Canvas.Convert.startLineTag + "\n" +
+        Convert.startLineTag + "\n" +
         "*****\n" +
         "*****\n" +
         "*****\n" +
         "*****\n" +
-        Canvas.Convert.endLineTag
+        Convert.endLineTag
 
     let maze =
-        (Canvas.Convert.fromString simpleCanvas).Value
+        (Convert.fromString simpleCanvas).Value
         |> OrthoGrid.create
         |> Maze.createEmpty
 
@@ -230,14 +231,14 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
 
     // arrange
     let simpleCanvas =
-        Canvas.Convert.startLineTag + "\n" +
+        Convert.startLineTag + "\n" +
         "***\n" +
         "*.*\n" +
         "***\n" +
-        Canvas.Convert.endLineTag
+        Convert.endLineTag
 
     let maze =
-        (Canvas.Convert.fromString simpleCanvas).Value    
+        (Convert.fromString simpleCanvas).Value    
         |> OrthoGrid.create
         |> Maze.createEmpty
 

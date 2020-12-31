@@ -2,10 +2,8 @@
 
 module Mazes.Render.SVG.OrthoGrid
 
-open System
 open System.Text
 open Mazes.Core
-open Mazes.Core.Array2D
 open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.Ortho
 open Mazes.Render.SVG.Base

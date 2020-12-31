@@ -4,10 +4,10 @@ module Mazes.Core.Tests.Maze.Generate.RecursiveBacktracker
 
 open FsUnit
 open Xunit
+open Mazes.Core.Canvas.Array2D.Shape
+open Mazes.Core.Canvas.ArrayOfA.Shape
 open Mazes.Core.Grid.Ortho
-open Mazes.Core.Grid.Ortho.Canvas.Shape
 open Mazes.Core.Grid.Polar
-open Mazes.Core.Grid.Polar.Canvas.Shape
 open Mazes.Core.Maze.Generate
 
 [<Fact>]

@@ -5,6 +5,7 @@ module Mazes.Core.Tests.Grid.Ortho.Grid
 open FsUnit
 open Xunit
 open Mazes.Core
+open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid.Ortho
 
 [<Fact>]
@@ -12,10 +13,10 @@ let ``Given an empty canvas, when creating a grid, then the grid should also be 
 
     // arrange
     let emptyStringCanvas =
-        Canvas.Convert.startLineTag +  "\n" +
-        Canvas.Convert.endLineTag
+        Convert.startLineTag +  "\n" +
+        Convert.endLineTag
 
-    let emptyCanvas = Canvas.Convert.fromString emptyStringCanvas
+    let emptyCanvas = Convert.fromString emptyStringCanvas
 
     // act
     let grid = emptyCanvas.Value |> OrthoGrid.create
@@ -28,11 +29,11 @@ let ``Given a canvas with a single zone part of the maze, when creating a grid, 
 
     // arrange
     let singleZoneStringCanvas =
-        Canvas.Convert.startLineTag + "\n" +
+        Convert.startLineTag + "\n" +
         "*\n" +
-        Canvas.Convert.endLineTag
+        Convert.endLineTag
 
-    let singleZoneCanvas = Canvas.Convert.fromString singleZoneStringCanvas
+    let singleZoneCanvas = Convert.fromString singleZoneStringCanvas
 
     // act
     let grid = singleZoneCanvas.Value |> OrthoGrid.create
@@ -50,11 +51,11 @@ let ``Given a canvas with two zones part of the maze side by side horizontally, 
 
     // arrange
     let twoZonesStringCanvas =
-        Canvas.Convert.startLineTag + "\n" +
+        Convert.startLineTag + "\n" +
         "**\n" +
-        Canvas.Convert.endLineTag
+        Convert.endLineTag
 
-    let twoZonesCanvas = Canvas.Convert.fromString twoZonesStringCanvas
+    let twoZonesCanvas = Convert.fromString twoZonesStringCanvas
 
     // act
     let grid = twoZonesCanvas.Value |> OrthoGrid.create
@@ -78,12 +79,12 @@ let ``Given a canvas with two zones part of the maze side by side vertically, wh
 
     // arrange
     let twoZonesStringCanvas =
-        Canvas.Convert.startLineTag + "\n" +
+        Convert.startLineTag + "\n" +
         "*\n" +
         "*\n" +
-        Canvas.Convert.endLineTag
+        Convert.endLineTag
 
-    let twoZonesCanvas = Canvas.Convert.fromString twoZonesStringCanvas
+    let twoZonesCanvas = Convert.fromString twoZonesStringCanvas
 
     // act
     let grid = twoZonesCanvas.Value |> OrthoGrid.create
@@ -107,13 +108,13 @@ let ``Given a 3x3 canvas, when creating a grid, then it should have 3x3 cells wi
 
     // arrange
     let threeByThreeStringCanvas =
-        Canvas.Convert.startLineTag + "\n" +
+        Convert.startLineTag + "\n" +
         "***\n" +
         "***\n" +
         "***\n" +
-        Canvas.Convert.endLineTag
+        Convert.endLineTag
 
-    let threeByThreeCanvas = Canvas.Convert.fromString threeByThreeStringCanvas
+    let threeByThreeCanvas = Convert.fromString threeByThreeStringCanvas
 
     // act
     let grid = threeByThreeCanvas.Value |> OrthoGrid.create
@@ -186,13 +187,13 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
 
     // arrange
     let threeByThreeStringCanvas =
-        Canvas.Convert.startLineTag + "\n" +
+        Convert.startLineTag + "\n" +
         "***\n" +
         "***\n" +
         "***\n" +
-        Canvas.Convert.endLineTag
+        Convert.endLineTag
 
-    let threeByThreeCanvas = Canvas.Convert.fromString threeByThreeStringCanvas
+    let threeByThreeCanvas = Convert.fromString threeByThreeStringCanvas
     let grid = threeByThreeCanvas.Value |> OrthoGrid.create
 
     let coordinate11 = { RIndex = 1; CIndex = 1 }

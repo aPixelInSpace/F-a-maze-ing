@@ -5,11 +5,11 @@ namespace Mazes.Core.Grid.Ortho
 open System
 open System.Text
 open Mazes.Core
+open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Teleport
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Array2D
-open Mazes.Core.Grid.Ortho.Canvas
 
 type OrthoGrid =
     {
@@ -161,7 +161,13 @@ type OrthoGrid =
 
     /// Returns the neighbors that are inside the bound of the grid
     member this.Neighbors coordinate =
-        this.Canvas.NeighborsPartOfMazeOf coordinate
+        let listOfNeighborCoordinate =
+            seq {
+                for position in OrthoPosition.values do
+                    yield ((OrthoCoordinate.neighborCoordinateAt coordinate position), position)
+            }
+
+        this.Canvas.NeighborsPartOfMazeOf listOfNeighborCoordinate
             |> Seq.filter(fun (_, nPosition) -> not (this.IsLimitAt coordinate nPosition))
             |> Seq.map(fst)
 

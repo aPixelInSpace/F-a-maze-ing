@@ -5,7 +5,7 @@ module Mazes.Render.Tests.Text.BinaryTree.TriangleIsosceles
 open System
 open FsUnit
 open Xunit
-open Mazes.Core.Grid.Ortho.Canvas
+open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate
 open Mazes.Render

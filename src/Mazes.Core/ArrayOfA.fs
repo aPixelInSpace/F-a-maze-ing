@@ -2,6 +2,7 @@
 
 namespace Mazes.Core
 
+open System
 
 module ArrayOfA =
     
@@ -78,3 +79,31 @@ module ArrayOfA =
     let existAt (arrayOfA : 'A[][]) coordinate =
         coordinate.RIndex >= minD1Index && coordinate.CIndex >= minD2Index &&
         coordinate.RIndex <= maxD1Index arrayOfA && coordinate.CIndex <= maxD2Index arrayOfA coordinate.RIndex
+
+    let createPolar numberOfRings widthHeightRatio numberOfCellsForCenterRing (constructor : int -> int -> 'T) =
+        let ringHeight = widthHeightRatio / (float)numberOfRings 
+
+        let createRingCells ringNumber numberOfCellsForTheRing =
+            [|
+                for cellIndex in 0 .. (numberOfCellsForTheRing - 1) ->
+                    constructor (ringNumber - 1) cellIndex
+            |]
+
+        let cells =
+            [|
+                let mutable currentNumberOfCellsForTheRing = 0
+
+                for ringNumber in 1 .. numberOfRings ->
+                    if ringNumber = 1 then
+                        currentNumberOfCellsForTheRing <- numberOfCellsForCenterRing
+                    else
+                        let radius = ((float)ringNumber - 1.0) / (float)numberOfRings
+                        let circumference = 2.0 * Math.PI * radius
+                        let estimatedCellWidth = circumference / (float)currentNumberOfCellsForTheRing
+                        let ratio = (int)(Math.Round(estimatedCellWidth / ringHeight, 0))
+                        currentNumberOfCellsForTheRing <- currentNumberOfCellsForTheRing * ratio
+
+                    createRingCells ringNumber currentNumberOfCellsForTheRing
+            |]
+
+        cells

@@ -5,7 +5,7 @@ module Mazes.Render.Tests.Text.BinaryTree.Composite
 open System
 open FsUnit
 open Xunit
-open Mazes.Core
+open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze.Generate
 open Mazes.Render
@@ -30,7 +30,7 @@ let savedCanvas =
     "end"
 
 let canvas =
-    match Canvas.Convert.fromString savedCanvas with
+    match Convert.fromString savedCanvas with
     | Some canvas -> canvas
     | None -> failwith "The saved canvas is not correct"
 

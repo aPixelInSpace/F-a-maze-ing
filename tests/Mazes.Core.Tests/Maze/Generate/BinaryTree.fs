@@ -3,13 +3,12 @@
 module Mazes.Core.Tests.Maze.Generate.BinaryTree
 
 open FsUnit
-open Mazes.Core.Maze.Generate
 open Xunit
+open Mazes.Core.Canvas.Array2D.Shape
+open Mazes.Core.Canvas.ArrayOfA.Shape
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
-open Mazes.Core.Grid.Ortho.Canvas.Shape
 open Mazes.Core.Grid.Polar
-open Mazes.Core.Grid.Polar.Canvas.Shape
 open Mazes.Core.Maze.Generate.BinaryTree
 
 [<Fact>]

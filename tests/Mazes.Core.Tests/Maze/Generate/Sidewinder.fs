@@ -5,11 +5,11 @@ module Mazes.Core.Tests.Maze.Generate.Sidewinder
 open FsUnit
 open Xunit
 open Mazes.Core.Tests.Helpers
+open Mazes.Core.Canvas.Array2D.Shape
+open Mazes.Core.Canvas.ArrayOfA.Shape
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
-open Mazes.Core.Grid.Ortho.Canvas.Shape
 open Mazes.Core.Grid.Polar
-open Mazes.Core.Grid.Polar.Canvas.Shape
 open Mazes.Core.Maze.Generate
 
 [<Fact>]

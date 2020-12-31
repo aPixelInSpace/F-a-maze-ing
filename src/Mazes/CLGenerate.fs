@@ -7,15 +7,13 @@ open System.Diagnostics
 open System.IO
 open System.Text
 open CommandLine
-open Mazes.Core.Grid.Ortho.Canvas
-open Mazes.Core.Grid.Ortho
+open Mazes.Core.Canvas.Array2D
+open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid.Polar
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 open Mazes.Render.SVG
-open Mazes.Render.Text
-open Mazes.Output.Html
 
 type AlgoEnum =
     | BinaryTree = 0
@@ -72,7 +70,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction)
     //let grid = (Mazes.Utility.Canvas.Convert.fromImage 0.0f "d:\\temp\\Microchip.png" |> OrthoGrid.createGridFunction)
     //let grid = Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction
-    let grid = Canvas.Shape.Disc.create options.Value.rows 1.0 2 |> PolarGrid.createGridFunction
+    let grid = Shape.Disc.create options.Value.rows 1.0 2 |> PolarGrid.createGridFunction
 
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"

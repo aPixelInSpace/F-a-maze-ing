@@ -3,7 +3,6 @@
 namespace Mazes.Core.Grid.Polar
 
 open Mazes.Core
-open Mazes.Core.Grid.Ortho
 
 [<Struct>]
 type PolarWall = {

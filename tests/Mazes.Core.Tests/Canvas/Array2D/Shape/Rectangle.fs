@@ -1,12 +1,11 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Tests.Grid.Ortho.Canvas.Shape.Rectangle
+module Mazes.Core.Tests.Canvas.Array2D.Shape.Rectangle
 
 open FsUnit
 open Xunit
-open Mazes.Core
-open Mazes.Core.Grid.Ortho
-open Mazes.Core.Grid.Ortho.Canvas.Shape
+open Mazes.Core.Canvas.Array2D
+open Mazes.Core.Canvas.Array2D.Shape
 
 [<Fact>]
 let ``Given a number of rows and columns, when creating a rectangle, then it should give a rectangular canvas`` () =
@@ -21,12 +20,12 @@ let ``Given a number of rows and columns, when creating a rectangle, then it sho
     // assert
     let expectedCanvas =
         let stringRepresentationCanvas =
-            Canvas.Convert.startLineTag + "\n" +
+            Convert.startLineTag + "\n" +
             "*****\n" +
             "*****\n" +
             "*****\n" +
-            Canvas.Convert.endLineTag
+            Convert.endLineTag
 
-        (Canvas.Convert.fromString stringRepresentationCanvas).Value
+        (Convert.fromString stringRepresentationCanvas).Value
 
     sut |> should equal expectedCanvas

@@ -7,8 +7,10 @@ open Mazes.Core
 type PolarPosition =
     | Inward
     | Outward
-    | Ccw // counter-clockwise
-    | Cw // clockwise
+    /// Counter-Clockwise
+    | Ccw
+    /// Clockwise
+    | Cw
 
     member this.Opposite =
         match this with
@@ -18,6 +20,9 @@ type PolarPosition =
         | Cw -> Ccw
 
 module PolarPosition =
+
+    let values =
+        [| Ccw; Cw; Inward; Outward |]
 
     let map position =
         match position with

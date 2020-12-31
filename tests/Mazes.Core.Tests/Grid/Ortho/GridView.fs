@@ -4,7 +4,7 @@ module Mazes.Core.Tests.Grid.Ortho.GridView
 
 open FsUnit
 open Xunit
-open Mazes.Core.Grid.Ortho.Canvas.Shape
+open Mazes.Core.Canvas.Array2D.Shape
 open Mazes.Core.Grid.Ortho
 
 

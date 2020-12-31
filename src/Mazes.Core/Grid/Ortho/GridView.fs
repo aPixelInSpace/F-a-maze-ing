@@ -4,7 +4,7 @@ module Mazes.Core.Grid.Ortho.GridView
 
 open Mazes.Core
 open Mazes.Core.Grid.Teleport
-open Mazes.Core.Grid.Ortho.Canvas
+open Mazes.Core.Canvas.Array2D
 
 let sliceGrid (grid : OrthoGrid) (startCoordinate : Coordinate) (endCoordinate : Coordinate) =
     let zones = grid.Canvas.Zones.[startCoordinate.RIndex .. endCoordinate.RIndex, startCoordinate.CIndex .. endCoordinate.CIndex]

@@ -2,11 +2,9 @@
 
 namespace Mazes.Core.Grid.Polar
 
-open System
 open Mazes.Core
-open Mazes.Core.Grid
+open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid.Polar.PolarArrayOfA
-open Mazes.Core.Grid.Polar.Canvas
 
 [<Struct>]
 type PolarCell =

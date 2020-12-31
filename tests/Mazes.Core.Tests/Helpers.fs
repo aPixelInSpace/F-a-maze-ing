@@ -2,7 +2,7 @@
 
 module Mazes.Core.Tests.Helpers
 
-open Mazes.Core.Grid.Ortho.Canvas.Shape
+open Mazes.Core.Canvas.Array2D.Shape
 
 type TriangleIsoscelesBaseAtEnum =
     | Top = 1

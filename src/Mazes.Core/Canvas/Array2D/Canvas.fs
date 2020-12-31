@@ -1,12 +1,11 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Ortho.Canvas
+namespace Mazes.Core.Canvas.Array2D
 
 open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas
-open Mazes.Core.Grid.Ortho
 
 type Canvas =
     { Zones : Zone[,] }
@@ -39,24 +38,11 @@ type Canvas =
     member this.GetZoneByZone extractBy filter =
         getItemByItem this.Zones extractBy filter
 
-    member this.NeighborsPartOfMazeOf (coordinate : Coordinate) =
-        let neighborCoordinateAt = OrthoCoordinate.neighborCoordinateAt coordinate 
+    member this.NeighborsPartOfMazeOf (listOfNeighborCoordinatePosition : (Coordinate * 'P) seq) =
         seq {
-            let leftCoordinate = neighborCoordinateAt Left
-            if (this.ExistAt leftCoordinate) && (this.Zone leftCoordinate).IsAPartOfMaze then
-                yield (leftCoordinate, Left)
-
-            let topCoordinate = neighborCoordinateAt Top
-            if (this.ExistAt topCoordinate) && (this.Zone topCoordinate).IsAPartOfMaze then
-                yield (topCoordinate, Top)
-
-            let rightCoordinate = neighborCoordinateAt Right
-            if (this.ExistAt rightCoordinate) && (this.Zone rightCoordinate).IsAPartOfMaze then
-                yield (rightCoordinate, Right)
-
-            let bottomCoordinate = neighborCoordinateAt Bottom
-            if (this.ExistAt bottomCoordinate) && (this.Zone bottomCoordinate).IsAPartOfMaze then
-                yield (bottomCoordinate, Bottom)
+            for (coordinate, position) in listOfNeighborCoordinatePosition do
+                if (this.ExistAt coordinate) && (this.Zone coordinate).IsAPartOfMaze then
+                    yield (coordinate, position)
         }
 
     member this.GetFirstPartOfMazeZone =

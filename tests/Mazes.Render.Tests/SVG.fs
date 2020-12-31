@@ -5,9 +5,10 @@ module Mazes.Render.Tests.SVG
 open System
 open System.Text
 open FsUnit
-open Mazes.Core.Canvas
 open Xunit
-open Mazes.Core.Grid.Ortho.Canvas
+open Mazes.Core.Canvas
+open Mazes.Core.Canvas.Array2D
+open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid.Ortho
 open Mazes.Core.Grid.Polar
 open Mazes.Core.Maze.Generate
@@ -36,7 +37,7 @@ let ``Given a maze (with an ortho grid), a path and a map, when creating an SVG,
 [<Fact>]
 let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
-    let canvas = Canvas.Shape.Disc.create 30 1.0 7
+    let canvas = Shape.Disc.create 30 1.0 7
     //canvas.Zones.[1].[0] <- Zone.Empty
     //canvas.Zones.[1].[1] <- Zone.Empty
     //canvas.Zones.[2].[0] <- Zone.Empty

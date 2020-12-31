@@ -1,10 +1,10 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Grid.Ortho.Canvas.Shape.TriangleIsosceles
+module Mazes.Core.Canvas.Array2D.Shape.TriangleIsosceles
 
 open System
 open Mazes.Core
-open Mazes.Core.Grid.Ortho.Canvas
+open Mazes.Core.Canvas.Array2D
 
 type BaseAt =
     | Top

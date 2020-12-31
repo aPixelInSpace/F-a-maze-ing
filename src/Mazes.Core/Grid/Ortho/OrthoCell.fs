@@ -4,7 +4,6 @@ namespace Mazes.Core.Grid.Ortho
 
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Grid
 open Mazes.Core.Grid.Ortho
 
 [<Struct>]

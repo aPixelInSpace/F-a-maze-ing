@@ -6,7 +6,6 @@ open System
 open System.Collections.Generic
 open Mazes.Core
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Ortho
 open Mazes.Core.Maze
 
 let createMaze rngSeed (grid : unit -> Grid<'G>) =
