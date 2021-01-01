@@ -32,7 +32,7 @@ let maze =
         fun () ->
         (Convert.fromString stringCanvas).Value    
         |> OrthoGrid.create
-        :> Grid<OrthoGrid>
+        :> IGrid<OrthoGrid>
 
     grid
     |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -65,7 +65,7 @@ let grid5x5 =
     fun () ->
         (Convert.fromString stringCanvas).Value
         |> OrthoGrid.create
-        :> Grid<OrthoGrid>
+        :> IGrid<OrthoGrid>
 
 [<Fact>]
 let ``Given a root inside the maze, when creating a map, then it should give all the count of the connected nodes`` () =

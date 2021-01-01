@@ -1,12 +1,11 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Ortho
+namespace Mazes.Core.Grid
 
 open Mazes.Core
-open Mazes.Core.Grid.Ortho
 
 [<Struct>]
-type OrthoWall = {
+type Wall<'Position> = {
     WallType : WallType
-    WallPosition : OrthoPosition
+    WallPosition : 'Position
 }

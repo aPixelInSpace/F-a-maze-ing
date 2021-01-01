@@ -4,10 +4,9 @@ namespace Mazes.Core.Grid
 
 open System
 open Mazes.Core
-open Mazes.Core.Position
 
 // todo : clean the interface and remove the unnecessary functions
-type Grid<'G> =
+type IGrid<'G> =
     abstract member TotalOfMazeCells : int
     abstract member Dimension1Boundaries : dimension2Index:int -> (int * int)
     abstract member Dimension2Boundaries : dimension1Index:int -> (int * int)

@@ -9,7 +9,7 @@ open Mazes.Core.Grid.Ortho
 
 type Maze<'G> =
     {    
-        Grid : Grid<'G>
+        Grid : IGrid<'G>
     }
 
     member this.createMap rootCoordinate =

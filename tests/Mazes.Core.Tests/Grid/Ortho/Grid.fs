@@ -5,6 +5,7 @@ module Mazes.Core.Tests.Grid.Ortho.Grid
 open FsUnit
 open Xunit
 open Mazes.Core
+open Mazes.Core.Grid
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid.Ortho
 
@@ -186,14 +187,14 @@ let ``Given a 3x3 canvas, when creating a grid, then it should have 3x3 cells wi
 let ``Given a grid, when linking a cell, then the neighbors walls should be empty at the positions`` () =
 
     // arrange
-    let threeByThreeStringCanvas =
+    let canvas3x3 =
         Convert.startLineTag + "\n" +
         "***\n" +
         "***\n" +
         "***\n" +
         Convert.endLineTag
 
-    let threeByThreeCanvas = Convert.fromString threeByThreeStringCanvas
+    let threeByThreeCanvas = Convert.fromString canvas3x3
     let grid = threeByThreeCanvas.Value |> OrthoGrid.create
 
     let coordinate11 = { RIndex = 1; CIndex = 1 }

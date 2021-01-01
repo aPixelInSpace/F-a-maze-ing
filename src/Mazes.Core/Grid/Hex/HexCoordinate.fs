@@ -8,20 +8,20 @@ module HexCoordinate =
 
     let neighborCoordinateAt coordinate position =    
         match position with
-        | TopLeft ->  { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
-        | Top -> { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
-        | TopRight -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
-        | BottomLeft -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex - 1 }
-        | Bottom -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
-        | BottomRight -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex + 1 }
+        | HexPosition.TopLeft ->  { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
+        | HexPosition.Top -> { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
+        | HexPosition.TopRight -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
+        | HexPosition.BottomLeft -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex - 1 }
+        | HexPosition.Bottom -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
+        | HexPosition.BottomRight -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex + 1 }
 
     let neighborPositionAt coordinate otherCoordinate =
         let neighborCoordinateAt = neighborCoordinateAt coordinate
         match otherCoordinate with
-        | c when c = neighborCoordinateAt TopLeft -> TopLeft
-        | c when c = neighborCoordinateAt Top -> Top
-        | c when c = neighborCoordinateAt TopRight -> TopRight
-        | c when c = neighborCoordinateAt BottomLeft -> BottomLeft
-        | c when c = neighborCoordinateAt Bottom -> Bottom
-        | c when c = neighborCoordinateAt BottomRight -> BottomRight
+        | c when c = neighborCoordinateAt HexPosition.TopLeft -> HexPosition.TopLeft
+        | c when c = neighborCoordinateAt HexPosition.Top -> HexPosition.Top
+        | c when c = neighborCoordinateAt HexPosition.TopRight -> HexPosition.TopRight
+        | c when c = neighborCoordinateAt HexPosition.BottomLeft -> HexPosition.BottomLeft
+        | c when c = neighborCoordinateAt HexPosition.Bottom -> HexPosition.Bottom
+        | c when c = neighborCoordinateAt HexPosition.BottomRight -> HexPosition.BottomRight
         | _ -> failwith "Unable to match the hex coordinates with a position"

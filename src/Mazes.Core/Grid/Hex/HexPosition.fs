@@ -21,7 +21,10 @@ type HexPosition =
         | Bottom -> Top
         | BottomRight -> TopLeft
 
-module OrthoPosition =
+module HexPosition =
+
+    let values =
+        [| TopLeft; Top; TopRight; BottomLeft; Bottom; BottomRight |]
 
     let map position =
         match position with

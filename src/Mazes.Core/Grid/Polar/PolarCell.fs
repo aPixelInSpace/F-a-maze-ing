@@ -4,12 +4,13 @@ namespace Mazes.Core.Grid.Polar
 
 open Mazes.Core
 open Mazes.Core.Canvas.ArrayOfA
+open Mazes.Core.Grid
 open Mazes.Core.Grid.Polar.PolarArrayOfA
 
 [<Struct>]
 type PolarCell =
     {
-        Walls : PolarWall array
+        Walls : Wall<PolarPosition> array
     }
 
     member this.WallTypeAtPosition position =
@@ -56,7 +57,7 @@ module PolarCell =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
         let neighborsCoordinateAt = PolarCoordinate.neighborsCoordinateAt canvas.Zones coordinate
 
-        let walls = ResizeArray<PolarWall>()
+        let walls = ResizeArray<Wall<PolarPosition>>()
 
         if not (isFirstRing coordinate.RIndex) then
             let isInwardNeighborPartOfMaze = isCellPartOfMaze ((neighborsCoordinateAt Inward) |> Seq.head)

@@ -2,7 +2,7 @@
 
 namespace Mazes.Core.Grid.Ortho
 
-open Mazes.Core.Position
+open Mazes.Core
 
 type OrthoPosition =
     | Left

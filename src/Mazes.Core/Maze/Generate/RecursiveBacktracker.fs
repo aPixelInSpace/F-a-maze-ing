@@ -8,7 +8,7 @@ open Mazes.Core
 open Mazes.Core.Grid
 open Mazes.Core.Maze
 
-let createMaze rngSeed (grid : unit -> Grid<'G>) =
+let createMaze rngSeed (grid : unit -> IGrid<'G>) =
 
     let grid = grid()
 

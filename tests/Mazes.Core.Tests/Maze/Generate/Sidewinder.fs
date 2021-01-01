@@ -19,7 +19,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Sidewinder alg
         fun () ->
             (Rectangle.create 5 10)
             |> OrthoGrid.create
-            :> Grid<OrthoGrid>
+            :> IGrid<OrthoGrid>
     
     // act
     let maze = grid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -79,7 +79,7 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
         fun () ->
         Rectangle.create numberOfRows numberOfColumns
         |> OrthoGrid.create
-        :> Grid<OrthoGrid>
+        :> IGrid<OrthoGrid>
 
     let map = mapSidewinderDirectionEnumToSidewinderDirection
 
@@ -160,7 +160,7 @@ let ``Given a triangular ortho grid, when creating a maze with the sidewinder al
         fun () ->
         TriangleIsosceles.create baseLength baseAt baseDecrement heightIncrement
         |> OrthoGrid.create
-        :> Grid<OrthoGrid>
+        :> IGrid<OrthoGrid>
 
     let map = mapSidewinderDirectionEnumToSidewinderDirection
 

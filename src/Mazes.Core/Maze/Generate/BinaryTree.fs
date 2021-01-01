@@ -37,7 +37,7 @@ let private carveRow
     (rng : Random)
     rngTotalWeight    
     rngPosition1Weight
-    (grid : Grid<'G>)
+    (grid : IGrid<'G>)
     rIndex
     getRowInfo =
     
@@ -85,7 +85,7 @@ let private carveRow
         | _ ->
             grid.LinkCells coordinate (neighborCoordinate direction2.Position)
 
-let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : unit -> Grid<'G>) =
+let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : unit -> IGrid<'G>) =
 
     let grid = grid()
 

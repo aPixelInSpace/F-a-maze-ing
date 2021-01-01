@@ -128,7 +128,7 @@ let private carveRow
            lastIndex2WithRemovablePos2Wall <- index2
            runStartIndex2 <- index2 + increment        
 
-let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : unit -> Grid<'G>) =    
+let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : unit -> IGrid<'G>) =    
 
     let grid = grid()
 

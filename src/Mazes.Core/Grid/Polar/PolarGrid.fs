@@ -18,7 +18,7 @@ type PolarGrid =
         Teleports : Teleports
     }
 
-    interface Grid<PolarGrid> with
+    interface IGrid<PolarGrid> with
         member this.TotalOfMazeCells =
             this.Canvas.TotalOfMazeZones
 
@@ -317,4 +317,4 @@ module PolarGrid =
         }
 
     let createGridFunction canvas =
-        fun () -> create canvas :> Grid<PolarGrid>
+        fun () -> create canvas :> IGrid<PolarGrid>

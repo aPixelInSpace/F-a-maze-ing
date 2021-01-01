@@ -1,6 +1,6 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Ortho
+namespace Mazes.Core.Grid.Hex
 
 open System
 open System.Text
@@ -8,17 +8,17 @@ open Mazes.Core
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Teleport
-open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Hex
 open Mazes.Core.Array2D
 
-type OrthoGrid =
+type HexGrid =
     {
         Canvas : Canvas
-        Cells : OrthoCell[,]
+        Cells : HexCell[,]
         Teleports : Teleports
     }
 
-    interface IGrid<OrthoGrid> with
+    interface IGrid<HexGrid> with
 
         member this.TotalOfMazeCells =
             this.Canvas.TotalOfMazeZones
@@ -30,7 +30,7 @@ type OrthoGrid =
             (0, this.Canvas.NumberOfColumns)
 
         member this.NeighborAbstractCoordinate coordinate position =
-            (OrthoCoordinate.neighborCoordinateAt coordinate (OrthoPosition.map position))
+            (HexCoordinate.neighborCoordinateAt coordinate (HexPosition.map position))
 
         member this.IsCellLinked coordinate =
             (this.Cell coordinate).IsLinked
@@ -42,7 +42,7 @@ type OrthoGrid =
             existAt this.Cells coordinate
 
         member this.IsLimitAt coordinate otherCoordinate =
-            this.IsLimitAt coordinate (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate)
+            this.IsLimitAt coordinate (HexCoordinate.neighborPositionAt coordinate otherCoordinate)
 
         member this.IsCellPartOfMaze coordinate =
             this.Canvas.IsZonePartOfMaze coordinate
@@ -66,7 +66,7 @@ type OrthoGrid =
             this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Border
 
         member this.Neighbor coordinate position =
-            Some (this.Neighbor coordinate (OrthoPosition.map position))
+            Some (this.Neighbor coordinate (HexPosition.map position))
 
         member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
             this.IfNotAtLimitLinkCells coordinate otherCoordinate
@@ -116,7 +116,7 @@ type OrthoGrid =
 
         let neighborCondition =
             fun () ->
-                let neighborCoordinate = OrthoCoordinate.neighborCoordinateAt coordinate position
+                let neighborCoordinate = HexCoordinate.neighborCoordinateAt coordinate position
 
                 not ((this.Canvas.ExistAt neighborCoordinate) &&
                     (this.Canvas.Zone neighborCoordinate).IsAPartOfMaze)
@@ -125,11 +125,11 @@ type OrthoGrid =
         cell.WallTypeAtPosition position = Border ||
         neighborCondition()
 
-    member private this.UpdateWallAtPosition coordinate (position : OrthoPosition) wallType =
+    member private this.UpdateWallAtPosition coordinate (position : HexPosition) wallType =
         let getWalls coordinate position =
             this.Cells.[coordinate.RIndex, coordinate.CIndex].Walls
             |> Array.mapi(fun index wall ->
-                if index = (OrthoCell.WallIndex position) then
+                if index = (HexCell.WallIndex position) then
                     { WallType = wallType; WallPosition = position }
                 else
                     wall
@@ -137,34 +137,31 @@ type OrthoGrid =
 
         this.Cells.[coordinate.RIndex, coordinate.CIndex] <- { Walls = (getWalls coordinate position) }
 
-        let neighbor = OrthoCoordinate.neighborCoordinateAt coordinate position        
+        let neighbor = HexCoordinate.neighborCoordinateAt coordinate position        
         this.Cells.[neighbor.RIndex, neighbor.CIndex] <- { Walls = (getWalls neighbor position.Opposite) }
 
     member this.LinkCells coordinate otherCoordinate =
         this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Empty
 
     member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
-        if not (this.IsLimitAt coordinate (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate)) then
+        if not (this.IsLimitAt coordinate (HexCoordinate.neighborPositionAt coordinate otherCoordinate)) then
             this.LinkCells coordinate otherCoordinate
 
     member private this.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =
-        let neighborCoordinateAt = OrthoCoordinate.neighborCoordinateAt coordinate
-        match otherCoordinate with
-        | oc when oc = (neighborCoordinateAt Left) -> this.UpdateWallAtPosition coordinate Left wallType
-        | oc when oc = (neighborCoordinateAt Top) -> this.UpdateWallAtPosition coordinate Top wallType
-        | oc when oc = (neighborCoordinateAt Right) -> this.UpdateWallAtPosition coordinate Right wallType
-        | oc when oc = (neighborCoordinateAt Bottom) -> this.UpdateWallAtPosition coordinate Bottom wallType
-        | _ -> failwith "UpdateWallAtCoordinates unable to find a connection between the two coordinates"
+        let neighborCoordinateAt = HexCoordinate.neighborCoordinateAt coordinate
 
+        for position in HexPosition.values do
+            if otherCoordinate = (neighborCoordinateAt position) then
+                this.UpdateWallAtPosition coordinate position wallType
     member this.Neighbor coordinate position =
-        OrthoCoordinate.neighborCoordinateAt coordinate position
+        HexCoordinate.neighborCoordinateAt coordinate position
 
     /// Returns the neighbors that are inside the bound of the grid
     member this.Neighbors coordinate =
         let listOfNeighborCoordinate =
             seq {
-                for position in OrthoPosition.values do
-                    yield ((OrthoCoordinate.neighborCoordinateAt coordinate position), position)
+                for position in HexPosition.values do
+                    yield ((HexCoordinate.neighborCoordinateAt coordinate position), position)
             }
 
         this.Canvas.NeighborsPartOfMazeOf listOfNeighborCoordinate
@@ -184,7 +181,7 @@ type OrthoGrid =
 
     member this.LinkedNeighbors coordinate =
         let isLinkedAt otherCoordinate =
-            not (this.IsLimitAt coordinate (OrthoCoordinate.neighborPositionAt coordinate otherCoordinate)) &&        
+            not (this.IsLimitAt coordinate (HexCoordinate.neighborPositionAt coordinate otherCoordinate)) &&        
             (this.Cell coordinate).AreLinked coordinate otherCoordinate
 
         let neighborsCoordinates = this.Neighbors coordinate
@@ -235,26 +232,26 @@ type OrthoGrid =
         sBuilder.Append("\n") |> ignore
 
         // every row
-        for rowIndex in 0 .. this.Cells |> maxRowIndex do
-            for columnIndex in 0 .. lastColumnIndex do
-                let cell = this.Cell { RIndex = rowIndex; CIndex = columnIndex }
-                appendVerticalWall cell.WallLeft.WallType
-                appendHorizontalWall cell.WallBottom.WallType
-                
-                if columnIndex = lastColumnIndex then
-                    appendVerticalWall cell.WallRight.WallType
-
-            sBuilder.Append("\n") |> ignore
+//        for rowIndex in 0 .. this.Cells |> maxRowIndex do
+//            for columnIndex in 0 .. lastColumnIndex do
+//                let cell = this.Cell { RIndex = rowIndex; CIndex = columnIndex }
+//                appendVerticalWall cell.WallLeft.WallType
+//                appendHorizontalWall cell.WallBottom.WallType
+//                
+//                if columnIndex = lastColumnIndex then
+//                    appendVerticalWall cell.WallRight.WallType
+//
+//            sBuilder.Append("\n") |> ignore
 
         sBuilder.ToString()
 
-module OrthoGrid =
+module HexGrid =
 
     let create canvas =
         let cells =
             canvas.Zones |>
             Array2D.mapi(fun rowIndex columnIndex _ ->
-                OrthoCell.create
+                HexCell.create
                     canvas.NumberOfRows
                     canvas.NumberOfColumns
                     { RIndex = rowIndex; CIndex = columnIndex }
@@ -263,4 +260,4 @@ module OrthoGrid =
         { Canvas = canvas; Cells = cells; Teleports = Teleports.createEmpty }
 
     let createGridFunction canvas =
-        fun () -> create canvas :> IGrid<OrthoGrid>
+        fun () -> create canvas :> IGrid<HexGrid>
