@@ -5,7 +5,7 @@ module Mazes.Render.Text
 open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Array2D.Ortho
 
 let private repetitionsMiddlePart = 1
 
@@ -132,8 +132,8 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
     | Normal, Empty, Border, Empty -> '╼'
     | Border, Empty, Normal, Empty -> '╾'
 
-let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid (coordinate : Coordinate) pos1 pos2 =
-    let neighborAtPos1 = OrthoCoordinate.neighborCoordinateAt coordinate pos1
+let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty (grid : OrthoGrid) (coordinate : Coordinate) pos1 pos2 =
+    let neighborAtPos1 = OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate pos1
     match grid.Canvas.ExistAt neighborAtPos1 with
     | true ->
         (grid.Cell neighborAtPos1).WallTypeAtPosition pos2

@@ -6,7 +6,7 @@ open System
 open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D
-open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -15,7 +15,7 @@ let ``Given a grid, when rendering the grid in text, then the result should like
     // arrange
     let grid =
         (Shape.Rectangle.create 15 25)
-        |> OrthoGrid.createGridFunction
+        |> OrthoGrid.CreateFunction
 
     let grid =
         grid()

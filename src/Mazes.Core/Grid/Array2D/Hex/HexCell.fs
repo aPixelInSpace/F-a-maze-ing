@@ -1,16 +1,55 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Hex
+namespace Mazes.Core.Grid.Array2D.Hex
 
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Hex
+open Mazes.Core.Grid.Array2D
+open Mazes.Core.Grid.Array2D.Hex
 
 [<Struct>]
 type HexCell =
 
     { Walls : Wall<HexPosition> array }
+
+    interface ICell<HexPosition> with
+        member this.Create walls =
+            ({ Walls = walls } :> ICell<HexPosition>)
+
+        member this.Walls =
+            this.WallsArray
+
+        member this.WallIndex position =
+            HexCell.WallIndex position
+
+        member this.WallTypeAtPosition position =
+            this.Walls.[HexCell.WallIndex position].WallType
+
+        member this.IsALink wallType =
+            HexCell.IsALink wallType
+
+        member this.IsLinkedAt position =
+            this.ToInterface.IsALink (this.ToInterface.WallTypeAtPosition position)
+
+        member this.AreLinked coordinate otherCoordinate =
+            this.ToInterface.IsLinkedAt (HexCoordinateHandler.Instance.NeighborPositionAt coordinate otherCoordinate)
+
+        member this.IsLinked =
+            this.IsLinked
+
+    member this.WallsArray =
+        this.Walls
+
+    member this.IsLinked =
+        (this.Walls
+        |> Array.where(fun wall -> HexCell.IsALink wall.WallType)).Length > 0
+
+    member this.ToInterface =
+        this :> ICell<HexPosition>
+
+    static member IsALink wallType =
+        wallType = Empty
 
     static member WallIndex position =
         match position with
@@ -21,58 +60,14 @@ type HexCell =
         | Bottom -> 4
         | BottomRight -> 5
 
-    member this.WallTopLeft =
-        this.Walls.[HexCell.WallIndex TopLeft]
-
-    member this.WallTop =
-        this.Walls.[HexCell.WallIndex Top]
-
-    member this.WallTopRight =
-        this.Walls.[HexCell.WallIndex TopRight]
-
-    member this.WallBottomLeft =
-        this.Walls.[HexCell.WallIndex BottomLeft]
-
-    member this.WallBottom =
-        this.Walls.[HexCell.WallIndex Bottom]
-
-    member this.WallBottomRight =
-        this.Walls.[HexCell.WallIndex BottomRight]
-
-    member this.WallTypeAtPosition position =
-        match position with
-        | TopLeft -> this.WallTopLeft.WallType
-        | Top -> this.WallTop.WallType
-        | TopRight -> this.WallTopRight.WallType
-        | BottomLeft -> this.WallBottomLeft.WallType
-        | Bottom -> this.WallBottom.WallType
-        | BottomRight -> this.WallBottomRight.WallType
-
-    static member IsALink wallType =
-        wallType = Empty
-
-    member this.IsLinkedAt pos =
-        HexCell.IsALink (this.WallTypeAtPosition pos)
-
-    member this.AreLinked (coordinate : Coordinate) (otherCoordinate : Coordinate) =
-        this.IsLinkedAt (HexCoordinate.neighborPositionAt coordinate otherCoordinate)
-
-    /// Returns true if the cell has at least one link
-    member this.IsLinked =
-        (this.Walls
-        |> Array.where(fun wall -> HexCell.IsALink wall.WallType)).Length > 0
-
-module HexCell =
-
-    let create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =
-
+    static member Create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
 
         let getWallType isOnEdge position =
             if isOnEdge then
                 WallType.getWallTypeForEdge isCurrentCellPartOfMaze
             else
-                let isNeighborPartOfMaze = isCellPartOfMaze (HexCoordinate.neighborCoordinateAt coordinate position)
+                let isNeighborPartOfMaze = isCellPartOfMaze (HexCoordinateHandler.Instance.NeighborCoordinateAt coordinate position)
                 WallType.getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
 
         let wallTypeTopLeft = getWallType (isFirstRow coordinate.RIndex || isFirstColumn coordinate.CIndex) TopLeft
@@ -95,4 +90,4 @@ module HexCell =
                    { WallType = wallTypeBottomLeft; WallPosition = BottomLeft }
                    { WallType = wallTypeBottom; WallPosition = Bottom }
                    { WallType = wallTypeBottomRight; WallPosition = BottomRight } |]
-        }
+        }.ToInterface

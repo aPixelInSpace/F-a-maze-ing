@@ -6,8 +6,8 @@ open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D.Shape
 open Mazes.Core.Canvas.ArrayOfA.Shape
-open Mazes.Core.Grid.Ortho
-open Mazes.Core.Grid.Polar
+open Mazes.Core.Grid.Array2D.Ortho
+open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
@@ -15,7 +15,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Hunt and Kill 
     // arrange
     let orthoGrid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.createGridFunction
+        |> OrthoGrid.CreateFunction
     
     // act
     let maze = orthoGrid |> HuntAndKill.createMaze 1

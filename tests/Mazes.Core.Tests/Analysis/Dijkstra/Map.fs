@@ -8,7 +8,7 @@ open Mazes.Core
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
 
@@ -29,10 +29,8 @@ let maze =
         Convert.endLineTag
 
     let grid =
-        fun () ->
         (Convert.fromString stringCanvas).Value    
-        |> OrthoGrid.create
-        :> IGrid<OrthoGrid>
+        |> OrthoGrid.CreateFunction
 
     grid
     |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -62,10 +60,8 @@ let grid5x5 =
         "*****\n" +    
         Convert.endLineTag
 
-    fun () ->
-        (Convert.fromString stringCanvas).Value
-        |> OrthoGrid.create
-        :> IGrid<OrthoGrid>
+    (Convert.fromString stringCanvas).Value
+    |> OrthoGrid.CreateFunction
 
 [<Fact>]
 let ``Given a root inside the maze, when creating a map, then it should give all the count of the connected nodes`` () =
@@ -125,7 +121,7 @@ let ``Given a maze with no internal walls, when creating a map and getting all t
 
     let maze =
         (Convert.fromString simpleCanvas).Value
-        |> OrthoGrid.create
+        |> OrthoGrid.Create
         |> Maze.createEmpty
 
     // act
@@ -239,7 +235,7 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
 
     let maze =
         (Convert.fromString simpleCanvas).Value    
-        |> OrthoGrid.create
+        |> OrthoGrid.Create
         |> Maze.createEmpty
 
     let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone

@@ -8,18 +8,16 @@ open Mazes.Core.Tests.Helpers
 open Mazes.Core.Canvas.Array2D.Shape
 open Mazes.Core.Canvas.ArrayOfA.Shape
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Ortho
-open Mazes.Core.Grid.Polar
+open Mazes.Core.Grid.Array2D.Ortho
+open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
 let ``Given a ortho grid 5 by 10, when generating a maze with the Sidewinder algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let grid =
-        fun () ->
-            (Rectangle.create 5 10)
-            |> OrthoGrid.create
-            :> IGrid<OrthoGrid>
+        (Rectangle.create 5 10)
+        |> OrthoGrid.CreateFunction
     
     // act
     let maze = grid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -76,10 +74,8 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
 
     // arrange
     let gridRectangle =
-        fun () ->
         Rectangle.create numberOfRows numberOfColumns
-        |> OrthoGrid.create
-        :> IGrid<OrthoGrid>
+        |> OrthoGrid.CreateFunction
 
     let map = mapSidewinderDirectionEnumToSidewinderDirection
 
@@ -157,10 +153,8 @@ let ``Given a triangular ortho grid, when creating a maze with the sidewinder al
 
     // arrange
     let gridTriangle =
-        fun () ->
         TriangleIsosceles.create baseLength baseAt baseDecrement heightIncrement
-        |> OrthoGrid.create
-        :> IGrid<OrthoGrid>
+        |> OrthoGrid.CreateFunction
 
     let map = mapSidewinderDirectionEnumToSidewinderDirection
 

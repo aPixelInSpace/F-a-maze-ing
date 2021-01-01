@@ -1,6 +1,6 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Polar
+namespace Mazes.Core.Grid.ArrayOfA.Polar
 
 open Mazes.Core
 

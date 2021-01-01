@@ -1,11 +1,11 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Polar
+namespace Mazes.Core.Grid.ArrayOfA.Polar
 
 open Mazes.Core
 open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Polar.PolarArrayOfA
+open Mazes.Core.Grid.ArrayOfA.Polar.PolarArrayOfA
 
 [<Struct>]
 type PolarCell =

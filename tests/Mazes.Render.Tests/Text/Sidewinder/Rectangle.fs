@@ -6,7 +6,7 @@ open System
 open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D
-open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -15,7 +15,7 @@ let ``Rendering a 3 by 3 maze generated with the sidewinder algorithm (Top, Righ
     // arrange
     let grid =
         (Shape.Rectangle.create 3 3)
-        |> OrthoGrid.createGridFunction
+        |> OrthoGrid.CreateFunction
 
     let maze =
         grid
@@ -38,7 +38,7 @@ let ``Rendering a 5 by 5 maze generated with the sidewinder algorithm (Top, Righ
     // arrange
     let grid =
         (Shape.Rectangle.create 5 5)
-        |> OrthoGrid.createGridFunction
+        |> OrthoGrid.CreateFunction
 
     let maze =
         grid
@@ -63,7 +63,7 @@ let ``Rendering a 5 by 10 maze generated with the sidewinder algorithm (Top, Rig
     // arrange
     let grid =
         (Shape.Rectangle.create 5 10)
-        |> OrthoGrid.createGridFunction
+        |> OrthoGrid.CreateFunction
 
     let maze =
         grid

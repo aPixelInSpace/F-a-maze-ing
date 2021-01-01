@@ -1,12 +1,12 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Tests.Grid.Polar.Grid
+module Mazes.Core.Tests.Grid.ArrayOfA.Polar.Grid
 
 open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Canvas.ArrayOfA
-open Mazes.Core.Grid.Polar
+open Mazes.Core.Grid.ArrayOfA.Polar
 
 [<Fact>]
 let ``Given an empty canvas, when creating a grid, then the grid should also be empty`` () =

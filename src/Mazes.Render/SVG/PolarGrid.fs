@@ -6,7 +6,7 @@ open System
 open System.Text
 open Mazes.Core
 open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid.Polar
+open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Render.SVG.Base
 
 let private appendWall (sBuilder : StringBuilder) lines (wallType : WallType) =

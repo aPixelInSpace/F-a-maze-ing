@@ -3,9 +3,8 @@
 namespace Mazes.Core.Grid.Array2D
 
 open Mazes.Core
-open Mazes.Core.Grid.Array2D
 
-type ICoordinate<'Position when 'Position :> IPosition<'Position>> =
+type ICoordinateHandler<'Position> =
 
     abstract member NeighborCoordinateAt : coordinate:Coordinate -> position:'Position -> Coordinate
     abstract member NeighborPositionAt : coordinate:Coordinate -> otherCoordinate:Coordinate -> 'Position

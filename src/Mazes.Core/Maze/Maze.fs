@@ -5,7 +5,7 @@ namespace Mazes.Core.Maze
 open Mazes.Core.Analysis
 open Mazes.Core.Analysis.Dijkstra.Tracker
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Array2D.Ortho
 
 type Maze<'G> =
     {    
@@ -21,7 +21,7 @@ module Maze =
         grid.Cells
         |> Array2D.iteri(fun r c _ ->
              let update = grid.IfNotAtLimitLinkCells { RIndex = r; CIndex = c }
-             let position = (OrthoCoordinate.neighborCoordinateAt { RIndex = r; CIndex = c })
+             let position = (OrthoCoordinateHandler.Instance.NeighborCoordinateAt { RIndex = r; CIndex = c })
              update (position Top)
              update (position Right)
              update (position Bottom)

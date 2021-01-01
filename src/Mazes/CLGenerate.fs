@@ -9,7 +9,7 @@ open System.Text
 open CommandLine
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Canvas.ArrayOfA
-open Mazes.Core.Grid.Polar
+open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
 open Mazes.Render

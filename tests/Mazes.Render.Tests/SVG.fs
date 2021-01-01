@@ -9,8 +9,8 @@ open Xunit
 open Mazes.Core.Canvas
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Canvas.ArrayOfA
-open Mazes.Core.Grid.Ortho
-open Mazes.Core.Grid.Polar
+open Mazes.Core.Grid.Array2D.Ortho
+open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -19,7 +19,7 @@ let ``Given a maze (with an ortho grid), a path and a map, when creating an SVG,
     // arrange
     let grid =
         Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside
-        |> OrthoGrid.createGridFunction
+        |> OrthoGrid.CreateFunction
 
     let maze =
         grid

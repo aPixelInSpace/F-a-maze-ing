@@ -1,6 +1,6 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Polar
+namespace Mazes.Core.Grid.ArrayOfA.Polar
 
 open System
 open System.Text
@@ -9,7 +9,7 @@ open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Teleport
 open Mazes.Core.ArrayOfA
-open Mazes.Core.Grid.Polar.PolarArrayOfA
+open Mazes.Core.Grid.ArrayOfA.Polar.PolarArrayOfA
 
 type PolarGrid =
     {

@@ -3,25 +3,27 @@
 namespace Mazes.Core.Grid.Array2D
 
 open System
-open System.Text
 open Mazes.Core
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Teleport
 open Mazes.Core.Array2D
 
-type Grid<'Position, 'Coordinate
-    when 'Position :> IPosition<'Position> and
-         'Coordinate :> ICoordinate<'Position>> =
-    {
-        Canvas : Canvas
-        Cells : ICell<'Position>[,]
-        Teleports : Teleports
-        PositionHandler : 'Position
-        CoordinateHandler : 'Coordinate
-    }
+[<AbstractClass>]
+type Grid<'Grid, 'Position, 'PH, 'CH
+    when 'PH :> IPositionHandler<'Position> and
+         'CH :> ICoordinateHandler<'Position>>
+         (canvas : Canvas, cells : ICell<'Position>[,], teleports : Teleports,
+          positionHandler : 'PH, coordinateHandler : 'CH) =
 
-    interface IGrid<Grid<'Position, 'Coordinate>> with
+    member this.Canvas = canvas
+    member this.Cells = cells
+    member this.Teleports = teleports
+    member this.PositionHandler = positionHandler
+    member this.CoordinateHandler = coordinateHandler    
+
+
+    interface IGrid<'Grid> with
 
         member this.TotalOfMazeCells =
             this.Canvas.TotalOfMazeZones
@@ -96,10 +98,10 @@ type Grid<'Position, 'Coordinate
             snd this.Canvas.GetLastPartOfMazeZone
 
         member this.ToString =
-            ""
+            this.ToString
 
         member this.ToSpecializedGrid =
-            this
+            this.ToSpecializedGrid
     
     member this.NumberOfRows =
         this.Canvas.NumberOfRows
@@ -144,7 +146,7 @@ type Grid<'Position, 'Coordinate
 
         let neighbor = this.CoordinateHandler.NeighborCoordinateAt coordinate position
         let neighborCell = this.Cells.[neighbor.RIndex, neighbor.CIndex]
-        this.Cells.[neighbor.RIndex, neighbor.CIndex] <- neighborCell.Create (getWalls neighbor position.Opposite)
+        this.Cells.[neighbor.RIndex, neighbor.CIndex] <- neighborCell.Create (getWalls neighbor (this.PositionHandler.Opposite position))
 
     member this.LinkCells coordinate otherCoordinate =
         this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Empty
@@ -216,38 +218,5 @@ type Grid<'Position, 'Coordinate
         this.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
         |> Seq.map(snd)
 
-//    member this.ToString =
-//        let sBuilder = StringBuilder()
-//
-//        let appendHorizontalWall wallType =
-//            match wallType with
-//                | Normal | Border -> sBuilder.Append("_") |> ignore
-//                | WallType.Empty -> sBuilder.Append(" ") |> ignore
-//
-//        let appendVerticalWall wallType =
-//            match wallType with
-//                | Normal | Border -> sBuilder.Append("|") |> ignore
-//                | WallType.Empty -> sBuilder.Append(" ") |> ignore
-//
-//        // first row
-//        let lastColumnIndex = this.Cells |> maxColumnIndex
-//        sBuilder.Append(" ") |> ignore
-//        for columnIndex in 0 .. lastColumnIndex do
-//            let cell = this.Cell { RIndex = 0; CIndex = columnIndex }
-//            appendHorizontalWall cell.WallTop.WallType
-//            sBuilder.Append(" ") |> ignore
-//        sBuilder.Append("\n") |> ignore
-//
-//        // every row
-//        for rowIndex in 0 .. this.Cells |> maxRowIndex do
-//            for columnIndex in 0 .. lastColumnIndex do
-//                let cell = this.Cell { RIndex = rowIndex; CIndex = columnIndex }
-//                appendVerticalWall cell.WallLeft.WallType
-//                appendHorizontalWall cell.WallBottom.WallType
-//                
-//                if columnIndex = lastColumnIndex then
-//                    appendVerticalWall cell.WallRight.WallType
-//
-//            sBuilder.Append("\n") |> ignore
-//
-//        sBuilder.ToString()
+    abstract member ToString : string
+    abstract member ToSpecializedGrid : 'Grid

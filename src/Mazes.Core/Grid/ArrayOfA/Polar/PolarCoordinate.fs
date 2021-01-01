@@ -1,9 +1,9 @@
 ﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Grid.Polar.PolarCoordinate
+module Mazes.Core.Grid.ArrayOfA.Polar.PolarCoordinate
 
 open Mazes.Core
-open Mazes.Core.Grid.Polar.PolarArrayOfA
+open Mazes.Core.Grid.ArrayOfA.Polar.PolarArrayOfA
 
 let neighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
     seq {

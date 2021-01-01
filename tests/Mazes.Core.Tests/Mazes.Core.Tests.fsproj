@@ -14,9 +14,9 @@
 		<Compile Include="Canvas\Array2D\Canvas.fs" />
         <Compile Include="Canvas\Array2D\Shape\Rectangle.fs" />
         <Compile Include="Canvas\Array2D\Shape\TriangleIsosceles.fs" />
-		<Compile Include="Grid\Ortho\Grid.fs" />
-		<Compile Include="Grid\Ortho\GridView.fs" />
-        <Compile Include="Grid\Polar\Grid.fs" />
+        <Compile Include="Grid\Array2D\Ortho\Grid.fs" />
+        <Compile Include="Grid\Array2D\Ortho\GridView.fs" />
+        <Compile Include="Grid\ArrayOfA\Polar\Grid.fs" />
 		<Compile Include="Maze\Generate\BinaryTree.fs" />
 		<Compile Include="Maze\Generate\Sidewinder.fs" />
 		<Compile Include="Maze\Generate\AldousBroder.fs" />

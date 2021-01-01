@@ -5,7 +5,7 @@ module Mazes.Render.SVG.OrthoGrid
 open System.Text
 open Mazes.Core
 open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid.Ortho
+open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Render.SVG.Base
 
 let private cellWidth = 30
@@ -35,7 +35,12 @@ let private appendWall (sBuilder : StringBuilder) (grid : OrthoGrid) coordinate 
 
     let addP = appendPathElement sBuilder None styleClass
 
-    match cell.WallLeft.WallType, cell.WallTop.WallType, cell.WallRight.WallType, cell.WallBottom.WallType with
+    let wallTypeLeft = cell.WallTypeAtPosition Left
+    let wallTypeTop = cell.WallTypeAtPosition Top
+    let wallTypeRight = cell.WallTypeAtPosition Right
+    let wallTypeBottom = cell.WallTypeAtPosition Bottom
+
+    match wallTypeLeft, wallTypeTop, wallTypeRight, wallTypeBottom with
     | (l, t, r, b) when l = wallType && t = wallType && r = wallType && b = wallType ->
         addP ("M " + topLeft.Value + (line LeftToRight) + (line TopToBottom) + (line RightToLeft) + (line BottomToTop))
     | (l, t, r, _) when l = wallType && t = wallType && r = wallType ->
@@ -78,7 +83,7 @@ let private wholeCellLines coordinate =
     let topLeft = ((coordinate.CIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RIndex * cellHeight) + marginHeight).ToString()
     "M " + topLeft + (line LeftToRight) + (line TopToBottom) + (line RightToLeft) + (line BottomToTop)
 
-let render grid (path : Coordinate seq) (map : Map) =
+let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     let sBuilder = StringBuilder()
 
     let width = ((grid.Canvas.NumberOfColumns) * cellWidth) + (marginWidth * 2)

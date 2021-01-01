@@ -47,5 +47,5 @@ type IGrid<'G> =
     abstract member GetLastPartOfMazeZone : Coordinate
     /// Returns the string representation of the grid
     abstract member ToString : string
-    /// Returns the subtyped grid
+    /// Returns the sub-typed grid
     abstract member ToSpecializedGrid : 'G

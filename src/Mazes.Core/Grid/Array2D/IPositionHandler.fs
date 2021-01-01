@@ -4,8 +4,8 @@ namespace Mazes.Core.Grid.Array2D
 
 open Mazes.Core
 
-type IPosition<'Position> =
+type IPositionHandler<'Position> =
 
-    abstract member Opposite : 'Position
+    abstract member Opposite : position:'Position -> 'Position
     abstract member Values : 'Position array
     abstract member Map : Position -> 'Position
