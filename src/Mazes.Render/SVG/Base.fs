@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
 module Mazes.Render.SVG.Base
 
@@ -10,6 +10,8 @@ open Mazes.Core.Analysis.Dijkstra
 // #63a873 : green
 // #fffaba : pale yellow
 // #fffef0 : very pale yellow
+// #f74525 : orange
+// #4a74e8 : blue path
 
 [<Literal>]
 let elementIdPrefix = "p"
@@ -27,6 +29,8 @@ let pathAnimatedClass = "pa"
 let leaveClass = "l"
 [<Literal>]
 let colorClass = "c"
+[<Literal>]
+let pathOpacity = "0.4"
 
 [<Literal>]
 let svgStyle =
@@ -52,7 +56,7 @@ let svgStyle =
                         stroke: transparent;
                         stroke-width: 0;
                         fill: purple;
-                        fill-opacity: 0.4;
+                        fill-opacity: " + pathOpacity + ";
                     }
                     ." + pathAnimatedClass + " {
                         stroke: transparent;
@@ -79,7 +83,7 @@ let round (f : float) =
 
 let appendHeader width height (sBuilder : StringBuilder) =
     sBuilder.Append("<?xml version=\"1.0\" standalone=\"no\"?>\n")
-            .Append("<!-- Copyright 2020 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->\n")
+            .Append("<!-- Copyright 2020-2021 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->\n")
             .Append("<svg width=\"" + width + "\" height=\"" + height + "\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">")
 
 let appendStyle (sBuilder : StringBuilder) =
@@ -104,7 +108,7 @@ let appendAnimationElement (sBuilder : StringBuilder) id relatedId =
     let elementId = elementIdPrefix + id
     let animationId = animationIdPrefix + elementId
 
-    sBuilder.Append($"<animate id=\"{animationId}\" xlink:href=\"#{elementId}\" attributeName=\"fill-opacity\" fill=\"freeze\" from=\"0\" to=\"0.4\" dur=\"0.02s\" ") |> ignore
+    sBuilder.Append($"<animate id=\"{animationId}\" xlink:href=\"#{elementId}\" attributeName=\"fill-opacity\" fill=\"freeze\" from=\"0\" to=\"{pathOpacity}\" dur=\"0.02s\" ") |> ignore
 
     match relatedId with
     | Some relatedId ->

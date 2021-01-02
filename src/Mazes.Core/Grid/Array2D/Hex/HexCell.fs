@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
 namespace Mazes.Core.Grid.Array2D.Hex
 
@@ -70,17 +70,20 @@ type HexCell =
                 let isNeighborPartOfMaze = isCellPartOfMaze (HexCoordinateHandler.Instance.NeighborCoordinateAt coordinate position)
                 WallType.getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
 
-        let wallTypeTopLeft = getWallType (isFirstRow coordinate.RIndex || isFirstColumn coordinate.CIndex) TopLeft
+        let isCIndexEven = coordinate.CIndex % 2 = 0
+        let isCIndexOdd = not isCIndexEven
+
+        let wallTypeTopLeft = getWallType ((isFirstRow coordinate.RIndex && isCIndexOdd) || isFirstColumn coordinate.CIndex) TopLeft
 
         let wallTypeTop = getWallType (isFirstRow coordinate.RIndex) Top
 
-        let wallTypeTopRight = getWallType (isFirstRow coordinate.RIndex || isLastColumn coordinate.CIndex numberOfColumns) TopRight
+        let wallTypeTopRight = getWallType ((isFirstRow coordinate.RIndex && isCIndexOdd) || isLastColumn coordinate.CIndex numberOfColumns) TopRight
 
-        let wallTypeBottomLeft = getWallType (isFirstColumn coordinate.CIndex || isLastRow coordinate.RIndex numberOfRows) BottomLeft
+        let wallTypeBottomLeft = getWallType (isFirstColumn coordinate.CIndex || (isLastRow coordinate.RIndex numberOfRows && isCIndexEven)) BottomLeft
 
         let wallTypeBottom = getWallType (isLastRow coordinate.RIndex numberOfRows) Bottom
 
-        let wallTypeBottomRight = getWallType (isLastRow coordinate.RIndex numberOfRows || isLastColumn coordinate.CIndex numberOfColumns) BottomRight
+        let wallTypeBottomRight = getWallType ((isLastRow coordinate.RIndex numberOfRows && isCIndexEven) || isLastColumn coordinate.CIndex numberOfColumns) BottomRight
 
         {
             Walls =

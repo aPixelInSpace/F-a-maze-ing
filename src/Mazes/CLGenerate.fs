@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
 module Mazes.CLGenerate
 
@@ -9,6 +9,7 @@ open System.Text
 open CommandLine
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Canvas.ArrayOfA
+open Mazes.Core.Grid.Array2D
 open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
@@ -70,7 +71,16 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction)
     //let grid = (Mazes.Utility.Canvas.Convert.fromImage 0.0f "d:\\temp\\Microchip.png" |> OrthoGrid.createGridFunction)
     //let grid = Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction
-    let grid = Shape.Disc.create options.Value.rows 1.0 2 |> PolarGrid.createGridFunction
+    //let grid = (Shape.Hexagon.create 15.0 |> Ortho.OrthoGrid.CreateFunction)
+
+    //let grid = Shape.Disc.create options.Value.rows 1.0 2 |> PolarGrid.createGridFunction
+
+    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateFunction)
+    //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> Hex.HexGrid.CreateFunction)
+    //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Hex.HexGrid.CreateFunction)
+    //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> Hex.HexGrid.CreateFunction)
+    //let grid = (Shape.Hexagon.create options.Value.rows |> Hex.HexGrid.CreateFunction)
+    let grid = (Shape.Hexagon.create 5.0 |> Hex.HexGrid.CreateFunction)
 
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
@@ -163,7 +173,9 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let renderedGridSvg = SVG.renderGrid maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
 
     //let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
-    let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
+    //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
+    
+    let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
 

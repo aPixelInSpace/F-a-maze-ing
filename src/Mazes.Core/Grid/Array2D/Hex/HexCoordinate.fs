@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
 namespace Mazes.Core.Grid.Array2D.Hex
 
@@ -12,13 +12,19 @@ type HexCoordinateHandler private () =
     interface ICoordinateHandler<HexPosition> with
 
         member this.NeighborCoordinateAt coordinate position =
+
+            let (rIndexTopLeftRight, rIndexBottomLeftRight) =
+                match coordinate.CIndex % 2 = 0 with
+                | true -> (coordinate.RIndex, coordinate.RIndex + 1)
+                | false -> (coordinate.RIndex - 1, coordinate.RIndex)
+
             match position with
-            | HexPosition.TopLeft ->  { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
+            | HexPosition.TopLeft ->  { RIndex = rIndexTopLeftRight; CIndex = coordinate.CIndex - 1 }
             | HexPosition.Top -> { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
-            | HexPosition.TopRight -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
-            | HexPosition.BottomLeft -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex - 1 }
+            | HexPosition.TopRight -> { RIndex = rIndexTopLeftRight; CIndex = coordinate.CIndex + 1 }
+            | HexPosition.BottomLeft -> { RIndex = rIndexBottomLeftRight; CIndex = coordinate.CIndex - 1 }
             | HexPosition.Bottom -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
-            | HexPosition.BottomRight -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex + 1 }
+            | HexPosition.BottomRight -> { RIndex = rIndexBottomLeftRight; CIndex = coordinate.CIndex + 1 }
 
         member this.NeighborPositionAt coordinate otherCoordinate =
             let neighborCoordinateAt = this.ToInterface.NeighborCoordinateAt coordinate

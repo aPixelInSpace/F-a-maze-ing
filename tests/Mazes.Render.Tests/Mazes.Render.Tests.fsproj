@@ -8,7 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-		<Content Include="Resources\Orthogrid.svg">
+		<Content Include="Resources\ortho.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\theta.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\sigma.svg">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Compile Include="Text\BinaryTree\Rectangle.fs" />

@@ -18,6 +18,7 @@
         <Compile Include="Canvas\Array2D\Shape\Rectangle.fs" />
         <Compile Include="Canvas\Array2D\Shape\TriangleIsosceles.fs" />
         <Compile Include="Canvas\Array2D\Shape\Ellipse.fs" />
+        <Compile Include="Canvas\Array2D\Shape\Hexagon.fs" />
         <Compile Include="Canvas\ArrayOfA\Canvas.fs" />
         <Compile Include="Canvas\ArrayOfA\Shape\Disc.fs" />
         <Compile Include="Grid\Teleport.fs" />

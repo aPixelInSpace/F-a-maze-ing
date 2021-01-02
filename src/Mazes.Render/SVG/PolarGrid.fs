@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
 module Mazes.Render.SVG.PolarGrid
 
@@ -69,6 +69,7 @@ let private appendWallsType (grid : PolarGrid) (centerX, centerY, ringHeight) (c
 let private wholeCellLines grid (centerX, centerY, ringHeight) coordinate =
     let ((innerRadius, outerRadius), (bottomLeftX, bottomLeftY), (topLeftX, topLeftY), (bottomRightX, bottomRightY), (topRightX, topRightY)) =
         calculatePoints grid (centerX, centerY, ringHeight) coordinate
+
     $"M {round bottomLeftX} {round bottomLeftY} " +
     $"L {round topLeftX} {round topLeftY} " +
     $"A {round outerRadius} {round outerRadius}, 0, 0, 1, {round topRightX} {round topRightY} " +
