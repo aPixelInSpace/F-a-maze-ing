@@ -97,7 +97,7 @@ let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     //|> appendPath path wholeCellLines
     |> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves wholeCellLines
-    |> appendWalls grid.CoordinatesPartOfMaze (appendWallsType grid)
+    |> appendWalls grid.ToInterface.CoordinatesPartOfMaze (appendWallsType grid)
     |> appendFooter
     |> ignore
  

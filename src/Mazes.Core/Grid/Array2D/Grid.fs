@@ -2,7 +2,6 @@
 
 namespace Mazes.Core.Grid.Array2D
 
-open System
 open Mazes.Core
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid
@@ -62,34 +61,58 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             coordinate
 
         member this.CoordinatesPartOfMaze =
-            this.CoordinatesPartOfMaze
+            this.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
+            |> Seq.map(snd)
 
         member this.LinkCells coordinate otherCoordinate =
-            this.LinkCells coordinate otherCoordinate
+            this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Empty
 
         member this.PutBorderBetweenCells coordinate otherCoordinate =
             this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Border
 
         member this.Neighbor coordinate position =
-            Some (this.Neighbor coordinate (this.PositionHandler.Map position))
+            Some (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map position))
 
         member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
-            this.IfNotAtLimitLinkCells coordinate otherCoordinate
+            if not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) then
+                this.ToInterface.LinkCells coordinate otherCoordinate
 
         member this.NeighborsThatAreLinked isLinked coordinate =
-            this.NeighborsThatAreLinked isLinked coordinate
+            let neighbors = this.Neighbors coordinate
+            neighbors |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked = isLinked)
 
         member this.AddTwoWayTeleport fromCoordinate toCoordinate =
-            this.AddTwoWayTeleport fromCoordinate toCoordinate
+            this.Teleports.AddTwoWayTeleport fromCoordinate toCoordinate
 
         member this.LinkedNeighbors coordinate =
-            this.LinkedNeighbors coordinate
+            let isLinkedAt otherCoordinate =
+                not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) &&        
+                (this.Cell coordinate).AreLinked coordinate otherCoordinate
+
+            let neighborsCoordinates = this.Neighbors coordinate
+
+            seq {
+                for neighborCoordinate in neighborsCoordinates do   
+                    if (isLinkedAt neighborCoordinate) then
+                        yield neighborCoordinate
+
+                for teleport in this.Teleports.Teleports coordinate do
+                    yield teleport
+            }
 
         member this.RandomNeighbor rng coordinate =
-            this.RandomNeighbor rng coordinate
+            let neighbors = this.Neighbors coordinate |> Seq.toArray
+            neighbors.[rng.Next(neighbors.Length)]
 
         member this.RandomCoordinatePartOfMazeAndNotLinked rng =
-            this.RandomCoordinatePartOfMazeAndNotLinked rng
+            let unlinkedPartOfMazeCells =
+                getItemByItem this.Cells RowsAscendingColumnsAscending
+                    (fun cell coordinate ->
+                        (this.Canvas.Zone coordinate).IsAPartOfMaze &&
+                        not cell.IsLinked
+                    ) |> Seq.toArray
+
+            snd (unlinkedPartOfMazeCells.[rng.Next(unlinkedPartOfMazeCells.Length)])
 
         member this.GetFirstPartOfMazeZone =
             snd this.Canvas.GetFirstPartOfMazeZone
@@ -111,9 +134,6 @@ type Grid<'Grid, 'Position, 'PH, 'CH
 
     member this.Cell coordinate =
         get this.Cells coordinate
-
-    member this.GetCellByCell extractBy filter =
-        getItemByItem this.Cells extractBy filter
 
     member this.IsLimitAt coordinate position =
         let zone = this.Canvas.Zone coordinate
@@ -148,22 +168,12 @@ type Grid<'Grid, 'Position, 'PH, 'CH
         let neighborCell = this.Cells.[neighbor.RIndex, neighbor.CIndex]
         this.Cells.[neighbor.RIndex, neighbor.CIndex] <- neighborCell.Create (getWalls neighbor (this.PositionHandler.Opposite position))
 
-    member this.LinkCells coordinate otherCoordinate =
-        this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Empty
-
-    member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
-        if not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) then
-            this.LinkCells coordinate otherCoordinate
-
     member private this.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =
         let neighborCoordinateAt = this.CoordinateHandler.NeighborCoordinateAt coordinate
 
         for position in this.PositionHandler.Values do
             if otherCoordinate = (neighborCoordinateAt position) then
                 this.UpdateWallAtPosition coordinate position wallType
-
-    member this.Neighbor coordinate position =
-        this.CoordinateHandler.NeighborCoordinateAt coordinate position
 
     /// Returns the neighbors that are inside the bound of the grid
     member this.Neighbors coordinate =
@@ -177,46 +187,8 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             |> Seq.filter(fun (_, nPosition) -> not (this.IsLimitAt coordinate nPosition))
             |> Seq.map(fst)
 
-    member this.RandomNeighbor (rng : Random) coordinate =
-        let neighbors = this.Neighbors coordinate |> Seq.toArray
-        neighbors.[rng.Next(neighbors.Length)]
-
-    member this.NeighborsThatAreLinked isLinked coordinate =
-        let neighbors = this.Neighbors coordinate
-        neighbors |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked = isLinked)
-
-    member this.AddTwoWayTeleport fromCoordinate toCoordinate =
-        this.Teleports.AddTwoWayTeleport fromCoordinate toCoordinate
-
-    member this.LinkedNeighbors coordinate =
-        let isLinkedAt otherCoordinate =
-            not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) &&        
-            (this.Cell coordinate).AreLinked coordinate otherCoordinate
-
-        let neighborsCoordinates = this.Neighbors coordinate
-
-        seq {
-            for neighborCoordinate in neighborsCoordinates do   
-                if (isLinkedAt neighborCoordinate) then
-                    yield neighborCoordinate
-
-            for teleport in this.Teleports.Teleports coordinate do
-                yield teleport
-        }
-
-    member this.RandomCoordinatePartOfMazeAndNotLinked (rng : Random) =
-        let unlinkedPartOfMazeCells =
-            this.GetCellByCell RowsAscendingColumnsAscending
-                (fun cell coordinate ->
-                    (this.Canvas.Zone coordinate).IsAPartOfMaze &&
-                    not cell.IsLinked
-                ) |> Seq.toArray
-
-        snd (unlinkedPartOfMazeCells.[rng.Next(unlinkedPartOfMazeCells.Length)])
-
-    member this.CoordinatesPartOfMaze =
-        this.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
-        |> Seq.map(snd)
+    member this.ToInterface =
+        this :> IGrid<'Grid>
 
     abstract member ToString : string
     abstract member ToSpecializedGrid : 'Grid

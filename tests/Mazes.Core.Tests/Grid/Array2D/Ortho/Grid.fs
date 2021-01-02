@@ -205,7 +205,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     grid.Cells.[1, 1].WallTypeAtPosition Top |> should equal Normal
     grid.Cells.[0, 1].WallTypeAtPosition Bottom |> should equal Normal
     
-    grid.LinkCells coordinate11 (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Top)
+    grid.ToInterface.LinkCells coordinate11 (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Top)
     
     // assert top
     grid.Cells.[1, 1].WallTypeAtPosition Top |> should equal Empty
@@ -217,7 +217,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     grid.Cells.[1, 1].WallTypeAtPosition Right |> should equal Normal
     grid.Cells.[1, 2].WallTypeAtPosition Left |> should equal Normal
     
-    grid.LinkCells coordinate11 (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Right)
+    grid.ToInterface.LinkCells coordinate11 (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Right)
     
     // assert right
     grid.Cells.[1, 1].WallTypeAtPosition Right |> should equal Empty
@@ -229,7 +229,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     grid.Cells.[1, 1].WallTypeAtPosition Bottom |> should equal Normal
     grid.Cells.[2, 1].WallTypeAtPosition Top |> should equal Normal
     
-    grid.LinkCells coordinate11 (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Bottom)
+    grid.ToInterface.LinkCells coordinate11 (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Bottom)
     
     // assert bottom
     grid.Cells.[1, 1].WallTypeAtPosition Bottom |> should equal Empty
@@ -241,7 +241,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     grid.Cells.[1, 1].WallTypeAtPosition Left |> should equal Normal
     grid.Cells.[1, 0].WallTypeAtPosition Right |> should equal Normal
     
-    grid.LinkCells coordinate11 (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Left)
+    grid.ToInterface.LinkCells coordinate11 (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Left)
     
     // assert left
     grid.Cells.[1, 1].WallTypeAtPosition Left |> should equal Empty

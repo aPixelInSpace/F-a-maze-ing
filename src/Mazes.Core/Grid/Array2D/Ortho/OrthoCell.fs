@@ -10,8 +10,8 @@ open Mazes.Core.Grid.Array2D.Ortho
 
 [<Struct>]
 type OrthoCell =
-
-    { Walls : Wall<OrthoPosition> array }
+    private
+        { Walls : Wall<OrthoPosition> array }
 
     interface ICell<OrthoPosition> with
         member this.Create walls =

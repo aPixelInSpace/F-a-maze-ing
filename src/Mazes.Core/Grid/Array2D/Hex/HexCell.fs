@@ -10,8 +10,8 @@ open Mazes.Core.Grid.Array2D.Hex
 
 [<Struct>]
 type HexCell =
-
-    { Walls : Wall<HexPosition> array }
+    private
+        { Walls : Wall<HexPosition> array }
 
     interface ICell<HexPosition> with
         member this.Create walls =
