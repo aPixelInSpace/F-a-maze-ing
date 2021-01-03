@@ -27,12 +27,17 @@ The SVG render can color the maze and show the path(s) between two zones :
 
 <img src="resources/Examples/Sigma/SVG/HexagonMaze.svg" width="400">
 
+#### Delta maze
+* Triangle
+
+<img src="resources/Examples/Delta/SVG/TriangularMaze.svg" width="400">
+
 #### Orthogonal maze
-* Rectangular
+* Rectangle
 
 <img src="resources/Examples/Ortho/SVG/RectangularMaze.svg" width="400">
 
-* Triangular
+* Triangle
 
 <img src="resources/Examples/Ortho/SVG/TriangularMaze.svg" width="400">
 
