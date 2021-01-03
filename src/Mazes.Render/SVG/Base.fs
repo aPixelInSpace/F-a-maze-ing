@@ -160,8 +160,8 @@ let appendLeaves leaves wholeCellLines (sBuilder : StringBuilder) =
 
     sBuilder
 
-let appendWalls cells walls (sBuilder : StringBuilder) =
-    cells
-    |> Seq.iter(fun coordinate -> sBuilder |> walls coordinate |> ignore)
+let appendWalls sequence walls (sBuilder : StringBuilder) =
+    sequence
+    |> Seq.iter(fun item -> sBuilder |> walls item |> ignore)
 
     sBuilder

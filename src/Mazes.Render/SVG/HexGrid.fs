@@ -59,7 +59,7 @@ let private appendWallsType calculatePoints (grid :HexGrid) coordinate (sBuilder
         | Bottom -> appendWall $"M {round bottomLeftX} {round bottomLeftY} L {round bottomRightX} {round bottomRightY}" (cell.WallTypeAtPosition position) |> ignore
         | BottomRight -> appendWall $"M {round bottomRightX} {round bottomRightY} L {round rightX} {round rightY}" (cell.WallTypeAtPosition position) |> ignore
 
-let private wholeCellLines calculatePoints (grid :HexGrid) coordinate =
+let private wholeCellLines calculatePoints coordinate =
     let ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY)) =
         calculatePoints coordinate
 
@@ -92,8 +92,9 @@ let render (grid : HexGrid) (path : Coordinate seq) (map : Map) =
     |> appendHeader ((round width).ToString()) ((round height).ToString())
     |> appendStyle
     |> appendBackground "transparent"
-    |> appendMazeColoration map (wholeCellLines calculatePoints grid)
-    |> appendPathWithAnimation path (wholeCellLines calculatePoints grid)
+    |> appendMazeColoration map (wholeCellLines calculatePoints)
+    |> appendPathWithAnimation path (wholeCellLines calculatePoints)
+    //|> appendLeaves map.Leaves (wholeCellLines calculatePoints grid)
     |> appendWalls grid.ToInterface.CoordinatesPartOfMaze (appendWallsType calculatePoints grid)
     |> appendFooter
     |> ignore

@@ -34,7 +34,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             (0, this.Canvas.NumberOfColumns)
 
         member this.NeighborAbstractCoordinate coordinate position =
-            (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map position))
+            (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
 
         member this.IsCellLinked coordinate =
             (this.Cell coordinate).IsLinked
@@ -71,7 +71,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Border
 
         member this.Neighbor coordinate position =
-            Some (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map position))
+            Some (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
 
         member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
             if not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) then

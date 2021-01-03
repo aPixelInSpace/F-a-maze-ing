@@ -31,12 +31,13 @@ type HexPositionHandler private () =
         member this.Values =
             [| TopLeft; Top; TopRight; BottomLeft; Bottom; BottomRight |]
 
-        member this.Map position =
+        member this.Map coordinate position =
+            let cIndexEven = coordinate.CIndex % 2 = 0
             match position with
             | Position.Top -> Top
-            | Position.Left -> TopLeft
+            | Position.Left -> if cIndexEven then TopLeft else BottomLeft
             | Position.Bottom -> Bottom
-            | Position.Right -> TopRight
+            | Position.Right -> if cIndexEven then TopRight else BottomRight
 
     member this.ToInterface =
         this :> IPositionHandler<HexPosition>

@@ -39,7 +39,7 @@ let ``Given a maze (with an ortho grid), a path and a map, when creating an SVG,
 let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
-        Shape.Disc.create 5 1.0 2
+        Shape.Disk.create 5 1.0 2
         |> PolarGrid.createGridFunction
 
     let maze =

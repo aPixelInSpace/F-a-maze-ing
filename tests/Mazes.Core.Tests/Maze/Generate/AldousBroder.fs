@@ -35,7 +35,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Aldous-Broder algo
 let ``Given a polar disc grid with 5 rings, when generating a maze with the Aldous-Broder algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let grid =
-        (Disc.create 5 1.0 3)
+        (Disk.create 5 1.0 3)
         |> PolarGrid.createGridFunction
     
     // act

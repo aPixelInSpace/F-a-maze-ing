@@ -173,7 +173,7 @@ let ``Given a triangular ortho grid, when creating a maze with the sidewinder al
 let ``Given a polar disc grid with 5 rings, when generating a maze with the Sidewinder algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let grid =
-        (Disc.create 5 1.0 3)
+        (Disk.create 5 1.0 3)
         |> PolarGrid.createGridFunction
     
     // act
@@ -233,7 +233,7 @@ let ``Given a disc polar grid, when creating a maze with the sidewinder algorith
     // arrange
     let map = mapSidewinderDirectionEnumToSidewinderDirection
     let grid =
-        (Disc.create numberOfRings widthHeightRatio numberOfCellsForCenterRing)
+        (Disk.create numberOfRings widthHeightRatio numberOfCellsForCenterRing)
         |> PolarGrid.createGridFunction
     
     // act

@@ -35,9 +35,9 @@ let neighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
 
 let neighborBaseCoordinateAt coordinate position =    
         match position with
-        | Outward ->  { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
+        | Outward ->  { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
         | Cw -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
-        | Inward -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
+        | Inward -> { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
         | Ccw -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
 
 let neighborPositionAt (arrayOfA : 'A[][]) coordinate otherCoordinate =

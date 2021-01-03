@@ -8,4 +8,4 @@ type IPositionHandler<'Position> =
 
     abstract member Opposite : position:'Position -> 'Position
     abstract member Values : 'Position array
-    abstract member Map : Position -> 'Position
+    abstract member Map : Coordinate -> Position -> 'Position

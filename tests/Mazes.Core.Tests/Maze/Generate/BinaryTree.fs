@@ -94,7 +94,7 @@ let ``Given a rectangular canvas, when a creating a maze with the binary tree al
 let ``Given a polar disc grid with 5 rings, when generating a maze with the Binary Tree algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let grid =
-        (Disc.create 5 1.0 3)
+        (Disk.create 5 1.0 3)
         |> PolarGrid.createGridFunction
     
     // act

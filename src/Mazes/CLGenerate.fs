@@ -41,8 +41,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let matchAlgoEnumWithFunction algoEnum rngSeed =
         match algoEnum with
-           | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right rngSeed 1 1
-           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Left rngSeed 1 1
+           | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Right BinaryTree.Direction.Top rngSeed 1 1
+           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Bottom rngSeed 1 1
            | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
            | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
            | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
@@ -75,12 +75,12 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     //let grid = Shape.Disc.create options.Value.rows 1.0 2 |> PolarGrid.createGridFunction
 
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateFunction)
+    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.Hexagon.create options.Value.rows |> Hex.HexGrid.CreateFunction)
-    let grid = (Shape.Hexagon.create 5.0 |> Hex.HexGrid.CreateFunction)
+    //let grid = (Shape.Hexagon.create 5.0 |> Hex.HexGrid.CreateFunction)
 
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"

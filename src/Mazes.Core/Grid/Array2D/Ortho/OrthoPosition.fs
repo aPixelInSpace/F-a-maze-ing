@@ -27,7 +27,7 @@ type OrthoPositionHandler private () =
         member this.Values =
             [| Left; Top; Right; Bottom |]
 
-        member this.Map position =
+        member this.Map _ position =
             match position with
             | Position.Left -> Left
             | Position.Top -> Top

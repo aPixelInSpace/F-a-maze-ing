@@ -20,7 +20,7 @@
         <Compile Include="Canvas\Array2D\Shape\Ellipse.fs" />
         <Compile Include="Canvas\Array2D\Shape\Hexagon.fs" />
         <Compile Include="Canvas\ArrayOfA\Canvas.fs" />
-        <Compile Include="Canvas\ArrayOfA\Shape\Disc.fs" />
+        <Compile Include="Canvas\ArrayOfA\Shape\Disk.fs" />
         <Compile Include="Grid\Teleport.fs" />
         <Compile Include="Grid\Wall.fs" />
 		<Compile Include="Grid\IGrid.fs" />
