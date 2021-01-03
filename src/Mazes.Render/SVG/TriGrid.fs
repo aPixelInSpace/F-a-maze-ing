@@ -80,7 +80,7 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
     let calculatePoints = calculatePoints (calculateWidth, calculateHeight, isNumberOfColumnsEven, isUpright, triWidth, triHalfWidth, triHeight, triHalfHeight, (float)marginWidth, (float)marginHeight)
 
     let width = calculateWidth ((float)grid.NumberOfColumns) + marginWidth
-    let height = calculateHeight ((float)grid.NumberOfColumns) + marginHeight
+    let height = calculateHeight ((float)grid.NumberOfRows) + marginHeight
 
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())
