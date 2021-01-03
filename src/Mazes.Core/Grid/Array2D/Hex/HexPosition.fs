@@ -28,7 +28,7 @@ type HexPositionHandler private () =
             | Bottom -> Top
             | BottomRight -> TopLeft
 
-        member this.Values =
+        member this.Values _ =
             [| TopLeft; Top; TopRight; BottomLeft; Bottom; BottomRight |]
 
         member this.Map coordinate position =

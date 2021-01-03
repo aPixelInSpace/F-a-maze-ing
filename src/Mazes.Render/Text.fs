@@ -134,10 +134,13 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
 
 let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty (grid : OrthoGrid) (coordinate : Coordinate) pos1 pos2 =
     let neighborAtPos1 = OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate pos1
-    match grid.Canvas.ExistAt neighborAtPos1 with
-    | true ->
-        (grid.Cell neighborAtPos1).WallTypeAtPosition pos2
-    | false -> Empty
+    match neighborAtPos1 with
+    | Some neighborAtPos1 ->
+        match grid.Canvas.ExistAt neighborAtPos1 with
+        | true ->
+            (grid.Cell neighborAtPos1).WallTypeAtPosition pos2
+        | false -> Empty
+    | None -> failwith $"Could not find a neighbor {coordinate} at {pos1}"
 
 let private append
     (sBuilder : StringBuilder) (grid : OrthoGrid) coordinate

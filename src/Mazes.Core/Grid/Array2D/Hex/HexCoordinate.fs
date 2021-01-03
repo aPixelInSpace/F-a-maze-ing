@@ -19,23 +19,22 @@ type HexCoordinateHandler private () =
                 | false -> (coordinate.RIndex - 1, coordinate.RIndex)
 
             match position with
-            | HexPosition.TopLeft ->  { RIndex = rIndexTopLeftRight; CIndex = coordinate.CIndex - 1 }
-            | HexPosition.Top -> { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
-            | HexPosition.TopRight -> { RIndex = rIndexTopLeftRight; CIndex = coordinate.CIndex + 1 }
-            | HexPosition.BottomLeft -> { RIndex = rIndexBottomLeftRight; CIndex = coordinate.CIndex - 1 }
-            | HexPosition.Bottom -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
-            | HexPosition.BottomRight -> { RIndex = rIndexBottomLeftRight; CIndex = coordinate.CIndex + 1 }
+            | HexPosition.TopLeft ->  Some { RIndex = rIndexTopLeftRight; CIndex = coordinate.CIndex - 1 }
+            | HexPosition.Top -> Some { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
+            | HexPosition.TopRight -> Some { RIndex = rIndexTopLeftRight; CIndex = coordinate.CIndex + 1 }
+            | HexPosition.BottomLeft -> Some { RIndex = rIndexBottomLeftRight; CIndex = coordinate.CIndex - 1 }
+            | HexPosition.Bottom -> Some { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
+            | HexPosition.BottomRight -> Some { RIndex = rIndexBottomLeftRight; CIndex = coordinate.CIndex + 1 }
 
         member this.NeighborPositionAt coordinate otherCoordinate =
             let neighborCoordinateAt = this.ToInterface.NeighborCoordinateAt coordinate
-            match otherCoordinate with
-            | c when c = neighborCoordinateAt HexPosition.TopLeft -> HexPosition.TopLeft
-            | c when c = neighborCoordinateAt HexPosition.Top -> HexPosition.Top
-            | c when c = neighborCoordinateAt HexPosition.TopRight -> HexPosition.TopRight
-            | c when c = neighborCoordinateAt HexPosition.BottomLeft -> HexPosition.BottomLeft
-            | c when c = neighborCoordinateAt HexPosition.Bottom -> HexPosition.Bottom
-            | c when c = neighborCoordinateAt HexPosition.BottomRight -> HexPosition.BottomRight
-            | _ -> failwith "Unable to match the hex coordinates with a position"
+
+            HexPositionHandler.Instance.Values coordinate
+            |> Array.find(fun position ->
+                            let neighborCoordinate = neighborCoordinateAt position
+                            match neighborCoordinate with
+                            | Some neighborCoordinate -> neighborCoordinate = otherCoordinate
+                            | None -> false)
 
     member this.ToInterface =
         this :> ICoordinateHandler<HexPosition>

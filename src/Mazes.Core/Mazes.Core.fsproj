@@ -37,6 +37,10 @@
 		<Compile Include="Grid\Array2D\Hex\HexCoordinate.fs" />
 		<Compile Include="Grid\Array2D\Hex\HexCell.fs" />
 		<Compile Include="Grid\Array2D\Hex\HexGrid.fs" />
+		<Compile Include="Grid\Array2D\Tri\TriPosition.fs" />
+		<Compile Include="Grid\Array2D\Tri\TriCoordinate.fs" />
+		<Compile Include="Grid\Array2D\Tri\TriCell.fs" />
+		<Compile Include="Grid\Array2D\Tri\TriGrid.fs" />
 		<Compile Include="Grid\ArrayOfA\Polar\PolarArrayOfA.fs" />
 		<Compile Include="Grid\ArrayOfA\Polar\PolarPosition.fs" />
 		<Compile Include="Grid\ArrayOfA\Polar\PolarCoordinate.fs" />

@@ -11,6 +11,7 @@
       <Compile Include="SVG\OrthoGrid.fs" />
       <Compile Include="SVG\PolarGrid.fs" />
       <Compile Include="SVG\HexGrid.fs" />
+      <Compile Include="SVG\TriGrid.fs" />
     </ItemGroup>
 
     <ItemGroup>

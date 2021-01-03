@@ -11,6 +11,7 @@ open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Grid.Array2D.Hex
+open Mazes.Core.Grid.Array2D.Tri
 open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 open Mazes.Render
@@ -72,5 +73,25 @@ let ``Given a maze (with a hex grid), a path and a map, when creating an SVG, th
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/sigma.svg", Encoding.UTF8)
+        
+    renderedMaze |> should equal expectedRenderedMaze
+
+[<Fact>]
+let ``Given a maze (with a tri grid), a path and a map, when creating an SVG, then it should match the expected result`` () =
+    // arrange
+    let grid =
+        Shape.TriangleIsosceles.create 9 Shape.TriangleIsosceles.BaseAt.Bottom 1 1
+        |> TriGrid.CreateFunction
+
+    let maze =
+        grid
+        |> HuntAndKill.createMaze 1
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+
+    // act
+    let renderedMaze = SVG.TriGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+        
+    // assert
+    let expectedRenderedMaze = IO.File.ReadAllText("Resources/delta.svg", Encoding.UTF8)
         
     renderedMaze |> should equal expectedRenderedMaze

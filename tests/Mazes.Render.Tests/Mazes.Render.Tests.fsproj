@@ -17,6 +17,9 @@
 		<Content Include="Resources\sigma.svg">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+		<Content Include="Resources\delta.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 		<Compile Include="Text\BinaryTree\Rectangle.fs" />
 		<Compile Include="Text\BinaryTree\TriangleIsosceles.fs" />
 		<Compile Include="Text\BinaryTree\Ellipse.fs" />

@@ -39,7 +39,7 @@ type PolarGrid =
             (0, this.Cells.[ringIndex].Length)
 
         member this.NeighborAbstractCoordinate coordinate position =
-            (PolarCoordinate.neighborBaseCoordinateAt coordinate (PolarPosition.map position))
+            Some (PolarCoordinate.neighborBaseCoordinateAt coordinate (PolarPosition.map position))
 
         member this.IsCellLinked coordinate =
             (this.Cell coordinate).IsLinked this.Cells coordinate

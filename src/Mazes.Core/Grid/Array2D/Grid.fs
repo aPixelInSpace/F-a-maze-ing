@@ -21,7 +21,6 @@ type Grid<'Grid, 'Position, 'PH, 'CH
     member this.PositionHandler = positionHandler
     member this.CoordinateHandler = coordinateHandler    
 
-
     interface IGrid<'Grid> with
 
         member this.TotalOfMazeCells =
@@ -71,7 +70,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Border
 
         member this.Neighbor coordinate position =
-            Some (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
+            (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
 
         member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
             if not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) then
@@ -143,8 +142,11 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             fun () ->
                 let neighborCoordinate = this.CoordinateHandler.NeighborCoordinateAt coordinate position
 
-                not ((this.Canvas.ExistAt neighborCoordinate) &&
-                    (this.Canvas.Zone neighborCoordinate).IsAPartOfMaze)
+                match neighborCoordinate with
+                | Some neighborCoordinate ->
+                    not ((this.Canvas.ExistAt neighborCoordinate) &&
+                        (this.Canvas.Zone neighborCoordinate).IsAPartOfMaze)
+                | None -> true
 
         not zone.IsAPartOfMaze ||
         cell.WallTypeAtPosition position = Border ||
@@ -165,22 +167,28 @@ type Grid<'Grid, 'Position, 'PH, 'CH
         this.Cells.[coordinate.RIndex, coordinate.CIndex] <- cell.Create (getWalls coordinate position)
 
         let neighbor = this.CoordinateHandler.NeighborCoordinateAt coordinate position
-        let neighborCell = this.Cells.[neighbor.RIndex, neighbor.CIndex]
-        this.Cells.[neighbor.RIndex, neighbor.CIndex] <- neighborCell.Create (getWalls neighbor (this.PositionHandler.Opposite position))
+        match neighbor with
+        | Some neighbor ->
+            let neighborCell = this.Cells.[neighbor.RIndex, neighbor.CIndex]
+            this.Cells.[neighbor.RIndex, neighbor.CIndex] <- neighborCell.Create (getWalls neighbor (this.PositionHandler.Opposite position))
+        | None -> ()
 
     member private this.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =
         let neighborCoordinateAt = this.CoordinateHandler.NeighborCoordinateAt coordinate
 
-        for position in this.PositionHandler.Values do
-            if otherCoordinate = (neighborCoordinateAt position) then
+        for position in this.PositionHandler.Values coordinate do
+            if Some otherCoordinate = (neighborCoordinateAt position) then
                 this.UpdateWallAtPosition coordinate position wallType
 
     /// Returns the neighbors that are inside the bound of the grid
     member this.Neighbors coordinate =
         let listOfNeighborCoordinate =
             seq {
-                for position in this.PositionHandler.Values do
-                    yield ((this.CoordinateHandler.NeighborCoordinateAt coordinate position), position)
+                for position in this.PositionHandler.Values coordinate do
+                    let coordinate = this.CoordinateHandler.NeighborCoordinateAt coordinate position
+                    match coordinate with
+                    | Some coordinate -> yield (coordinate, position)
+                    | None -> ()
             }
 
         this.Canvas.NeighborsPartOfMazeOf listOfNeighborCoordinate

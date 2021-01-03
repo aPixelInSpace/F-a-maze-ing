@@ -67,8 +67,11 @@ type HexCell =
             if isOnEdge then
                 WallType.getWallTypeForEdge isCurrentCellPartOfMaze
             else
-                let isNeighborPartOfMaze = isCellPartOfMaze (HexCoordinateHandler.Instance.NeighborCoordinateAt coordinate position)
-                WallType.getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
+                match (HexCoordinateHandler.Instance.NeighborCoordinateAt coordinate position) with
+                | Some neighborCoordinate ->
+                    let isNeighborPartOfMaze = isCellPartOfMaze neighborCoordinate
+                    WallType.getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
+                | None -> failwith $"Could not find a wall type for the neighbor {coordinate} at {position}"
 
         let isCIndexEven = coordinate.CIndex % 2 = 0
         let isCIndexOdd = not isCIndexEven

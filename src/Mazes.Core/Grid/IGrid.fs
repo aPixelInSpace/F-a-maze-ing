@@ -10,7 +10,7 @@ type IGrid<'G> =
     abstract member TotalOfMazeCells : int
     abstract member Dimension1Boundaries : dimension2Index:int -> (int * int)
     abstract member Dimension2Boundaries : dimension1Index:int -> (int * int)
-    abstract member NeighborAbstractCoordinate : coordinate:Coordinate -> position:Position -> Coordinate
+    abstract member NeighborAbstractCoordinate : coordinate:Coordinate -> position:Position -> Coordinate option
     /// Returns true if the cell has at least one link to another cell, false otherwise
     abstract member IsCellLinked : coordinate:Coordinate -> bool
     abstract member ExistAt : coordinate:Coordinate -> bool

@@ -13,19 +13,20 @@ type OrthoCoordinateHandler private () =
 
         member this.NeighborCoordinateAt coordinate position =
             match position with
-            | OrthoPosition.Top ->  { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
-            | OrthoPosition.Right -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
-            | OrthoPosition.Bottom -> { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
-            | OrthoPosition.Left -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
+            | OrthoPosition.Top ->  Some { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
+            | OrthoPosition.Right -> Some { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
+            | OrthoPosition.Bottom -> Some { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
+            | OrthoPosition.Left -> Some  { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
 
         member this.NeighborPositionAt coordinate otherCoordinate =
             let neighborCoordinateAt = this.ToInterface.NeighborCoordinateAt coordinate
-            match otherCoordinate with
-            | c when c = neighborCoordinateAt OrthoPosition.Top -> OrthoPosition.Top
-            | c when c = neighborCoordinateAt OrthoPosition.Right -> OrthoPosition.Right
-            | c when c = neighborCoordinateAt OrthoPosition.Bottom -> OrthoPosition.Bottom
-            | c when c = neighborCoordinateAt OrthoPosition.Left -> OrthoPosition.Left
-            | _ -> failwith "Unable to match the ortho coordinates with a position"
+
+            OrthoPositionHandler.Instance.Values coordinate
+            |> Array.find(fun position ->
+                            let neighborCoordinate = neighborCoordinateAt position
+                            match neighborCoordinate with
+                            | Some neighborCoordinate -> neighborCoordinate = otherCoordinate
+                            | None -> false)
 
     member this.ToInterface =
         this :> ICoordinateHandler<OrthoPosition>

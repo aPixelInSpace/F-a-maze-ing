@@ -1,39 +1,39 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Array2D.Ortho
+namespace Mazes.Core.Grid.Array2D.Tri
 
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Array2D
-open Mazes.Core.Grid.Array2D.Ortho
+open Mazes.Core.Grid.Array2D.Tri
 
 [<Struct>]
-type OrthoCell =
+type TriCell =
     private
-        { Walls : Wall<OrthoPosition> array }
+        { Walls : Wall<TriPosition> array }
 
-    interface ICell<OrthoPosition> with
+    interface ICell<TriPosition> with
         member this.Create walls =
-            ({ Walls = walls } :> ICell<OrthoPosition>)
+            ({ Walls = walls } :> ICell<TriPosition>)
 
         member this.Walls =
             this.WallsArray
 
         member this.WallIndex position =
-            OrthoCell.WallIndex position
+            TriCell.WallIndex position
 
         member this.WallTypeAtPosition position =
-            this.Walls.[OrthoCell.WallIndex position].WallType
+            this.Walls.[TriCell.WallIndex position].WallType
 
         member this.IsALink wallType =
-            OrthoCell.IsALink wallType
+            TriCell.IsALink wallType
 
         member this.IsLinkedAt position =
             this.ToInterface.IsALink (this.ToInterface.WallTypeAtPosition position)
 
         member this.AreLinked coordinate otherCoordinate =
-            this.ToInterface.IsLinkedAt (OrthoCoordinateHandler.Instance.NeighborPositionAt coordinate otherCoordinate)
+            this.ToInterface.IsLinkedAt (TriCoordinateHandler.Instance.NeighborPositionAt coordinate otherCoordinate)
 
         member this.IsLinked =
             this.IsLinked
@@ -43,20 +43,20 @@ type OrthoCell =
 
     member this.IsLinked =
         (this.Walls
-        |> Array.where(fun wall -> OrthoCell.IsALink wall.WallType)).Length > 0
+        |> Array.where(fun wall -> TriCell.IsALink wall.WallType)).Length > 0
 
     member this.ToInterface =
-        this :> ICell<OrthoPosition>
+        this :> ICell<TriPosition>
 
     static member IsALink wallType =
         wallType = Empty
 
     static member WallIndex position =
         match position with
-        | Top -> 0
+        | Left -> 0
         | Right -> 1
+        | Top -> 2
         | Bottom -> 2
-        | Left -> 3
 
     static member Create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
@@ -65,24 +65,20 @@ type OrthoCell =
             if isOnEdge then
                 WallType.getWallTypeForEdge isCurrentCellPartOfMaze
             else
-                match (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate position) with
+                match (TriCoordinateHandler.Instance.NeighborCoordinateAt coordinate position) with
                 | Some neighborCoordinate ->
                     let isNeighborPartOfMaze = isCellPartOfMaze neighborCoordinate
                     WallType.getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
                 | None -> failwith $"Could not find a wall type for the neighbor {coordinate} at {position}"
 
-        let wallTypeTop = getWallType (isFirstRow coordinate.RIndex) Top
-
-        let wallTypeRight = getWallType (isLastColumn coordinate.CIndex numberOfColumns) Right
-
-        let wallTypeBottom = getWallType (isLastRow coordinate.RIndex numberOfRows) Bottom
-
-        let wallTypeLeft = getWallType (isFirstColumn coordinate.CIndex) Left                
-
         {
             Walls =
-                [| { WallType = wallTypeTop; WallPosition = Top }
-                   { WallType = wallTypeRight; WallPosition = Right }
-                   { WallType = wallTypeBottom; WallPosition = Bottom }
-                   { WallType = wallTypeLeft; WallPosition = Left } |]                
+                [|
+                   { WallType = (getWallType (isFirstColumn coordinate.CIndex) Left); WallPosition = Left }
+                   { WallType = (getWallType (isLastColumn coordinate.CIndex numberOfColumns) Right); WallPosition = Right }
+
+                   if TriPositionHandler.IsUpright coordinate then
+                       { WallType = (getWallType (isLastRow coordinate.RIndex numberOfRows) Bottom); WallPosition = Bottom }
+                   else
+                       { WallType = (getWallType (isFirstRow coordinate.RIndex) Top); WallPosition = Top } |]                
         }.ToInterface

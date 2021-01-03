@@ -42,7 +42,7 @@ let private calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeig
 
     ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY))
 
-let private appendWallsType calculatePoints (grid :HexGrid) coordinate (sBuilder : StringBuilder) =
+let private appendWallsType calculatePoints (grid : HexGrid) coordinate (sBuilder : StringBuilder) =
     let ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY)) =
         calculatePoints coordinate
 
@@ -50,7 +50,7 @@ let private appendWallsType calculatePoints (grid :HexGrid) coordinate (sBuilder
 
     let cell = grid.Cell coordinate
 
-    for position in HexPositionHandler.Instance.Values do
+    for position in HexPositionHandler.Instance.Values coordinate do
         match position with
         | TopLeft -> appendWall $"M {round leftX} {round leftY} L {round topLeftX} {round topLeftY}" (cell.WallTypeAtPosition position) |> ignore
         | Top -> appendWall $"M {round topLeftX} {round topLeftY} L {round topRightX} {round topRightY}" (cell.WallTypeAtPosition position) |> ignore

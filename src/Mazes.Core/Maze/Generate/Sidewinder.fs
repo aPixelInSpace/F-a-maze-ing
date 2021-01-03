@@ -189,7 +189,9 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
             | true -> grid.ExistAt
             | false -> grid.GetAdjustedExistAt
 
-        existAt (grid.NeighborAbstractCoordinate coordinate direction.Position)
+        match (grid.NeighborAbstractCoordinate coordinate direction.Position) with
+        | Some neighbor -> existAt neighbor
+        | None -> false
 
     let isALimitAt coordinate (direction : Direction) =
         (grid.Neighbor (getCoordinate coordinate) direction.Position).IsNone ||

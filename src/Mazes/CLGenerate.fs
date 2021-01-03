@@ -75,12 +75,15 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     //let grid = Shape.Disc.create options.Value.rows 1.0 2 |> PolarGrid.createGridFunction
 
-    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateFunction)
+    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.Hexagon.create options.Value.rows |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.Hexagon.create 5.0 |> Hex.HexGrid.CreateFunction)
+
+    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Tri.TriGrid.CreateFunction)
+    let grid = (Shape.TriangleIsosceles.create 9 Shape.TriangleIsosceles.BaseAt.Bottom 1 1 |> Tri.TriGrid.CreateFunction)
 
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
@@ -175,7 +178,9 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
-    let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+
+    let renderedGridSvg = SVG.TriGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
 
