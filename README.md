@@ -1,4 +1,5 @@
 ![build](https://github.com/apixelinspace/F-a-maze-ing/workflows/build/badge.svg)
+[![Build Status](https://apat21.visualstudio.com/aPixelInSpace/_apis/build/status/aPixelInSpace.F-a-maze-ing?branchName=main)](https://apat21.visualstudio.com/aPixelInSpace/_build/latest?definitionId=1&branchName=main)
 [![codecov](https://codecov.io/gh/aPixelInSpace/F-a-maze-ing/branch/main/graph/badge.svg?token=K6FQOQZ8BS)](https://codecov.io/gh/aPixelInSpace/F-a-maze-ing)
 
 # F-a-maze-ing
