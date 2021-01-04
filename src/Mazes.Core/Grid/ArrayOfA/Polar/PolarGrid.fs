@@ -301,7 +301,7 @@ type PolarGrid =
 
 module PolarGrid =
 
-    let create (canvas : Canvas) =
+    let Create (canvas : Canvas) =
 
         let cells =
             createPolar
@@ -313,8 +313,8 @@ module PolarGrid =
         {
             Canvas = canvas
             Cells = cells
-            Teleports = Teleports.createEmpty
+            Teleports = Teleports.CreateEmpty
         }
 
-    let createGridFunction canvas =
-        fun () -> create canvas :> IGrid<PolarGrid>
+    let CreateFunction canvas =
+        fun () -> Create canvas :> IGrid<PolarGrid>

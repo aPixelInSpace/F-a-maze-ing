@@ -12,6 +12,7 @@ open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Grid.Array2D.Hex
 open Mazes.Core.Grid.Array2D.Tri
+open Mazes.Core.Grid.Array2D.OctaSquare
 open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 open Mazes.Render
@@ -41,7 +42,7 @@ let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, 
     // arrange
     let grid =
         Shape.Disk.create 5 1.0 2
-        |> PolarGrid.createGridFunction
+        |> PolarGrid.CreateFunction
 
     let maze =
         grid
@@ -93,5 +94,25 @@ let ``Given a maze (with a tri grid), a path and a map, when creating an SVG, th
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/delta.svg", Encoding.UTF8)
+        
+    renderedMaze |> should equal expectedRenderedMaze
+
+[<Fact>]
+let ``Given a maze (with a octa-square grid), a path and a map, when creating an SVG, then it should match the expected result`` () =
+    // arrange
+    let grid =
+        Shape.Rectangle.create 5 7
+        |> OctaSquareGrid.CreateFunction
+
+    let maze =
+        grid
+        |> HuntAndKill.createMaze 1
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+
+    // act
+    let renderedMaze = SVG.OctaSquareGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+        
+    // assert
+    let expectedRenderedMaze = IO.File.ReadAllText("Resources/upsilon.svg", Encoding.UTF8)
         
     renderedMaze |> should equal expectedRenderedMaze

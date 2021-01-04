@@ -66,7 +66,7 @@ type OrthoGrid
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
-        OrthoGrid(canvas, cells, Teleports.createEmpty, OrthoPositionHandler.Instance,  OrthoCoordinateHandler.Instance)
+        OrthoGrid(canvas, cells, Teleports.CreateEmpty, OrthoPositionHandler.Instance,  OrthoCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
         fun () -> OrthoGrid.Create canvas :> IGrid<OrthoGrid>

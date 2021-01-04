@@ -95,7 +95,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Bina
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> PolarGrid.createGridFunction
+        |> PolarGrid.CreateFunction
     
     // act
     let maze = grid |> createMaze Direction.Top Direction.Right 1 1 1

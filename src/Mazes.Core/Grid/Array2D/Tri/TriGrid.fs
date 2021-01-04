@@ -33,7 +33,7 @@ type TriGrid
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
-        TriGrid(canvas, cells, Teleports.createEmpty, TriPositionHandler.Instance,  TriCoordinateHandler.Instance)
+        TriGrid(canvas, cells, Teleports.CreateEmpty, TriPositionHandler.Instance,  TriCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
         fun () -> TriGrid.Create canvas :> IGrid<TriGrid>

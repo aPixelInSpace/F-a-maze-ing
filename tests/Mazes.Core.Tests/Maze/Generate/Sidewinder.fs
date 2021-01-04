@@ -174,7 +174,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Side
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> PolarGrid.createGridFunction
+        |> PolarGrid.CreateFunction
     
     // act
     let maze = grid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -234,7 +234,7 @@ let ``Given a disc polar grid, when creating a maze with the sidewinder algorith
     let map = mapSidewinderDirectionEnumToSidewinderDirection
     let grid =
         (Disk.create numberOfRings widthHeightRatio numberOfCellsForCenterRing)
-        |> PolarGrid.createGridFunction
+        |> PolarGrid.CreateFunction
     
     // act
     let maze = grid |> Sidewinder.createMaze (map direction1) (map direction2) rngSeed direction1Weight direction2Weight

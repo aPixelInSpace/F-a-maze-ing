@@ -12,6 +12,7 @@
       <Compile Include="SVG\PolarGrid.fs" />
       <Compile Include="SVG\HexGrid.fs" />
       <Compile Include="SVG\TriGrid.fs" />
+      <Compile Include="SVG\OctaSquareGrid.fs" />
     </ItemGroup>
 
     <ItemGroup>

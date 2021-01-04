@@ -30,5 +30,5 @@ type Teleports =
                     yield toCoordinate
         }
 
-    static member createEmpty =
+    static member CreateEmpty =
         { Container = Dictionary<Coordinate, HashSet<Coordinate>>() }

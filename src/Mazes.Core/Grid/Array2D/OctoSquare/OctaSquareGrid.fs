@@ -1,18 +1,18 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Array2D.Hex
+namespace Mazes.Core.Grid.Array2D.OctaSquare
 
 open Mazes.Core
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Teleport
 open Mazes.Core.Grid.Array2D
-open Mazes.Core.Grid.Array2D.Hex
+open Mazes.Core.Grid.Array2D.OctaSquare
 
-type HexGrid
+type OctaSquareGrid
     (canvas, cells, teleports,
      positionHandler, coordinateHandler) =
-    inherit Grid<HexGrid, HexPosition, IPositionHandler<HexPosition>, ICoordinateHandler<HexPosition>>(
+    inherit Grid<OctaSquareGrid, OctaSquarePosition, IPositionHandler<OctaSquarePosition>, ICoordinateHandler<OctaSquarePosition>>(
         canvas, cells, teleports, positionHandler, coordinateHandler)
 
         override this.ToString =
@@ -25,13 +25,13 @@ type HexGrid
         let cells =
             canvas.Zones |>
             Array2D.mapi(fun rowIndex columnIndex _ ->
-                HexCell.Create
+                OctaSquareCell.Create
                     canvas.NumberOfRows
                     canvas.NumberOfColumns
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
-        HexGrid(canvas, cells, Teleports.CreateEmpty, HexPositionHandler.Instance,  HexCoordinateHandler.Instance)
+        OctaSquareGrid(canvas, cells, Teleports.CreateEmpty, OctaSquarePositionHandler.Instance,  OctaSquareCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
-        fun () -> HexGrid.Create canvas :> IGrid<HexGrid>
+        fun () -> OctaSquareGrid.Create canvas :> IGrid<OctaSquareGrid>

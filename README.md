@@ -17,39 +17,32 @@ My goal is two fold : give the project a functional spin and learn F# in the pro
 
 ### SVG
 The SVG render can color the maze and show the path(s) between two zones :
+
 #### Theta maze
-* Disk
 
 <img src="resources/Examples/Theta/SVG/CircleMaze.svg" width="400">
 
 #### Sigma maze
-* Hexagon
 
 <img src="resources/Examples/Sigma/SVG/HexagonMaze.svg" width="400">
 
 #### Delta maze
-* Triangle
 
 <img src="resources/Examples/Delta/SVG/TriangularMaze.svg" width="400">
 
+#### Upsilon maze
+
+<img src="resources/Examples/Upsilon/SVG/UpsilonMaze.svg" width="400">
+
 #### Orthogonal maze
-* Rectangle
 
 <img src="resources/Examples/Ortho/SVG/RectangularMaze.svg" width="400">
 
-* Triangle
-
 <img src="resources/Examples/Ortho/SVG/TriangularMaze.svg" width="400">
-
-* Ellipse
 
 <img src="resources/Examples/Ortho/SVG/EllipseMaze.svg" width="400">
 
-* Doughnut
-
 <img src="resources/Examples/Ortho/SVG/DoughnutMaze.svg" width="400">
-
-* Composite
 
 <img src="resources/Examples/Ortho/SVG/CompositeMaze.svg" width="400">
 

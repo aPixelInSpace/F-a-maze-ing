@@ -15,7 +15,7 @@ let private appendWall (sBuilder : StringBuilder) lines (wallType : WallType) =
     | Border -> appendPathElement sBuilder None borderWallClass lines
     | Empty -> sBuilder
 
-let private calculatePoints (calculateWidth, calculateHeight, isNumberOfColumnsEven, isUpright, triWidth, triHalfWidth, triHeight, triHalfHeight, marginWidth, marginHeight) coordinate =
+let private calculatePoints (calculateWidth, calculateHeight, isUpright, triWidth, triHalfWidth, triHeight) coordinate =
     let baseLengthAtRight = calculateWidth ((float)(coordinate.CIndex + 1))
     let baseLengthAtBottom = calculateHeight ((float)(coordinate.RIndex + 1))
     let baseLengthAtLeft = baseLengthAtRight - triWidth
@@ -64,20 +64,19 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
     let triWidth = 15.0
     let triHalfWidth = triWidth / 2.0
     let triHeight = (triWidth * Math.Sqrt(3.0)) / 2.0
-    let triHalfHeight = triHeight / 2.0
 
     let isNumberOfColumnsEven = grid.NumberOfColumns % 2 = 0
     let calculateWidth numberOfColumns =
         if isNumberOfColumnsEven then
-            ((numberOfColumns - 1.0) / 2.0) * triWidth + triHalfWidth + marginWidth
+            marginWidth + ((numberOfColumns - 1.0) / 2.0) * triWidth + triHalfWidth
         else
-            ((numberOfColumns + 1.0) / 2.0) * triWidth + marginWidth
+            marginWidth + ((numberOfColumns + 1.0) / 2.0) * triWidth
 
     let calculateHeight numberOfRows = (numberOfRows * triHeight) + marginHeight
 
     let isUpright = TriPositionHandler.IsUpright
 
-    let calculatePoints = calculatePoints (calculateWidth, calculateHeight, isNumberOfColumnsEven, isUpright, triWidth, triHalfWidth, triHeight, triHalfHeight, (float)marginWidth, (float)marginHeight)
+    let calculatePoints = calculatePoints (calculateWidth, calculateHeight, isUpright, triWidth, triHalfWidth, triHeight)
 
     let width = calculateWidth ((float)grid.NumberOfColumns) + marginWidth
     let height = calculateHeight ((float)grid.NumberOfRows) + marginHeight
