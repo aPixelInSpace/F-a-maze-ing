@@ -73,20 +73,20 @@ type HexCell =
                     WallType.getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
                 | None -> failwith $"Could not find a wall type for the neighbor {coordinate} at {position}"
 
-        let isCIndexEven = coordinate.CIndex % 2 = 0
-        let isCIndexOdd = not isCIndexEven
+        let isEven = (HexPositionHandler.IsEven coordinate)
+        let isOdd = not isEven
 
-        let wallTypeTopLeft = getWallType ((isFirstRow coordinate.RIndex && isCIndexOdd) || isFirstColumn coordinate.CIndex) TopLeft
+        let wallTypeTopLeft = getWallType ((isFirstRow coordinate.RIndex && isOdd) || isFirstColumn coordinate.CIndex) TopLeft
 
         let wallTypeTop = getWallType (isFirstRow coordinate.RIndex) Top
 
-        let wallTypeTopRight = getWallType ((isFirstRow coordinate.RIndex && isCIndexOdd) || isLastColumn coordinate.CIndex numberOfColumns) TopRight
+        let wallTypeTopRight = getWallType ((isFirstRow coordinate.RIndex && isOdd) || isLastColumn coordinate.CIndex numberOfColumns) TopRight
 
-        let wallTypeBottomLeft = getWallType (isFirstColumn coordinate.CIndex || (isLastRow coordinate.RIndex numberOfRows && isCIndexEven)) BottomLeft
+        let wallTypeBottomLeft = getWallType (isFirstColumn coordinate.CIndex || (isLastRow coordinate.RIndex numberOfRows && isEven)) BottomLeft
 
         let wallTypeBottom = getWallType (isLastRow coordinate.RIndex numberOfRows) Bottom
 
-        let wallTypeBottomRight = getWallType ((isLastRow coordinate.RIndex numberOfRows && isCIndexEven) || isLastColumn coordinate.CIndex numberOfColumns) BottomRight
+        let wallTypeBottomRight = getWallType ((isLastRow coordinate.RIndex numberOfRows && isEven) || isLastColumn coordinate.CIndex numberOfColumns) BottomRight
 
         {
             Walls =

@@ -4,12 +4,12 @@ namespace Mazes.Core.Grid.Array2D.Ortho
 
 open System.Text
 open Mazes.Core
+open Mazes.Core.Array2D
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Array2D
 open Mazes.Core.Grid.Teleport
 open Mazes.Core.Grid.Array2D.Ortho
-open Mazes.Core.Array2D
 
 type OrthoGrid
     (canvas, cells, teleports,

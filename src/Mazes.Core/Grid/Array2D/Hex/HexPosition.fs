@@ -32,7 +32,7 @@ type HexPositionHandler private () =
             [| TopLeft; Top; TopRight; BottomLeft; Bottom; BottomRight |]
 
         member this.Map coordinate position =
-            let cIndexEven = coordinate.CIndex % 2 = 0
+            let cIndexEven = (HexPositionHandler.IsEven coordinate)
             match position with
             | Position.Top -> Top
             | Position.Left -> if cIndexEven then TopLeft else BottomLeft
@@ -44,3 +44,6 @@ type HexPositionHandler private () =
 
     static member Instance =
         instance.ToInterface
+
+    static member IsEven coordinate =
+        coordinate.CIndex % 2 = 0

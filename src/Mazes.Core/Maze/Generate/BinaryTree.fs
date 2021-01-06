@@ -46,12 +46,16 @@ let private carveRow
     for columnIndex in startColumnIndex .. increment .. endColumnIndex do
 
         let coordinate = { RIndex = rIndex; CIndex = columnIndex }
+
         let neighborCoordinate position =
             match (grid.Neighbor coordinate position) with
             | Some neighbor -> neighbor
             | None -> failwith "Binary Tree, unable to find the neighbor coordinate"
 
         let isPosALimit position = ((grid.Neighbor coordinate position).IsNone) || (grid.IsLimitAt coordinate (neighborCoordinate position))
+        let ifNotAtLimitLinkCells position =
+            if not (isPosALimit position) then
+                grid.LinkCells coordinate (neighborCoordinate position)
         
         // if the cell is not part of the maze, we do nothing
         if not (grid.IsCellPartOfMaze coordinate) then ()
@@ -62,20 +66,20 @@ let private carveRow
 
         // if we are in a corner 
         if isPos1ALimit &&  isPos2ALimit then
-            grid.IfNotAtLimitLinkCells coordinate (neighborCoordinate direction1.Opposite.Position)
-            grid.IfNotAtLimitLinkCells coordinate (neighborCoordinate direction2.Opposite.Position)
+            ifNotAtLimitLinkCells direction1.Opposite.Position
+            ifNotAtLimitLinkCells direction2.Opposite.Position
         else
 
         // if the pos 1 is a limit then we always choose remove pos 2 (and the opposite pos 2 if possible)
         if isPos1ALimit then
             grid.LinkCells coordinate (neighborCoordinate direction2.Position)
-            grid.IfNotAtLimitLinkCells coordinate (neighborCoordinate direction2.Opposite.Position)
+            ifNotAtLimitLinkCells direction2.Opposite.Position
         else
 
         // if the pos 2 is a limit then we always choose remove pos 1 (and the opposite pos 1 if possible)
         if isPos2ALimit then
             grid.LinkCells coordinate (neighborCoordinate direction1.Position)
-            grid.IfNotAtLimitLinkCells coordinate (neighborCoordinate direction1.Opposite.Position)
+            ifNotAtLimitLinkCells direction1.Opposite.Position
         else
 
         // if pos 1 and pos 2 are both not a limit we flip a coin to decide which one we remove

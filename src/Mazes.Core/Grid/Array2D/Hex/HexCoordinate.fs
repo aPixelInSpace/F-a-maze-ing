@@ -14,7 +14,7 @@ type HexCoordinateHandler private () =
         member this.NeighborCoordinateAt coordinate position =
 
             let (rIndexTopLeftRight, rIndexBottomLeftRight) =
-                match coordinate.CIndex % 2 = 0 with
+                match (HexPositionHandler.IsEven coordinate) with
                 | true -> (coordinate.RIndex, coordinate.RIndex + 1)
                 | false -> (coordinate.RIndex - 1, coordinate.RIndex)
 

@@ -7,6 +7,7 @@ open Xunit
 open Mazes.Core.Canvas.Array2D.Shape
 open Mazes.Core.Canvas.ArrayOfA.Shape
 open Mazes.Core.Grid.Array2D.Ortho
+open Mazes.Core.Grid.Array2D.Hex
 open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 
@@ -49,6 +50,25 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Aldo
         "|‾¦¨¦‾¦‾¦¨¦‾|¨|‾¦‾¦‾¦¨|¨|¨¦‾¦‾¦‾¦‾¦‾¦‾|¨¦‾¦¨¦‾¦‾|\n" +
         "|‾¦‾¦‾¦¨|¨¦‾|¨¦‾|¨|‾¦¨|¨¦‾¦‾¦¨|‾¦¨|‾¦‾¦¨|‾¦¨|¨¦‾|\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
+        
+    maze.Grid.ToString |> should equal expectedMaze
+
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+
+[<Fact>]
+let ``Given a hex disc grid 5 by 10, when generating a maze with the Aldous-Broder algorithm (rng 1), then the output should be like the expected output`` () =
+    // arrange
+    let grid =
+        (Rectangle.create 5 10)
+        |> HexGrid.CreateFunction
+    
+    // act
+    let maze = grid |> AldousBroder.createMaze 1
+
+    // assert
+    let expectedMaze =
+        ""
         
     maze.Grid.ToString |> should equal expectedMaze
 

@@ -53,10 +53,10 @@ type OrthoCell =
 
     static member WallIndex position =
         match position with
-        | Top -> 0
-        | Right -> 1
-        | Bottom -> 2
-        | Left -> 3
+        | Left -> 0
+        | Top -> 1
+        | Right -> 2
+        | Bottom -> 3
 
     static member Create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
@@ -71,18 +71,15 @@ type OrthoCell =
                     WallType.getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
                 | None -> failwith $"Could not find a wall type for the neighbor {coordinate} at {position}"
 
-        let wallTypeTop = getWallType (isFirstRow coordinate.RIndex) Top
-
-        let wallTypeRight = getWallType (isLastColumn coordinate.CIndex numberOfColumns) Right
-
-        let wallTypeBottom = getWallType (isLastRow coordinate.RIndex numberOfRows) Bottom
-
-        let wallTypeLeft = getWallType (isFirstColumn coordinate.CIndex) Left                
+        let wallType pos =
+            match pos with
+            | Top -> getWallType (isFirstRow coordinate.RIndex) Top
+            | Right -> getWallType (isLastColumn coordinate.CIndex numberOfColumns) Right
+            | Bottom -> getWallType (isLastRow coordinate.RIndex numberOfRows) Bottom
+            | Left -> getWallType (isFirstColumn coordinate.CIndex) Left                        
 
         {
             Walls =
-                [| { WallType = wallTypeTop; WallPosition = Top }
-                   { WallType = wallTypeRight; WallPosition = Right }
-                   { WallType = wallTypeBottom; WallPosition = Bottom }
-                   { WallType = wallTypeLeft; WallPosition = Left } |]                
+                [| for pos in OrthoPositionHandler.Instance.Values coordinate do
+                       { WallType = (wallType pos); WallPosition = pos } |]                
         }.ToInterface

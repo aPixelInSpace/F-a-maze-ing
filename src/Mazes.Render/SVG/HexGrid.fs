@@ -18,7 +18,7 @@ let private appendWall (sBuilder : StringBuilder) lines (wallType : WallType) =
 let private calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeight, hexHeight, marginWidth, marginHeight) coordinate =
     let lengthAtLeft = (float)coordinate.CIndex * (3.0 * hexHalfEdgeSize) + marginWidth
     let lengthAtTop =
-        match coordinate.CIndex % 2 = 0 with
+        match (HexPositionHandler.IsEven coordinate) with
         | true -> (float)coordinate.RIndex * hexHeight + hexHalfHeight + marginHeight
         | false -> (float)coordinate.RIndex * hexHeight + marginHeight
 

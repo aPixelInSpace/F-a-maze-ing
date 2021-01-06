@@ -41,8 +41,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let matchAlgoEnumWithFunction algoEnum rngSeed =
         match algoEnum with
-           | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Right BinaryTree.Direction.Top rngSeed 1 1
-           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Bottom rngSeed 1 1
+           | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
+           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top rngSeed 1 1
            | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
            | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
            | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
@@ -75,7 +75,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     //let grid = Shape.Disc.create options.Value.rows 1.0 2 |> PolarGrid.createGridFunction
 
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateFunction)
+    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> Hex.HexGrid.CreateFunction)
@@ -85,7 +85,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Tri.TriGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 9 Shape.TriangleIsosceles.BaseAt.Bottom 1 1 |> Tri.TriGrid.CreateFunction)
 
-    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> OctaSquare.OctaSquareGrid.CreateFunction)
+    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> OctaSquare.OctaSquareGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 30 35 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> OctaSquare.OctaSquareGrid.CreateFunction)
 
     stopWatch.Stop()
@@ -181,11 +181,11 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
-    //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
     //let renderedGridSvg = SVG.TriGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
-    let renderedGridSvg = SVG.OctaSquareGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVG.OctaSquareGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
 
