@@ -6,6 +6,6 @@ open Mazes.Core
 
 type IPositionHandler<'Position> =
 
-    abstract member Opposite : position:'Position -> 'Position
+    abstract member Opposite : sourceCoordinate:Coordinate -> position:'Position -> 'Position
     abstract member Values : Coordinate -> 'Position array
     abstract member Map : Coordinate -> Position -> 'Position

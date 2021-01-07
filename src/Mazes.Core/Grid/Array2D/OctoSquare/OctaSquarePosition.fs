@@ -21,7 +21,7 @@ type OctaSquarePositionHandler private () =
 
     interface IPositionHandler<OctaSquarePosition> with
 
-        member this.Opposite position =
+        member this.Opposite _ position =
             match position with
             | Left -> Right
             | TopLeft -> BottomRight

@@ -17,7 +17,7 @@ type OrthoPositionHandler private () =
 
     interface IPositionHandler<OrthoPosition> with
 
-        member this.Opposite position =
+        member this.Opposite _ position =
             match position with
             | Left -> Right
             | Top -> Bottom

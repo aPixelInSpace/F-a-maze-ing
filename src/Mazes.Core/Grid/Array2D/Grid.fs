@@ -170,7 +170,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
         match neighbor with
         | Some neighbor ->
             let neighborCell = this.Cells.[neighbor.RIndex, neighbor.CIndex]
-            this.Cells.[neighbor.RIndex, neighbor.CIndex] <- neighborCell.Create (getWalls neighbor (this.PositionHandler.Opposite position))
+            this.Cells.[neighbor.RIndex, neighbor.CIndex] <- neighborCell.Create (getWalls neighbor (this.PositionHandler.Opposite coordinate position))
         | None -> ()
 
     member private this.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =

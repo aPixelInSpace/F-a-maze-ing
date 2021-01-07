@@ -9,6 +9,7 @@ open Mazes.Core.Canvas.ArrayOfA.Shape
 open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Grid.Array2D.Tri
 open Mazes.Core.Grid.Array2D.OctaSquare
+open Mazes.Core.Grid.Array2D.PentaCairo
 open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 
@@ -82,6 +83,25 @@ let ``Given a octagon-square grid 5 by 10, when generating a maze with the Hunt 
     let grid =
         (Rectangle.create 5 10)
         |> OctaSquareGrid.CreateFunction
+    
+    // act
+    let maze = grid |> HuntAndKill.createMaze 1
+
+    // assert
+    let expectedMaze =
+        ""
+        
+    maze.Grid.ToString |> should equal expectedMaze
+
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+
+[<Fact>]
+let ``Given a Cairo pentagonal grid 5 by 10, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output`` () =
+    // arrange
+    let grid =
+        (Rectangle.create 5 10)
+        |> PentaCairoGrid.CreateFunction
     
     // act
     let maze = grid |> HuntAndKill.createMaze 1

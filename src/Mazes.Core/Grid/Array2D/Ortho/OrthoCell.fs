@@ -76,7 +76,7 @@ type OrthoCell =
             | Top -> getWallType (isFirstRow coordinate.RIndex) Top
             | Right -> getWallType (isLastColumn coordinate.CIndex numberOfColumns) Right
             | Bottom -> getWallType (isLastRow coordinate.RIndex numberOfRows) Bottom
-            | Left -> getWallType (isFirstColumn coordinate.CIndex) Left                        
+            | Left -> getWallType (isFirstColumn coordinate.CIndex) Left
 
         {
             Walls =

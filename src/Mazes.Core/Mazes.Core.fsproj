@@ -45,6 +45,10 @@
 		<Compile Include="Grid\Array2D\OctoSquare\OctaSquareCoordinate.fs" />
 		<Compile Include="Grid\Array2D\OctoSquare\OctaSquareCell.fs" />
 		<Compile Include="Grid\Array2D\OctoSquare\OctaSquareGrid.fs" />
+		<Compile Include="Grid\Array2D\PentaCairo\PentaCairoPosition.fs" />
+		<Compile Include="Grid\Array2D\PentaCairo\PentaCairoCoordinate.fs" />
+		<Compile Include="Grid\Array2D\PentaCairo\PentaCairoCell.fs" />
+		<Compile Include="Grid\Array2D\PentaCairo\PentaCairoGrid.fs" />
 		<Compile Include="Grid\ArrayOfA\Polar\PolarArrayOfA.fs" />
 		<Compile Include="Grid\ArrayOfA\Polar\PolarPosition.fs" />
 		<Compile Include="Grid\ArrayOfA\Polar\PolarCoordinate.fs" />

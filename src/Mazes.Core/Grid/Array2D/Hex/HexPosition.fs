@@ -19,7 +19,7 @@ type HexPositionHandler private () =
 
     interface IPositionHandler<HexPosition> with
 
-        member this.Opposite position =
+        member this.Opposite _ position =
             match position with
             | TopLeft -> BottomRight
             | Top -> Bottom

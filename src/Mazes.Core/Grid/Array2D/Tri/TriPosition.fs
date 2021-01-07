@@ -17,7 +17,8 @@ type TriPositionHandler private () =
 
     interface IPositionHandler<TriPosition> with
 
-        member this.Opposite position =
+        // todo : use the coordinate to better handle the opposite position ?
+        member this.Opposite _ position =
             match position with
             | Left -> Right
             | Top -> Bottom
