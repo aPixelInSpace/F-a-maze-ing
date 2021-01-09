@@ -13,12 +13,13 @@ open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Grid.Array2D.Hex
 open Mazes.Core.Grid.Array2D.Tri
 open Mazes.Core.Grid.Array2D.OctaSquare
+open Mazes.Core.Grid.Array2D.PentaCairo
 open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
 [<Fact>]
-let ``Given a maze (with an ortho grid), a path and a map, when creating an SVG, then it should match the expected result`` () =
+let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
         Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside
@@ -38,7 +39,7 @@ let ``Given a maze (with an ortho grid), a path and a map, when creating an SVG,
     renderedMaze |> should equal expectedRenderedMaze
 
 [<Fact>]
-let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, then it should match the expected result`` () =
+let ``Given a maze with a polar grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
         Shape.Disk.create 5 1.0 2
@@ -58,7 +59,7 @@ let ``Given a maze (with a polar grid), a path and a map, when creating an SVG, 
     renderedMaze |> should equal expectedRenderedMaze
 
 [<Fact>]
-let ``Given a maze (with a hex grid), a path and a map, when creating an SVG, then it should match the expected result`` () =
+let ``Given a maze with a hex grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
         Shape.Hexagon.create 5.0
@@ -78,7 +79,7 @@ let ``Given a maze (with a hex grid), a path and a map, when creating an SVG, th
     renderedMaze |> should equal expectedRenderedMaze
 
 [<Fact>]
-let ``Given a maze (with a tri grid), a path and a map, when creating an SVG, then it should match the expected result`` () =
+let ``Given a maze with a tri grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
         Shape.TriangleIsosceles.create 9 Shape.TriangleIsosceles.BaseAt.Bottom 1 1
@@ -98,7 +99,7 @@ let ``Given a maze (with a tri grid), a path and a map, when creating an SVG, th
     renderedMaze |> should equal expectedRenderedMaze
 
 [<Fact>]
-let ``Given a maze (with a octa-square grid), a path and a map, when creating an SVG, then it should match the expected result`` () =
+let ``Given a maze with a octa-square grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
         Shape.Rectangle.create 5 7
@@ -114,5 +115,25 @@ let ``Given a maze (with a octa-square grid), a path and a map, when creating an
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/upsilon.svg", Encoding.UTF8)
+        
+    renderedMaze |> should equal expectedRenderedMaze
+
+[<Fact>]
+let ``Given a maze with a Cairo pentagonal grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
+    // arrange
+    let grid =
+        Shape.Rectangle.create 5 7
+        |> PentaCairoGrid.CreateFunction
+
+    let maze =
+        grid
+        |> HuntAndKill.createMaze 1
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+
+    // act
+    let renderedMaze = SVG.PentaCairoGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+        
+    // assert
+    let expectedRenderedMaze = IO.File.ReadAllText("Resources/pentacairo.svg", Encoding.UTF8)
         
     renderedMaze |> should equal expectedRenderedMaze

@@ -9,12 +9,6 @@ open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Render.SVG.Base
 
-let private appendWall (sBuilder : StringBuilder) lines (wallType : WallType) =
-    match wallType with
-    | Normal -> appendPathElement sBuilder None normalWallClass lines
-    | Border -> appendPathElement sBuilder None borderWallClass lines
-    | Empty -> sBuilder
-
 let private calculatePoints (grid : PolarGrid) (centerX, centerY, ringHeight) coordinate =
     let ringIndex = coordinate.RIndex
     let cellIndex = coordinate.CIndex
@@ -47,7 +41,6 @@ let private appendWallsType (grid : PolarGrid) (centerX, centerY, ringHeight) (c
 
     let appendWall = appendWall sBuilder
 
-    // todo : put a parameter for cobweb style : 0, 0, 1, -> 0, 0, 0,
     let wallInward = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Inward)
     match wallInward with
     | Some wallInward ->

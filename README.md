@@ -16,7 +16,13 @@ My goal is two fold : give the project a functional spin and learn F# in the pro
 ## Examples
 
 ### SVG
-The SVG render can color the maze and show the path(s) between two zones :
+The SVG render can color the maze (darker = greater distance from an arbitrarily chosen point) and show the path between two zones :
+
+#### Penta maze
+
+Here with the "Cairo pentagonal" tiling
+
+<img src="resources/Examples/Penta/SVG/PentaMaze.svg" width="400">
 
 #### Theta maze
 

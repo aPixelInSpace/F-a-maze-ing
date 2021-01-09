@@ -9,12 +9,6 @@ open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.Array2D.Tri
 open Mazes.Render.SVG.Base
 
-let private appendWall (sBuilder : StringBuilder) lines (wallType : WallType) =
-    match wallType with
-    | Normal -> appendPathElement sBuilder None normalWallClass lines
-    | Border -> appendPathElement sBuilder None borderWallClass lines
-    | Empty -> sBuilder
-
 let private calculatePoints (calculateWidth, calculateHeight, isUpright, triWidth, triHalfWidth, triHeight) coordinate =
     let baseLengthAtRight = calculateWidth ((float)(coordinate.CIndex + 1))
     let baseLengthAtBottom = calculateHeight ((float)(coordinate.RIndex + 1))
@@ -37,15 +31,16 @@ let private calculatePoints (calculateWidth, calculateHeight, isUpright, triWidt
 let private appendWallsType calculatePoints (grid : TriGrid) coordinate (sBuilder : StringBuilder) =
     let ((leftX, leftY), (middleX, middleY), (rightX, rightY)) = calculatePoints coordinate
 
-    let appendWall = appendWall sBuilder
-
     let cell = grid.Cell coordinate
 
     for position in TriPositionHandler.Instance.Values coordinate do
-        match position with
-        | Left -> appendWall $"M {round leftX} {round leftY} L {round middleX} {round middleY}" (cell.WallTypeAtPosition position) |> ignore
-        | Right -> appendWall $"M {round rightX} {round rightY} L {round middleX} {round middleY}" (cell.WallTypeAtPosition position) |> ignore
-        | Top | Bottom -> appendWall $"M {round leftX} {round leftY} L {round rightX} {round rightY}" (cell.WallTypeAtPosition position) |> ignore
+        let lines =
+            match position with
+            | Left -> $"M {round leftX} {round leftY} L {round middleX} {round middleY}"
+            | Right -> $"M {round rightX} {round rightY} L {round middleX} {round middleY}"
+            | Top | Bottom -> $"M {round leftX} {round leftY} L {round rightX} {round rightY}"
+
+        appendWall sBuilder lines (cell.WallTypeAtPosition position) |> ignore
 
 let private wholeCellLines calculatePoints coordinate =
     let ((leftX, leftY), (middleX, middleY), (rightX, rightY)) = calculatePoints coordinate

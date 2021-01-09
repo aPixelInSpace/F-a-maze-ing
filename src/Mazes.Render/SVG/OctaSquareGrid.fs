@@ -9,12 +9,6 @@ open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.Array2D.OctaSquare
 open Mazes.Render.SVG.Base
 
-let private appendWall (sBuilder : StringBuilder) lines (wallType : WallType) =
-    match wallType with
-    | Normal -> appendPathElement sBuilder None normalWallClass lines
-    | Border -> appendPathElement sBuilder None borderWallClass lines
-    | Empty -> sBuilder
-
 let private calculatePointsOctagon (calculateLength, (octaSquareSideSize : float), (otherSideSize : float)) coordinate =
     let baseLengthAtLeft = calculateLength ((float)(coordinate.CIndex))
     let baseLengthAtTop = calculateLength ((float)(coordinate.RIndex))
@@ -81,34 +75,37 @@ let private appendWallsType (calculateLength, isOctagon, octaSquareSideSize, oth
 
     let cell = grid.Cell coordinate
 
-    let appendWall s position =
-        appendWall sBuilder s (cell.WallTypeAtPosition position) |> ignore
-
     if (isOctagon coordinate) then
         let ((leftTopX, leftTopY),(topLeftX, topLeftY),(topRightX, topRightY),(rightTopX, rightTopY),(leftBottomX, leftBottomY),(bottomLeftX, bottomLeftY),(bottomRightX, bottomRightY),(rightBottomX, rightBottomY)) =
             calculatePointsOctagon (calculateLength, octaSquareSideSize, otherSideSize) coordinate
 
         for position in OctaSquarePositionHandler.Instance.Values coordinate do
-            match position with
-            | Left -> appendWall $"M {round leftBottomX} {round leftBottomY} L {round leftTopX} {round leftTopY}" position
-            | TopLeft -> appendWall $"M {round leftTopX} {round leftTopY} L {round topLeftX} {round topLeftY}" position
-            | Top -> appendWall $"M {round topLeftX} {round topLeftY} L {round topRightX} {round topRightY}" position
-            | TopRight -> appendWall $"M {round topRightX} {round topRightY} L {round rightTopX} {round rightTopY}" position
-            | Right -> appendWall $"M {round rightTopX} {round rightTopY} L {round rightBottomX} {round rightBottomY}" position
-            | BottomLeft -> appendWall $"M {round leftBottomX} {round leftBottomY} L {round bottomLeftX} {round bottomLeftY}" position
-            | Bottom -> appendWall $"M {round bottomLeftX} {round bottomLeftY} L {round bottomRightX} {round bottomRightY}" position
-            | BottomRight -> appendWall $"M {round bottomRightX} {round bottomRightY} L {round rightBottomX} {round rightBottomY}" position
+            let lines =
+                match position with
+                | Left -> $"M {round leftBottomX} {round leftBottomY} L {round leftTopX} {round leftTopY}"
+                | TopLeft -> $"M {round leftTopX} {round leftTopY} L {round topLeftX} {round topLeftY}"
+                | Top -> $"M {round topLeftX} {round topLeftY} L {round topRightX} {round topRightY}"
+                | TopRight -> $"M {round topRightX} {round topRightY} L {round rightTopX} {round rightTopY}"
+                | Right -> $"M {round rightTopX} {round rightTopY} L {round rightBottomX} {round rightBottomY}"
+                | BottomLeft -> $"M {round leftBottomX} {round leftBottomY} L {round bottomLeftX} {round bottomLeftY}"
+                | Bottom -> $"M {round bottomLeftX} {round bottomLeftY} L {round bottomRightX} {round bottomRightY}"
+                | BottomRight -> $"M {round bottomRightX} {round bottomRightY} L {round rightBottomX} {round rightBottomY}"
+
+            appendWall sBuilder lines (cell.WallTypeAtPosition position) |> ignore
     else
         let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
             calculatePointsSquare (calculateLength, octaSquareSideSize, otherSideSize) coordinate
 
         for position in OctaSquarePositionHandler.Instance.Values coordinate do
-            match position with
-            | Left -> appendWall $"M {round leftBottomX} {round leftBottomY} L {round leftTopX} {round leftTopY}" position
-            | Top -> appendWall $"M {round leftTopX} {round leftTopY} L {round rightTopX} {round rightTopY}" position
-            | Right -> appendWall $"M {round rightBottomX} {round rightBottomY} L {round rightTopX} {round rightTopY}" position
-            | Bottom -> appendWall $"M {round leftBottomX} {round leftBottomY} L {round rightBottomX} {round rightBottomY}" position
-            | _ -> failwith $"Could not match position {coordinate} at {position}"
+            let lines =
+                match position with
+                | Left -> $"M {round leftBottomX} {round leftBottomY} L {round leftTopX} {round leftTopY}"
+                | Top -> $"M {round leftTopX} {round leftTopY} L {round rightTopX} {round rightTopY}"
+                | Right -> $"M {round rightBottomX} {round rightBottomY} L {round rightTopX} {round rightTopY}"
+                | Bottom -> $"M {round leftBottomX} {round leftBottomY} L {round rightBottomX} {round rightBottomY}"
+                | _ -> failwith $"Could not match position {coordinate} at {position}"
+
+            appendWall sBuilder lines (cell.WallTypeAtPosition position) |> ignore
 
 let private wholeCellLines (calculateLength, isOctagon, octaSquareSideSize, otherSideSize) coordinate =
     

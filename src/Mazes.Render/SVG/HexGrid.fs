@@ -9,12 +9,6 @@ open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.Array2D.Hex
 open Mazes.Render.SVG.Base
 
-let private appendWall (sBuilder : StringBuilder) lines (wallType : WallType) =
-    match wallType with
-    | Normal -> appendPathElement sBuilder None normalWallClass lines
-    | Border -> appendPathElement sBuilder None borderWallClass lines
-    | Empty -> sBuilder
-
 let private calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeight, hexHeight, marginWidth, marginHeight) coordinate =
     let lengthAtLeft = (float)coordinate.CIndex * (3.0 * hexHalfEdgeSize) + marginWidth
     let lengthAtTop =
@@ -46,18 +40,19 @@ let private appendWallsType calculatePoints (grid : HexGrid) coordinate (sBuilde
     let ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY)) =
         calculatePoints coordinate
 
-    let appendWall = appendWall sBuilder
-
     let cell = grid.Cell coordinate
 
     for position in HexPositionHandler.Instance.Values coordinate do
-        match position with
-        | TopLeft -> appendWall $"M {round leftX} {round leftY} L {round topLeftX} {round topLeftY}" (cell.WallTypeAtPosition position) |> ignore
-        | Top -> appendWall $"M {round topLeftX} {round topLeftY} L {round topRightX} {round topRightY}" (cell.WallTypeAtPosition position) |> ignore
-        | TopRight -> appendWall $"M {round topRightX} {round topRightY} L {round rightX} {round rightY}" (cell.WallTypeAtPosition position) |> ignore
-        | BottomLeft -> appendWall $"M {round leftX} {round leftY} L {round bottomLeftX} {round bottomLeftY}" (cell.WallTypeAtPosition position) |> ignore
-        | Bottom -> appendWall $"M {round bottomLeftX} {round bottomLeftY} L {round bottomRightX} {round bottomRightY}" (cell.WallTypeAtPosition position) |> ignore
-        | BottomRight -> appendWall $"M {round bottomRightX} {round bottomRightY} L {round rightX} {round rightY}" (cell.WallTypeAtPosition position) |> ignore
+        let lines =
+            match position with
+            | TopLeft -> $"M {round leftX} {round leftY} L {round topLeftX} {round topLeftY}"
+            | Top -> $"M {round topLeftX} {round topLeftY} L {round topRightX} {round topRightY}"
+            | TopRight -> $"M {round topRightX} {round topRightY} L {round rightX} {round rightY}"
+            | BottomLeft -> $"M {round leftX} {round leftY} L {round bottomLeftX} {round bottomLeftY}"
+            | Bottom -> $"M {round bottomLeftX} {round bottomLeftY} L {round bottomRightX} {round bottomRightY}"
+            | BottomRight -> $"M {round bottomRightX} {round bottomRightY} L {round rightX} {round rightY}"
+
+        appendWall sBuilder lines (cell.WallTypeAtPosition position) |> ignore
 
 let private wholeCellLines calculatePoints coordinate =
     let ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY)) =

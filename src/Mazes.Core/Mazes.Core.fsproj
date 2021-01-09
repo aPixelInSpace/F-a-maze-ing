@@ -15,10 +15,12 @@
         <Compile Include="Analysis\Dijkstra\Map.fs" />
         <Compile Include="Canvas\Zone.fs" />
         <Compile Include="Canvas\Array2D\Canvas.fs" />
+        <Compile Include="Canvas\Array2D\Shape\Trigonometry.fs" />
         <Compile Include="Canvas\Array2D\Shape\Rectangle.fs" />
         <Compile Include="Canvas\Array2D\Shape\TriangleIsosceles.fs" />
         <Compile Include="Canvas\Array2D\Shape\Ellipse.fs" />
         <Compile Include="Canvas\Array2D\Shape\Hexagon.fs" />
+        <Compile Include="Canvas\Array2D\Shape\Pentagon.fs" />
         <Compile Include="Canvas\ArrayOfA\Canvas.fs" />
         <Compile Include="Canvas\ArrayOfA\Shape\Disk.fs" />
         <Compile Include="Grid\Teleport.fs" />

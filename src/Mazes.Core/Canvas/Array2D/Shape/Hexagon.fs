@@ -4,10 +4,9 @@ module Mazes.Core.Canvas.Array2D.Shape.Hexagon
 
 open System
 open Mazes.Core
-open Mazes.Core.Array2D
 open Mazes.Core.Canvas.Array2D
 
-let isHexagon edgeSize vertical horizontal centerX centerY (rowIndex : int) (columnIndex : int) =
+let isInsideHexagon edgeSize vertical horizontal centerX centerY (rowIndex : int) (columnIndex : int) =
 (*
     http://www.playchilla.com/how-to-check-if-a-point-is-inside-a-hexagon
    _____
@@ -34,4 +33,4 @@ let create (edgeSize : float) =
     let centerX = numberOfRows - 1.0
     let centerY = numberOfColumns - 1.0
 
-    Canvas.create ((int)numberOfRows) ((int)numberOfColumns) (isHexagon edgeSize vertical horizontal centerX centerY)
+    Canvas.create ((int)numberOfRows) ((int)numberOfColumns) (isInsideHexagon edgeSize vertical horizontal centerX centerY)

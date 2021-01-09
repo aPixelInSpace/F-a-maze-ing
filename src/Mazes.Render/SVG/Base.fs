@@ -4,6 +4,7 @@ module Mazes.Render.SVG.Base
 
 open System
 open System.Text
+open Mazes.Core
 open Mazes.Core.Analysis.Dijkstra
 
 // #4287f5 : blue
@@ -12,6 +13,7 @@ open Mazes.Core.Analysis.Dijkstra
 // #fffef0 : very pale yellow
 // #f74525 : orange
 // #4a74e8 : blue path
+// #2d195e : mauve
 
 [<Literal>]
 let elementIdPrefix = "p"
@@ -81,6 +83,13 @@ let svgStyle =
 let round (f : float) =
     Math.Round(f, 2).ToString().Replace(",", ".")
 
+let convertToRadian angleInDegree =
+    (angleInDegree * Math.PI) / 180.0
+
+/// Returns the point situated at the matching angle and distance from the base point
+let calculatePoint (baseX, baseY) angleInRadian distance =
+    (distance * Math.Cos(angleInRadian) + baseX, distance * Math.Sin(angleInRadian) + baseY)
+
 let appendHeader width height (sBuilder : StringBuilder) =
     sBuilder.Append("<?xml version=\"1.0\" standalone=\"no\"?>\n")
             .Append("<!-- Copyright 2020-2021 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->\n")
@@ -100,6 +109,12 @@ let appendPathElement (sBuilder : StringBuilder) id styleClass lines =
     | None -> ()
 
     sBuilder.Append($"d=\"{lines}\" class=\"{styleClass}\"/>\n")
+
+let appendWall (sBuilder : StringBuilder) lines (wallType : WallType) =
+    match wallType with
+    | Normal -> appendPathElement sBuilder None normalWallClass lines
+    | Border -> appendPathElement sBuilder None borderWallClass lines
+    | Empty -> sBuilder
 
 let appendPathElementColor (sBuilder : StringBuilder) styleClass opacity (lines : string) =
     sBuilder.Append($"<path d=\"{lines}\" class=\"{styleClass}\" fill-opacity=\"{opacity}\"/>\n")
