@@ -158,6 +158,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let maze = (algo rngSeed grid)
     //maze.Grid.AddTwoWayTeleport { RIndex = 2; CIndex = 4 } { RIndex = 41; CIndex = 8 }
+    //maze.Grid.AddCostForCoordinate 200 { RIndex = maze.Grid.GetFirstPartOfMazeZone.RIndex + 1; CIndex = maze.Grid.GetFirstPartOfMazeZone.CIndex}
 
     stopWatch.Stop()
     printfn $"Created maze ({stopWatch.ElapsedMilliseconds} ms)"
@@ -174,6 +175,16 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //
 
     stopWatch.Restart()
+
+    //
+    
+    //stopWatch.Restart()
+    //
+    //let maze = Maze.braid 1 0.3 map.Leaves maze
+    //let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    //
+    //stopWatch.Stop()
+    //printfn $"Braided the maze and re-created the map ({stopWatch.ElapsedMilliseconds} ms)"
 
     //let renderedGrid = renderGrid  (maze.Grid.ToSpecializedGrid)
 

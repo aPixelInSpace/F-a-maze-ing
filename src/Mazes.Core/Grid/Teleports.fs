@@ -1,10 +1,11 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Grid.Teleport
+namespace Mazes.Core.Grid
 
 open System.Collections.Generic
 open Mazes.Core
 
+/// Non adjacent neighbors
 type Teleports =
     private
         {

@@ -5,19 +5,19 @@ namespace Mazes.Core.Grid.Array2D
 open Mazes.Core
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Teleport
 open Mazes.Core.Array2D
 
 [<AbstractClass>]
 type Grid<'Grid, 'Position, 'PH, 'CH
     when 'PH :> IPositionHandler<'Position> and
          'CH :> ICoordinateHandler<'Position>>
-         (canvas : Canvas, cells : ICell<'Position>[,], teleports : Teleports,
+         (canvas : Canvas, cells : ICell<'Position>[,], teleports : Teleports, obstacles : Obstacles,
           positionHandler : 'PH, coordinateHandler : 'CH) =
 
     member this.Canvas = canvas
     member this.Cells = cells
     member this.Teleports = teleports
+    member this.Obstacles = obstacles
     member this.PositionHandler = positionHandler
     member this.CoordinateHandler = coordinateHandler    
 
@@ -26,11 +26,22 @@ type Grid<'Grid, 'Position, 'PH, 'CH
         member this.TotalOfMazeCells =
             this.Canvas.TotalOfMazeZones
 
+        member this.EveryCoordinatesPartOfMaze =
+            this.Cells
+            |> getItemByItem RowsAscendingColumnsAscending (fun _ _ -> true)
+            |> Seq.map(snd)
+
         member this.Dimension1Boundaries _ =
             (0, this.Canvas.NumberOfRows)
 
         member this.Dimension2Boundaries _ =
             (0, this.Canvas.NumberOfColumns)
+
+        member this.AddCostForCoordinate cost coordinate =
+            this.Obstacles.AddUpdateCost cost coordinate
+
+        member this.CostOfCoordinate coordinate =
+            1 + (this.Obstacles.Cost coordinate)
 
         member this.NeighborAbstractCoordinate coordinate position =
             (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
@@ -84,19 +95,24 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             this.Teleports.AddTwoWayTeleport fromCoordinate toCoordinate
 
         member this.LinkedNeighbors coordinate =
-            let isLinkedAt otherCoordinate =
-                not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) &&        
-                (this.Cell coordinate).AreLinked coordinate otherCoordinate
-
             let neighborsCoordinates = this.Neighbors coordinate
 
             seq {
                 for neighborCoordinate in neighborsCoordinates do   
-                    if (isLinkedAt neighborCoordinate) then
+                    if (this.AreLinked coordinate neighborCoordinate) then
                         yield neighborCoordinate
 
                 for teleport in this.Teleports.Teleports coordinate do
                     yield teleport
+            }
+
+        member this.NotLinkedNeighbors coordinate =
+            let neighborsCoordinates = this.Neighbors coordinate
+
+            seq {
+                for neighborCoordinate in neighborsCoordinates do   
+                    if not (this.AreLinked coordinate neighborCoordinate) then
+                        yield neighborCoordinate
             }
 
         member this.RandomNeighbor rng coordinate =
@@ -105,7 +121,8 @@ type Grid<'Grid, 'Position, 'PH, 'CH
 
         member this.RandomCoordinatePartOfMazeAndNotLinked rng =
             let unlinkedPartOfMazeCells =
-                getItemByItem this.Cells RowsAscendingColumnsAscending
+                this.Cells
+                |> getItemByItem RowsAscendingColumnsAscending
                     (fun cell coordinate ->
                         (this.Canvas.Zone coordinate).IsAPartOfMaze &&
                         not cell.IsLinked
@@ -194,6 +211,10 @@ type Grid<'Grid, 'Position, 'PH, 'CH
         this.Canvas.NeighborsPartOfMazeOf listOfNeighborCoordinate
             |> Seq.filter(fun (_, nPosition) -> not (this.IsLimitAt coordinate nPosition))
             |> Seq.map(fst)
+
+    member this.AreLinked coordinate otherCoordinate =
+        not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) &&        
+        (this.Cell coordinate).AreLinked coordinate otherCoordinate
 
     member this.ToInterface =
         this :> IGrid<'Grid>

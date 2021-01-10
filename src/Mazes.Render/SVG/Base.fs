@@ -9,6 +9,7 @@ open Mazes.Core.Analysis.Dijkstra
 
 // #4287f5 : blue
 // #63a873 : green
+// #e6da00 : yellow
 // #fffaba : pale yellow
 // #fffef0 : very pale yellow
 // #f74525 : orange

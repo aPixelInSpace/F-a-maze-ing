@@ -5,17 +5,16 @@ namespace Mazes.Core.Grid.Array2D.PentaCairo
 open Mazes.Core
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Teleport
 open Mazes.Core.Grid.Array2D
 open Mazes.Core.Grid.Array2D.PentaCairo
 
 /// Equilateral form of the Cairo tiling
 /// Visit https://en.wikipedia.org/wiki/Cairo_pentagonal_tiling for more information
 type PentaCairoGrid
-    (canvas, cells, teleports,
+    (canvas, cells, teleports, obstacles,
      positionHandler, coordinateHandler) =
     inherit Grid<PentaCairoGrid, PentaCairoPosition, IPositionHandler<PentaCairoPosition>, ICoordinateHandler<PentaCairoPosition>>(
-        canvas, cells, teleports, positionHandler, coordinateHandler)
+        canvas, cells, teleports, obstacles, positionHandler, coordinateHandler)
 
         override this.ToString =
             ""
@@ -33,7 +32,7 @@ type PentaCairoGrid
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
-        PentaCairoGrid(canvas, cells, Teleports.CreateEmpty, PentaCairoPositionHandler.Instance,  PentaCairoCoordinateHandler.Instance)
+        PentaCairoGrid(canvas, cells, Teleports.CreateEmpty, Obstacles.CreateEmpty, PentaCairoPositionHandler.Instance,  PentaCairoCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
         fun () -> PentaCairoGrid.Create canvas :> IGrid<PentaCairoGrid>

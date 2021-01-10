@@ -72,7 +72,7 @@ type ShortestPathGraph<'Node> when 'Node : equality =
         else
             let minAdjacentNode = this.ClosestAdjacentNode node
             match minAdjacentNode with
-            | Some minAdjacentNode -> Some ((snd minAdjacentNode) + 1)
+            | Some minAdjacentNode -> Some (snd minAdjacentNode)
             | None -> None
 
     member this.PathFromGoalToRoot goal =

@@ -38,8 +38,8 @@ let getCell (arrayOfA : 'A[][]) coordinate =
 let getNumberOfCellsAt (arrayOfA : 'A[][]) ringIndex =
     getD2LengthAt arrayOfA ringIndex
 
-let getCellByCell (arrayOfA : 'A[][]) filter =
-    getItemByItem arrayOfA filter
+let getCellByCell filter (arrayOfA : 'A[][]) =
+    arrayOfA |> getItemByItem filter
 
 let getRingByRing (arrayOfA : 'A[][]) =
     seq {

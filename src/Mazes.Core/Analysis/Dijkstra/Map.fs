@@ -47,7 +47,7 @@ type CoordinatesByDistance =
         coordinates
 
     member this.Farthest =
-        { Distance = this.MaxDistance; Coordinates = this.CoordinatesWithDistance(this.MaxDistance) }
+        { Distance = this.MaxDistance - 1; Coordinates = this.CoordinatesWithDistance(this.MaxDistance) }
 
     static member createEmpty =
         { Container = Dictionary<Distance, HashSet<Coordinate>>() }
@@ -67,13 +67,18 @@ type Map =
                     | Some nodes -> nodes
                     | None -> Seq.empty
 
+            let cost node =
+                match this.ShortestPathGraph.NodeDistanceFromRoot node with
+                | Some distance -> distance
+                | None -> failwith $"Could not find a distance for node {node}"
+
             for farthestCoordinate in this.FarthestFromRoot.Coordinates do
-                let mapFromFarthest = Map.create adjacentNodes PriorityQueueTracker.createEmpty farthestCoordinate
+                let mapFromFarthest = Map.create adjacentNodes cost PriorityQueueTracker.createEmpty farthestCoordinate
                 for newFarthestCoordinate in mapFromFarthest.FarthestFromRoot.Coordinates do
                     yield mapFromFarthest.ShortestPathGraph.PathFromGoalToRoot newFarthestCoordinate
         }
 
-    static member create (linkedNeighbors : Coordinate -> Coordinate seq) (unvisitedTracker : Tracker<Coordinate, Distance>) rootCoordinate =
+    static member create (linkedNeighbors : Coordinate -> Coordinate seq) (cost : Coordinate -> int) (unvisitedTracker : Tracker<Coordinate, Distance>) rootCoordinate =
 
         let coordinatesByDistance = CoordinatesByDistance.createEmpty
 
@@ -95,7 +100,7 @@ type Map =
             
             let newDistance =
                 match (graph.NodeDistanceFromRoot coordinate) with
-                | Some distance -> distance
+                | Some distance -> distance + (cost coordinate)
                 | None -> currentDistance + 1
 
             coordinatesByDistance.AddUpdate newDistance coordinate

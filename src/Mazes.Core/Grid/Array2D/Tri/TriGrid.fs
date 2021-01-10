@@ -7,15 +7,14 @@ open Mazes.Core
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Array2D
-open Mazes.Core.Grid.Teleport
 open Mazes.Core.Grid.Array2D.Tri
 open Mazes.Core.Array2D
 
 type TriGrid
-    (canvas, cells, teleports,
+    (canvas, cells, teleports, obstacles,
      positionHandler, coordinateHandler) =
     inherit Grid<TriGrid, TriPosition, IPositionHandler<TriPosition>, ICoordinateHandler<TriPosition>>(
-        canvas, cells, teleports, positionHandler, coordinateHandler)
+        canvas, cells, teleports, obstacles, positionHandler, coordinateHandler)
 
         override this.ToString =
             ""
@@ -33,7 +32,7 @@ type TriGrid
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
-        TriGrid(canvas, cells, Teleports.CreateEmpty, TriPositionHandler.Instance,  TriCoordinateHandler.Instance)
+        TriGrid(canvas, cells, Teleports.CreateEmpty, Obstacles.CreateEmpty, TriPositionHandler.Instance,  TriCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
         fun () -> TriGrid.Create canvas :> IGrid<TriGrid>

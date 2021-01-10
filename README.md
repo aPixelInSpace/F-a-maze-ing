@@ -22,35 +22,35 @@ The SVG render can color the maze (darker = greater distance from an arbitrarily
 
 Here with the "Cairo pentagonal" tiling
 
-<img src="resources/Examples/Penta/SVG/PentaMaze.svg" width="400">
+<img src="docs/resources/Examples/Penta/SVG/PentaMaze.svg" width="400">
 
 #### Theta maze
 
-<img src="resources/Examples/Theta/SVG/CircleMaze.svg" width="400">
+<img src="docs/resources/Examples/Theta/SVG/CircleMaze.svg" width="400">
 
 #### Sigma maze
 
-<img src="resources/Examples/Sigma/SVG/HexagonMaze.svg" width="400">
+<img src="docs/resources/Examples/Sigma/SVG/HexagonMaze.svg" width="400">
 
 #### Delta maze
 
-<img src="resources/Examples/Delta/SVG/TriangularMaze.svg" width="400">
+<img src="docs/resources/Examples/Delta/SVG/TriangularMaze.svg" width="400">
 
 #### Upsilon maze
 
-<img src="resources/Examples/Upsilon/SVG/UpsilonMaze.svg" width="400">
+<img src="docs/resources/Examples/Upsilon/SVG/UpsilonMaze.svg" width="400">
 
 #### Orthogonal maze
 
-<img src="resources/Examples/Ortho/SVG/RectangularMaze.svg" width="400">
+<img src="docs/resources/Examples/Ortho/SVG/RectangularMaze.svg" width="400">
 
-<img src="resources/Examples/Ortho/SVG/TriangularMaze.svg" width="400">
+<img src="docs/resources/Examples/Ortho/SVG/TriangularMaze.svg" width="400">
 
-<img src="resources/Examples/Ortho/SVG/EllipseMaze.svg" width="400">
+<img src="docs/resources/Examples/Ortho/SVG/EllipseMaze.svg" width="400">
 
-<img src="resources/Examples/Ortho/SVG/DoughnutMaze.svg" width="400">
+<img src="docs/resources/Examples/Ortho/SVG/DoughnutMaze.svg" width="400">
 
-<img src="resources/Examples/Ortho/SVG/CompositeMaze.svg" width="400">
+<img src="docs/resources/Examples/Ortho/SVG/CompositeMaze.svg" width="400">
 
 ### ASCII
 The text render is simpler and only displays orthogonal mazes (using the Unicode characters [link](https://en.wikipedia.org/wiki/Box-drawing_character)) :

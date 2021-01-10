@@ -7,7 +7,6 @@ open System.Text
 open Mazes.Core
 open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Teleport
 open Mazes.Core.ArrayOfA
 open Mazes.Core.Grid.ArrayOfA.Polar.PolarArrayOfA
 
@@ -16,11 +15,16 @@ type PolarGrid =
         Canvas : Canvas
         Cells : PolarCell[][]
         Teleports : Teleports
+        Obstacles : Obstacles
     }
 
     interface IGrid<PolarGrid> with
         member this.TotalOfMazeCells =
             this.Canvas.TotalOfMazeZones
+
+        member this.EveryCoordinatesPartOfMaze =
+            this.GetCellByCell (fun _ _ -> true)
+            |> Seq.map(snd)
 
         member this.Dimension1Boundaries cellIndex =
             let maxCellsInLastRing = this.Cells.[maxD1Index this.Cells].Length
@@ -37,6 +41,12 @@ type PolarGrid =
 
         member this.Dimension2Boundaries ringIndex =
             (0, this.Cells.[ringIndex].Length)
+
+        member this.AddCostForCoordinate cost coordinate =
+            this.Obstacles.AddUpdateCost cost coordinate
+
+        member this.CostOfCoordinate coordinate =
+            1 + (this.Obstacles.Cost coordinate)
 
         member this.NeighborAbstractCoordinate coordinate position =
             Some (PolarCoordinate.neighborBaseCoordinateAt coordinate (PolarPosition.map position))
@@ -98,6 +108,9 @@ type PolarGrid =
         member this.LinkedNeighbors coordinate =
             this.LinkedNeighbors coordinate
 
+        member this.NotLinkedNeighbors coordinate =
+            this.NotLinkedNeighbors coordinate
+
         member this.RandomNeighbor rng coordinate =
             this.RandomNeighbor rng coordinate
 
@@ -120,7 +133,7 @@ type PolarGrid =
         get this.Cells coordinate
 
     member this.GetCellByCell filter =
-        getItemByItem this.Cells filter
+        this.Cells |> getItemByItem filter
 
     member this.IsLimitAt coordinate otherCoordinate =
         let zone = this.Canvas.Zone coordinate
@@ -206,19 +219,24 @@ type PolarGrid =
         this.Teleports.AddTwoWayTeleport fromCoordinate toCoordinate
 
     member this.LinkedNeighbors coordinate =
-        let isLinkedAt otherCoordinate =
-            not (this.IsLimitAt coordinate otherCoordinate) &&        
-            (this.Cell coordinate).AreLinked this.Cells coordinate otherCoordinate
-
         seq {
             let neighborsCoordinates = this.NeighborsFrom coordinate
             for neighborCoordinate in neighborsCoordinates do   
-                if (isLinkedAt neighborCoordinate) then
+                if (this.AreLinked coordinate neighborCoordinate) then
                     yield neighborCoordinate
 
             for teleport in this.Teleports.Teleports coordinate do
                 yield teleport
         }
+
+    member this.NotLinkedNeighbors coordinate =
+            let neighborsCoordinates = this.NeighborsFrom coordinate
+
+            seq {
+                for neighborCoordinate in neighborsCoordinates do   
+                    if not (this.AreLinked coordinate neighborCoordinate) then
+                        yield neighborCoordinate
+            }
 
     member this.RandomCoordinatePartOfMazeAndNotLinked (rng : Random) =
         let unlinkedPartOfMazeCells =
@@ -299,6 +317,10 @@ type PolarGrid =
 
         sBuilder.ToString()
 
+    member this.AreLinked coordinate otherCoordinate =
+        not (this.IsLimitAt coordinate otherCoordinate) &&        
+        (this.Cell coordinate).AreLinked this.Cells coordinate otherCoordinate
+
 module PolarGrid =
 
     let Create (canvas : Canvas) =
@@ -314,6 +336,7 @@ module PolarGrid =
             Canvas = canvas
             Cells = cells
             Teleports = Teleports.CreateEmpty
+            Obstacles = Obstacles.CreateEmpty
         }
 
     let CreateFunction canvas =

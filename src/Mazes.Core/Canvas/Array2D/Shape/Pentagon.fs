@@ -58,9 +58,7 @@ module PentagonStar =
         let numberOfColumns = greatPentagonDistanceBetweenTwoNonAdjacentVertices
 
         let center = (numberOfColumns / 2.0, numberOfRows / 2.0)
-
         let greatPentagonPoints = Pentagon.calculatePointsPentagon center greatEdgeSize 0.0 (0.0, 0.0)
-
         let smallPentagonPoints = Pentagon.calculatePointsPentagon center smallEdgeSize 36.0 (0.0, 0.0)
 
         let pentagonStarPolygons = pentagonStarPolygons greatPentagonPoints smallPentagonPoints

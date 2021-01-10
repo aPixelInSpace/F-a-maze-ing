@@ -78,7 +78,7 @@ module Array2D =
                 yield i
         }
 
-    let getItemByItem (array2d: 'T[,]) extractBy filter =
+    let getItemByItem extractBy filter (array2d: 'T[,]) =
 
         let getCoordinate dimension1Index dimension2Index =
             match extractBy with

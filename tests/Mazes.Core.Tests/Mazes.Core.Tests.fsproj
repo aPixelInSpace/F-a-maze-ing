@@ -18,6 +18,7 @@
         <Compile Include="Grid\Array2D\Ortho\Grid.fs" />
         <Compile Include="Grid\Array2D\Ortho\GridView.fs" />
         <Compile Include="Grid\ArrayOfA\Polar\Grid.fs" />
+        <Compile Include="Maze\Maze.fs" />
 		<Compile Include="Maze\Generate\BinaryTree.fs" />
 		<Compile Include="Maze\Generate\Sidewinder.fs" />
 		<Compile Include="Maze\Generate\AldousBroder.fs" />

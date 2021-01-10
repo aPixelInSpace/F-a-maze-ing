@@ -46,7 +46,7 @@ let ``Given a 2d array, when getting item by item, then it should return the ite
     let array2d = Array2D.init 3 3 (fun r c -> r.ToString() + "," + c.ToString())
 
     // act
-    let items = getItemByItem array2d (mapExtractByEnumToExtractBy extractByEnum) (fun _ _ -> true)
+    let items = array2d |> getItemByItem (mapExtractByEnumToExtractBy extractByEnum) (fun _ _ -> true)
 
     // assert
     items

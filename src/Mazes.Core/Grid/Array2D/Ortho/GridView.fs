@@ -3,7 +3,7 @@
 module Mazes.Core.Grid.Array2D.Ortho.GridView
 
 open Mazes.Core
-open Mazes.Core.Grid.Teleport
+open Mazes.Core.Grid
 open Mazes.Core.Canvas.Array2D
 
 //let sliceGrid (grid : OrthoGrid) (startCoordinate : Coordinate) (endCoordinate : Coordinate) =

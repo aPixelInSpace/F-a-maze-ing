@@ -8,8 +8,11 @@ open Mazes.Core
 // todo : clean the interface and remove the unnecessary functions
 type IGrid<'G> =
     abstract member TotalOfMazeCells : int
+    abstract member EveryCoordinatesPartOfMaze : Coordinate seq
     abstract member Dimension1Boundaries : dimension2Index:int -> (int * int)
     abstract member Dimension2Boundaries : dimension1Index:int -> (int * int)
+    abstract member AddCostForCoordinate : Cost -> coordinate:Coordinate -> unit
+    abstract member CostOfCoordinate : coordinate:Coordinate -> Cost
     abstract member NeighborAbstractCoordinate : coordinate:Coordinate -> position:Position -> Coordinate option
     /// Returns true if the cell has at least one link to another cell, false otherwise
     abstract member IsCellLinked : coordinate:Coordinate -> bool
@@ -37,6 +40,8 @@ type IGrid<'G> =
     abstract member AddTwoWayTeleport : Coordinate -> Coordinate -> unit
     /// Returns the neighbors coordinates that are linked WITH the coordinate
     abstract member LinkedNeighbors : coordinate:Coordinate -> Coordinate seq
+    /// Returns the neighbors coordinates that are NOT linked WITH the coordinate
+    abstract member NotLinkedNeighbors : coordinate:Coordinate -> Coordinate seq
     /// Returns a random neighbor that is inside the bound of the grid (doesn't check if the neighbor is linked or not)
     abstract member RandomNeighbor : rng:Random -> coordinate:Coordinate -> Coordinate
     /// Returns a random coordinate from the grid that is part of the maze but isn't yet linked

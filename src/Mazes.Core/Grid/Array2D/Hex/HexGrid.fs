@@ -7,15 +7,14 @@ open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Teleport
 open Mazes.Core.Grid.Array2D
 open Mazes.Core.Grid.Array2D.Hex
 
 type HexGrid
-    (canvas, cells, teleports,
+    (canvas, cells, teleports, obstacles,
      positionHandler, coordinateHandler) =
     inherit Grid<HexGrid, HexPosition, IPositionHandler<HexPosition>, ICoordinateHandler<HexPosition>>(
-        canvas, cells, teleports, positionHandler, coordinateHandler)
+        canvas, cells, teleports, obstacles, positionHandler, coordinateHandler)
 
         override this.ToString =
             let sBuilder = StringBuilder()
@@ -130,7 +129,7 @@ type HexGrid
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
-        HexGrid(canvas, cells, Teleports.CreateEmpty, HexPositionHandler.Instance,  HexCoordinateHandler.Instance)
+        HexGrid(canvas, cells, Teleports.CreateEmpty, Obstacles.CreateEmpty, HexPositionHandler.Instance,  HexCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
         fun () -> HexGrid.Create canvas :> IGrid<HexGrid>

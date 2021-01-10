@@ -56,7 +56,7 @@ module ArrayOfA =
                 yield i
         }
 
-    let getItemByItem (arrayOfA : 'A[][]) filter =
+    let getItemByItem filter (arrayOfA : 'A[][]) =
         seq {
             for rIndex in 0 .. maxD1Index arrayOfA do
                 for cIndex in 0 .. maxD2Index arrayOfA rIndex do
