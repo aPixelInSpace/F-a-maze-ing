@@ -7,7 +7,7 @@ A simple, composable and configurable maze generator made with F#
 
 This project is inspired by working through the book [Mazes for Programmers](https://pragprog.com/book/jbmaze/mazes-for-programmers) by Jamis Buck.
 
-<img src="resources/Book/mazes-for-programmers.jpg" width="300">
+<img src="docs/resources/Book/mazes-for-programmers.jpg" width="300">
 
 The code in the book is written in Ruby and leans on Object-Oriented design.
 
