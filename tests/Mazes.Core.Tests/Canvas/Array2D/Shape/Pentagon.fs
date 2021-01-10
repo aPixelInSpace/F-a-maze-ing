@@ -16,8 +16,6 @@ let ``Given an edge length of 10, when creating a pentagon, then it should give 
     // act
     let sut = Pentagon.create edgeSize
 
-    let t = Convert.toString sut
-
     // assert
     let expectedCanvas =
         let stringRepresentationCanvas =
@@ -29,14 +27,49 @@ let ``Given an edge length of 10, when creating a pentagon, then it should give 
             "...***********..\n" +
             "..*************.\n" +
             ".***************\n" +
-            ".***************\n" +
-            ".***************\n" +
-            "..**************\n" +
             "..*************.\n" +
             "..*************.\n" +
             "..*************.\n" +
             "...***********..\n" +
             "...***********..\n" +
+            "...***********..\n" +
+            "....*********...\n" +
+            "................\n" +
+            Convert.endLineTag
+
+        (Convert.fromString stringRepresentationCanvas).Value
+
+    sut |> should equal expectedCanvas
+
+[<Fact>]
+let ``Given an edge length of 10 and 6, when creating a pentagon star, then it should give a pentagon star canvas that is like the representation`` () =
+
+    // arrange
+    let greatEdgeSize = 10.0
+    let smallEdgeSize = 6.0
+
+    // act
+    let sut = PentagonStar.create greatEdgeSize smallEdgeSize
+
+    // assert
+    let expectedCanvas =
+        let stringRepresentationCanvas =
+            Convert.startLineTag + "\n" +
+            "................\n" +
+            "........*.......\n" +
+            ".......***......\n" +
+            ".......****.....\n" +
+            "......*****.....\n" +
+            "..*************.\n" +
+            "..*************.\n" +
+            "...************.\n" +
+            "...***********..\n" +
+            "....*********...\n" +
+            "....*********...\n" +
+            "....*********...\n" +
+            "....*********...\n" +
+            "....***....**...\n" +
+            "................\n" +
             Convert.endLineTag
 
         (Convert.fromString stringRepresentationCanvas).Value

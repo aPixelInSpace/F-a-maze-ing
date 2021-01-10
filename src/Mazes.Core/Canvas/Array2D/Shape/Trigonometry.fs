@@ -11,6 +11,9 @@ let convertToRadian angleInDegree =
 let calculatePoint (baseX, baseY) angleInRadian distance =
     (distance * Math.Cos(angleInRadian) + baseX, distance * Math.Sin(angleInRadian) + baseY)
 
+let translatePoint (translation : (float * float)) (point : (float * float)) =
+    (fst point + fst translation, snd point + snd translation)
+
 let pythagorasSide side hypotenuse =
     Math.Sqrt(hypotenuse ** 2.0 - side ** 2.0)
 
@@ -21,5 +24,25 @@ let pythagorasHypotenuse sideA sideB =
 let sideAngleSide sideA angleInRadian sideB =
     Math.Sqrt(sideA ** 2.0 + sideB ** 2.0 - 2.0 * sideA * sideB * Math.Cos(angleInRadian))
 
+let sideAngleAngle sideA angleAInRadian angleBInRadian =
+    (sideA * Math.Sin(angleAInRadian)) / Math.Sin(angleBInRadian)
+
 let checkSide (px:float, py:float) (s1x:float, s1y:float) (s2x:float, s2y:float) =
     (py - s1y) * (s2x - s1x) - (px - s1x) * (s2y - s1y) >= 0.0
+
+/// Checks if the given x,y are inside the polygon formed by the given points (the points must be consecutive)
+let isInsideConvexPolygon (points : (float * float) array) x y =
+    let checkSide = checkSide (x, y)
+
+    (points
+    |> Array.pairwise
+    |> Array.fold(fun check (pointA, pointB) -> check && checkSide pointA pointB) true)
+
+    &&
+
+    checkSide (points |> Array.last) (points |> Array.head)
+
+/// Checks if the given x,y are inside at least one of the polygons
+let isInsideMultipleConvexPolygons (polygonsPoints : (float * float) array seq) x y =
+    polygonsPoints
+    |> Seq.fold(fun check polygonPoints -> check || isInsideConvexPolygon polygonPoints x y) false
