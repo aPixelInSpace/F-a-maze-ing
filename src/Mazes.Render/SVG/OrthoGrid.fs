@@ -12,82 +12,82 @@ let private cellWidth = 30
 let private cellHeight = 30
 let private marginWidth = 20
 let private marginHeight = 20
+let private inset = 0
 
-type private Direction =
-    | LeftToRight
-    | RightToLeft
-    | TopToBottom
-    | BottomToTop
+let private calculatePoints (calculateHeight, calculateWidth) inset coordinate =
+    let (baseX, baseY) = (calculateWidth coordinate.CIndex, calculateHeight coordinate.RIndex)
+    let (leftTopX, leftTopY) = (baseX + inset, baseY + inset)
+    let (rightTopX, rightTopY) = (baseX + cellWidth - inset, baseY + inset)
+    let (leftBottomX, leftBottomY) = (baseX + inset, baseY + cellHeight - inset)
+    let (rightBottomX, rightBottomY) = (baseX + cellWidth - inset, baseY + cellHeight - inset)
 
-let private line direction =
-    match direction with
-    | LeftToRight -> " h " + cellWidth.ToString()
-    | RightToLeft -> " h -" + cellWidth.ToString()
-    | TopToBottom -> " v " + cellHeight.ToString()
-    | BottomToTop -> " v -" + cellHeight.ToString()
+    ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY))
 
-let private appendWall (sBuilder : StringBuilder) (grid : OrthoGrid) coordinate (wallType : WallType) styleClass =
+let private appendWallsType calculatePoints (grid : OrthoGrid) coordinate (sBuilder : StringBuilder) =
+    let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
+        calculatePoints inset coordinate
+
     let cell = grid.Cell coordinate
+    for position in OrthoPositionHandler.Instance.Values coordinate do
+        let wallType = (cell.WallTypeAtPosition position)
+        let lines =
+            match position with
+            | Left -> $"M {leftBottomX} {leftBottomY} L {leftTopX} {leftTopY}"
+            | Top -> $"M {leftTopX} {leftTopY} L {rightTopX} {rightTopY}"
+            | Right -> $"M {rightBottomX} {rightBottomY} L {rightTopX} {rightTopY}"
+            | Bottom -> $"M {leftBottomX} {leftBottomY} L {rightBottomX} {rightBottomY}"
 
-    let topLeft = lazy (((coordinate.CIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RIndex * cellHeight) + marginHeight).ToString())
-    let bottomLeft = lazy (((coordinate.CIndex * cellWidth) + marginWidth).ToString() + " " + (((coordinate.RIndex + 1) * cellHeight) + marginHeight).ToString())
-    let bottomRight = lazy ((((coordinate.CIndex + 1) * cellWidth) + marginWidth).ToString() + " " + (((coordinate.RIndex + 1) * cellHeight) + marginHeight).ToString())
+        appendWall sBuilder lines wallType |> ignore
 
-    let addP = appendPathElement sBuilder None styleClass
+let private appendWallsTypeInset calculatePoints (grid : OrthoGrid) coordinate (sBuilder : StringBuilder) =
+    let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
+        calculatePoints inset coordinate
 
-    let wallTypeLeft = cell.WallTypeAtPosition Left
-    let wallTypeTop = cell.WallTypeAtPosition Top
-    let wallTypeRight = cell.WallTypeAtPosition Right
-    let wallTypeBottom = cell.WallTypeAtPosition Bottom
+    let appendWall = appendWall sBuilder
+    let appendNormalWallInset = appendNormalWallInset sBuilder
 
-    match wallTypeLeft, wallTypeTop, wallTypeRight, wallTypeBottom with
-    | (l, t, r, b) when l = wallType && t = wallType && r = wallType && b = wallType ->
-        addP ("M " + topLeft.Value + (line LeftToRight) + (line TopToBottom) + (line RightToLeft) + (line BottomToTop))
-    | (l, t, r, _) when l = wallType && t = wallType && r = wallType ->
-        addP ("M " + bottomRight.Value + (line BottomToTop) + (line RightToLeft) + (line TopToBottom))
-    | (l, t, _, b) when l = wallType && t = wallType && b = wallType ->
-        addP ("M " + bottomRight.Value + (line RightToLeft) + (line BottomToTop) + (line LeftToRight))
-    | (l, _, r, b) when l = wallType && r = wallType && b = wallType ->
-        addP ("M " + topLeft.Value + (line TopToBottom) + (line LeftToRight) + (line BottomToTop))
-    | (_, t, r, b) when t = wallType && r = wallType && b = wallType ->
-        addP ("M " + topLeft.Value + (line LeftToRight) + (line TopToBottom) + (line RightToLeft))
-    | (l, t, _, _) when l = wallType && t = wallType ->
-        addP ("M " + bottomLeft.Value + (line BottomToTop) + (line LeftToRight))
-    | (l, _, r, _) when l = wallType && r = wallType ->
-        addP ("M " + topLeft.Value + (line TopToBottom)) |> ignore
-        addP ("M " + bottomRight.Value + (line BottomToTop))
-    | (_, t, r, _) when t = wallType && r = wallType ->
-        addP ("M " + topLeft.Value + (line LeftToRight) + (line TopToBottom))
-    | (_, t, _, b) when t = wallType && b = wallType ->
-        addP ("M " + topLeft.Value + (line LeftToRight)) |> ignore
-        addP ("M " + bottomRight.Value + (line RightToLeft))
-    | (_, _, r, b) when r = wallType && b = wallType ->
-        addP ("M " + bottomLeft.Value + (line LeftToRight) + (line BottomToTop))
-    | (l, _, _, b) when l = wallType && b = wallType ->
-        addP ("M " + topLeft.Value + (line TopToBottom) + (line LeftToRight))
-    | (l, _, _, _) when l = wallType ->
-        addP ("M " + topLeft.Value + (line TopToBottom))
-    | (_, t, _, _) when t = wallType ->
-        addP ("M " + topLeft.Value + (line LeftToRight))
-    | (_, _, r, _) when r = wallType ->
-        addP ("M " + bottomRight.Value + (line BottomToTop))
-    | (_, _, _, b) when b = wallType ->
-        addP ("M " + bottomRight.Value + (line RightToLeft))
-    | _ -> sBuilder
+    let cell = grid.Cell coordinate
+    for position in OrthoPositionHandler.Instance.Values coordinate do
+        let wallType = (cell.WallTypeAtPosition position)
+        
+        match position with
+        | Left ->
+            appendWall $"M {leftBottomX} {leftBottomY} L {leftTopX} {leftTopY}" wallType |> ignore
+            if wallType = Normal then appendNormalWallInset $"M {leftBottomX} {leftBottomY + 1} L {leftTopX} {leftTopY  - 1}" |> ignore
+        | Top ->
+            appendWall $"M {leftTopX} {leftTopY} L {rightTopX} {rightTopY}" wallType |> ignore
+            if wallType = Normal then appendNormalWallInset $"M {leftTopX - 1} {leftTopY} L {rightTopX + 1} {rightTopY}" |> ignore
+        | Right ->
+            appendWall $"M {rightBottomX} {rightBottomY} L {rightTopX} {rightTopY}" wallType |> ignore
+            if wallType = Normal then  appendNormalWallInset $"M {rightBottomX} {rightBottomY + 1} L {rightTopX} {rightTopY - 1}" |> ignore
+        | Bottom ->
+            appendWall $"M {leftBottomX} {leftBottomY} L {rightBottomX} {rightBottomY}" wallType |> ignore
+            if wallType = Normal then  appendNormalWallInset $"M {leftBottomX - 1} {leftBottomY} L {rightBottomX + 1} {rightBottomY}" |> ignore
 
-let private appendWallsType (grid : OrthoGrid) coordinate (sBuilder : StringBuilder) =
-    appendWall sBuilder grid coordinate Border borderWallClass |> ignore
-    appendWall sBuilder grid coordinate Normal normalWallClass
+let private wholeCellLines calculatePoints coordinate =
+    let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
+        calculatePoints inset coordinate
 
-let private wholeCellLines coordinate =
-    let topLeft = ((coordinate.CIndex * cellWidth) + marginWidth).ToString() + " " + ((coordinate.RIndex * cellHeight) + marginHeight).ToString()
-    "M " + topLeft + (line LeftToRight) + (line TopToBottom) + (line RightToLeft) + (line BottomToTop)
+    $"M {leftBottomX} {leftBottomY} " +
+    $"L {rightBottomX} {rightBottomY} " +
+    $"L {rightTopX} {rightTopY} " +
+    $"L {leftTopX} {leftTopY} "
 
 let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     let sBuilder = StringBuilder()
 
-    let width = ((grid.Canvas.NumberOfColumns) * cellWidth) + (marginWidth * 2)
-    let height = ((grid.Canvas.NumberOfRows) * cellHeight) + (marginHeight * 2)
+    let calculateHeight numberOfRows =
+        marginHeight + (numberOfRows * cellHeight)
+
+    let calculateWidth numberOfColumns =
+        marginWidth + (numberOfColumns * cellWidth)
+
+    let width = calculateWidth grid.Canvas.NumberOfColumns + marginWidth
+    let height = calculateHeight grid.Canvas.NumberOfRows + marginHeight
+
+    let calculatePoints = calculatePoints (calculateHeight, calculateWidth)
+    let wholeCellLines = wholeCellLines calculatePoints
+    let appendWallsType = appendWallsType calculatePoints grid
 
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
@@ -97,7 +97,7 @@ let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     //|> appendPath path wholeCellLines
     |> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves wholeCellLines
-    |> appendWalls grid.ToInterface.CoordinatesPartOfMaze (appendWallsType grid)
+    |> appendWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType
     |> appendFooter
     |> ignore
  

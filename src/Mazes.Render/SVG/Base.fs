@@ -23,6 +23,8 @@ let animationIdPrefix = "a"
 [<Literal>]
 let normalWallClass = "n"
 [<Literal>]
+let normalWallInsetClass = "ni"
+[<Literal>]
 let borderWallClass = "b"
 [<Literal>]
 let pathClass = "p"
@@ -81,6 +83,13 @@ let svgStyle =
                 </style>
             </defs>"
 
+//." + normalWallInsetClass + " {
+//                        stroke: white;
+//                        stroke-width: 1;
+//                        stroke-linecap: round;
+//                        stroke-linejoin: round;
+//                    }
+
 let round (f : float) =
     Math.Round(f, 2).ToString().Replace(",", ".")
 
@@ -116,6 +125,9 @@ let appendWall (sBuilder : StringBuilder) lines (wallType : WallType) =
     | Normal -> appendPathElement sBuilder None normalWallClass lines
     | Border -> appendPathElement sBuilder None borderWallClass lines
     | Empty -> sBuilder
+
+let appendNormalWallInset (sBuilder : StringBuilder) lines =
+    appendPathElement sBuilder None normalWallInsetClass lines
 
 let appendPathElementColor (sBuilder : StringBuilder) styleClass opacity (lines : string) =
     sBuilder.Append($"<path d=\"{lines}\" class=\"{styleClass}\" fill-opacity=\"{opacity}\"/>\n")

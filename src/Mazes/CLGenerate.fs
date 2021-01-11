@@ -64,7 +64,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let stopWatch = Stopwatch()
 
     stopWatch.Start()
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> OrthoGrid.createGridFunction)
+    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Ortho.OrthoGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> OrthoGrid.createGridFunction)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction)
     //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> OrthoGrid.createGridFunction)
@@ -95,7 +95,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Mazes.Utility.Canvas.Convert.fromImage 0.0f "d:\\temp\\Microchip.png" |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.Pentagon.create 25.0 |> PentaCairo.PentaCairoGrid.CreateFunction)
-    let grid = (Shape.PentagonStar.create 30.0 20.0 |> PentaCairo.PentaCairoGrid.CreateFunction)
+    //let grid = (Shape.PentagonStar.create 30.0 20.0 |> PentaCairo.PentaCairoGrid.CreateFunction)
 
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
@@ -194,7 +194,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let rawTestOutput = Output.RawForTest.outputRawForTest maze renderedGrid
     //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
-    //let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
 
@@ -207,7 +207,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     //let renderedGridSvg = SVG.OctaSquareGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
-    let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
 
