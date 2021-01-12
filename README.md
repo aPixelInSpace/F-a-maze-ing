@@ -20,7 +20,7 @@ The SVG render can color the maze (darker = greater distance from an arbitrarily
 
 #### Penta maze
 
-Here with the "Cairo pentagonal" tiling
+Here with the "Cairo" pentagonal tiling
 
 <img src="docs/resources/Examples/Penta/SVG/PentaMaze.svg" width="400">
 

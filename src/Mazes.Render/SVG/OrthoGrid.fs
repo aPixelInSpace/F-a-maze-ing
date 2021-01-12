@@ -23,7 +23,7 @@ let private calculatePoints (calculateHeight, calculateWidth) inset coordinate =
 
     ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY))
 
-let private appendWallsType calculatePoints (grid : OrthoGrid) coordinate (sBuilder : StringBuilder) =
+let private appendWallsType calculatePoints (grid : OrthoGrid) appendWall coordinate (sBuilder : StringBuilder) =
     let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
         calculatePoints inset coordinate
 
@@ -38,31 +38,6 @@ let private appendWallsType calculatePoints (grid : OrthoGrid) coordinate (sBuil
             | Bottom -> $"M {leftBottomX} {leftBottomY} L {rightBottomX} {rightBottomY}"
 
         appendWall sBuilder lines wallType |> ignore
-
-let private appendWallsTypeInset calculatePoints (grid : OrthoGrid) coordinate (sBuilder : StringBuilder) =
-    let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
-        calculatePoints inset coordinate
-
-    let appendWall = appendWall sBuilder
-    let appendNormalWallInset = appendNormalWallInset sBuilder
-
-    let cell = grid.Cell coordinate
-    for position in OrthoPositionHandler.Instance.Values coordinate do
-        let wallType = (cell.WallTypeAtPosition position)
-        
-        match position with
-        | Left ->
-            appendWall $"M {leftBottomX} {leftBottomY} L {leftTopX} {leftTopY}" wallType |> ignore
-            if wallType = Normal then appendNormalWallInset $"M {leftBottomX} {leftBottomY + 1} L {leftTopX} {leftTopY  - 1}" |> ignore
-        | Top ->
-            appendWall $"M {leftTopX} {leftTopY} L {rightTopX} {rightTopY}" wallType |> ignore
-            if wallType = Normal then appendNormalWallInset $"M {leftTopX - 1} {leftTopY} L {rightTopX + 1} {rightTopY}" |> ignore
-        | Right ->
-            appendWall $"M {rightBottomX} {rightBottomY} L {rightTopX} {rightTopY}" wallType |> ignore
-            if wallType = Normal then  appendNormalWallInset $"M {rightBottomX} {rightBottomY + 1} L {rightTopX} {rightTopY - 1}" |> ignore
-        | Bottom ->
-            appendWall $"M {leftBottomX} {leftBottomY} L {rightBottomX} {rightBottomY}" wallType |> ignore
-            if wallType = Normal then  appendNormalWallInset $"M {leftBottomX - 1} {leftBottomY} L {rightBottomX + 1} {rightBottomY}" |> ignore
 
 let private wholeCellLines calculatePoints coordinate =
     let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
@@ -86,18 +61,27 @@ let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     let height = calculateHeight grid.Canvas.NumberOfRows + marginHeight
 
     let calculatePoints = calculatePoints (calculateHeight, calculateWidth)
-    let wholeCellLines = wholeCellLines calculatePoints
+    
     let appendWallsType = appendWallsType calculatePoints grid
+    let wholeCellLines = wholeCellLines calculatePoints
+    
+    let appendSimpleWalls sBuilder =
+        appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+    
+    let appendWallsWithInset sBuilder =
+        appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
 
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
     |> appendStyle
     |> appendBackground "transparent"
-    |> appendMazeColoration map wholeCellLines
+    //|> appendMazeColoration grid.ToInterface.CoordinatesPartOfMaze wholeCellLines
+    |> appendMazeDistanceColoration map wholeCellLines
     //|> appendPath path wholeCellLines
     |> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves wholeCellLines
-    |> appendWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType
+    //|> appendSimpleWalls
+    |> appendWallsWithInset
     |> appendFooter
     |> ignore
  

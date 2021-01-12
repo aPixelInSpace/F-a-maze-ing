@@ -28,7 +28,7 @@ let private calculatePoints (calculateWidth, calculateHeight, isUpright, triWidt
 
     ((leftX, leftY), (middleX, middleY), (rightX, rightY))
 
-let private appendWallsType calculatePoints (grid : TriGrid) coordinate (sBuilder : StringBuilder) =
+let private appendWallsType calculatePoints (grid : TriGrid) appendWall coordinate (sBuilder : StringBuilder) =
     let ((leftX, leftY), (middleX, middleY), (rightX, rightY)) = calculatePoints coordinate
 
     let cell = grid.Cell coordinate
@@ -56,7 +56,7 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
     let marginWidth = 20.0
     let marginHeight = 20.0
 
-    let triWidth = 15.0
+    let triWidth = 30.0
     let triHalfWidth = triWidth / 2.0
     let triHeight = (triWidth * Math.Sqrt(3.0)) / 2.0
 
@@ -73,6 +73,15 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
 
     let calculatePoints = calculatePoints (calculateWidth, calculateHeight, isUpright, triWidth, triHalfWidth, triHeight)
 
+    let appendWallsType = appendWallsType calculatePoints grid
+    let wholeCellLines = wholeCellLines calculatePoints
+
+    let appendSimpleWalls sBuilder =
+        appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+    
+    let appendWallsWithInset sBuilder =
+        appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+
     let width = calculateWidth ((float)grid.NumberOfColumns) + marginWidth
     let height = calculateHeight ((float)grid.NumberOfRows) + marginHeight
 
@@ -80,10 +89,11 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
     |> appendHeader ((round width).ToString()) ((round height).ToString())
     |> appendStyle
     |> appendBackground "transparent"
-    |> appendMazeColoration map (wholeCellLines calculatePoints)
-    |> appendPathWithAnimation path (wholeCellLines calculatePoints)
+    |> appendMazeDistanceColoration map wholeCellLines
+    |> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves (wholeCellLines calculatePoints grid)
-    |> appendWalls grid.ToInterface.CoordinatesPartOfMaze (appendWallsType calculatePoints grid)
+    //|> appendSimpleWalls
+    |> appendWallsWithInset
     |> appendFooter
     |> ignore
 

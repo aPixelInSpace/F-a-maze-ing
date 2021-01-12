@@ -36,7 +36,7 @@ let private calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeig
 
     ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY))
 
-let private appendWallsType calculatePoints (grid : HexGrid) coordinate (sBuilder : StringBuilder) =
+let private appendWallsType calculatePoints (grid : HexGrid) appendWall coordinate (sBuilder : StringBuilder) =
     let ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY)) =
         calculatePoints coordinate
 
@@ -72,7 +72,7 @@ let render (grid : HexGrid) (path : Coordinate seq) (map : Map) =
     let marginWidth = 20
     let marginHeight = 20
 
-    let hexEdgeSize = 15.0
+    let hexEdgeSize = 30.0
     let hexHalfEdgeSize = hexEdgeSize / 2.0
     let hexWidth = hexEdgeSize * 2.0
     let hexHalfHeight = (hexEdgeSize * Math.Sqrt(3.0)) / 2.0
@@ -83,14 +83,24 @@ let render (grid : HexGrid) (path : Coordinate seq) (map : Map) =
 
     let calculatePoints = calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeight, hexHeight, (float)marginWidth, (float)marginHeight)
 
+    let appendWallsType = appendWallsType calculatePoints grid
+    let wholeCellLines = wholeCellLines calculatePoints
+
+    let appendSimpleWalls sBuilder =
+        appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+    
+    let appendWallsWithInset sBuilder =
+        appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())
     |> appendStyle
     |> appendBackground "transparent"
-    |> appendMazeColoration map (wholeCellLines calculatePoints)
-    |> appendPathWithAnimation path (wholeCellLines calculatePoints)
+    |> appendMazeDistanceColoration map wholeCellLines
+    |> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves (wholeCellLines calculatePoints grid)
-    |> appendWalls grid.ToInterface.CoordinatesPartOfMaze (appendWallsType calculatePoints grid)
+    //|> appendSimpleWalls
+    |> appendWallsWithInset
     |> appendFooter
     |> ignore
 

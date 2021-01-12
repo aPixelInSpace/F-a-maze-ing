@@ -23,9 +23,15 @@ let animationIdPrefix = "a"
 [<Literal>]
 let normalWallClass = "n"
 [<Literal>]
-let normalWallInsetClass = "ni"
-[<Literal>]
 let borderWallClass = "b"
+[<Literal>]
+let normalWallInsetBackClass = "nb"
+[<Literal>]
+let normalWallInsetForeClass = "nf"
+[<Literal>]
+let borderWallInsetBackClass = "bb"
+[<Literal>]
+let borderWallInsetForeClass = "bf"
 [<Literal>]
 let pathClass = "p"
 [<Literal>]
@@ -35,6 +41,8 @@ let leaveClass = "l"
 [<Literal>]
 let colorClass = "c"
 [<Literal>]
+let colorDistanceClass = "cd"
+[<Literal>]
 let pathOpacity = "0.4"
 
 [<Literal>]
@@ -43,19 +51,44 @@ let svgStyle =
                 <style>
                     ." + normalWallClass + " {
                         stroke: #333;
-                        fill:transparent;
+                        fill: transparent;
                         stroke-width: 1;
                         stroke-linecap: round;
                         stroke-linejoin: round;
-                        //stroke-dasharray: 5;
                     }
                     ." + borderWallClass + " {
                         stroke: #333;
-                        fill:transparent;
+                        fill: transparent;
                         stroke-width: 2;
-                        stroke-linecap:round;
+                        stroke-linecap: round;
                         stroke-linejoin: round;
-                        //stroke-dasharray: 5;
+                    }
+                    ." + normalWallInsetBackClass + " {
+                        fill: transparent;
+                        stroke: #333;
+                        stroke-width: 10;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                    }
+                    ." + normalWallInsetForeClass + " {
+                        stroke: white;
+                        stroke-width: 8;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                    }
+                    ." + borderWallInsetBackClass + " {
+                        stroke: #333;
+                        fill: transparent;
+                        stroke-width: 10;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                    }
+                    ." + borderWallInsetForeClass + " {
+                        stroke: white;
+                        fill: transparent;
+                        stroke-width: 4;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
                     }
                     ." + pathClass + " {
                         stroke: transparent;
@@ -75,6 +108,11 @@ let svgStyle =
                         fill: #70361f;
                         fill-opacity: 0.2;
                     }
+                    ." + colorDistanceClass + " {
+                        stroke: transparent;
+                        stroke-width: 0;
+                        fill: #4287f5;
+                    }
                     ." + colorClass + " {
                         stroke: transparent;
                         stroke-width: 0;
@@ -82,13 +120,6 @@ let svgStyle =
                     }
                 </style>
             </defs>"
-
-//." + normalWallInsetClass + " {
-//                        stroke: white;
-//                        stroke-width: 1;
-//                        stroke-linecap: round;
-//                        stroke-linejoin: round;
-//                    }
 
 let round (f : float) =
     Math.Round(f, 2).ToString().Replace(",", ".")
@@ -126,8 +157,25 @@ let appendWall (sBuilder : StringBuilder) lines (wallType : WallType) =
     | Border -> appendPathElement sBuilder None borderWallClass lines
     | Empty -> sBuilder
 
-let appendNormalWallInset (sBuilder : StringBuilder) lines =
-    appendPathElement sBuilder None normalWallInsetClass lines
+let appendNormalWallBackInset (sBuilder : StringBuilder) lines (wallType : WallType) =
+    match wallType with
+    | Normal -> appendPathElement sBuilder None normalWallInsetBackClass lines
+    | _ -> sBuilder
+
+let appendNormalWallForeInset (sBuilder : StringBuilder) lines (wallType : WallType) =
+    match wallType with
+    | Normal -> appendPathElement sBuilder None normalWallInsetForeClass lines
+    | _ -> sBuilder
+
+let appendBorderWallBackInset (sBuilder : StringBuilder) lines (wallType : WallType) =
+    match wallType with
+    | Border -> appendPathElement sBuilder None borderWallInsetBackClass lines
+    | _ -> sBuilder
+
+let appendBorderWallForeInset (sBuilder : StringBuilder) lines (wallType : WallType) =
+    match wallType with
+    | Border -> appendPathElement sBuilder None borderWallInsetForeClass lines
+    | _ -> sBuilder
 
 let appendPathElementColor (sBuilder : StringBuilder) styleClass opacity (lines : string) =
     sBuilder.Append($"<path d=\"{lines}\" class=\"{styleClass}\" fill-opacity=\"{opacity}\"/>\n")
@@ -153,9 +201,9 @@ let appendCellColorWithDynamicOpacity lines distanceFromRoot maxDistance (sBuild
     let opacity = round (1.0 - (float (maxDistance - distanceFromRoot) / float maxDistance))
     let sOpacity = opacity.ToString().Replace(",", ".")
 
-    appendPathElementColor sBuilder colorClass sOpacity lines
+    appendPathElementColor sBuilder colorDistanceClass sOpacity lines
 
-let appendMazeColoration map wholeCellLines (sBuilder : StringBuilder) =
+let appendMazeDistanceColoration map wholeCellLines (sBuilder : StringBuilder) =
     let distanceFromRoot coordinate =
         match (map.ShortestPathGraph.NodeDistanceFromRoot coordinate) with
         | Some distance when distance = 0 -> 0
@@ -163,6 +211,12 @@ let appendMazeColoration map wholeCellLines (sBuilder : StringBuilder) =
         | None -> 0
     map.ShortestPathGraph.Graph.Vertices
     |> Seq.iter(fun coordinate -> sBuilder |> appendCellColorWithDynamicOpacity (wholeCellLines coordinate) (distanceFromRoot coordinate) (map.FarthestFromRoot.Distance - 1) |> ignore)
+
+    sBuilder
+
+let appendMazeColoration sequence wholeCellLines (sBuilder : StringBuilder) =
+    sequence
+    |> Seq.iter(fun coordinate -> appendPathElementColor sBuilder colorDistanceClass "1" (wholeCellLines coordinate) |> ignore)
 
     sBuilder
 
@@ -188,8 +242,26 @@ let appendLeaves leaves wholeCellLines (sBuilder : StringBuilder) =
 
     sBuilder
 
-let appendWalls sequence walls (sBuilder : StringBuilder) =
+let appendBaseWalls sequence walls (sBuilder : StringBuilder) =
     sequence
     |> Seq.iter(fun item -> sBuilder |> walls item |> ignore)
 
     sBuilder
+
+let appendSimpleWalls sequence cellsWithWall sBuilder =
+    let appendSimpleWalls = cellsWithWall appendWall
+
+    sBuilder
+    |> appendBaseWalls sequence appendSimpleWalls
+
+let appendWallsWithInset sequence cellsWithWall sBuilder =
+    let appendWallsTypeNormalBack = cellsWithWall appendNormalWallBackInset
+    let appendWallsTypeNormalFore = cellsWithWall appendNormalWallForeInset
+    let appendWallsTypeBorderBack = cellsWithWall appendBorderWallBackInset
+    let appendWallsTypeBorderFore = cellsWithWall appendBorderWallForeInset
+
+    sBuilder
+    |> appendBaseWalls sequence appendWallsTypeNormalBack
+    |> appendBaseWalls sequence appendWallsTypeNormalFore
+    |> appendBaseWalls sequence appendWallsTypeBorderBack
+    |> appendBaseWalls sequence appendWallsTypeBorderFore

@@ -71,7 +71,7 @@ let private calculatePointsSquare (calculateLength, (octaSquareSideSize : float)
 
     ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY))
 
-let private appendWallsType (calculateLength, isOctagon, octaSquareSideSize, otherSideSize) (grid : OctaSquareGrid) coordinate (sBuilder : StringBuilder) =
+let private appendWallsType (calculateLength, isOctagon, octaSquareSideSize, otherSideSize) (grid : OctaSquareGrid) appendWall coordinate (sBuilder : StringBuilder) =
 
     let cell = grid.Cell coordinate
 
@@ -137,7 +137,7 @@ let render (grid : OctaSquareGrid) (path : Coordinate seq) (map : Map) =
     let marginWidth = 20.0
     let marginHeight = 20.0
 
-    let octaSquareSideSize = 15.0 // also hypotenuse of the triangle 
+    let octaSquareSideSize = 30.0 // also hypotenuse of the triangle 
     let otherSideSize = Math.Sqrt((octaSquareSideSize ** 2.0) / 2.0) // by good old Pythagoras's theorem
 
     let calculateLength numberOf =
@@ -145,16 +145,26 @@ let render (grid : OctaSquareGrid) (path : Coordinate seq) (map : Map) =
 
     let isOctagon = OctaSquarePositionHandler.IsOctagon
 
-    let width = calculateLength ((float)grid.NumberOfColumns) + marginWidth
-    let height = calculateLength ((float)grid.NumberOfRows) + marginHeight
+    let appendWallsType = appendWallsType (calculateLength, isOctagon, octaSquareSideSize, otherSideSize) grid
+    let wholeCellLines = wholeCellLines (calculateLength, isOctagon, octaSquareSideSize, otherSideSize)
+
+    let appendSimpleWalls sBuilder =
+        appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+    
+    let appendWallsWithInset sBuilder =
+        appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+
+    let width = calculateLength ((float)grid.NumberOfColumns) + marginWidth + 20.0 // because of the size of the border
+    let height = calculateLength ((float)grid.NumberOfRows) + marginHeight + 20.0 // because of the size of the border
 
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())
     |> appendStyle
     |> appendBackground "transparent"
-    |> appendMazeColoration map (wholeCellLines (calculateLength, isOctagon, octaSquareSideSize, otherSideSize))
-    |> appendPathWithAnimation path (wholeCellLines (calculateLength, isOctagon, octaSquareSideSize, otherSideSize))
-    |> appendWalls grid.ToInterface.CoordinatesPartOfMaze (appendWallsType (calculateLength, isOctagon, octaSquareSideSize, otherSideSize) grid)
+    |> appendMazeDistanceColoration map wholeCellLines
+    |> appendPathWithAnimation path wholeCellLines
+    //|> appendSimpleWalls
+    |> appendWallsWithInset
     |> appendFooter
     |> ignore
 

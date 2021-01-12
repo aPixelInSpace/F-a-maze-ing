@@ -70,7 +70,7 @@ let private calculatePointsQuadrantFour calculatePointD calculatePointsQuadrant 
         quadrantFourPointD
         thetaQuadrantFourRotation
 
-let private appendWallsType calculatePointD calculatePointsQuadrant (pentGreatSide, hypGreatSide) (grid : PentaCairoGrid) coordinate (sBuilder : StringBuilder) =
+let private appendWallsType calculatePointD calculatePointsQuadrant (pentGreatSide, hypGreatSide) (grid : PentaCairoGrid) appendWall coordinate (sBuilder : StringBuilder) =
     let cell = grid.Cell coordinate
 
     let ((sx,sy), (ax,ay), (bx,by), (cx,cy), (dx,dy)) =
@@ -113,7 +113,7 @@ let render (grid : PentaCairoGrid) (path : Coordinate seq) (map : Map) =
     let marginHeight = 20.0
 
     // the greater side of the pentagon
-    let pentGreatSide = 15.0
+    let pentGreatSide = 30.0
 
     // the hypotenuses of the isosceles right triangle with pentGreatSide
     let hypGreatSide = Math.Sqrt(2.0 * (pentGreatSide ** 2.0))
@@ -145,14 +145,21 @@ let render (grid : PentaCairoGrid) (path : Coordinate seq) (map : Map) =
     let wholeCellLines = wholeCellLines calculatePointD calculatePointsQuadrant (pentGreatSide, hypGreatSide)
     let appendWallsType = appendWallsType calculatePointD calculatePointsQuadrant (pentGreatSide, hypGreatSide) grid
 
+    let appendSimpleWalls sBuilder =
+        appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+    
+    let appendWallsWithInset sBuilder =
+        appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())
     |> appendStyle
     |> appendBackground "transparent"
-    |> appendMazeColoration map wholeCellLines
+    |> appendMazeDistanceColoration map wholeCellLines
     |> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves wholeCellLines
-    |> appendWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType
+    //|> appendSimpleWalls
+    |> appendWallsWithInset
     |> appendFooter
     |> ignore
 
