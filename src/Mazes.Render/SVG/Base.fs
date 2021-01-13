@@ -7,6 +7,9 @@ open System.Text
 open Mazes.Core
 open Mazes.Core.Analysis.Dijkstra
 
+[<Literal>]
+let debugShowCoordinate = false
+
 // #4287f5 : blue
 // #63a873 : green
 // #e6da00 : yellow
@@ -142,43 +145,56 @@ let appendStyle (sBuilder : StringBuilder) =
 let appendBackground (color : string) (sBuilder : StringBuilder) =
     sBuilder.Append($"<rect width=\"100%%\" height=\"100%%\" fill=\"{color}\"/>")
 
-let appendPathElement (sBuilder : StringBuilder) id styleClass lines =
+let appendPathElement (sBuilder : StringBuilder) id styleClass lines coordinate =
     sBuilder.Append("<path ") |> ignore
 
     match id with
     | Some id -> sBuilder.Append($"id=\"{elementIdPrefix}{id}\" ") |> ignore
     | None -> ()
 
-    sBuilder.Append($"d=\"{lines}\" class=\"{styleClass}\"/>\n")
+    sBuilder.Append($"d=\"{lines}\" class=\"{styleClass}\"") |> ignore
 
-let appendWall (sBuilder : StringBuilder) lines (wallType : WallType) =
+    if debugShowCoordinate then
+        sBuilder.Append($"><title>RIndex {coordinate.RIndex}; CIndex {coordinate.CIndex}</title></path>") |> ignore
+    else
+        sBuilder.Append($"/>") |> ignore
+
+    sBuilder.Append($"\n")
+
+let appendWall (sBuilder : StringBuilder) lines (wallType : WallType) coordinate =
     match wallType with
-    | Normal -> appendPathElement sBuilder None normalWallClass lines
-    | Border -> appendPathElement sBuilder None borderWallClass lines
+    | Normal -> appendPathElement sBuilder None normalWallClass lines coordinate
+    | Border -> appendPathElement sBuilder None borderWallClass lines coordinate
     | Empty -> sBuilder
 
-let appendNormalWallBackInset (sBuilder : StringBuilder) lines (wallType : WallType) =
+let appendNormalWallBackInset (sBuilder : StringBuilder) lines (wallType : WallType) coordinate =
     match wallType with
-    | Normal -> appendPathElement sBuilder None normalWallInsetBackClass lines
+    | Normal -> appendPathElement sBuilder None normalWallInsetBackClass lines coordinate
     | _ -> sBuilder
 
-let appendNormalWallForeInset (sBuilder : StringBuilder) lines (wallType : WallType) =
+let appendNormalWallForeInset (sBuilder : StringBuilder) lines (wallType : WallType) coordinate =
     match wallType with
-    | Normal -> appendPathElement sBuilder None normalWallInsetForeClass lines
+    | Normal -> appendPathElement sBuilder None normalWallInsetForeClass lines coordinate
     | _ -> sBuilder
 
-let appendBorderWallBackInset (sBuilder : StringBuilder) lines (wallType : WallType) =
+let appendBorderWallBackInset (sBuilder : StringBuilder) lines (wallType : WallType) coordinate =
     match wallType with
-    | Border -> appendPathElement sBuilder None borderWallInsetBackClass lines
+    | Border -> appendPathElement sBuilder None borderWallInsetBackClass lines coordinate
     | _ -> sBuilder
 
-let appendBorderWallForeInset (sBuilder : StringBuilder) lines (wallType : WallType) =
+let appendBorderWallForeInset (sBuilder : StringBuilder) lines (wallType : WallType) coordinate =
     match wallType with
-    | Border -> appendPathElement sBuilder None borderWallInsetForeClass lines
+    | Border -> appendPathElement sBuilder None borderWallInsetForeClass lines coordinate
     | _ -> sBuilder
 
-let appendPathElementColor (sBuilder : StringBuilder) styleClass opacity (lines : string) =
-    sBuilder.Append($"<path d=\"{lines}\" class=\"{styleClass}\" fill-opacity=\"{opacity}\"/>\n")
+let appendPathElementColor (sBuilder : StringBuilder) styleClass opacity (lines : string) coordinate =
+    sBuilder.Append($"<path d=\"{lines}\" class=\"{styleClass}\" fill-opacity=\"{opacity}\"") |> ignore
+    if debugShowCoordinate then
+        sBuilder.Append($"><title>RIndex {coordinate.RIndex}; CIndex {coordinate.CIndex}</title></path>") |> ignore
+     else
+        sBuilder.Append($"/>") |> ignore
+
+    sBuilder.Append($"\n")
 
 let appendAnimationElement (sBuilder : StringBuilder) id relatedId =
     let elementId = elementIdPrefix + id
@@ -197,11 +213,11 @@ let appendAnimationElement (sBuilder : StringBuilder) id relatedId =
 let appendFooter (sBuilder : StringBuilder) =
     sBuilder.Append("</svg>")
 
-let appendCellColorWithDynamicOpacity lines distanceFromRoot maxDistance (sBuilder : StringBuilder) =
+let appendCellColorWithDynamicOpacity lines distanceFromRoot maxDistance coordinate (sBuilder : StringBuilder) =
     let opacity = round (1.0 - (float (maxDistance - distanceFromRoot) / float maxDistance))
     let sOpacity = opacity.ToString().Replace(",", ".")
 
-    appendPathElementColor sBuilder colorDistanceClass sOpacity lines
+    appendPathElementColor sBuilder colorDistanceClass sOpacity lines coordinate
 
 let appendMazeDistanceColoration map wholeCellLines (sBuilder : StringBuilder) =
     let distanceFromRoot coordinate =
@@ -210,19 +226,19 @@ let appendMazeDistanceColoration map wholeCellLines (sBuilder : StringBuilder) =
         | Some distance -> distance - 1
         | None -> 0
     map.ShortestPathGraph.Graph.Vertices
-    |> Seq.iter(fun coordinate -> sBuilder |> appendCellColorWithDynamicOpacity (wholeCellLines coordinate) (distanceFromRoot coordinate) (map.FarthestFromRoot.Distance - 1) |> ignore)
+    |> Seq.iter(fun coordinate -> sBuilder |> appendCellColorWithDynamicOpacity (wholeCellLines coordinate) (distanceFromRoot coordinate) (map.FarthestFromRoot.Distance - 1) coordinate |> ignore)
 
     sBuilder
 
 let appendMazeColoration sequence wholeCellLines (sBuilder : StringBuilder) =
     sequence
-    |> Seq.iter(fun coordinate -> appendPathElementColor sBuilder colorDistanceClass "1" (wholeCellLines coordinate) |> ignore)
+    |> Seq.iter(fun coordinate -> appendPathElementColor sBuilder colorDistanceClass "1" (wholeCellLines coordinate) coordinate |> ignore)
 
     sBuilder
 
 let appendPath path wholeCellLines (sBuilder : StringBuilder) =
     path
-    |> Seq.iter(fun coordinate -> appendPathElement sBuilder None pathClass (wholeCellLines coordinate) |> ignore)
+    |> Seq.iter(fun coordinate -> appendPathElement sBuilder None pathClass (wholeCellLines coordinate) coordinate |> ignore)
 
     sBuilder
 
@@ -230,7 +246,7 @@ let appendPathWithAnimation  path wholeCellLines (sBuilder : StringBuilder) =
     path
     |> Seq.iteri(
         fun i coordinate ->
-            appendPathElement sBuilder (Some i) pathAnimatedClass (wholeCellLines coordinate) |> ignore
+            appendPathElement sBuilder (Some i) pathAnimatedClass (wholeCellLines coordinate) coordinate |> ignore
             let related = if i > 0 then Some ((i - 1).ToString()) else None 
             appendAnimationElement sBuilder (i.ToString()) related |> ignore)
 
@@ -238,7 +254,7 @@ let appendPathWithAnimation  path wholeCellLines (sBuilder : StringBuilder) =
 
 let appendLeaves leaves wholeCellLines (sBuilder : StringBuilder) =
     leaves
-    |> Seq.iter(fun coordinate -> appendPathElement sBuilder None leaveClass (wholeCellLines coordinate) |> ignore)
+    |> Seq.iter(fun coordinate -> appendPathElement sBuilder None leaveClass (wholeCellLines coordinate) coordinate |> ignore)
 
     sBuilder
 

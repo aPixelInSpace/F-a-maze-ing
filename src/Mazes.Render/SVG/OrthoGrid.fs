@@ -12,20 +12,19 @@ let private cellWidth = 30
 let private cellHeight = 30
 let private marginWidth = 20
 let private marginHeight = 20
-let private inset = 0
 
-let private calculatePoints (calculateHeight, calculateWidth) inset coordinate =
+let private calculatePoints (calculateHeight, calculateWidth) coordinate =
     let (baseX, baseY) = (calculateWidth coordinate.CIndex, calculateHeight coordinate.RIndex)
-    let (leftTopX, leftTopY) = (baseX + inset, baseY + inset)
-    let (rightTopX, rightTopY) = (baseX + cellWidth - inset, baseY + inset)
-    let (leftBottomX, leftBottomY) = (baseX + inset, baseY + cellHeight - inset)
-    let (rightBottomX, rightBottomY) = (baseX + cellWidth - inset, baseY + cellHeight - inset)
+    let (leftTopX, leftTopY) = (baseX, baseY)
+    let (rightTopX, rightTopY) = (baseX + cellWidth, baseY )
+    let (leftBottomX, leftBottomY) = (baseX , baseY + cellHeight)
+    let (rightBottomX, rightBottomY) = (baseX + cellWidth, baseY + cellHeight)
 
     ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY))
 
 let private appendWallsType calculatePoints (grid : OrthoGrid) appendWall coordinate (sBuilder : StringBuilder) =
     let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
-        calculatePoints inset coordinate
+        calculatePoints coordinate
 
     let cell = grid.Cell coordinate
     for position in OrthoPositionHandler.Instance.Values coordinate do
@@ -37,11 +36,11 @@ let private appendWallsType calculatePoints (grid : OrthoGrid) appendWall coordi
             | Right -> $"M {rightBottomX} {rightBottomY} L {rightTopX} {rightTopY}"
             | Bottom -> $"M {leftBottomX} {leftBottomY} L {rightBottomX} {rightBottomY}"
 
-        appendWall sBuilder lines wallType |> ignore
+        appendWall sBuilder lines wallType coordinate |> ignore
 
 let private wholeCellLines calculatePoints coordinate =
     let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
-        calculatePoints inset coordinate
+        calculatePoints coordinate
 
     $"M {leftBottomX} {leftBottomY} " +
     $"L {rightBottomX} {rightBottomY} " +

@@ -52,7 +52,7 @@ let private appendWallsType calculatePoints (grid : HexGrid) appendWall coordina
             | Bottom -> $"M {round bottomLeftX} {round bottomLeftY} L {round bottomRightX} {round bottomRightY}"
             | BottomRight -> $"M {round bottomRightX} {round bottomRightY} L {round rightX} {round rightY}"
 
-        appendWall sBuilder lines (cell.WallTypeAtPosition position) |> ignore
+        appendWall sBuilder lines (cell.WallTypeAtPosition position) coordinate |> ignore
 
 let private wholeCellLines calculatePoints coordinate =
     let ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY)) =

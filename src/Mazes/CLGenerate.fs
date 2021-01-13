@@ -89,13 +89,13 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> OctaSquare.OctaSquareGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 30 35 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> OctaSquare.OctaSquareGrid.CreateFunction)
 
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> PentaCairo.PentaCairoGrid.CreateFunction)
+    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.Hexagon.create 15.0 |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Mazes.Utility.Canvas.Convert.fromImage 0.0f "d:\\temp\\Microchip.png" |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> PentaCairo.PentaCairoGrid.CreateFunction)
-    let grid = (Shape.Pentagon.create 25.0 |> PentaCairo.PentaCairoGrid.CreateFunction)
+    //let grid = (Shape.Pentagon.create 25.0 |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.PentagonStar.create 20.0 12.0 |> PentaCairo.PentaCairoGrid.CreateFunction)
 
     stopWatch.Stop()
@@ -156,6 +156,11 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    [maze1; maze2; maze3; maze4] |> Async.Parallel |> Async.RunSynchronously |> ignore
 //    
 //    let maze = { Grid = grid }
+
+    let grid =
+        let grid = grid()
+        grid.AddTwoWayTeleport { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 }
+        (fun _ -> grid)
 
     let maze = (algo rngSeed grid)
     //maze.Grid.AddTwoWayTeleport { RIndex = 2; CIndex = 4 } { RIndex = 41; CIndex = 8 }

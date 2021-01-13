@@ -40,7 +40,7 @@ let private appendWallsType calculatePoints (grid : TriGrid) appendWall coordina
             | Right -> $"M {round rightX} {round rightY} L {round middleX} {round middleY}"
             | Top | Bottom -> $"M {round leftX} {round leftY} L {round rightX} {round rightY}"
 
-        appendWall sBuilder lines (cell.WallTypeAtPosition position) |> ignore
+        appendWall sBuilder lines (cell.WallTypeAtPosition position) coordinate |> ignore
 
 let private wholeCellLines calculatePoints coordinate =
     let ((leftX, leftY), (middleX, middleY), (rightX, rightY)) = calculatePoints coordinate

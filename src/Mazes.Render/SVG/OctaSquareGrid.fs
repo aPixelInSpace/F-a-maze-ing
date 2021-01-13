@@ -91,7 +91,7 @@ let private appendWallsType (calculateLength, isOctagon, octaSquareSideSize, oth
                 | Bottom -> $"M {round bottomLeftX} {round bottomLeftY} L {round bottomRightX} {round bottomRightY}"
                 | BottomRight -> $"M {round bottomRightX} {round bottomRightY} L {round rightBottomX} {round rightBottomY}"
 
-            appendWall sBuilder lines (cell.WallTypeAtPosition position) |> ignore
+            appendWall sBuilder lines (cell.WallTypeAtPosition position) coordinate |> ignore
     else
         let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
             calculatePointsSquare (calculateLength, octaSquareSideSize, otherSideSize) coordinate
@@ -105,7 +105,7 @@ let private appendWallsType (calculateLength, isOctagon, octaSquareSideSize, oth
                 | Bottom -> $"M {round leftBottomX} {round leftBottomY} L {round rightBottomX} {round rightBottomY}"
                 | _ -> failwith $"Could not match position {coordinate} at {position}"
 
-            appendWall sBuilder lines (cell.WallTypeAtPosition position) |> ignore
+            appendWall sBuilder lines (cell.WallTypeAtPosition position) coordinate |> ignore
 
 let private wholeCellLines (calculateLength, isOctagon, octaSquareSideSize, otherSideSize) coordinate =
     

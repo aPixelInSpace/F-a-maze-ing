@@ -89,7 +89,7 @@ let private appendWallsType calculatePointD calculatePointsQuadrant (pentGreatSi
             | C -> $"M {round bx} {round by} L {round cx} {round cy}"
             | D -> $"M {round cx} {round cy} L {round dx} {round dy}"
 
-        appendWall sBuilder lines (cell.WallTypeAtPosition position) |> ignore
+        appendWall sBuilder lines (cell.WallTypeAtPosition position) coordinate |> ignore
 
 let private wholeCellLines calculatePointD calculatePointsQuadrant (pentGreatSide, hypGreatSide) coordinate =
     let ((sx,sy), (ax,ay), (bx,by), (cx,cy), (dx,dy)) =

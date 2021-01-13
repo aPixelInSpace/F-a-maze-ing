@@ -42,19 +42,19 @@ let private appendWallsType (grid : PolarGrid) (centerX, centerY, ringHeight) ap
     let wallInward = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Inward)
     match wallInward with
     | Some wallInward ->
-        appendWall sBuilder $"M {round bottomLeftX} {round bottomLeftY} A {round innerRadius} {round innerRadius}, 0, 0, 1, {round bottomRightX} {round bottomRightY}" wallInward.WallType |> ignore
+        appendWall sBuilder $"M {round bottomLeftX} {round bottomLeftY} A {round innerRadius} {round innerRadius}, 0, 0, 1, {round bottomRightX} {round bottomRightY}" wallInward.WallType coordinate |> ignore
     | None -> ()
 
     let wallLeft = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Ccw)
     match wallLeft with
     | Some wallLeft ->
-        appendWall sBuilder $"M {round bottomLeftX} {round bottomLeftY} L {round topLeftX} {round topLeftY}" wallLeft.WallType |> ignore
+        appendWall sBuilder $"M {round bottomLeftX} {round bottomLeftY} L {round topLeftX} {round topLeftY}" wallLeft.WallType coordinate |> ignore
     | None -> ()
 
     let wallOutward = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Outward)
     match wallOutward with
     | Some wallOutward ->
-        appendWall sBuilder $"M {round topLeftX} {round topLeftY} A {round outerRadius} {round outerRadius}, 0, 0, 1, {round topRightX} {round topRightY}" wallOutward.WallType |> ignore
+        appendWall sBuilder $"M {round topLeftX} {round topLeftY} A {round outerRadius} {round outerRadius}, 0, 0, 1, {round topRightX} {round topRightY}" wallOutward.WallType coordinate |> ignore
     | None -> ()
 
 let private wholeCellLines grid (centerX, centerY, ringHeight) coordinate =
