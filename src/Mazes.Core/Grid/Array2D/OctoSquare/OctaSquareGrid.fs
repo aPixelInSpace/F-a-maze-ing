@@ -9,10 +9,10 @@ open Mazes.Core.Grid.Array2D
 open Mazes.Core.Grid.Array2D.OctaSquare
 
 type OctaSquareGrid
-    (canvas, cells, teleports, obstacles,
+    (canvas, cells, nonAdjacentNeighbors, obstacles,
      positionHandler, coordinateHandler) =
     inherit Grid<OctaSquareGrid, OctaSquarePosition, IPositionHandler<OctaSquarePosition>, ICoordinateHandler<OctaSquarePosition>>(
-        canvas, cells, teleports, obstacles, positionHandler, coordinateHandler)
+        canvas, cells, nonAdjacentNeighbors, obstacles, positionHandler, coordinateHandler)
 
         override this.ToString =
             ""
@@ -30,7 +30,7 @@ type OctaSquareGrid
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
-        OctaSquareGrid(canvas, cells, Teleports.CreateEmpty, Obstacles.CreateEmpty, OctaSquarePositionHandler.Instance,  OctaSquareCoordinateHandler.Instance)
+        OctaSquareGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, OctaSquarePositionHandler.Instance,  OctaSquareCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
         fun () -> OctaSquareGrid.Create canvas :> IGrid<OctaSquareGrid>

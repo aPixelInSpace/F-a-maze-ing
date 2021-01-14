@@ -23,7 +23,7 @@
         <Compile Include="Canvas\Array2D\Shape\Pentagon.fs" />
         <Compile Include="Canvas\ArrayOfA\Canvas.fs" />
         <Compile Include="Canvas\ArrayOfA\Shape\Disk.fs" />
-        <Compile Include="Grid\Teleports.fs" />
+        <Compile Include="Grid\NonAdjacentNeighbors.fs" />
         <Compile Include="Grid\Obstacles.fs" />
         <Compile Include="Grid\Wall.fs" />
 		<Compile Include="Grid\IGrid.fs" />

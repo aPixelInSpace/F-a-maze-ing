@@ -11,12 +11,12 @@ open Mazes.Core.Array2D
 type Grid<'Grid, 'Position, 'PH, 'CH
     when 'PH :> IPositionHandler<'Position> and
          'CH :> ICoordinateHandler<'Position>>
-         (canvas : Canvas, cells : ICell<'Position>[,], teleports : Teleports, obstacles : Obstacles,
+         (canvas : Canvas, cells : ICell<'Position>[,], nonAdjacentNeighbors : NonAdjacentNeighbors, obstacles : Obstacles,
           positionHandler : 'PH, coordinateHandler : 'CH) =
 
     member this.Canvas = canvas
     member this.Cells = cells
-    member this.Teleports = teleports
+    member this.NonAdjacentNeighbors = nonAdjacentNeighbors
     member this.Obstacles = obstacles
     member this.PositionHandler = positionHandler
     member this.CoordinateHandler = coordinateHandler    
@@ -43,10 +43,11 @@ type Grid<'Grid, 'Position, 'PH, 'CH
         member this.CostOfCoordinate coordinate =
             1 + (this.Obstacles.Cost coordinate)
 
-        member this.NeighborAbstractCoordinate coordinate position =
+        member this.AdjacentNeighborAbstractCoordinate coordinate position =
             (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
 
         member this.IsCellLinked coordinate =
+            this.NonAdjacentNeighbors.NeighborsThatAreLinked true coordinate |> Seq.length > 0 ||
             (this.Cell coordinate).IsLinked
 
         member this.ExistAt coordinate =
@@ -80,19 +81,23 @@ type Grid<'Grid, 'Position, 'PH, 'CH
         member this.PutBorderBetweenCells coordinate otherCoordinate =
             this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Border
 
-        member this.Neighbor coordinate position =
+        member this.AdjacentNeighbor coordinate position =
             (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
 
         member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
-            if not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) then
+            if (this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate) || not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) then
                 this.ToInterface.LinkCells coordinate otherCoordinate
 
         member this.NeighborsThatAreLinked isLinked coordinate =
-            let neighbors = this.Neighbors coordinate
-            neighbors |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked = isLinked)
+            let adjacentNeighbors =
+                this.Neighbors coordinate
+                |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked = isLinked)
 
-        member this.AddTwoWayTeleport fromCoordinate toCoordinate =
-            this.Teleports.AddTwoWayTeleport fromCoordinate toCoordinate
+            adjacentNeighbors
+            |> Seq.append (this.NonAdjacentNeighbors.NeighborsThatAreLinked isLinked coordinate)
+
+        member this.AddUpdateTwoWayNeighbor fromCoordinate toCoordinate wallType =
+            this.NonAdjacentNeighbors.AddUpdateTwoWayNeighbor fromCoordinate toCoordinate wallType
 
         member this.LinkedNeighbors coordinate =
             let neighborsCoordinates = this.Neighbors coordinate
@@ -102,8 +107,9 @@ type Grid<'Grid, 'Position, 'PH, 'CH
                     if (this.AreLinked coordinate neighborCoordinate) then
                         yield neighborCoordinate
 
-                for teleport in this.Teleports.Teleports coordinate do
-                    yield teleport
+                for (neighborCoordinate, wallType) in this.NonAdjacentNeighbors.NonAdjacentNeighbors coordinate do
+                    if WallType.isALink wallType then
+                        yield neighborCoordinate
             }
 
         member this.NotLinkedNeighbors coordinate =
@@ -112,6 +118,10 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             seq {
                 for neighborCoordinate in neighborsCoordinates do   
                     if not (this.AreLinked coordinate neighborCoordinate) then
+                        yield neighborCoordinate
+
+                for (neighborCoordinate, wallType) in this.NonAdjacentNeighbors.NonAdjacentNeighbors coordinate do
+                    if not (WallType.isALink wallType) then
                         yield neighborCoordinate
             }
 
@@ -191,15 +201,18 @@ type Grid<'Grid, 'Position, 'PH, 'CH
         | None -> ()
 
     member private this.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =
-        let neighborCoordinateAt = this.CoordinateHandler.NeighborCoordinateAt coordinate
+        if this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate then
+            this.NonAdjacentNeighbors.AddUpdateTwoWayNeighbor coordinate otherCoordinate wallType
+        else
+            let neighborCoordinateAt = this.CoordinateHandler.NeighborCoordinateAt coordinate
 
-        for position in this.PositionHandler.Values coordinate do
-            if Some otherCoordinate = (neighborCoordinateAt position) then
-                this.UpdateWallAtPosition coordinate position wallType
+            for position in this.PositionHandler.Values coordinate do
+                if Some otherCoordinate = (neighborCoordinateAt position) then
+                    this.UpdateWallAtPosition coordinate position wallType
 
     /// Returns the neighbors that are inside the bound of the grid
     member this.Neighbors coordinate =
-        let listOfNeighborCoordinate =
+        let listOfAdjacentNeighborCoordinate =
             seq {
                 for position in this.PositionHandler.Values coordinate do
                     let coordinate = this.CoordinateHandler.NeighborCoordinateAt coordinate position
@@ -208,13 +221,21 @@ type Grid<'Grid, 'Position, 'PH, 'CH
                     | None -> ()
             }
 
-        this.Canvas.NeighborsPartOfMazeOf listOfNeighborCoordinate
-            |> Seq.filter(fun (_, nPosition) -> not (this.IsLimitAt coordinate nPosition))
+        let listOfNonAdjacentNeighborCoordinate =
+            this.NonAdjacentNeighbors.NonAdjacentNeighbors(coordinate)
             |> Seq.map(fst)
 
+        this.Canvas.NeighborsPartOfMazeOf listOfAdjacentNeighborCoordinate
+        |> Seq.filter(fun (_, nPosition) -> not (this.IsLimitAt coordinate nPosition))
+        |> Seq.map(fst)
+        |> Seq.append listOfNonAdjacentNeighborCoordinate
+
     member this.AreLinked coordinate otherCoordinate =
-        not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) &&        
-        (this.Cell coordinate).AreLinked coordinate otherCoordinate
+        if this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate then
+            this.NonAdjacentNeighbors.AreLinked coordinate otherCoordinate
+        else
+            not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) &&        
+            (this.Cell coordinate).AreLinked coordinate otherCoordinate
 
     member this.ToInterface =
         this :> IGrid<'Grid>

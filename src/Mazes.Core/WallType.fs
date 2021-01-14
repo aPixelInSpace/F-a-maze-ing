@@ -19,3 +19,6 @@ module WallType =
         | false, false -> Empty
         | true, true -> Normal
         | true, false | false, true -> Border
+
+    let isALink wallType =
+        wallType = Empty

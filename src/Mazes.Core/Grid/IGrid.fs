@@ -13,7 +13,7 @@ type IGrid<'G> =
     abstract member Dimension2Boundaries : dimension1Index:int -> (int * int)
     abstract member AddCostForCoordinate : Cost -> coordinate:Coordinate -> unit
     abstract member CostOfCoordinate : coordinate:Coordinate -> Cost
-    abstract member NeighborAbstractCoordinate : coordinate:Coordinate -> position:Position -> Coordinate option
+    abstract member AdjacentNeighborAbstractCoordinate : coordinate:Coordinate -> position:Position -> Coordinate option
     /// Returns true if the cell has at least one link to another cell, false otherwise
     abstract member IsCellLinked : coordinate:Coordinate -> bool
     abstract member ExistAt : coordinate:Coordinate -> bool
@@ -34,10 +34,10 @@ type IGrid<'G> =
     /// Puts a border between two cells
     abstract member PutBorderBetweenCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
     /// Returns the coordinate of the neighbor, if there are multiple neighbor then returns the last one
-    abstract member Neighbor : coordinate:Coordinate -> position:Position -> Coordinate option
+    abstract member AdjacentNeighbor : coordinate:Coordinate -> position:Position -> Coordinate option
     /// Returns the neighbors coordinates that are linked, NOT NECESSARILY WITH the coordinate
     abstract member NeighborsThatAreLinked : isLinked:bool -> coordinate:Coordinate -> Coordinate seq
-    abstract member AddTwoWayTeleport : Coordinate -> Coordinate -> unit
+    abstract member AddUpdateTwoWayNeighbor : Coordinate -> Coordinate -> WallType -> unit
     /// Returns the neighbors coordinates that are linked WITH the coordinate
     abstract member LinkedNeighbors : coordinate:Coordinate -> Coordinate seq
     /// Returns the neighbors coordinates that are NOT linked WITH the coordinate

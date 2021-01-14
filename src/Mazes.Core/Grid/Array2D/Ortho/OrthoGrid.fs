@@ -11,10 +11,10 @@ open Mazes.Core.Grid.Array2D
 open Mazes.Core.Grid.Array2D.Ortho
 
 type OrthoGrid
-    (canvas, cells, teleports, obstacles,
+    (canvas, cells, nonAdjacentNeighbors, obstacles,
      positionHandler, coordinateHandler) =
     inherit Grid<OrthoGrid, OrthoPosition, IPositionHandler<OrthoPosition>, ICoordinateHandler<OrthoPosition>>(
-        canvas, cells, teleports, obstacles, positionHandler, coordinateHandler)
+        canvas, cells, nonAdjacentNeighbors, obstacles, positionHandler, coordinateHandler)
 
         override this.ToString =
             let sBuilder = StringBuilder()
@@ -65,7 +65,7 @@ type OrthoGrid
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
-        OrthoGrid(canvas, cells, Teleports.CreateEmpty, Obstacles.CreateEmpty, OrthoPositionHandler.Instance,  OrthoCoordinateHandler.Instance)
+        OrthoGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, OrthoPositionHandler.Instance,  OrthoCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
         fun () -> OrthoGrid.Create canvas :> IGrid<OrthoGrid>

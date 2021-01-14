@@ -4,6 +4,7 @@ module Mazes.Core.Tests.Maze.Generate.HuntAndKill
 
 open FsUnit
 open Xunit
+open Mazes.Core
 open Mazes.Core.Canvas.Array2D.Shape
 open Mazes.Core.Canvas.ArrayOfA.Shape
 open Mazes.Core.Grid.Array2D.Ortho
@@ -33,6 +34,39 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Hunt and Kill 
         "|_ _ _ _ _ _ _ _ _|_|\n"
 
     maze.Grid.ToString |> should equal expectedMaze
+
+[<Fact>]
+let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output and every cell should be accessible`` () =
+    // arrange
+    let orthoGrid =
+        (Rectangle.create 5 10)
+        |> OrthoGrid.CreateFunction
+
+    let orthoGrid =
+        let grid = orthoGrid()
+        grid.AddUpdateTwoWayNeighbor { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 } WallType.Normal
+        grid.AddUpdateTwoWayNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 4 } WallType.Normal
+        grid.AddUpdateTwoWayNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 1; CIndex = 1 } WallType.Normal
+        grid.AddUpdateTwoWayNeighbor { RIndex = 4; CIndex = 8 } { RIndex = 2; CIndex = 7 } WallType.Normal
+        (fun _ -> grid)
+
+    // act
+    let maze = orthoGrid |> HuntAndKill.createMaze 1
+
+    // assert
+    let expectedMaze =
+        " _ _ _ _ _ _ _ _ _ _ \n" + 
+        "|  _    |_ _ _  |   |\n" +
+        "|_ _|_|_ _  | |_ _| |\n" +
+        "|  _ _ _   _| |_ _ _|\n" +
+        "| |  _  |_  |_    | |\n" +
+        "|_ _ _|_ _|_ _ _|_ _|\n"
+
+    maze.Grid.ToString |> should equal expectedMaze
+
+    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap rootCoordinate
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
 let ``Given a polar disc grid with 5 rings, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output`` () =

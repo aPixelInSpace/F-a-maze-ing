@@ -11,10 +11,10 @@ open Mazes.Core.Grid.Array2D
 open Mazes.Core.Grid.Array2D.Hex
 
 type HexGrid
-    (canvas, cells, teleports, obstacles,
+    (canvas, cells, nonAdjacentNeighbors, obstacles,
      positionHandler, coordinateHandler) =
     inherit Grid<HexGrid, HexPosition, IPositionHandler<HexPosition>, ICoordinateHandler<HexPosition>>(
-        canvas, cells, teleports, obstacles, positionHandler, coordinateHandler)
+        canvas, cells, nonAdjacentNeighbors, obstacles, positionHandler, coordinateHandler)
 
         override this.ToString =
             let sBuilder = StringBuilder()
@@ -129,7 +129,7 @@ type HexGrid
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
-        HexGrid(canvas, cells, Teleports.CreateEmpty, Obstacles.CreateEmpty, HexPositionHandler.Instance,  HexCoordinateHandler.Instance)
+        HexGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, HexPositionHandler.Instance,  HexCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
         fun () -> HexGrid.Create canvas :> IGrid<HexGrid>

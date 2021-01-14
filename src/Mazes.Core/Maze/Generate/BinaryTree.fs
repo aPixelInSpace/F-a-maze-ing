@@ -48,11 +48,11 @@ let private carveRow
         let coordinate = { RIndex = rIndex; CIndex = columnIndex }
 
         let neighborCoordinate position =
-            match (grid.Neighbor coordinate position) with
+            match (grid.AdjacentNeighbor coordinate position) with
             | Some neighbor -> neighbor
             | None -> failwith "Binary Tree, unable to find the neighbor coordinate"
 
-        let isPosALimit position = ((grid.Neighbor coordinate position).IsNone) || (grid.IsLimitAt coordinate (neighborCoordinate position))
+        let isPosALimit position = ((grid.AdjacentNeighbor coordinate position).IsNone) || (grid.IsLimitAt coordinate (neighborCoordinate position))
         let ifNotAtLimitLinkCells position =
             if not (isPosALimit position) then
                 grid.LinkCells coordinate (neighborCoordinate position)

@@ -176,7 +176,7 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
              (startIndex, getIndex (length + startIndex))
 
     let neighborCoordinate coordinate position =
-            match (grid.Neighbor (getCoordinate coordinate) position) with
+            match (grid.AdjacentNeighbor (getCoordinate coordinate) position) with
             | Some neighbor -> neighbor
             | None -> failwith "Sidewinder, unable to find the neighbor coordinate"
 
@@ -189,18 +189,18 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
             | true -> grid.ExistAt
             | false -> grid.GetAdjustedExistAt
 
-        match (grid.NeighborAbstractCoordinate coordinate direction.Position) with
+        match (grid.AdjacentNeighborAbstractCoordinate coordinate direction.Position) with
         | Some neighbor -> existAt neighbor
         | None -> false
 
     let isALimitAt coordinate (direction : Direction) =
-        (grid.Neighbor (getCoordinate coordinate) direction.Position).IsNone ||
+        (grid.AdjacentNeighbor (getCoordinate coordinate) direction.Position).IsNone ||
         (grid.IsLimitAt (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position)) ||
         (not (isInsideGridBoundary coordinate direction))
 
     let linkCellAtPosition coordinate (direction : Direction) = (grid.LinkCells (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))
     let ifNotAtLimitLinkCellAtPosition coordinate (direction : Direction) =
-        if (grid.Neighbor (getCoordinate coordinate) direction.Position).IsSome then
+        if (grid.AdjacentNeighbor (getCoordinate coordinate) direction.Position).IsSome then
             (grid.IfNotAtLimitLinkCells (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))
 
     let getRandomIndex2FromRange = (getRandomIndex2AtPos1ForFromRange isALimitAt rng increment direction1)

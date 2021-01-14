@@ -7,6 +7,7 @@ open System.Diagnostics
 open System.IO
 open System.Text
 open CommandLine
+open Mazes.Core
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid.Array2D
@@ -74,7 +75,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.Hexagon.create 15.0 |> Ortho.OrthoGrid.CreateFunction)
     //let grid = (Shape.PentagonStar.create 32.0 20.0 |> Ortho.OrthoGrid.CreateFunction)
 
-    //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateFunction
+    let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateFunction
 
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> Hex.HexGrid.CreateFunction)
@@ -89,7 +90,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> OctaSquare.OctaSquareGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 30 35 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> OctaSquare.OctaSquareGrid.CreateFunction)
 
-    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> PentaCairo.PentaCairoGrid.CreateFunction)
+    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.Hexagon.create 15.0 |> PentaCairo.PentaCairoGrid.CreateFunction)
@@ -157,10 +158,13 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    
 //    let maze = { Grid = grid }
 
-    let grid =
-        let grid = grid()
-        grid.AddTwoWayTeleport { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 }
-        (fun _ -> grid)
+//    let grid =
+//        let grid = grid()
+//        grid.AddUpdateTwoWayNeighbor { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 } WallType.Normal
+//        grid.AddUpdateTwoWayNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 4 } WallType.Normal
+//        grid.AddUpdateTwoWayNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 1; CIndex = 1 } WallType.Normal
+//        grid.AddUpdateTwoWayNeighbor { RIndex = 4; CIndex = 8 } { RIndex = 2; CIndex = 7 } WallType.Normal
+//        (fun _ -> grid)
 
     let maze = (algo rngSeed grid)
     //maze.Grid.AddTwoWayTeleport { RIndex = 2; CIndex = 4 } { RIndex = 41; CIndex = 8 }
@@ -194,17 +198,17 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     //let renderedGrid = renderGrid  (maze.Grid.ToSpecializedGrid)
 
-    //let htmlOutput = outputHtml maze { Name = nameOfMaze } renderedGrid
-    //File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
-    
-    //let rawTestOutput = Output.RawForTest.outputRawForTest maze renderedGrid
-    //File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
+//    let htmlOutput = Mazes.Output.Html.outputHtml maze { Name = nameOfMaze } (Text.renderGrid maze.Grid.ToSpecializedGrid)
+//    File.WriteAllText(filePath, htmlOutput, Encoding.UTF8)
+//    
+//    let rawTestOutput = Output.RawForTest.outputRawForTest maze (Text.renderGrid maze.Grid.ToSpecializedGrid)
+//    File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
     //let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
 
-    //let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
     //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
@@ -213,7 +217,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     //let renderedGridSvg = SVG.OctaSquareGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
-    let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
 

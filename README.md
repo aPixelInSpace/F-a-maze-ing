@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/gh/aPixelInSpace/F-a-maze-ing/branch/main/graph/badge.svg?token=K6FQOQZ8BS)](https://codecov.io/gh/aPixelInSpace/F-a-maze-ing)
 
 # F-a-maze-ing
-A simple, composable and configurable maze generator made with F#
+An easy-to-use, highly composable and configurable maze generator and solver. Several types of grid tiles with multiple possible shapes.
 
 This project is inspired by working through the book [Mazes for Programmers](https://pragprog.com/book/jbmaze/mazes-for-programmers) by Jamis Buck.
 
@@ -11,7 +11,7 @@ This project is inspired by working through the book [Mazes for Programmers](htt
 
 The code in the book is written in Ruby and leans on Object-Oriented design.
 
-My goal is two fold : give the project a functional spin and learn F# in the process. To do so, I freely change or adapt much of the original code.
+My goal is two fold : give the project a functional spin and learn F# in the process. To do so, I freely change or adapt much of the original code and implementation.
 
 ## Examples
 

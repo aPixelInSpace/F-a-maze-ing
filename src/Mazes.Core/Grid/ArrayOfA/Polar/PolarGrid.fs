@@ -14,7 +14,7 @@ type PolarGrid =
     {
         Canvas : Canvas
         Cells : PolarCell[][]
-        Teleports : Teleports
+        NonAdjacentNeighbors : NonAdjacentNeighbors
         Obstacles : Obstacles
     }
 
@@ -48,10 +48,11 @@ type PolarGrid =
         member this.CostOfCoordinate coordinate =
             1 + (this.Obstacles.Cost coordinate)
 
-        member this.NeighborAbstractCoordinate coordinate position =
+        member this.AdjacentNeighborAbstractCoordinate coordinate position =
             Some (PolarCoordinate.neighborBaseCoordinateAt coordinate (PolarPosition.map position))
 
         member this.IsCellLinked coordinate =
+            this.NonAdjacentNeighbors.NeighborsThatAreLinked true coordinate |> Seq.length > 0 ||
             (this.Cell coordinate).IsLinked this.Cells coordinate
 
         member this.ExistAt coordinate =
@@ -93,8 +94,8 @@ type PolarGrid =
             let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
             this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Border
 
-        member this.Neighbor coordinate position =
-            this.Neighbor coordinate (PolarPosition.map position)
+        member this.AdjacentNeighbor coordinate position =
+            this.AdjacentNeighbor coordinate (PolarPosition.map position)
 
         member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
             this.IfNotAtLimitLinkCells coordinate otherCoordinate
@@ -102,8 +103,8 @@ type PolarGrid =
         member this.NeighborsThatAreLinked isLinked coordinate =
             this.NeighborsThatAreLinked isLinked coordinate
 
-        member this.AddTwoWayTeleport fromCoordinate toCoordinate =
-            this.AddTwoWayTeleport fromCoordinate toCoordinate
+        member this.AddUpdateTwoWayNeighbor fromCoordinate toCoordinate wallType =
+            this.NonAdjacentNeighbors.AddUpdateTwoWayNeighbor fromCoordinate toCoordinate wallType
 
         member this.LinkedNeighbors coordinate =
             this.LinkedNeighbors coordinate
@@ -180,14 +181,17 @@ type PolarGrid =
             this.Cells.[neighborCoordinate.RIndex].[neighborCoordinate.CIndex] <- { Walls = (getWalls neighborCoordinate neighborPosition.Opposite) }
 
     member this.LinkCells coordinate otherCoordinate =
-        let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
-        this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Empty
+        if this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate then
+            this.NonAdjacentNeighbors.AddUpdateTwoWayNeighbor coordinate otherCoordinate Empty
+        else
+            let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
+            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Empty
 
     member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
-        if not (this.IsLimitAt coordinate otherCoordinate) then
+        if (this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate) || not (this.IsLimitAt coordinate otherCoordinate) then
             this.LinkCells coordinate otherCoordinate
 
-    member this.Neighbor coordinate position =
+    member this.AdjacentNeighbor coordinate position =
         let neighbors = PolarCoordinate.neighborsCoordinateAt this.Cells coordinate position
         if neighbors |> Seq.isEmpty then
             None
@@ -203,20 +207,27 @@ type PolarGrid =
                     for coordinate in neighborsCoordinateAt position do
                         yield (coordinate, position)
             }
+
+        let listOfNonAdjacentNeighborCoordinate =
+            this.NonAdjacentNeighbors.NonAdjacentNeighbors(coordinate)
+            |> Seq.map(fst)
+
         this.Canvas.NeighborsPartOfMazeOf listOfNeighborCoordinate
         |> Seq.filter(fun (nCoordinate, _) -> not (this.IsLimitAt coordinate nCoordinate))
         |> Seq.map(fst)
+        |> Seq.append listOfNonAdjacentNeighborCoordinate
 
     member this.RandomNeighbor (rng : Random) coordinate =
         let neighbors = this.NeighborsFrom coordinate |> Seq.toArray
         neighbors.[rng.Next(neighbors.Length)]
 
     member this.NeighborsThatAreLinked isLinked coordinate =
-        this.NeighborsFrom coordinate
-        |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked this.Cells nCoordinate = isLinked)
+        let adjacentNeighbors =
+            this.NeighborsFrom coordinate
+            |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked this.Cells nCoordinate = isLinked)
 
-    member this.AddTwoWayTeleport fromCoordinate toCoordinate =
-        this.Teleports.AddTwoWayTeleport fromCoordinate toCoordinate
+        adjacentNeighbors
+        |> Seq.append (this.NonAdjacentNeighbors.NeighborsThatAreLinked isLinked coordinate)
 
     member this.LinkedNeighbors coordinate =
         seq {
@@ -225,18 +236,23 @@ type PolarGrid =
                 if (this.AreLinked coordinate neighborCoordinate) then
                     yield neighborCoordinate
 
-            for teleport in this.Teleports.Teleports coordinate do
-                yield teleport
+            for (neighborCoordinate, wallType) in this.NonAdjacentNeighbors.NonAdjacentNeighbors coordinate do
+                if WallType.isALink wallType then
+                    yield neighborCoordinate
         }
 
     member this.NotLinkedNeighbors coordinate =
-            let neighborsCoordinates = this.NeighborsFrom coordinate
+        let neighborsCoordinates = this.NeighborsFrom coordinate
 
-            seq {
-                for neighborCoordinate in neighborsCoordinates do   
-                    if not (this.AreLinked coordinate neighborCoordinate) then
-                        yield neighborCoordinate
-            }
+        seq {
+            for neighborCoordinate in neighborsCoordinates do   
+                if not (this.AreLinked coordinate neighborCoordinate) then
+                    yield neighborCoordinate
+
+            for (neighborCoordinate, wallType) in this.NonAdjacentNeighbors.NonAdjacentNeighbors coordinate do
+                if not (WallType.isALink wallType) then
+                    yield neighborCoordinate
+        }
 
     member this.RandomCoordinatePartOfMazeAndNotLinked (rng : Random) =
         let unlinkedPartOfMazeCells =
@@ -318,8 +334,11 @@ type PolarGrid =
         sBuilder.ToString()
 
     member this.AreLinked coordinate otherCoordinate =
-        not (this.IsLimitAt coordinate otherCoordinate) &&        
-        (this.Cell coordinate).AreLinked this.Cells coordinate otherCoordinate
+        if this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate then
+            this.NonAdjacentNeighbors.AreLinked coordinate otherCoordinate
+        else
+            not (this.IsLimitAt coordinate otherCoordinate) &&        
+            (this.Cell coordinate).AreLinked this.Cells coordinate otherCoordinate
 
 module PolarGrid =
 
@@ -335,7 +354,7 @@ module PolarGrid =
         {
             Canvas = canvas
             Cells = cells
-            Teleports = Teleports.CreateEmpty
+            NonAdjacentNeighbors = NonAdjacentNeighbors.CreateEmpty
             Obstacles = Obstacles.CreateEmpty
         }
 

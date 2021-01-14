@@ -310,7 +310,7 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
     longestPath |> Seq.toArray |> should equal expectedLongestPath
 
 [<Fact>]
-let ``Given a maze with teleport (non adjacent neighbor), when getting all the distances from the root, then it should match the expected distances`` () =
+let ``Given a maze with a non adjacent neighbor, when getting all the distances from the root, then it should match the expected distances`` () =
 
     // arrange
     let maze =
@@ -327,7 +327,7 @@ let ``Given a maze with teleport (non adjacent neighbor), when getting all the d
             ┗━━━━━┷━┷━┛
         *)
 
-    maze.Grid.AddTwoWayTeleport { RIndex = 0; CIndex = 0 } { RIndex = 3; CIndex = 1 }
+    maze.Grid.AddUpdateTwoWayNeighbor { RIndex = 0; CIndex = 0 } { RIndex = 3; CIndex = 1 } Empty
 
     let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
 
@@ -339,7 +339,7 @@ let ``Given a maze with teleport (non adjacent neighbor), when getting all the d
     
     let expectedGraph =
         "(0;0)->1->(0;1) (0;0)->1->(3;1) (0;1)->2->(0;2) (0;2)->3->(0;3) (0;2)->3->(1;2)\n" +
-        "(0;3)->4->(0;4) (0;4)->5->(1;4) (1;1)->5->(1;0) (1;2)->4->(1;1) (1;2)->4->(1;3)\n" +
+        "(0;3)->4->(0;4) (0;4)->5->(1;4) (1;0)->5->(1;1) (1;2)->4->(1;1) (1;2)->4->(1;3)\n" +
         "(1;2)->4->(2;2) (1;3)->5->(2;3) (2;0)->4->(1;0) (2;0)->4->(3;0) (2;1)->3->(2;0)\n" +
         "(2;2)->5->(3;2) (2;3)->6->(2;4) (2;3)->6->(3;3) (2;4)->7->(3;4) (3;0)->5->(4;0)\n" +
         "(3;1)->2->(2;1) (3;3)->7->(4;3) (3;4)->8->(4;4) (4;0)->6->(4;1) (4;1)->7->(4;2)\n"
