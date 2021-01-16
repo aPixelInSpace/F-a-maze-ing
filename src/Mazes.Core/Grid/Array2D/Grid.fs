@@ -90,7 +90,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
 
         member this.NeighborsThatAreLinked isLinked coordinate =
             let adjacentNeighbors =
-                this.Neighbors coordinate
+                this.AdjacentNeighbors coordinate
                 |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked = isLinked)
 
             adjacentNeighbors
@@ -210,8 +210,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
                 if Some otherCoordinate = (neighborCoordinateAt position) then
                     this.UpdateWallAtPosition coordinate position wallType
 
-    /// Returns the neighbors that are inside the bound of the grid
-    member this.Neighbors coordinate =
+    member this.AdjacentNeighbors coordinate =
         let listOfAdjacentNeighborCoordinate =
             seq {
                 for position in this.PositionHandler.Values coordinate do
@@ -221,13 +220,18 @@ type Grid<'Grid, 'Position, 'PH, 'CH
                     | None -> ()
             }
 
+        this.Canvas.NeighborsPartOfMazeOf listOfAdjacentNeighborCoordinate
+        |> Seq.filter(fun (_, nPosition) -> not (this.IsLimitAt coordinate nPosition))
+        |> Seq.map(fst)
+
+    member this.Neighbors coordinate =
+        let listOfAdjacentNeighborCoordinate = this.AdjacentNeighbors coordinate
+
         let listOfNonAdjacentNeighborCoordinate =
             this.NonAdjacentNeighbors.NonAdjacentNeighbors(coordinate)
             |> Seq.map(fst)
 
-        this.Canvas.NeighborsPartOfMazeOf listOfAdjacentNeighborCoordinate
-        |> Seq.filter(fun (_, nPosition) -> not (this.IsLimitAt coordinate nPosition))
-        |> Seq.map(fst)
+        listOfAdjacentNeighborCoordinate
         |> Seq.append listOfNonAdjacentNeighborCoordinate
 
     member this.AreLinked coordinate otherCoordinate =

@@ -198,8 +198,7 @@ type PolarGrid =
         else
             Some (neighbors |> Seq.last)
 
-    /// Returns the neighbors that are inside the bound of the grid
-    member this.NeighborsFrom coordinate =
+    member this.AdjacentNeighborsFrom coordinate =
         let listOfNeighborCoordinate =
             let neighborsCoordinateAt = PolarCoordinate.neighborsCoordinateAt this.Cells coordinate
             seq {
@@ -208,13 +207,19 @@ type PolarGrid =
                         yield (coordinate, position)
             }
 
+        this.Canvas.NeighborsPartOfMazeOf listOfNeighborCoordinate
+        |> Seq.filter(fun (nCoordinate, _) -> not (this.IsLimitAt coordinate nCoordinate))
+        |> Seq.map(fst)
+
+    /// Returns the neighbors that are inside the bound of the grid
+    member this.NeighborsFrom coordinate =
+        let listOfNeighborCoordinate = this.AdjacentNeighborsFrom coordinate
+
         let listOfNonAdjacentNeighborCoordinate =
             this.NonAdjacentNeighbors.NonAdjacentNeighbors(coordinate)
             |> Seq.map(fst)
 
-        this.Canvas.NeighborsPartOfMazeOf listOfNeighborCoordinate
-        |> Seq.filter(fun (nCoordinate, _) -> not (this.IsLimitAt coordinate nCoordinate))
-        |> Seq.map(fst)
+        listOfNeighborCoordinate
         |> Seq.append listOfNonAdjacentNeighborCoordinate
 
     member this.RandomNeighbor (rng : Random) coordinate =

@@ -9,8 +9,8 @@ open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Render.SVG.Base
 
-let private cellWidth = 40
-let private cellHeight = 40
+let private cellWidth = 30
+let private cellHeight = 30
 let private bridgeHalfWidth = 7.0
 let private marginWidth = 20
 let private marginHeight = 20
@@ -111,7 +111,7 @@ let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     |> appendBackground "transparent"
     
     |> appendMazeColoration grid.ToInterface.CoordinatesPartOfMaze wholeCellLines
-    |> appendMazeDistanceColoration map wholeCellLines
+    //|> appendMazeDistanceColoration map wholeCellLines
     
     |> appendPathAndBridgesWithAnimation
 
@@ -119,7 +119,7 @@ let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     //|> appendWallsWithInset
     
     //|> appendMazeDistanceBridgeColoration
-    //|> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
+    |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
     |> appendSimpleWallsBridges
 
     //|> appendPath path wholeCellLines
