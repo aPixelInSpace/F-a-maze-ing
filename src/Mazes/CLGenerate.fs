@@ -65,7 +65,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let stopWatch = Stopwatch()
 
     stopWatch.Start()
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Ortho.OrthoGrid.CreateFunction)
+    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Ortho.OrthoGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> OrthoGrid.createGridFunction)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Ortho.OrthoGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> OrthoGrid.createGridFunction)
@@ -75,7 +75,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.Hexagon.create 15.0 |> Ortho.OrthoGrid.CreateFunction)
     //let grid = (Shape.PentagonStar.create 32.0 20.0 |> Ortho.OrthoGrid.CreateFunction)
 
-    let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateFunction
+    //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateFunction
 
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> Hex.HexGrid.CreateFunction)
@@ -158,13 +158,18 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    
 //    let maze = { Grid = grid }
 
-//    let grid =
-//        let grid = grid()
-//        grid.AddUpdateTwoWayNeighbor { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 } WallType.Normal
-//        grid.AddUpdateTwoWayNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 4 } WallType.Normal
-//        grid.AddUpdateTwoWayNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 1; CIndex = 1 } WallType.Normal
-//        grid.AddUpdateTwoWayNeighbor { RIndex = 4; CIndex = 8 } { RIndex = 2; CIndex = 7 } WallType.Normal
-//        (fun _ -> grid)
+    let grid =
+        let grid = grid()
+        grid.AddUpdateTwoWayNeighbor { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 } WallType.Normal
+        grid.AddUpdateTwoWayNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 5; CIndex = 2 } WallType.Normal
+        grid.AddUpdateTwoWayNeighbor { RIndex = 1; CIndex = 20 } { RIndex = 3; CIndex = 20 } WallType.Normal
+        grid.AddUpdateTwoWayNeighbor { RIndex = 15; CIndex = 20 } { RIndex = 17; CIndex = 20 } WallType.Normal
+        grid.AddUpdateTwoWayNeighbor { RIndex = 15; CIndex = 10 } { RIndex = 17; CIndex = 10 } WallType.Normal
+        grid.AddUpdateTwoWayNeighbor { RIndex = 8; CIndex = 12 } { RIndex = 10; CIndex = 12 } WallType.Normal
+        grid.AddUpdateTwoWayNeighbor { RIndex = 7; CIndex = 14 } { RIndex = 9; CIndex = 14 } WallType.Normal
+        grid.AddUpdateTwoWayNeighbor { RIndex = 6; CIndex = 6 } { RIndex = 5; CIndex = 5 } WallType.Normal
+        //grid.AddUpdateTwoWayNeighbor { RIndex = 8; CIndex = 10 } { RIndex = 8; CIndex = 12 } WallType.Normal
+        (fun _ -> grid)
 
     let maze = (algo rngSeed grid)
     //maze.Grid.AddTwoWayTeleport { RIndex = 2; CIndex = 4 } { RIndex = 41; CIndex = 8 }
@@ -204,11 +209,11 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    let rawTestOutput = Output.RawForTest.outputRawForTest maze (Text.renderGrid maze.Grid.ToSpecializedGrid)
 //    File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
-    //let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
 
-    let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
     //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map

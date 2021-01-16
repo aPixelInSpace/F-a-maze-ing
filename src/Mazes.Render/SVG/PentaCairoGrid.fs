@@ -5,6 +5,7 @@ module Mazes.Render.SVG.PentaCairoGrid
 open System
 open System.Text
 open Mazes.Core
+open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.Array2D.PentaCairo
 open Mazes.Render.SVG.Base

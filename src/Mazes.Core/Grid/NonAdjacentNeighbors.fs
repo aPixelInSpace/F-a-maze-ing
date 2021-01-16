@@ -49,5 +49,12 @@ type NonAdjacentNeighbors =
         else
             Seq.empty
 
+    member this.All =
+        seq {
+            for fromItem in this.Container do
+                for toItem in this.Container.Item(fromItem.Key) do
+                    yield (fromItem.Key, toItem.Key)
+        }
+
     static member CreateEmpty =
         { Container = Dictionary<Coordinate, Dictionary<Coordinate, WallType>>() }

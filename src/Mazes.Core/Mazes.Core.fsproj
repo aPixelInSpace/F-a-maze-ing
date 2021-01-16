@@ -6,6 +6,7 @@
 
     <ItemGroup>
         <Compile Include="Coordinate.fs" />
+        <Compile Include="Trigonometry.fs" />
         <Compile Include="Position.fs" />
         <Compile Include="WallType.fs" />
         <Compile Include="Array2D.fs" />
@@ -15,7 +16,6 @@
         <Compile Include="Analysis\Dijkstra\Map.fs" />
         <Compile Include="Canvas\Zone.fs" />
         <Compile Include="Canvas\Array2D\Canvas.fs" />
-        <Compile Include="Canvas\Array2D\Shape\Trigonometry.fs" />
         <Compile Include="Canvas\Array2D\Shape\Rectangle.fs" />
         <Compile Include="Canvas\Array2D\Shape\TriangleIsosceles.fs" />
         <Compile Include="Canvas\Array2D\Shape\Ellipse.fs" />

@@ -8,7 +8,7 @@ open Mazes.Core
 open Mazes.Core.Analysis.Dijkstra
 
 [<Literal>]
-let debugShowCoordinate = false
+let debugShowCoordinate = true
 
 // #4287f5 : blue
 // #63a873 : green
@@ -119,20 +119,13 @@ let svgStyle =
                     ." + colorClass + " {
                         stroke: transparent;
                         stroke-width: 0;
-                        fill: #4287f5;
+                        fill: white;
                     }
                 </style>
             </defs>"
 
 let round (f : float) =
     Math.Round(f, 2).ToString().Replace(",", ".")
-
-let convertToRadian angleInDegree =
-    (angleInDegree * Math.PI) / 180.0
-
-/// Returns the point situated at the matching angle and distance from the base point
-let calculatePoint (baseX, baseY) angleInRadian distance =
-    (distance * Math.Cos(angleInRadian) + baseX, distance * Math.Sin(angleInRadian) + baseY)
 
 let appendHeader width height (sBuilder : StringBuilder) =
     sBuilder.Append("<?xml version=\"1.0\" standalone=\"no\"?>\n")
@@ -158,6 +151,17 @@ let appendPathElement (sBuilder : StringBuilder) id styleClass lines coordinate 
         sBuilder.Append($"><title>RIndex {coordinate.RIndex}; CIndex {coordinate.CIndex}</title></path>") |> ignore
     else
         sBuilder.Append($"/>") |> ignore
+
+    sBuilder.Append($"\n")
+
+let appendPathBridge (sBuilder : StringBuilder) id styleClass lines =
+    sBuilder.Append("<path ") |> ignore
+
+    match id with
+    | Some id -> sBuilder.Append($"id=\"{elementIdPrefix}{id}\" ") |> ignore
+    | None -> ()
+
+    sBuilder.Append($"d=\"{lines}\" class=\"{styleClass}\"/>") |> ignore
 
     sBuilder.Append($"\n")
 
@@ -190,7 +194,9 @@ let appendBorderWallForeInset (sBuilder : StringBuilder) lines (wallType : WallT
 let appendPathElementColor (sBuilder : StringBuilder) styleClass opacity (lines : string) coordinate =
     sBuilder.Append($"<path d=\"{lines}\" class=\"{styleClass}\" fill-opacity=\"{opacity}\"") |> ignore
     if debugShowCoordinate then
-        sBuilder.Append($"><title>RIndex {coordinate.RIndex}; CIndex {coordinate.CIndex}</title></path>") |> ignore
+        match coordinate with
+        | Some coordinate -> sBuilder.Append($"><title>RIndex {coordinate.RIndex}; CIndex {coordinate.CIndex}</title></path>") |> ignore
+        | None -> sBuilder.Append($"/>") |> ignore
      else
         sBuilder.Append($"/>") |> ignore
 
@@ -226,13 +232,30 @@ let appendMazeDistanceColoration map wholeCellLines (sBuilder : StringBuilder) =
         | Some distance -> distance - 1
         | None -> 0
     map.ShortestPathGraph.Graph.Vertices
-    |> Seq.iter(fun coordinate -> sBuilder |> appendCellColorWithDynamicOpacity (wholeCellLines coordinate) (distanceFromRoot coordinate) (map.FarthestFromRoot.Distance - 1) coordinate |> ignore)
+    |> Seq.iter(fun coordinate -> sBuilder |> appendCellColorWithDynamicOpacity (wholeCellLines coordinate) (distanceFromRoot coordinate) (map.FarthestFromRoot.Distance - 1) (Some coordinate) |> ignore)
+
+    sBuilder
+
+let appendMazeDistanceBridgeColoration sequence wholeBridgeLines distanceFromRoot maxDistanceFromRoot (sBuilder : StringBuilder) =
+    let distanceFromRoot coordinate =
+        match (distanceFromRoot coordinate) with
+        | Some distance when distance = 0 -> 0
+        | Some distance -> distance - 1
+        | None -> 0
+    sequence
+    |> Seq.iter(fun (fromCoordinate, toCoordinate) -> sBuilder |> appendCellColorWithDynamicOpacity (wholeBridgeLines fromCoordinate toCoordinate) (distanceFromRoot fromCoordinate) (maxDistanceFromRoot - 1) None |> ignore)
 
     sBuilder
 
 let appendMazeColoration sequence wholeCellLines (sBuilder : StringBuilder) =
     sequence
-    |> Seq.iter(fun coordinate -> appendPathElementColor sBuilder colorDistanceClass "1" (wholeCellLines coordinate) coordinate |> ignore)
+    |> Seq.iter(fun coordinate -> appendPathElementColor sBuilder colorClass "1" (wholeCellLines coordinate) (Some coordinate) |> ignore)
+
+    sBuilder
+
+let appendMazeBridgeColoration sequence wholeBridgeLines (sBuilder : StringBuilder) =
+    sequence
+    |> Seq.iter(fun (fromCoordinate, toCoordinate) -> appendPathElementColor sBuilder colorClass "1" (wholeBridgeLines fromCoordinate toCoordinate) None |> ignore)
 
     sBuilder
 
@@ -242,13 +265,35 @@ let appendPath path wholeCellLines (sBuilder : StringBuilder) =
 
     sBuilder
 
-let appendPathWithAnimation  path wholeCellLines (sBuilder : StringBuilder) =
+let appendPathWithAnimation path wholeCellLines (sBuilder : StringBuilder) =
     path
     |> Seq.iteri(
         fun i coordinate ->
             appendPathElement sBuilder (Some i) pathAnimatedClass (wholeCellLines coordinate) coordinate |> ignore
             let related = if i > 0 then Some ((i - 1).ToString()) else None 
             appendAnimationElement sBuilder (i.ToString()) related |> ignore)
+
+    sBuilder
+
+let appendPathAndBridgesWithAnimation path wholeCellLines existBridge wholeBridgeLines (sBuilder : StringBuilder) =
+    let mutable previous = None
+    path
+    |> Seq.iteri(
+        fun i coordinate ->
+            let i = i * 2
+            let related = if i > 0 then Some ((i - 2).ToString()) else None
+            
+            appendPathElement sBuilder (Some i) pathAnimatedClass (wholeCellLines coordinate) coordinate |> ignore
+            appendAnimationElement sBuilder (i.ToString()) related |> ignore
+            
+            match previous with
+            | Some previousCoordinate ->
+                if existBridge previousCoordinate coordinate then
+                    appendPathElement sBuilder (Some (i - 1)) pathAnimatedClass (wholeBridgeLines previousCoordinate coordinate) coordinate |> ignore
+                    appendAnimationElement sBuilder ((i - 1).ToString()) related |> ignore
+            | None -> ()
+
+            previous <- Some coordinate)
 
     sBuilder
 
@@ -281,3 +326,12 @@ let appendWallsWithInset sequence cellsWithWall sBuilder =
     |> appendBaseWalls sequence appendWallsTypeNormalFore
     |> appendBaseWalls sequence appendWallsTypeBorderBack
     |> appendBaseWalls sequence appendWallsTypeBorderFore
+
+let appendSimpleWallsBridges calculatePointsBridge (bridges : (Coordinate * Coordinate) seq) (sBuilder : StringBuilder) =
+    bridges
+    |> Seq.iter(fun (fromCoordinate, toCoordinate) ->
+            let ((leftFromX, leftFromY), (rightFromX, rightFromY), (leftToX, leftToY), (rightToX, rightToY)) = calculatePointsBridge fromCoordinate toCoordinate
+            appendPathBridge sBuilder None normalWallClass $"M {leftFromX} {leftFromY} L {leftToX} {leftToY}" |> ignore
+            appendPathBridge sBuilder None normalWallClass $"M {rightFromX} {rightFromY} L {rightToX} {rightToY}" |> ignore)
+
+    sBuilder

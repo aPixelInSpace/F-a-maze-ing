@@ -4,12 +4,14 @@ module Mazes.Render.SVG.OrthoGrid
 
 open System.Text
 open Mazes.Core
+open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Render.SVG.Base
 
-let private cellWidth = 30
-let private cellHeight = 30
+let private cellWidth = 40
+let private cellHeight = 40
+let private bridgeHalfWidth = 7.0
 let private marginWidth = 20
 let private marginHeight = 20
 
@@ -21,6 +23,21 @@ let private calculatePoints (calculateHeight, calculateWidth) coordinate =
     let (rightBottomX, rightBottomY) = (baseX + cellWidth, baseY + cellHeight)
 
     ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY))
+
+let private calculatePointsBridge (calculateHeight, calculateWidth) fromCoordinate toCoordinate =
+    let center coordinate =
+        let ((leftTopX, leftTopY),_,_,_) = calculatePoints (calculateHeight, calculateWidth) coordinate
+        ((float)leftTopX, (float)leftTopY) |> translatePoint ((float)(cellWidth / 2), (float)(cellHeight / 2))
+
+    let (centerFromCoordinateX, centerFromCoordinateY) = center fromCoordinate
+    let (centerToCoordinateX, centerToCoordinateY) = center toCoordinate
+
+    let leftFromBridge = (centerFromCoordinateX - bridgeHalfWidth, centerFromCoordinateY)
+    let rightFromBridge = (centerFromCoordinateX + bridgeHalfWidth, centerFromCoordinateY)
+    let leftToBridge = (centerToCoordinateX - bridgeHalfWidth, centerToCoordinateY)
+    let rightToBridge = (centerToCoordinateX + bridgeHalfWidth, centerToCoordinateY)
+
+    (leftFromBridge, rightFromBridge, leftToBridge, rightToBridge)
 
 let private appendWallsType calculatePoints (grid : OrthoGrid) appendWall coordinate (sBuilder : StringBuilder) =
     let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
@@ -47,6 +64,15 @@ let private wholeCellLines calculatePoints coordinate =
     $"L {rightTopX} {rightTopY} " +
     $"L {leftTopX} {leftTopY} "
 
+let private wholeBridgeLines calculatePointsBridge fromCoordinate toCoordinate =
+    let ((leftFromX, leftFromY), (rightFromX, rightFromY), (leftToX, leftToY), (rightToX, rightToY)) =
+        calculatePointsBridge fromCoordinate toCoordinate
+
+    $"M {leftFromX} {leftFromY} " +
+    $"L {rightFromX} {rightFromY} " +
+    $"L {rightToX} {rightToY} " +
+    $"L {leftToX} {leftToY} "
+
 let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     let sBuilder = StringBuilder()
 
@@ -60,9 +86,12 @@ let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     let height = calculateHeight grid.Canvas.NumberOfRows + marginHeight
 
     let calculatePoints = calculatePoints (calculateHeight, calculateWidth)
+    let calculatePointsBridge = calculatePointsBridge (calculateHeight, calculateWidth)
+    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
     
     let appendWallsType = appendWallsType calculatePoints grid
     let wholeCellLines = wholeCellLines calculatePoints
+    let wholeBridgeLines = wholeBridgeLines calculatePointsBridge
     
     let appendSimpleWalls sBuilder =
         appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
@@ -70,17 +99,34 @@ let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     let appendWallsWithInset sBuilder =
         appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
 
+    let appendMazeDistanceBridgeColoration =
+        appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines (map.ShortestPathGraph.NodeDistanceFromRoot) (map.FarthestFromRoot.Distance)
+
+    let appendPathAndBridgesWithAnimation =
+        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
+
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
     |> appendStyle
     |> appendBackground "transparent"
-    //|> appendMazeColoration grid.ToInterface.CoordinatesPartOfMaze wholeCellLines
+    
+    |> appendMazeColoration grid.ToInterface.CoordinatesPartOfMaze wholeCellLines
     |> appendMazeDistanceColoration map wholeCellLines
+    
+    |> appendPathAndBridgesWithAnimation
+
+    |> appendSimpleWalls
+    //|> appendWallsWithInset
+    
+    //|> appendMazeDistanceBridgeColoration
+    //|> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
+    |> appendSimpleWallsBridges
+
     //|> appendPath path wholeCellLines
-    |> appendPathWithAnimation path wholeCellLines
+    //|> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves wholeCellLines
-    //|> appendSimpleWalls
-    |> appendWallsWithInset
+    
+    
     |> appendFooter
     |> ignore
  
