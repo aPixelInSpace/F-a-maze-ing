@@ -160,15 +160,19 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let grid =
         let grid = grid()
-        grid.AddUpdateTwoWayNeighbor { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 } WallType.Normal
-        grid.AddUpdateTwoWayNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 5; CIndex = 2 } WallType.Normal
-        grid.AddUpdateTwoWayNeighbor { RIndex = 1; CIndex = 20 } { RIndex = 3; CIndex = 20 } WallType.Normal
-        grid.AddUpdateTwoWayNeighbor { RIndex = 15; CIndex = 20 } { RIndex = 17; CIndex = 20 } WallType.Normal
-        grid.AddUpdateTwoWayNeighbor { RIndex = 15; CIndex = 10 } { RIndex = 17; CIndex = 10 } WallType.Normal
-        grid.AddUpdateTwoWayNeighbor { RIndex = 8; CIndex = 12 } { RIndex = 10; CIndex = 12 } WallType.Normal
-        grid.AddUpdateTwoWayNeighbor { RIndex = 7; CIndex = 14 } { RIndex = 9; CIndex = 14 } WallType.Normal
-        grid.AddUpdateTwoWayNeighbor { RIndex = 6; CIndex = 6 } { RIndex = 5; CIndex = 5 } WallType.Normal
-        //grid.AddUpdateTwoWayNeighbor { RIndex = 8; CIndex = 10 } { RIndex = 8; CIndex = 12 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 6; CIndex = 6 } { RIndex = 5; CIndex = 5 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 7; CIndex = 14 } { RIndex = 9; CIndex = 14 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 8; CIndex = 5 } { RIndex = 10; CIndex = 5 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 9; CIndex = 7 } { RIndex = 10; CIndex = 8 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 5; CIndex = 22 } { RIndex = 7; CIndex = 22 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 9; CIndex = 21 } { RIndex = 11; CIndex = 21 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 6; CIndex = 6 } { RIndex = 5; CIndex = 7 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 6; CIndex = 6 } { RIndex = 7; CIndex = 5 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 19; CIndex = 0 } { RIndex = 15; CIndex = 5 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 16; CIndex = 19 } { RIndex = 18; CIndex = 19 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 18; CIndex = 19 } { RIndex = 18; CIndex = 21 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 12; CIndex = 25 } { RIndex = 17; CIndex = 27 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 11; CIndex = 10 } { RIndex = 14; CIndex = 11 } WallType.Normal
         (fun _ -> grid)
 
     let maze = (algo rngSeed grid)
@@ -209,9 +213,9 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    let rawTestOutput = Output.RawForTest.outputRawForTest maze (Text.renderGrid maze.Grid.ToSpecializedGrid)
 //    File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
-    let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
-    //let renderedGridSvg = SVG.renderGrid maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
+    let renderedGridSvg = SVG.OrthoGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
 
     //let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map

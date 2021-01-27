@@ -20,6 +20,10 @@ let calculateAngle (pointAx, pointAy) (pointBx, pointBy) =
     let deltaY = pointAy - pointBy
     Math.Atan2(deltaY, deltaX)
 
+/// Returns the distance between two points
+let calculateDistance (pointAx, pointAy) (pointBx, pointBy) =
+    Math.Sqrt(((pointBx - pointAx) ** 2.0) + ((pointBy - pointAy) ** 2.0))
+
 let translatePoint (translation : (float * float)) (point : (float * float)) =
     (fst point + fst translation, snd point + snd translation)
 

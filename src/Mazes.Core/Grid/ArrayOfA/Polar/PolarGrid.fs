@@ -52,7 +52,7 @@ type PolarGrid =
             Some (PolarCoordinate.neighborBaseCoordinateAt coordinate (PolarPosition.map position))
 
         member this.IsCellLinked coordinate =
-            this.NonAdjacentNeighbors.NeighborsThatAreLinked true coordinate |> Seq.length > 0 ||
+            this.NonAdjacentNeighbors.IsLinked coordinate ||
             (this.Cell coordinate).IsLinked this.Cells coordinate
 
         member this.ExistAt coordinate =
@@ -103,8 +103,8 @@ type PolarGrid =
         member this.NeighborsThatAreLinked isLinked coordinate =
             this.NeighborsThatAreLinked isLinked coordinate
 
-        member this.AddUpdateTwoWayNeighbor fromCoordinate toCoordinate wallType =
-            this.NonAdjacentNeighbors.AddUpdateTwoWayNeighbor fromCoordinate toCoordinate wallType
+        member this.AddUpdateNonAdjacentNeighbor fromCoordinate toCoordinate wallType =
+            this.NonAdjacentNeighbors.AddUpdate fromCoordinate toCoordinate wallType
 
         member this.LinkedNeighbors coordinate =
             this.LinkedNeighbors coordinate
@@ -182,7 +182,7 @@ type PolarGrid =
 
     member this.LinkCells coordinate otherCoordinate =
         if this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate then
-            this.NonAdjacentNeighbors.AddUpdateTwoWayNeighbor coordinate otherCoordinate Empty
+            this.NonAdjacentNeighbors.AddUpdate coordinate otherCoordinate Empty
         else
             let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
             this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Empty
@@ -227,12 +227,13 @@ type PolarGrid =
         neighbors.[rng.Next(neighbors.Length)]
 
     member this.NeighborsThatAreLinked isLinked coordinate =
-        let adjacentNeighbors =
-            this.NeighborsFrom coordinate
-            |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked this.Cells nCoordinate = isLinked)
-
-        adjacentNeighbors
-        |> Seq.append (this.NonAdjacentNeighbors.NeighborsThatAreLinked isLinked coordinate)
+        this.NeighborsFrom coordinate
+        |> Seq.append (
+            this.NonAdjacentNeighbors.NonAdjacentNeighbors coordinate
+            |> Seq.map(fst))
+        |> Seq.filter(fun nCoordinate ->
+            (this.Cell nCoordinate).IsLinked this.Cells nCoordinate = isLinked &&
+            (this.NonAdjacentNeighbors.IsLinked nCoordinate) = isLinked)
 
     member this.LinkedNeighbors coordinate =
         seq {

@@ -11,7 +11,8 @@ open Mazes.Render.SVG.Base
 
 let private cellWidth = 30
 let private cellHeight = 30
-let private bridgeHalfWidth = 7.0
+let private bridgeHalfWidth = 7.2
+let private bridgeDistanceFromCenter = 13.0
 let private marginWidth = 20
 let private marginHeight = 20
 
@@ -29,13 +30,27 @@ let private calculatePointsBridge (calculateHeight, calculateWidth) fromCoordina
         let ((leftTopX, leftTopY),_,_,_) = calculatePoints (calculateHeight, calculateWidth) coordinate
         ((float)leftTopX, (float)leftTopY) |> translatePoint ((float)(cellWidth / 2), (float)(cellHeight / 2))
 
-    let (centerFromCoordinateX, centerFromCoordinateY) = center fromCoordinate
-    let (centerToCoordinateX, centerToCoordinateY) = center toCoordinate
+    let centerFrom = center fromCoordinate
+    let centerTo = center toCoordinate
+    let angle = calculateAngle centerFrom centerTo
+    let angleDeg = convertToDegree angle
 
-    let leftFromBridge = (centerFromCoordinateX - bridgeHalfWidth, centerFromCoordinateY)
-    let rightFromBridge = (centerFromCoordinateX + bridgeHalfWidth, centerFromCoordinateY)
-    let leftToBridge = (centerToCoordinateX - bridgeHalfWidth, centerToCoordinateY)
-    let rightToBridge = (centerToCoordinateX + bridgeHalfWidth, centerToCoordinateY)
+    let centerFrom = calculatePoint centerFrom (-angle) bridgeDistanceFromCenter
+    
+    let angleCenterTo = convertToRadian (180.0 - angleDeg)
+    let centerTo = calculatePoint centerTo (angleCenterTo) bridgeDistanceFromCenter
+
+    let angle90 = convertToRadian 90.0
+    let angleMin = -(angle - angle90)
+    let angleMax = -(angle + angle90)
+
+    let leftFromBridge = calculatePoint centerFrom angleMin bridgeHalfWidth
+    let rightFromBridge = calculatePoint centerFrom angleMax bridgeHalfWidth
+    let leftToBridge = calculatePoint centerTo angleMin bridgeHalfWidth
+    let rightToBridge = calculatePoint centerTo angleMax bridgeHalfWidth
+
+    let angleN = calculateAngle leftFromBridge leftToBridge
+    let angleNDeg = convertToDegree angleN
 
     (leftFromBridge, rightFromBridge, leftToBridge, rightToBridge)
 
@@ -68,10 +83,10 @@ let private wholeBridgeLines calculatePointsBridge fromCoordinate toCoordinate =
     let ((leftFromX, leftFromY), (rightFromX, rightFromY), (leftToX, leftToY), (rightToX, rightToY)) =
         calculatePointsBridge fromCoordinate toCoordinate
 
-    $"M {leftFromX} {leftFromY} " +
-    $"L {rightFromX} {rightFromY} " +
-    $"L {rightToX} {rightToY} " +
-    $"L {leftToX} {leftToY} "
+    $"M {round leftFromX} {round leftFromY} " +
+    $"L {round rightFromX} {round rightFromY} " +
+    $"L {round rightToX} {round rightToY} " +
+    $"L {round leftToX} {round leftToY} "
 
 let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     let sBuilder = StringBuilder()
@@ -87,6 +102,7 @@ let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
 
     let calculatePoints = calculatePoints (calculateHeight, calculateWidth)
     let calculatePointsBridge = calculatePointsBridge (calculateHeight, calculateWidth)
+    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
     let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
     
     let appendWallsType = appendWallsType calculatePoints grid
@@ -110,8 +126,8 @@ let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     |> appendStyle
     |> appendBackground "transparent"
     
-    |> appendMazeColoration grid.ToInterface.CoordinatesPartOfMaze wholeCellLines
-    //|> appendMazeDistanceColoration map wholeCellLines
+    //|> appendMazeColoration grid.ToInterface.CoordinatesPartOfMaze wholeCellLines
+    |> appendMazeDistanceColoration map wholeCellLines
     
     |> appendPathAndBridgesWithAnimation
 
@@ -119,6 +135,7 @@ let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     //|> appendWallsWithInset
     
     //|> appendMazeDistanceBridgeColoration
+    |> appendSimpleBridges
     |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
     |> appendSimpleWallsBridges
 

@@ -47,7 +47,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
 
         member this.IsCellLinked coordinate =
-            this.NonAdjacentNeighbors.NeighborsThatAreLinked true coordinate |> Seq.length > 0 ||
+            this.NonAdjacentNeighbors.IsLinked coordinate ||
             (this.Cell coordinate).IsLinked
 
         member this.ExistAt coordinate =
@@ -89,15 +89,20 @@ type Grid<'Grid, 'Position, 'PH, 'CH
                 this.ToInterface.LinkCells coordinate otherCoordinate
 
         member this.NeighborsThatAreLinked isLinked coordinate =
-            let adjacentNeighbors =
-                this.AdjacentNeighbors coordinate
-                |> Seq.filter(fun nCoordinate -> (this.Cell nCoordinate).IsLinked = isLinked)
+            this.AdjacentNeighbors coordinate
+            |> Seq.append (
+                this.NonAdjacentNeighbors.NonAdjacentNeighbors coordinate
+                |> Seq.map(fst))
+            |> Seq.filter(fun nCoordinate ->
+                if isLinked then
+                    (this.Cell nCoordinate).IsLinked = isLinked ||
+                    (this.NonAdjacentNeighbors.IsLinked nCoordinate) = isLinked
+                else
+                    (this.Cell nCoordinate).IsLinked = isLinked &&
+                    (this.NonAdjacentNeighbors.IsLinked nCoordinate) = isLinked)
 
-            adjacentNeighbors
-            |> Seq.append (this.NonAdjacentNeighbors.NeighborsThatAreLinked isLinked coordinate)
-
-        member this.AddUpdateTwoWayNeighbor fromCoordinate toCoordinate wallType =
-            this.NonAdjacentNeighbors.AddUpdateTwoWayNeighbor fromCoordinate toCoordinate wallType
+        member this.AddUpdateNonAdjacentNeighbor fromCoordinate toCoordinate wallType =
+            this.NonAdjacentNeighbors.AddUpdate fromCoordinate toCoordinate wallType
 
         member this.LinkedNeighbors coordinate =
             let neighborsCoordinates = this.Neighbors coordinate
@@ -202,7 +207,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
 
     member private this.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =
         if this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate then
-            this.NonAdjacentNeighbors.AddUpdateTwoWayNeighbor coordinate otherCoordinate wallType
+            this.NonAdjacentNeighbors.AddUpdate coordinate otherCoordinate wallType
         else
             let neighborCoordinateAt = this.CoordinateHandler.NeighborCoordinateAt coordinate
 

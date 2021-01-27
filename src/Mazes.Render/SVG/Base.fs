@@ -5,6 +5,7 @@ module Mazes.Render.SVG.Base
 open System
 open System.Text
 open Mazes.Core
+open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
 
 [<Literal>]
@@ -20,31 +21,33 @@ let debugShowCoordinate = true
 // #2d195e : mauve
 
 [<Literal>]
-let elementIdPrefix = "p"
+let elementIdPrefix = "eip"
 [<Literal>]
-let animationIdPrefix = "a"
+let animationIdPrefix = "aip"
 [<Literal>]
-let normalWallClass = "n"
+let normalWallClass = "nwc"
 [<Literal>]
-let borderWallClass = "b"
+let borderWallClass = "bwc"
 [<Literal>]
-let normalWallInsetBackClass = "nb"
+let normalWallInsetBackClass = "nwibc"
 [<Literal>]
-let normalWallInsetForeClass = "nf"
+let normalWallInsetForeClass = "nwifc"
 [<Literal>]
-let borderWallInsetBackClass = "bb"
+let borderWallInsetBackClass = "bwibc"
 [<Literal>]
-let borderWallInsetForeClass = "bf"
+let borderWallInsetForeClass = "bwifc"
 [<Literal>]
-let pathClass = "p"
+let normalWallBridgeClass = "nwbc"
 [<Literal>]
-let pathAnimatedClass = "pa"
+let pathClass = "pc"
 [<Literal>]
-let leaveClass = "l"
+let pathAnimatedClass = "pac"
 [<Literal>]
-let colorClass = "c"
+let leaveClass = "lc"
 [<Literal>]
-let colorDistanceClass = "cd"
+let colorClass = "cc"
+[<Literal>]
+let colorDistanceClass = "cdc"
 [<Literal>]
 let pathOpacity = "0.4"
 
@@ -92,6 +95,13 @@ let svgStyle =
                         stroke-width: 4;
                         stroke-linecap: round;
                         stroke-linejoin: round;
+                    }
+                    ." + normalWallBridgeClass + " {
+                        stroke: #333;
+                        fill: transparent;
+                        stroke-width: 2;
+                        //stroke-linecap: round;
+                        //stroke-linejoin: round;
                     }
                     ." + pathClass + " {
                         stroke: transparent;
@@ -243,7 +253,7 @@ let appendMazeDistanceBridgeColoration sequence wholeBridgeLines distanceFromRoo
         | Some distance -> distance - 1
         | None -> 0
     sequence
-    |> Seq.iter(fun (fromCoordinate, toCoordinate) -> sBuilder |> appendCellColorWithDynamicOpacity (wholeBridgeLines fromCoordinate toCoordinate) (distanceFromRoot fromCoordinate) (maxDistanceFromRoot - 1) None |> ignore)
+    |> Seq.iter(fun (fromCoordinate, toCoordinate, _) -> sBuilder |> appendCellColorWithDynamicOpacity (wholeBridgeLines fromCoordinate toCoordinate) (distanceFromRoot fromCoordinate) (maxDistanceFromRoot - 1) None |> ignore)
 
     sBuilder
 
@@ -255,7 +265,7 @@ let appendMazeColoration sequence wholeCellLines (sBuilder : StringBuilder) =
 
 let appendMazeBridgeColoration sequence wholeBridgeLines (sBuilder : StringBuilder) =
     sequence
-    |> Seq.iter(fun (fromCoordinate, toCoordinate) -> appendPathElementColor sBuilder colorClass "1" (wholeBridgeLines fromCoordinate toCoordinate) None |> ignore)
+    |> Seq.iter(fun (fromCoordinate, toCoordinate, _) -> appendPathElementColor sBuilder colorClass "1" (wholeBridgeLines fromCoordinate toCoordinate) None |> ignore)
 
     sBuilder
 
@@ -327,11 +337,26 @@ let appendWallsWithInset sequence cellsWithWall sBuilder =
     |> appendBaseWalls sequence appendWallsTypeBorderBack
     |> appendBaseWalls sequence appendWallsTypeBorderFore
 
-let appendSimpleWallsBridges calculatePointsBridge (bridges : (Coordinate * Coordinate) seq) (sBuilder : StringBuilder) =
+let appendSimpleBridges calculatePointsBridge (bridges : (Coordinate * Coordinate * WallType) seq) (sBuilder : StringBuilder) =
     bridges
-    |> Seq.iter(fun (fromCoordinate, toCoordinate) ->
+    |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
             let ((leftFromX, leftFromY), (rightFromX, rightFromY), (leftToX, leftToY), (rightToX, rightToY)) = calculatePointsBridge fromCoordinate toCoordinate
-            appendPathBridge sBuilder None normalWallClass $"M {leftFromX} {leftFromY} L {leftToX} {leftToY}" |> ignore
-            appendPathBridge sBuilder None normalWallClass $"M {rightFromX} {rightFromY} L {rightToX} {rightToY}" |> ignore)
+            appendPathBridge sBuilder None normalWallBridgeClass $"M {round leftFromX} {round leftFromY} L {round leftToX} {round leftToY}" |> ignore
+            appendPathBridge sBuilder None normalWallBridgeClass $"M {round rightFromX} {round rightFromY} L {round rightToX} {round rightToY}" |> ignore)
+
+    sBuilder
+
+let appendSimpleWallsBridges calculatePointsBridge (bridges : (Coordinate * Coordinate * WallType) seq) (sBuilder : StringBuilder) =
+    bridges
+    |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
+            let ((leftFromX, leftFromY), (rightFromX, rightFromY), (leftToX, leftToY), _) = calculatePointsBridge fromCoordinate toCoordinate
+            match wallType with
+            | Normal ->
+                let distance = calculateDistance (leftFromX, leftFromY) (leftToX, leftToY)
+                let angle = -(calculateAngle (leftFromX, leftFromY) (leftToX, leftToY))
+                let (leftPointX, leftPointY) = calculatePoint (leftFromX, leftFromY) angle (distance / 2.0)
+                let (rightPointX, rightPointY) = calculatePoint (rightFromX, rightFromY) angle (distance / 2.0)
+                appendWall sBuilder $"M {round leftPointX} {round leftPointY} L {round rightPointX} {round rightPointY}" wallType fromCoordinate |> ignore
+            | _ -> ())
 
     sBuilder
