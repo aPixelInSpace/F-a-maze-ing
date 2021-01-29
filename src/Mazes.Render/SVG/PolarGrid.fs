@@ -39,7 +39,7 @@ let private calculatePoints (grid : PolarGrid) (centerX, centerY, ringHeight) co
 let center calculatePoints coordinate =
     let (_, _, topLeft, bottomRight, _) = calculatePoints coordinate
 
-    middlePoint topLeft bottomRight
+    middlePoint topLeft bottomRight // this is a good enough approximation
 
 let private appendWallsType (grid : PolarGrid) (centerX, centerY, ringHeight) appendWall (cell, coordinate) (sBuilder : StringBuilder) =
     let ((innerRadius, outerRadius), (bottomLeftX, bottomLeftY), (topLeftX, topLeftY), (bottomRightX, bottomRightY), (topRightX, topRightY)) =
@@ -108,6 +108,9 @@ let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
     let appendWallsWithInset sBuilder =
         appendWallsWithInset coordinatesPartOfMaze appendWallsType sBuilder
 
+    let appendPathAndBridgesWithAnimation =
+        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
+
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
     |> appendStyle
@@ -117,7 +120,7 @@ let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
     |> appendMazeDistanceColoration map wholeCellLines
 
     //|> appendPath path wholeCellLines
-    |> appendPathWithAnimation path wholeCellLines
+    //|> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map wholeCellLines
 
     |> appendSimpleWalls
@@ -125,6 +128,8 @@ let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
 
     |> appendSimpleBridges
     |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
+    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines map.ShortestPathGraph.NodeDistanceFromRoot map.FarthestFromRoot.Distance
+    |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
 
     |> appendFooter

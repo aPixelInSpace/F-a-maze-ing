@@ -99,6 +99,9 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
     let appendWallsWithInset sBuilder =
         appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
 
+    let appendPathAndBridgesWithAnimation =
+        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
+
     let width = calculateWidth ((float)grid.NumberOfColumns) + marginWidth
     let height = calculateHeight ((float)grid.NumberOfRows) + marginHeight
 
@@ -109,7 +112,7 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
 
     |> appendMazeDistanceColoration map wholeCellLines
 
-    |> appendPathWithAnimation path wholeCellLines
+    //|> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves (wholeCellLines calculatePoints grid)
 
     |> appendSimpleWalls
@@ -117,6 +120,8 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
 
     |> appendSimpleBridges
     |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
+    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines map.ShortestPathGraph.NodeDistanceFromRoot map.FarthestFromRoot.Distance
+    |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
 
     |> appendFooter

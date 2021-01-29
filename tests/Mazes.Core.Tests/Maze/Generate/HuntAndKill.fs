@@ -56,11 +56,11 @@ let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a 
     // assert
     let expectedMaze =
         " _ _ _ _ _ _ _ _ _ _ \n" + 
-        "|  _    |_ _ _  |   |\n" +
-        "|_ _|_|_ _  | |_ _| |\n" +
-        "|  _ _ _   _| |_ _ _|\n" +
-        "| |  _  |_  |_    | |\n" +
-        "|_ _ _|_ _|_ _ _|_ _|\n"
+        "|   |   |  _ _  |   |\n" +
+        "|_|_ _|_ _  | |_ _| |\n" +
+        "|  _ _ _ _ _|_ _ _ _|\n" +
+        "| |     |  _    |   |\n" +
+        "|_ _|_|_ _|_ _|_ _|_|\n"
 
     maze.Grid.ToString |> should equal expectedMaze
 

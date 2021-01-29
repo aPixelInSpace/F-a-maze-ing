@@ -177,6 +177,9 @@ let render (grid : OctaSquareGrid) (path : Coordinate seq) (map : Map) =
     let appendWallsWithInset sBuilder =
         appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
 
+    let appendPathAndBridgesWithAnimation =
+        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
+
     let width = calculateLength ((float)grid.NumberOfColumns) + marginWidth + 20.0 // because of the size of the border
     let height = calculateLength ((float)grid.NumberOfRows) + marginHeight + 20.0 // because of the size of the border
 
@@ -187,13 +190,15 @@ let render (grid : OctaSquareGrid) (path : Coordinate seq) (map : Map) =
 
     |> appendMazeDistanceColoration map wholeCellLines
 
-    |> appendPathWithAnimation path wholeCellLines
+    //|> appendPathWithAnimation path wholeCellLines
 
     |> appendSimpleWalls
     //|> appendWallsWithInset
 
     |> appendSimpleBridges
     |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
+    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines map.ShortestPathGraph.NodeDistanceFromRoot map.FarthestFromRoot.Distance
+    |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
 
     |> appendFooter

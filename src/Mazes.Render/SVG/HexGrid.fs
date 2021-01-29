@@ -106,6 +106,9 @@ let render (grid : HexGrid) (path : Coordinate seq) (map : Map) =
     let appendWallsWithInset sBuilder =
         appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
 
+    let appendPathAndBridgesWithAnimation =
+        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
+
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())
     |> appendStyle
@@ -113,7 +116,7 @@ let render (grid : HexGrid) (path : Coordinate seq) (map : Map) =
 
     |> appendMazeDistanceColoration map wholeCellLines
 
-    |> appendPathWithAnimation path wholeCellLines
+    //|> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves (wholeCellLines calculatePoints grid)
 
     |> appendSimpleWalls
@@ -121,6 +124,8 @@ let render (grid : HexGrid) (path : Coordinate seq) (map : Map) =
 
     |> appendSimpleBridges
     |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
+    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines map.ShortestPathGraph.NodeDistanceFromRoot map.FarthestFromRoot.Distance
+    |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
 
     |> appendFooter

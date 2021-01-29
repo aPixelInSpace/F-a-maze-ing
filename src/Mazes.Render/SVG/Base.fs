@@ -9,7 +9,7 @@ open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
 
 [<Literal>]
-let debugShowCoordinate = true
+let debugShowCoordinate = false
 
 [<Literal>]
 let showClosedBridge = false
@@ -255,8 +255,13 @@ let appendMazeDistanceBridgeColoration sequence wholeBridgeLines distanceFromRoo
         | Some distance when distance = 0 -> 0
         | Some distance -> distance - 1
         | None -> 0
+
     sequence
-    |> Seq.iter(fun (fromCoordinate, toCoordinate, _) -> sBuilder |> appendCellColorWithDynamicOpacity (wholeBridgeLines fromCoordinate toCoordinate) (distanceFromRoot fromCoordinate) (maxDistanceFromRoot - 1) None |> ignore)
+    |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
+        match wallType, showClosedBridge with
+        | Empty, _ | Normal, true ->
+            sBuilder |> appendCellColorWithDynamicOpacity (wholeBridgeLines fromCoordinate toCoordinate) (distanceFromRoot fromCoordinate) (maxDistanceFromRoot - 1) None |> ignore
+        | _ -> ())
 
     sBuilder
 

@@ -103,10 +103,10 @@ let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
 
     |> appendSimpleWalls
     //|> appendWallsWithInset
-    
-    //|> appendMazeDistanceBridgeColoration
+
     |> appendSimpleBridges
     |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
+    |> appendMazeDistanceBridgeColoration
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
 
