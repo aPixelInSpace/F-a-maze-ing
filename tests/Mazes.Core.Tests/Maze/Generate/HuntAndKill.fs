@@ -44,10 +44,10 @@ let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a 
 
     let orthoGrid =
         let grid = orthoGrid()
-        grid.AddUpdateTwoWayNeighbor { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 } WallType.Normal
-        grid.AddUpdateTwoWayNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 4 } WallType.Normal
-        grid.AddUpdateTwoWayNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 1; CIndex = 1 } WallType.Normal
-        grid.AddUpdateTwoWayNeighbor { RIndex = 4; CIndex = 8 } { RIndex = 2; CIndex = 7 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 4 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 1; CIndex = 1 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 4; CIndex = 8 } { RIndex = 2; CIndex = 7 } WallType.Normal
         (fun _ -> grid)
 
     // act
@@ -56,11 +56,11 @@ let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a 
     // assert
     let expectedMaze =
         " _ _ _ _ _ _ _ _ _ _ \n" + 
-        "|  _    |_ _ _  |   |\n" +
-        "|_ _|_|_ _  | |_ _| |\n" +
-        "|  _ _ _   _| |_ _ _|\n" +
-        "| |  _  |_  |_    | |\n" +
-        "|_ _ _|_ _|_ _ _|_ _|\n"
+        "|   |   |  _ _  |   |\n" +
+        "|_|_ _|_ _  | |_ _| |\n" +
+        "|  _ _ _ _ _|_ _ _ _|\n" +
+        "| |     |  _    |   |\n" +
+        "|_ _|_|_ _|_ _|_ _|_|\n"
 
     maze.Grid.ToString |> should equal expectedMaze
 

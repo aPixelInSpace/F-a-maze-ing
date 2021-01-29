@@ -11,25 +11,26 @@ type NonAdjacentNeighbors =
             Container : Dictionary<Coordinate, Dictionary<Coordinate, WallType>>
         }
 
-    member this.AddUpdateOneWayNeighbor fromCoordinate toCoordinate wallType =
-        if this.Container.ContainsKey(fromCoordinate) then
-            if this.Container.Item(fromCoordinate).ContainsKey(toCoordinate) then
-                this.Container.Item(fromCoordinate).Item(toCoordinate) <- wallType
+    member this.AddUpdate fromCoordinate toCoordinate wallType =
+        let addUpdate fromCoordinate toCoordinate wallType =
+            if this.Container.ContainsKey(fromCoordinate) then
+                if this.Container.Item(fromCoordinate).ContainsKey(toCoordinate) then
+                    this.Container.Item(fromCoordinate).Item(toCoordinate) <- wallType
+                else
+                    this.Container.Item(fromCoordinate).Add(toCoordinate, wallType)
             else
-                this.Container.Item(fromCoordinate).Add(toCoordinate, wallType)
-        else
-            let dic = Dictionary<Coordinate, WallType>()
-            dic.Add(toCoordinate, wallType)
-            this.Container.Add(fromCoordinate, dic)
-
-    member this.AddUpdateTwoWayNeighbor fromCoordinate toCoordinate wallType =
-        this.AddUpdateOneWayNeighbor fromCoordinate toCoordinate wallType
-        this.AddUpdateOneWayNeighbor toCoordinate fromCoordinate wallType
+                let dic = Dictionary<Coordinate, WallType>()
+                dic.Add(toCoordinate, wallType)
+                this.Container.Add(fromCoordinate, dic)
+        
+        addUpdate fromCoordinate toCoordinate wallType
+        addUpdate toCoordinate fromCoordinate wallType
 
     member this.NonAdjacentNeighbors coordinate =
         seq {
             if this.Container.ContainsKey(coordinate) then
-                for neighbor in this.Container.Item(coordinate) do
+                let neighbors = this.Container.Item(coordinate)
+                for neighbor in neighbors do
                     yield (neighbor.Key, neighbor.Value)
         }
 
@@ -37,17 +38,21 @@ type NonAdjacentNeighbors =
         this.Container.ContainsKey(fromCoordinate) &&
         this.Container.Item(fromCoordinate).ContainsKey(toCoordinate)
 
+    member this.IsLinked coordinate =
+        this.Container.ContainsKey(coordinate) &&
+        (this.Container.Item(coordinate) |> Seq.where(fun kv -> WallType.isALink kv.Value)) |> Seq.length > 0
+
     member this.AreLinked fromCoordinate toCoordinate =
         this.ExistNeighbor fromCoordinate toCoordinate &&
         WallType.isALink (this.Container.Item(fromCoordinate).Item(toCoordinate))
 
-    member this.NeighborsThatAreLinked isLinked coordinate =
-        if this.Container.ContainsKey(coordinate) then
-            this.Container.Item(coordinate)
-            |> Seq.filter(fun item -> (WallType.isALink item.Value) = isLinked)
-            |> Seq.map(fun item -> item.Key)
-        else
-            Seq.empty
+    member this.All =
+        seq {
+            for fromItem in this.Container do
+                for toItem in this.Container.Item(fromItem.Key) do
+                    yield (fromItem.Key, toItem.Key, toItem.Value)
+        } |> Seq.distinctBy(fun (coordinate1, coordinate2, _) ->
+            if coordinate1 >= coordinate2 then $"{coordinate1.GetHashCode()}-{coordinate2.GetHashCode()}" else $"{coordinate2.GetHashCode()}-{coordinate1.GetHashCode()}")
 
     static member CreateEmpty =
         { Container = Dictionary<Coordinate, Dictionary<Coordinate, WallType>>() }

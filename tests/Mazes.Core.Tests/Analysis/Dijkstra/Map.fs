@@ -327,7 +327,7 @@ let ``Given a maze with a non adjacent neighbor, when getting all the distances 
             ┗━━━━━┷━┷━┛
         *)
 
-    maze.Grid.AddUpdateTwoWayNeighbor { RIndex = 0; CIndex = 0 } { RIndex = 3; CIndex = 1 } Empty
+    maze.Grid.AddUpdateNonAdjacentNeighbor { RIndex = 0; CIndex = 0 } { RIndex = 3; CIndex = 1 } Empty
 
     let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
 

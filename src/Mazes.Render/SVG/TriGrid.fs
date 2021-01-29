@@ -5,6 +5,7 @@ module Mazes.Render.SVG.TriGrid
 open System
 open System.Text
 open Mazes.Core
+open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.Array2D.Tri
 open Mazes.Render.SVG.Base
@@ -27,6 +28,14 @@ let private calculatePoints (calculateWidth, calculateHeight, isUpright, triWidt
         | false -> (baseLengthAtTop, baseLengthAtBottom, baseLengthAtTop)
 
     ((leftX, leftY), (middleX, middleY), (rightX, rightY))
+
+let center calculatePoints isUpright halfTriHeight coordinate =
+    let (_, middle, _) = calculatePoints coordinate
+
+    if isUpright coordinate then
+        translatePoint (0.0, halfTriHeight) middle
+    else
+        translatePoint (0.0, -halfTriHeight) middle
 
 let private appendWallsType calculatePoints (grid : TriGrid) appendWall coordinate (sBuilder : StringBuilder) =
     let ((leftX, leftY), (middleX, middleY), (rightX, rightY)) = calculatePoints coordinate
@@ -60,6 +69,9 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
     let triHalfWidth = triWidth / 2.0
     let triHeight = (triWidth * Math.Sqrt(3.0)) / 2.0
 
+    let bridgeHalfWidth = 4.0
+    let bridgeDistanceFromCenter = 2.0
+
     let isNumberOfColumnsEven = grid.NumberOfColumns % 2 = 0
     let calculateWidth numberOfColumns =
         if isNumberOfColumnsEven then
@@ -73,14 +85,22 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
 
     let calculatePoints = calculatePoints (calculateWidth, calculateHeight, isUpright, triWidth, triHalfWidth, triHeight)
 
+    let calculatePointsBridge = calculatePointsBridge (center calculatePoints isUpright (triHeight / 2.0)) bridgeHalfWidth bridgeDistanceFromCenter
+    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
+    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
+
     let appendWallsType = appendWallsType calculatePoints grid
     let wholeCellLines = wholeCellLines calculatePoints
+    let wholeBridgeLines = wholeBridgeLines calculatePointsBridge
 
     let appendSimpleWalls sBuilder =
         appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
     
     let appendWallsWithInset sBuilder =
         appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+
+    let appendPathAndBridgesWithAnimation =
+        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
 
     let width = calculateWidth ((float)grid.NumberOfColumns) + marginWidth
     let height = calculateHeight ((float)grid.NumberOfRows) + marginHeight
@@ -89,11 +109,21 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
     |> appendHeader ((round width).ToString()) ((round height).ToString())
     |> appendStyle
     |> appendBackground "transparent"
+
     |> appendMazeDistanceColoration map wholeCellLines
-    |> appendPathWithAnimation path wholeCellLines
+
+    //|> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves (wholeCellLines calculatePoints grid)
-    //|> appendSimpleWalls
-    |> appendWallsWithInset
+
+    |> appendSimpleWalls
+    //|> appendWallsWithInset
+
+    |> appendSimpleBridges
+    |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
+    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines map.ShortestPathGraph.NodeDistanceFromRoot map.FarthestFromRoot.Distance
+    |> appendPathAndBridgesWithAnimation
+    |> appendSimpleWallsBridges
+
     |> appendFooter
     |> ignore
 

@@ -4,7 +4,7 @@ namespace Mazes.Core.Canvas.Array2D.Shape
 
 open Mazes.Core
 open Mazes.Core.Canvas.Array2D
-open Mazes.Core.Canvas.Array2D.Shape.Trigonometry
+open Mazes.Core.Trigonometry
 
 module Pentagon =
 

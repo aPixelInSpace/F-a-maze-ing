@@ -37,7 +37,7 @@ type IGrid<'G> =
     abstract member AdjacentNeighbor : coordinate:Coordinate -> position:Position -> Coordinate option
     /// Returns the neighbors coordinates that are linked, NOT NECESSARILY WITH the coordinate
     abstract member NeighborsThatAreLinked : isLinked:bool -> coordinate:Coordinate -> Coordinate seq
-    abstract member AddUpdateTwoWayNeighbor : Coordinate -> Coordinate -> WallType -> unit
+    abstract member AddUpdateNonAdjacentNeighbor : Coordinate -> Coordinate -> WallType -> unit
     /// Returns the neighbors coordinates that are linked WITH the coordinate
     abstract member LinkedNeighbors : coordinate:Coordinate -> Coordinate seq
     /// Returns the neighbors coordinates that are NOT linked WITH the coordinate

@@ -6,7 +6,8 @@ open System
 open System.Text
 open FsUnit
 open Xunit
-open Mazes.Core.Canvas
+open Mazes.Core
+open Mazes.Core.Grid
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid.Array2D.Ortho
@@ -22,12 +23,19 @@ open Mazes.Render
 let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
-        Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside
-        |> OrthoGrid.CreateFunction
+        let grid =
+            Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside
+            |> OrthoGrid.Create
+            :> IGrid<OrthoGrid>
+
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 6 } { RIndex = 3; CIndex = 6 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 } WallType.Normal
+
+        (fun () -> grid)
 
     let maze =
         grid
-        |> RecursiveBacktracker.createMaze 1
+        |> HuntAndKill.createMaze 1
     let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
 
     // act
@@ -42,8 +50,15 @@ let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, t
 let ``Given a maze with a polar grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
-        Shape.Disk.create 5 1.0 2
-        |> PolarGrid.CreateFunction
+        let grid =
+            Shape.Disk.create 5 1.0 2
+            |> PolarGrid.Create
+            :> IGrid<PolarGrid>
+
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 13 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 } WallType.Normal
+
+        (fun () -> grid)
 
     let maze =
         grid
@@ -62,8 +77,15 @@ let ``Given a maze with a polar grid, a path and a map, when creating an SVG, th
 let ``Given a maze with a hex grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
-        Shape.Hexagon.create 5.0
-        |> HexGrid.CreateFunction
+        let grid =
+            Shape.Hexagon.create 5.0
+            |> HexGrid.Create
+            :> IGrid<HexGrid>
+
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 5; CIndex = 2 } { RIndex = 6; CIndex = 3 } WallType.Normal
+
+        (fun () -> grid)
 
     let maze =
         grid
@@ -82,8 +104,15 @@ let ``Given a maze with a hex grid, a path and a map, when creating an SVG, then
 let ``Given a maze with a tri grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
-        Shape.TriangleIsosceles.create 9 Shape.TriangleIsosceles.BaseAt.Bottom 1 1
-        |> TriGrid.CreateFunction
+        let grid =
+            Shape.TriangleIsosceles.create 9 Shape.TriangleIsosceles.BaseAt.Bottom 1 1
+            |> TriGrid.Create
+            :> IGrid<TriGrid>
+
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 3 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 3 } WallType.Normal
+
+        (fun _ -> grid)
 
     let maze =
         grid
@@ -102,8 +131,15 @@ let ``Given a maze with a tri grid, a path and a map, when creating an SVG, then
 let ``Given a maze with a octa-square grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
-        Shape.Rectangle.create 5 7
-        |> OctaSquareGrid.CreateFunction
+        let grid =
+            Shape.Rectangle.create 5 7
+            |> OctaSquareGrid.Create
+            :> IGrid<OctaSquareGrid>
+
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 } WallType.Normal
+
+        (fun _ -> grid)
 
     let maze =
         grid
@@ -122,12 +158,20 @@ let ``Given a maze with a octa-square grid, a path and a map, when creating an S
 let ``Given a maze with a Cairo pentagonal grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
-        Shape.Rectangle.create 5 7
-        |> PentaCairoGrid.CreateFunction
+        let grid =
+            Shape.Pentagon.create 5.0
+            |> PentaCairoGrid.Create
+            :> IGrid<PentaCairoGrid>
+
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 3 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 5; CIndex = 3 } { RIndex = 6; CIndex = 4 } WallType.Normal
+
+        (fun _ -> grid)
 
     let maze =
         grid
         |> HuntAndKill.createMaze 1
+
     let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
 
     // act

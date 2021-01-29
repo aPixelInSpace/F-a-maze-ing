@@ -1,18 +1,34 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Canvas.Array2D.Shape.Trigonometry
+module Mazes.Core.Trigonometry
 
 open System
 
 let convertToRadian angleInDegree =
     (angleInDegree * Math.PI) / 180.0
 
+let convertToDegree angleInRadian =
+    (180.0 / Math.PI) * angleInRadian
+
 /// Returns the point situated at the matching angle and distance from the base point
 let calculatePoint (baseX, baseY) angleInRadian distance =
     (distance * Math.Cos(angleInRadian) + baseX, distance * Math.Sin(angleInRadian) + baseY)
 
+/// Returns the angle in radians between two points
+let calculateAngle (pointAx, pointAy) (pointBx, pointBy) =
+    let deltaX = pointBx - pointAx
+    let deltaY = pointAy - pointBy
+    Math.Atan2(deltaY, deltaX)
+
+/// Returns the distance between two points
+let calculateDistance (pointAx, pointAy) (pointBx, pointBy) =
+    Math.Sqrt(((pointBx - pointAx) ** 2.0) + ((pointBy - pointAy) ** 2.0))
+
 let translatePoint (translation : (float * float)) (point : (float * float)) =
     (fst point + fst translation, snd point + snd translation)
+
+let middlePoint (pointAx, pointAy) (pointBx, pointBy) =
+    ((pointAx + pointBx) / 2.0, (pointAy + pointBy) / 2.0)
 
 let pythagorasSide side hypotenuse =
     Math.Sqrt(hypotenuse ** 2.0 - side ** 2.0)
