@@ -232,18 +232,18 @@ type PolarGrid =
             this.NonAdjacentNeighbors.NonAdjacentNeighbors coordinate
             |> Seq.map(fst))
         |> Seq.filter(fun nCoordinate ->
-            (this.Cell nCoordinate).IsLinked this.Cells nCoordinate = isLinked &&
-            (this.NonAdjacentNeighbors.IsLinked nCoordinate) = isLinked)
+            if isLinked then
+                (this.Cell nCoordinate).IsLinked this.Cells nCoordinate = isLinked ||
+                (this.NonAdjacentNeighbors.IsLinked nCoordinate) = isLinked
+            else
+                (this.Cell nCoordinate).IsLinked this.Cells nCoordinate = isLinked &&
+                (this.NonAdjacentNeighbors.IsLinked nCoordinate) = isLinked)
 
     member this.LinkedNeighbors coordinate =
         seq {
             let neighborsCoordinates = this.NeighborsFrom coordinate
             for neighborCoordinate in neighborsCoordinates do   
                 if (this.AreLinked coordinate neighborCoordinate) then
-                    yield neighborCoordinate
-
-            for (neighborCoordinate, wallType) in this.NonAdjacentNeighbors.NonAdjacentNeighbors coordinate do
-                if WallType.isALink wallType then
                     yield neighborCoordinate
         }
 
@@ -253,10 +253,6 @@ type PolarGrid =
         seq {
             for neighborCoordinate in neighborsCoordinates do   
                 if not (this.AreLinked coordinate neighborCoordinate) then
-                    yield neighborCoordinate
-
-            for (neighborCoordinate, wallType) in this.NonAdjacentNeighbors.NonAdjacentNeighbors coordinate do
-                if not (WallType.isALink wallType) then
                     yield neighborCoordinate
         }
 

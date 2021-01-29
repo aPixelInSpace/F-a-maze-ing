@@ -11,6 +11,9 @@ open Mazes.Core.Analysis.Dijkstra
 [<Literal>]
 let debugShowCoordinate = true
 
+[<Literal>]
+let showClosedBridge = false
+
 // #4287f5 : blue
 // #63a873 : green
 // #e6da00 : yellow
@@ -265,7 +268,11 @@ let appendMazeColoration sequence wholeCellLines (sBuilder : StringBuilder) =
 
 let appendMazeBridgeColoration sequence wholeBridgeLines (sBuilder : StringBuilder) =
     sequence
-    |> Seq.iter(fun (fromCoordinate, toCoordinate, _) -> appendPathElementColor sBuilder colorClass "1" (wholeBridgeLines fromCoordinate toCoordinate) None |> ignore)
+    |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
+        match wallType, showClosedBridge with
+        | Empty, _ | Normal, true ->
+            appendPathElementColor sBuilder colorClass "1" (wholeBridgeLines fromCoordinate toCoordinate) None |> ignore
+        | _ -> ())
 
     sBuilder
 
@@ -337,21 +344,55 @@ let appendWallsWithInset sequence cellsWithWall sBuilder =
     |> appendBaseWalls sequence appendWallsTypeBorderBack
     |> appendBaseWalls sequence appendWallsTypeBorderFore
 
+let calculatePointsBridge center bridgeHalfWidth bridgeDistanceFromCenter fromCoordinate toCoordinate =
+    let centerFrom = center fromCoordinate
+    let centerTo = center toCoordinate
+    let angle = calculateAngle centerFrom centerTo
+    let angle180 = convertToRadian 180.0
+
+    let centerFrom = calculatePoint centerFrom (-angle) bridgeDistanceFromCenter
+    
+    let angleCenterTo = angle180 - angle
+    let centerTo = calculatePoint centerTo (angleCenterTo) bridgeDistanceFromCenter
+
+    let angle90 = convertToRadian 90.0
+    let angleMin = -(angle - angle90)
+    let angleMax = -(angle + angle90)
+
+    let leftFromBridge = calculatePoint centerFrom angleMin bridgeHalfWidth
+    let rightFromBridge = calculatePoint centerFrom angleMax bridgeHalfWidth
+    let leftToBridge = calculatePoint centerTo angleMin bridgeHalfWidth
+    let rightToBridge = calculatePoint centerTo angleMax bridgeHalfWidth
+
+    (leftFromBridge, rightFromBridge, leftToBridge, rightToBridge)
+
+let wholeBridgeLines calculatePointsBridge fromCoordinate toCoordinate =
+    let ((leftFromX, leftFromY), (rightFromX, rightFromY), (leftToX, leftToY), (rightToX, rightToY)) =
+        calculatePointsBridge fromCoordinate toCoordinate
+
+    $"M {round leftFromX} {round leftFromY} " +
+    $"L {round rightFromX} {round rightFromY} " +
+    $"L {round rightToX} {round rightToY} " +
+    $"L {round leftToX} {round leftToY} "
+
 let appendSimpleBridges calculatePointsBridge (bridges : (Coordinate * Coordinate * WallType) seq) (sBuilder : StringBuilder) =
     bridges
     |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
-            let ((leftFromX, leftFromY), (rightFromX, rightFromY), (leftToX, leftToY), (rightToX, rightToY)) = calculatePointsBridge fromCoordinate toCoordinate
-            appendPathBridge sBuilder None normalWallBridgeClass $"M {round leftFromX} {round leftFromY} L {round leftToX} {round leftToY}" |> ignore
-            appendPathBridge sBuilder None normalWallBridgeClass $"M {round rightFromX} {round rightFromY} L {round rightToX} {round rightToY}" |> ignore)
-
+            match wallType, showClosedBridge with
+            | Empty, _ | Normal, true ->
+                let ((leftFromX, leftFromY), (rightFromX, rightFromY), (leftToX, leftToY), (rightToX, rightToY)) = calculatePointsBridge fromCoordinate toCoordinate
+                appendPathBridge sBuilder None normalWallBridgeClass $"M {round leftFromX} {round leftFromY} L {round leftToX} {round leftToY}" |> ignore
+                appendPathBridge sBuilder None normalWallBridgeClass $"M {round rightFromX} {round rightFromY} L {round rightToX} {round rightToY}" |> ignore
+            | _ -> ())
+            
     sBuilder
 
 let appendSimpleWallsBridges calculatePointsBridge (bridges : (Coordinate * Coordinate * WallType) seq) (sBuilder : StringBuilder) =
     bridges
     |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
             let ((leftFromX, leftFromY), (rightFromX, rightFromY), (leftToX, leftToY), _) = calculatePointsBridge fromCoordinate toCoordinate
-            match wallType with
-            | Normal ->
+            match wallType, showClosedBridge with
+            | Normal, true ->
                 let distance = calculateDistance (leftFromX, leftFromY) (leftToX, leftToY)
                 let angle = -(calculateAngle (leftFromX, leftFromY) (leftToX, leftToY))
                 let (leftPointX, leftPointY) = calculatePoint (leftFromX, leftFromY) angle (distance / 2.0)

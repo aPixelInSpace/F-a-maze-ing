@@ -111,10 +111,6 @@ type Grid<'Grid, 'Position, 'PH, 'CH
                 for neighborCoordinate in neighborsCoordinates do   
                     if (this.AreLinked coordinate neighborCoordinate) then
                         yield neighborCoordinate
-
-                for (neighborCoordinate, wallType) in this.NonAdjacentNeighbors.NonAdjacentNeighbors coordinate do
-                    if WallType.isALink wallType then
-                        yield neighborCoordinate
             }
 
         member this.NotLinkedNeighbors coordinate =
@@ -123,10 +119,6 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             seq {
                 for neighborCoordinate in neighborsCoordinates do   
                     if not (this.AreLinked coordinate neighborCoordinate) then
-                        yield neighborCoordinate
-
-                for (neighborCoordinate, wallType) in this.NonAdjacentNeighbors.NonAdjacentNeighbors coordinate do
-                    if not (WallType.isALink wallType) then
                         yield neighborCoordinate
             }
 

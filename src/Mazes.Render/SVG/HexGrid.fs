@@ -5,6 +5,7 @@ module Mazes.Render.SVG.HexGrid
 open System
 open System.Text
 open Mazes.Core
+open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.Array2D.Hex
 open Mazes.Render.SVG.Base
@@ -35,6 +36,11 @@ let private calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeig
     let bottomRightY = lengthAtTop + hexHeight
 
     ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY))
+
+let center calculatePoints coordinate =
+    let (_, topLeft, _, _, _, bottomRight) = calculatePoints coordinate
+
+    middlePoint topLeft bottomRight
 
 let private appendWallsType calculatePoints (grid : HexGrid) appendWall coordinate (sBuilder : StringBuilder) =
     let ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY)) =
@@ -78,13 +84,21 @@ let render (grid : HexGrid) (path : Coordinate seq) (map : Map) =
     let hexHalfHeight = (hexEdgeSize * Math.Sqrt(3.0)) / 2.0
     let hexHeight = hexHalfHeight * 2.0
 
+    let bridgeHalfWidth = 9.0
+    let bridgeDistanceFromCenter = 13.0
+
     let width = (3.0 * hexHalfEdgeSize * (float)grid.NumberOfColumns) + hexHalfEdgeSize + (float)(marginWidth * 2)
     let height = (hexHeight * (float)grid.NumberOfRows) + hexHalfHeight + (float)(marginHeight * 2)
 
     let calculatePoints = calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeight, hexHeight, (float)marginWidth, (float)marginHeight)
 
+    let calculatePointsBridge = calculatePointsBridge (center calculatePoints) bridgeHalfWidth bridgeDistanceFromCenter
+    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
+    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
+
     let appendWallsType = appendWallsType calculatePoints grid
     let wholeCellLines = wholeCellLines calculatePoints
+    let wholeBridgeLines = wholeBridgeLines calculatePointsBridge
 
     let appendSimpleWalls sBuilder =
         appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
@@ -96,11 +110,19 @@ let render (grid : HexGrid) (path : Coordinate seq) (map : Map) =
     |> appendHeader ((round width).ToString()) ((round height).ToString())
     |> appendStyle
     |> appendBackground "transparent"
+
     |> appendMazeDistanceColoration map wholeCellLines
+
     |> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves (wholeCellLines calculatePoints grid)
-    //|> appendSimpleWalls
-    |> appendWallsWithInset
+
+    |> appendSimpleWalls
+    //|> appendWallsWithInset
+
+    |> appendSimpleBridges
+    |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
+    |> appendSimpleWallsBridges
+
     |> appendFooter
     |> ignore
 

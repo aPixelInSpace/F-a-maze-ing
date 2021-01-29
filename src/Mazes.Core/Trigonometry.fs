@@ -27,6 +27,9 @@ let calculateDistance (pointAx, pointAy) (pointBx, pointBy) =
 let translatePoint (translation : (float * float)) (point : (float * float)) =
     (fst point + fst translation, snd point + snd translation)
 
+let middlePoint (pointAx, pointAy) (pointBx, pointBy) =
+    ((pointAx + pointBx) / 2.0, (pointAy + pointBy) / 2.0)
+
 let pythagorasSide side hypotenuse =
     Math.Sqrt(hypotenuse ** 2.0 - side ** 2.0)
 

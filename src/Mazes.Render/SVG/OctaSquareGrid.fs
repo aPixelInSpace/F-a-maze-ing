@@ -5,6 +5,7 @@ module Mazes.Render.SVG.OctaSquareGrid
 open System
 open System.Text
 open Mazes.Core
+open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.Array2D.OctaSquare
 open Mazes.Render.SVG.Base
@@ -70,6 +71,17 @@ let private calculatePointsSquare (calculateLength, (octaSquareSideSize : float)
     let rightBottomY = baseLengthAtMiddleBottom
 
     ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY))
+
+let center calculatePointsOctagon calculatePointsSquare isOctagon coordinate =
+    let (pointA, pointB) =
+        if isOctagon coordinate then
+            let (_, topLeft, _, _, _, _, bottomRight, _) = calculatePointsOctagon coordinate
+            (topLeft, bottomRight)
+        else
+            let (leftTop, _, _, rightBottom) = calculatePointsSquare coordinate
+            (leftTop, rightBottom)
+
+    middlePoint pointA pointB
 
 let private appendWallsType (calculateLength, isOctagon, octaSquareSideSize, otherSideSize) (grid : OctaSquareGrid) appendWall coordinate (sBuilder : StringBuilder) =
 
@@ -137,16 +149,27 @@ let render (grid : OctaSquareGrid) (path : Coordinate seq) (map : Map) =
     let marginWidth = 20.0
     let marginHeight = 20.0
 
-    let octaSquareSideSize = 30.0 // also hypotenuse of the triangle 
+    let octaSquareSideSize = 30.0 // also hypotenuse of the triangle
     let otherSideSize = Math.Sqrt((octaSquareSideSize ** 2.0) / 2.0) // by good old Pythagoras's theorem
+
+    let bridgeHalfWidth = 7.0
+    let bridgeDistanceFromCenter = 5.0
 
     let calculateLength numberOf =
         marginWidth + numberOf * (otherSideSize + octaSquareSideSize) + otherSideSize
 
     let isOctagon = OctaSquarePositionHandler.IsOctagon
 
+    let calculatePointsOctagon = calculatePointsOctagon (calculateLength, octaSquareSideSize, otherSideSize)
+    let calculatePointsSquare = calculatePointsSquare (calculateLength, octaSquareSideSize, otherSideSize)
+
+    let calculatePointsBridge = calculatePointsBridge (center calculatePointsOctagon calculatePointsSquare isOctagon) bridgeHalfWidth bridgeDistanceFromCenter
+    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
+    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
+
     let appendWallsType = appendWallsType (calculateLength, isOctagon, octaSquareSideSize, otherSideSize) grid
     let wholeCellLines = wholeCellLines (calculateLength, isOctagon, octaSquareSideSize, otherSideSize)
+    let wholeBridgeLines = wholeBridgeLines calculatePointsBridge
 
     let appendSimpleWalls sBuilder =
         appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
@@ -161,10 +184,18 @@ let render (grid : OctaSquareGrid) (path : Coordinate seq) (map : Map) =
     |> appendHeader ((round width).ToString()) ((round height).ToString())
     |> appendStyle
     |> appendBackground "transparent"
+
     |> appendMazeDistanceColoration map wholeCellLines
+
     |> appendPathWithAnimation path wholeCellLines
-    //|> appendSimpleWalls
-    |> appendWallsWithInset
+
+    |> appendSimpleWalls
+    //|> appendWallsWithInset
+
+    |> appendSimpleBridges
+    |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
+    |> appendSimpleWallsBridges
+
     |> appendFooter
     |> ignore
 

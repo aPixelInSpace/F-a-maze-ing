@@ -29,7 +29,8 @@ type NonAdjacentNeighbors =
     member this.NonAdjacentNeighbors coordinate =
         seq {
             if this.Container.ContainsKey(coordinate) then
-                for neighbor in this.Container.Item(coordinate) do
+                let neighbors = this.Container.Item(coordinate)
+                for neighbor in neighbors do
                     yield (neighbor.Key, neighbor.Value)
         }
 

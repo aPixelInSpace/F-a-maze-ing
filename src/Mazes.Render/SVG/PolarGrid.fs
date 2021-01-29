@@ -5,6 +5,7 @@ module Mazes.Render.SVG.PolarGrid
 open System
 open System.Text
 open Mazes.Core
+open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Render.SVG.Base
@@ -34,6 +35,11 @@ let private calculatePoints (grid : PolarGrid) (centerX, centerY, ringHeight) co
     let topRightY = centerY + outerRadius * Math.Sin(thetaCw)
 
     ((innerRadius, outerRadius), (bottomLeftX, bottomLeftY), (topLeftX, topLeftY), (bottomRightX, bottomRightY), (topRightX, topRightY))
+
+let center calculatePoints coordinate =
+    let (_, _, topLeft, bottomRight, _) = calculatePoints coordinate
+
+    middlePoint topLeft bottomRight
 
 let private appendWallsType (grid : PolarGrid) (centerX, centerY, ringHeight) appendWall (cell, coordinate) (sBuilder : StringBuilder) =
     let ((innerRadius, outerRadius), (bottomLeftX, bottomLeftY), (topLeftX, topLeftY), (bottomRightX, bottomRightY), (topRightX, topRightY)) =
@@ -75,6 +81,9 @@ let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
     let marginHeight = 20
 
     let ringHeight = 30
+    let bridgeHalfWidth = 5.0
+    let bridgeDistanceFromCenter = 7.0
+
     let centerX = (float)((grid.Cells.Length * ringHeight) + marginWidth)
     let centerY = (float)((grid.Cells.Length * ringHeight) + marginHeight)
 
@@ -83,8 +92,15 @@ let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
 
     let coordinatesPartOfMaze = (grid.GetCellByCell (fun _ _ -> true))
 
+    let calculatePoints = calculatePoints grid (centerX, centerY, ringHeight)
+
+    let calculatePointsBridge = calculatePointsBridge (center calculatePoints) bridgeHalfWidth bridgeDistanceFromCenter
+    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
+    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
+
     let appendWallsType = (appendWallsType grid (centerX, centerY, ringHeight))
     let wholeCellLines = wholeCellLines grid (centerX, centerY, ringHeight)
+    let wholeBridgeLines = wholeBridgeLines calculatePointsBridge
 
     let appendSimpleWalls sBuilder =
         appendSimpleWalls coordinatesPartOfMaze appendWallsType sBuilder
@@ -96,13 +112,21 @@ let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
     |> appendHeader (width.ToString()) (height.ToString())
     |> appendStyle
     |> appendBackground "transparent"
+
     //|> appendMazeColoration (coordinatesPartOfMaze |> Seq.map(snd)) wholeCellLines
     |> appendMazeDistanceColoration map wholeCellLines
+
     //|> appendPath path wholeCellLines
     |> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map wholeCellLines
-    //|> appendSimpleWalls
-    |> appendWallsWithInset
+
+    |> appendSimpleWalls
+    //|> appendWallsWithInset
+
+    |> appendSimpleBridges
+    |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
+    |> appendSimpleWallsBridges
+
     |> appendFooter
     |> ignore
 
