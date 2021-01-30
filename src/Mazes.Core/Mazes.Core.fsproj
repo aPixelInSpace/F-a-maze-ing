@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="Utils.fs" />
         <Compile Include="Coordinate.fs" />
         <Compile Include="Trigonometry.fs" />
         <Compile Include="Position.fs" />
@@ -63,7 +64,8 @@
         <Compile Include="Maze\Generate\AldousBroder.fs" />
         <Compile Include="Maze\Generate\Wilson.fs" />
         <Compile Include="Maze\Generate\HuntAndKill.fs" />
-        <Compile Include="Maze\Generate\RecursiveBacktracker.fs" />        
+        <Compile Include="Maze\Generate\RecursiveBacktracker.fs" />
+        <Compile Include="Maze\Generate\Kruskal.fs" />        
     </ItemGroup>
 
     <ItemGroup>

@@ -5,42 +5,31 @@
 # F-a-maze-ing
 An easy-to-use, highly composable and configurable maze generator and solver. Several types of grid tiles with multiple possible shapes.
 
-This project is inspired by working through the book [Mazes for Programmers](https://pragprog.com/book/jbmaze/mazes-for-programmers) by Jamis Buck.
-
-<img src="docs/resources/Book/mazes-for-programmers.jpg" width="300">
-
-The code in the book is written in Ruby and leans on Object-Oriented design.
-
-My goal is two fold : give the project a functional spin and learn F# in the process. To do so, I freely change or adapt much of the original code and implementation.
-
 ## Examples
 
-### SVG
-The SVG render can color the maze (darker = greater distance from an arbitrarily chosen point) and show the path between two zones :
-
-#### Penta maze
+### Penta maze
 
 Here with the "Cairo" pentagonal tiling
 
 <img src="docs/resources/Examples/Penta/SVG/PentaMaze.svg" width="400">
 
-#### Theta maze
+### Theta maze
 
 <img src="docs/resources/Examples/Theta/SVG/CircleMaze.svg" width="400">
 
-#### Sigma maze
+### Sigma maze
 
 <img src="docs/resources/Examples/Sigma/SVG/HexagonMaze.svg" width="400">
 
-#### Delta maze
+### Delta maze
 
 <img src="docs/resources/Examples/Delta/SVG/TriangularMaze.svg" width="400">
 
-#### Upsilon maze
+### Upsilon maze
 
 <img src="docs/resources/Examples/Upsilon/SVG/UpsilonMaze.svg" width="400">
 
-#### Orthogonal maze
+### Orthogonal maze
 
 <img src="docs/resources/Examples/Ortho/SVG/RectangularMaze.svg" width="400">
 
@@ -86,6 +75,7 @@ mazes
                      - Wilson
                      - HuntAndKill
                      - RecursiveBackTracker
+                     - Kruskal
 
   -s, --seed         The seed number to use for the random number generator. If empty, a random seed is picked.
 
@@ -97,3 +87,13 @@ mazes
 
   --version          Display version information.
 ```
+
+## Book
+
+This project is inspired by working through the book [Mazes for Programmers](https://pragprog.com/book/jbmaze/mazes-for-programmers) by Jamis Buck.
+
+<img src="docs/resources/Book/mazes-for-programmers.jpg" width="300">
+
+The code in the book is written in Ruby and leans on Object-Oriented design.
+
+My goal is two fold : give the project a functional spin and learn F# in the process. To do so, I freely change or adapt much of the original code and implementation.

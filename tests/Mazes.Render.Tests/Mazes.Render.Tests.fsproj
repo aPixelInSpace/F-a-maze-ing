@@ -24,7 +24,7 @@
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Resources\pentacairo.svg">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Compile Include="Text\BinaryTree\Rectangle.fs" />
 		<Compile Include="Text\BinaryTree\TriangleIsosceles.fs" />

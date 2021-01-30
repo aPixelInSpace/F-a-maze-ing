@@ -32,6 +32,9 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Aldous-Broder algo
         
     maze.Grid.ToString |> should equal expectedMaze
 
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+
 [<Fact>]
 let ``Given a polar disc grid with 5 rings, when generating a maze with the Aldous-Broder algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange

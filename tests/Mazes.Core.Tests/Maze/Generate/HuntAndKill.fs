@@ -35,6 +35,9 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Hunt and Kill 
 
     maze.Grid.ToString |> should equal expectedMaze
 
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+
 [<Fact>]
 let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output and every cell should be accessible`` () =
     // arrange

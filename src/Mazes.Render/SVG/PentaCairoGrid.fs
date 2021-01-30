@@ -134,11 +134,6 @@ let render (grid : PentaCairoGrid) (path : Coordinate seq) (map : Map) =
 
     // small side up
     let lenghtSmallSide = sideAngleAngle pentSmallSide (convertToRadian 45.0) (convertToRadian 90.0)
-//        let thetaDegGreatUp = 90.0 - thetaDegBase
-//        let thetaDegSmallBottom = 180.0 - 120.0 - thetaDegGreatUp
-//        let thetaDegSmallRight = convertToRadian (180.0 - 90.0 - thetaDegSmallBottom)
-//
-//        Math.Abs((pentSmallSide * Math.Sin(convertToRadian thetaDegSmallRight)) / Math.Sin(theta90))
 
     let bridgeHalfWidth = 7.0
     let bridgeDistanceFromCenter = 5.0

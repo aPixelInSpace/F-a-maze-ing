@@ -179,5 +179,5 @@ let ``Given a maze with a Cairo pentagonal grid, a path and a map, when creating
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/pentacairo.svg", Encoding.UTF8)
-        
+
     renderedMaze |> should equal expectedRenderedMaze

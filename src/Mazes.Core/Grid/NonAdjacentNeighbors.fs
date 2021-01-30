@@ -51,8 +51,7 @@ type NonAdjacentNeighbors =
             for fromItem in this.Container do
                 for toItem in this.Container.Item(fromItem.Key) do
                     yield (fromItem.Key, toItem.Key, toItem.Value)
-        } |> Seq.distinctBy(fun (coordinate1, coordinate2, _) ->
-            if coordinate1 >= coordinate2 then $"{coordinate1.GetHashCode()}-{coordinate2.GetHashCode()}" else $"{coordinate2.GetHashCode()}-{coordinate1.GetHashCode()}")
+        } |> Seq.distinctBy(fun (c1, c2, _) -> Utils.getKey (c1, c2) )
 
     static member CreateEmpty =
         { Container = Dictionary<Coordinate, Dictionary<Coordinate, WallType>>() }
