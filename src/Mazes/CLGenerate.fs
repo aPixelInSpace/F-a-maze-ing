@@ -32,6 +32,10 @@ type AlgoEnum =
     | RB = 5
     | Kruskal = 6
     | KR = 6
+    | SimplePrim = 7
+    | SP = 7
+    | TruePrim = 8
+    | TP = 8
 
 let private defaultNameOfFile = "The F Amazing Maze"
 
@@ -57,6 +61,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
            | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
            | AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
            | AlgoEnum.Kruskal -> Kruskal.createMaze rngSeed
+           | AlgoEnum.SimplePrim -> SimplePrim.createMaze rngSeed
+           | AlgoEnum.TruePrim -> TruePrim.createMaze rngSeed 42
            | _ -> failwith "Generating algorithm unknown"
 
     let nameOfMaze =

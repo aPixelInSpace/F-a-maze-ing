@@ -63,34 +63,34 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
         |> Seq.toArray
         |> Utils.shuffle rng
 
-    let sets = Sets<Coordinate>.createEmpty
+    let forests = Sets<Coordinate>.createEmpty
 
     let totalOfMazeCells = grid.TotalOfMazeCells
 
     let i = ref 0
 
     while i.Value < possibleLinks.Length &&
-          sets.HeadCount < totalOfMazeCells do
+          forests.HeadCount < totalOfMazeCells do
 
         let (coordinate1, coordinate2) = possibleLinks.[i.Value]
 
-        let setKey1 = sets.GetSetKey coordinate1
-        let setKey2 = sets.GetSetKey coordinate2
+        let setKey1 = forests.GetSetKey coordinate1
+        let setKey2 = forests.GetSetKey coordinate2
 
         match setKey1, setKey2 with
         | None, None ->
             grid.LinkCells coordinate1 coordinate2
-            sets.AddNewSet coordinate1 coordinate2
+            forests.AddNewSet coordinate1 coordinate2
         | Some setKey, None ->
             grid.LinkCells coordinate1 coordinate2
-            sets.AddToSet setKey coordinate2
+            forests.AddToSet setKey coordinate2
         | None, Some setKey ->
             grid.LinkCells coordinate1 coordinate2
-            sets.AddToSet setKey coordinate1
+            forests.AddToSet setKey coordinate1
         | Some setKey1, Some setKey2 ->
             if setKey1 <> setKey2 then
                 grid.LinkCells coordinate1 coordinate2
-                sets.MergeSets setKey1 setKey2
+                forests.MergeSets setKey1 setKey2
 
         incr i
 

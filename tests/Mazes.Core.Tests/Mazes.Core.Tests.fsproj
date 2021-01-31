@@ -26,6 +26,7 @@
 		<Compile Include="Maze\Generate\HuntAndKill.fs" />
 		<Compile Include="Maze\Generate\RecursiveBacktracker.fs" />
 		<Compile Include="Maze\Generate\Kruskal.fs" />
+		<Compile Include="Maze\Generate\Prim.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
