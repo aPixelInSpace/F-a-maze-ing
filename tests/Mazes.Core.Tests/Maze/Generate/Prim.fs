@@ -7,7 +7,6 @@ open Xunit
 open Mazes.Core.Canvas.Array2D.Shape
 open Mazes.Core.Canvas.ArrayOfA.Shape
 open Mazes.Core.Grid.Array2D.Ortho
-open Mazes.Core.Grid.Array2D.Hex
 open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 
@@ -19,7 +18,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the simple Prim's 
         |> OrthoGrid.CreateFunction
     
     // act
-    let maze = grid |> SimplePrim.createMaze 1
+    let maze = grid |> PrimSimple.createMaze 1
         
     // assert
     let expectedMaze =
@@ -43,7 +42,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the simp
         |> PolarGrid.CreateFunction
     
     // act
-    let maze = grid |> SimplePrim.createMaze 1
+    let maze = grid |> PrimSimple.createMaze 1
 
     // assert
     let expectedMaze =
@@ -60,14 +59,62 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the simp
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
-let ``Given a ortho grid 5 by 10, when generating a maze with the true Prim's algorithm (rng 1), then the output should be like the expected output`` () =
+let ``Given a ortho grid 5 by 10, when generating a maze with the modified simple Prim's algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let grid =
         (Rectangle.create 5 10)
         |> OrthoGrid.CreateFunction
     
     // act
-    let maze = grid |> TruePrim.createMaze 1 42
+    let maze = grid |> PrimSimpleModified.createMaze 1
+        
+    // assert
+    let expectedMaze =
+        " _ _ _ _ _ _ _ _ _ _ \n" + 
+        "|_   _| | | |_  |  _|\n" +
+        "| |  _  |  _| | |  _|\n" +
+        "|   | |_     _ _   _|\n" +
+        "|_|  _  |_|    _|_  |\n" +
+        "|_ _|_ _|_ _|_ _ _|_|\n"
+        
+    maze.Grid.ToString |> should equal expectedMaze
+
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+
+[<Fact>]
+let ``Given a polar disc grid with 5 rings, when generating a maze with the modified simple Prim's algorithm (rng 1), then the output should be like the expected output`` () =
+    // arrange
+    let grid =
+        (Disk.create 5 1.0 3)
+        |> PolarGrid.CreateFunction
+    
+    // act
+    let maze = grid |> PrimSimpleModified.createMaze 1
+
+    // assert
+    let expectedMaze =
+        "| ¦ ¦ |\n" +
+        "|‾¦¨|‾¦‾¦¨|¨|\n" +
+        "|¨|‾¦‾¦¨|‾¦‾¦‾|‾¦¨¦‾|¨|‾|\n" +
+        "¦¨¦‾|¨|¨|¨|¨|¨|¨|‾¦‾¦‾¦‾¦‾¦¨¦¨¦‾|¨|¨¦‾|¨¦‾¦‾|¨¦‾¦\n" +
+        "¦‾|¨|¨|¨|¨|‾¦¨|¨|¨|‾¦¨|¨¦‾|¨|¨|‾¦‾¦¨¦‾|¨|¨|¨¦‾|¨¦\n" +
+        " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
+        
+    maze.Grid.ToString |> should equal expectedMaze
+
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+
+[<Fact>]
+let ``Given a ortho grid 5 by 10, when generating a maze with the weighted Prim's algorithm (rng 1), then the output should be like the expected output`` () =
+    // arrange
+    let grid =
+        (Rectangle.create 5 10)
+        |> OrthoGrid.CreateFunction
+    
+    // act
+    let maze = grid |> PrimWeighted.createMaze 1 42
         
     // assert
     let expectedMaze =
@@ -84,14 +131,14 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the true Prim's al
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
-let ``Given a polar disc grid with 5 rings, when generating a maze with the true Prim's algorithm (rng 1), then the output should be like the expected output`` () =
+let ``Given a polar disc grid with 5 rings, when generating a maze with the weighted Prim's algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
         |> PolarGrid.CreateFunction
     
     // act
-    let maze = grid |> TruePrim.createMaze 1 42
+    let maze = grid |> PrimWeighted.createMaze 1 42
 
     // assert
     let expectedMaze =

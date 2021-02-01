@@ -76,6 +76,12 @@ mazes
                      - HuntAndKill
                      - RecursiveBackTracker
                      - Kruskal
+                     - PrimSimple
+                     - PrimSimpleModified
+                     - PrimWeighted
+                     - GrowingTreeMixRandomAndLast
+                     - GrowingTreeMixOldestAndLast
+                     - GrowingTreeMixChosenRandomAndLast
 
   -s, --seed         The seed number to use for the random number generator. If empty, a random seed is picked.
 

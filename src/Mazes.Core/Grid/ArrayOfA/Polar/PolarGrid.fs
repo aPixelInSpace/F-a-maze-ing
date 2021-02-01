@@ -100,6 +100,9 @@ type PolarGrid =
         member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
             this.IfNotAtLimitLinkCells coordinate otherCoordinate
 
+        member this.Neighbors coordinate =
+            this.NeighborsFrom coordinate
+
         member this.NeighborsThatAreLinked isLinked coordinate =
             this.NeighborsThatAreLinked isLinked coordinate
 

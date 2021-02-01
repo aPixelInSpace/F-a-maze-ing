@@ -32,10 +32,22 @@ type AlgoEnum =
     | RB = 5
     | Kruskal = 6
     | KR = 6
-    | SimplePrim = 7
-    | SP = 7
-    | TruePrim = 8
-    | TP = 8
+    | PrimSimple = 7
+    | PS = 7
+    | PrimSimpleModified = 8
+    | PSM = 8
+    | PrimWeighted = 9
+    | PW = 9
+    | GrowingTreeMixRandomAndLast = 10
+    | GTMRL = 10
+    | GrowingTreeMixChosenRandomAndLast = 11
+    | GTMCRL = 11
+    | GrowingTreeMixOldestAndLast = 12
+    | GTMOL = 12
+    | GrowingTreeDirection = 13
+    | GTD = 13
+    | GrowingTreeSpiral = 14
+    | GTS = 14
 
 let private defaultNameOfFile = "The F Amazing Maze"
 
@@ -61,8 +73,14 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
            | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
            | AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
            | AlgoEnum.Kruskal -> Kruskal.createMaze rngSeed
-           | AlgoEnum.SimplePrim -> SimplePrim.createMaze rngSeed
-           | AlgoEnum.TruePrim -> TruePrim.createMaze rngSeed 42
+           | AlgoEnum.PrimSimple -> PrimSimple.createMaze rngSeed
+           | AlgoEnum.PrimSimpleModified -> PrimSimpleModified.createMaze rngSeed
+           | AlgoEnum.PrimWeighted -> PrimWeighted.createMaze rngSeed 42
+           | AlgoEnum.GrowingTreeMixRandomAndLast -> GrowingTreeMixRandomAndLast.createMaze rngSeed 0.5
+           | AlgoEnum.GrowingTreeMixChosenRandomAndLast -> GrowingTreeMixChosenRandomAndLast.createMaze rngSeed 0.5
+           | AlgoEnum.GrowingTreeMixOldestAndLast -> GrowingTreeMixOldestAndLast.createMaze rngSeed 0.5
+           | AlgoEnum.GrowingTreeDirection -> GrowingTreeDirection.createMaze rngSeed 0.3 0.2 0.3
+           | AlgoEnum.GrowingTreeSpiral -> GrowingTreeSpiral.createMaze rngSeed
            | _ -> failwith "Generating algorithm unknown"
 
     let nameOfMaze =
@@ -266,6 +284,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let renderedGridSvg = SVG.OctaSquareGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
     let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.LongestPaths |> Seq.head) map
 
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
 

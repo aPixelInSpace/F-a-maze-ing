@@ -35,6 +35,7 @@ type IGrid<'G> =
     abstract member PutBorderBetweenCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
     /// Returns the coordinate of the neighbor, if there are multiple neighbor then returns the last one
     abstract member AdjacentNeighbor : coordinate:Coordinate -> position:Position -> Coordinate option
+    abstract member Neighbors : coordinate:Coordinate -> Coordinate seq
     /// Returns the neighbors coordinates that are linked, NOT NECESSARILY WITH the coordinate
     abstract member NeighborsThatAreLinked : isLinked:bool -> coordinate:Coordinate -> Coordinate seq
     abstract member AddUpdateNonAdjacentNeighbor : Coordinate -> Coordinate -> WallType -> unit

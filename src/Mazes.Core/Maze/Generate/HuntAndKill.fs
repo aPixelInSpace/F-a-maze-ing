@@ -17,13 +17,13 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
 
     let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
 
-    let edges = HashSet<Coordinate>()
-    edges.Add(randomStartCoordinate) |> ignore
+    let frontier = HashSet<Coordinate>()
+    frontier.Add(randomStartCoordinate) |> ignore
 
-    while edges.Count > 0 do
-        let mutable headCoordinate = edges.ElementAt(rng.Next(edges.Count))
-        edges.UnionWith(headCoordinate |> grid.NeighborsThatAreLinked false)
-        edges.Remove(headCoordinate) |> ignore
+    while frontier.Count > 0 do
+        let mutable headCoordinate = frontier.ElementAt(rng.Next(frontier.Count))
+        frontier.UnionWith(headCoordinate |> grid.NeighborsThatAreLinked false)
+        frontier.Remove(headCoordinate) |> ignore
 
         let headLinkedNeighbors =
             headCoordinate
@@ -40,11 +40,11 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
             let nextCoordinate = unlinkedNeighbors.[rng.Next(unlinkedNeighbors.Length)]
 
             grid.LinkCells headCoordinate nextCoordinate
-            edges.Remove(nextCoordinate) |> ignore
+            frontier.Remove(nextCoordinate) |> ignore
 
             unlinkedNeighbors <- grid.NeighborsThatAreLinked false nextCoordinate |> Seq.toArray
 
-            edges.UnionWith(unlinkedNeighbors)
+            frontier.UnionWith(unlinkedNeighbors)
 
             headCoordinate <- nextCoordinate
             

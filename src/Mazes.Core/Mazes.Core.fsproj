@@ -59,6 +59,7 @@
 		<Compile Include="Grid\ArrayOfA\Polar\PolarCell.fs" />
 		<Compile Include="Grid\ArrayOfA\Polar\PolarGrid.fs" />
 		<Compile Include="Maze\Maze.fs" />
+		<Compile Include="Maze\Generate\GrowingTree.fs" />
         <Compile Include="Maze\Generate\BinaryTree.fs" />
         <Compile Include="Maze\Generate\Sidewinder.fs" />
         <Compile Include="Maze\Generate\AldousBroder.fs" />

@@ -16,23 +16,22 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
 
     let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
 
-    let stack = Stack<Coordinate>()
-    stack.Push(randomStartCoordinate)
+    let actives = Stack<Coordinate>()
 
-    while stack.Count > 0 do
+    let count () = actives.Count
 
-        let currentCoordinate = stack.Peek()
+    let add coordinate =
+        actives.Push(coordinate)
 
-        let unlinkedNeighbors =
-            currentCoordinate
-            |> grid.NeighborsThatAreLinked false
-            |> Seq.toArray
+    let next () =
+        actives.Peek()
 
-        if unlinkedNeighbors.Length > 0 then
-            let nextCoordinate = unlinkedNeighbors.[rng.Next(unlinkedNeighbors.Length)]
-            grid.LinkCells currentCoordinate nextCoordinate
-            stack.Push(nextCoordinate)
-        else
-            stack.Pop() |> ignore
+    let remove _ =
+        actives.Pop() |> ignore
+
+    let chooseNeighbor _ (unlinked : array<'T>) =
+        unlinked.[rng.Next(unlinked.Length)]
+
+    let grid = grid |> GrowingTree.baseAlgorithm randomStartCoordinate count add next remove chooseNeighbor
 
     { Grid = grid }

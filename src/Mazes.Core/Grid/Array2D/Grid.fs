@@ -88,11 +88,11 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             if (this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate) || not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) then
                 this.ToInterface.LinkCells coordinate otherCoordinate
 
+        member this.Neighbors coordinate =
+            this.Neighbors coordinate
+
         member this.NeighborsThatAreLinked isLinked coordinate =
-            this.AdjacentNeighbors coordinate
-            |> Seq.append (
-                this.NonAdjacentNeighbors.NonAdjacentNeighbors coordinate
-                |> Seq.map(fst))
+            this.Neighbors coordinate
             |> Seq.filter(fun nCoordinate ->
                 if isLinked then
                     (this.Cell nCoordinate).IsLinked = isLinked ||
