@@ -82,6 +82,7 @@ mazes
                      - GrowingTreeMixRandomAndLast
                      - GrowingTreeMixOldestAndLast
                      - GrowingTreeMixChosenRandomAndLast
+                     - Eller
 
   -s, --seed         The seed number to use for the random number generator. If empty, a random seed is picked.
 

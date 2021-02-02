@@ -102,6 +102,8 @@ let render (grid : OrthoGrid) (path : Coordinate seq) (map : Map) =
     //|> appendPathAndBridgesWithAnimation
 
     |> appendSimpleWalls
+
+    //|> appendPathAndBridgesWithAnimation
     //|> appendWallsWithInset
 
     |> appendSimpleBridges

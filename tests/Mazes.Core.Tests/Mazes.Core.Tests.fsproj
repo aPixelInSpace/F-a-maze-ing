@@ -28,6 +28,7 @@
 		<Compile Include="Maze\Generate\Kruskal.fs" />
 		<Compile Include="Maze\Generate\Prim.fs" />
 		<Compile Include="Maze\Generate\GrowingTree.fs" />
+		<Compile Include="Maze\Generate\Eller.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 

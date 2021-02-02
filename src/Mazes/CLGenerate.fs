@@ -48,6 +48,8 @@ type AlgoEnum =
     | GTD = 13
     | GrowingTreeSpiral = 14
     | GTS = 14
+    | Eller = 15
+    | EL = 15
 
 let private defaultNameOfFile = "The F Amazing Maze"
 
@@ -81,6 +83,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
            | AlgoEnum.GrowingTreeMixOldestAndLast -> GrowingTreeMixOldestAndLast.createMaze rngSeed 0.5
            | AlgoEnum.GrowingTreeDirection -> GrowingTreeDirection.createMaze rngSeed 0.3 0.2 0.3
            | AlgoEnum.GrowingTreeSpiral -> GrowingTreeSpiral.createMaze rngSeed
+           | AlgoEnum.Eller -> Eller.createMaze rngSeed
            | _ -> failwith "Generating algorithm unknown"
 
     let nameOfMaze =
@@ -194,27 +197,27 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let grid =
         let grid = grid()
 
-        let rng = Random(rngSeed)
-        for coordinate in grid.CoordinatesPartOfMaze do
-            let toCoordinate = 
-                if (coordinate.RIndex % 2 = 0 && coordinate.CIndex % 2 = 1) then
-                    Some { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex + 1 }
-                elif (coordinate.RIndex % 2 = 1 && coordinate.CIndex % 2 = 0) then
-                    Some { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex + 1 }
-                else
-                    None
-            
-            match toCoordinate with
-            | Some toCoordinate ->
-                if (toCoordinate.RIndex >= fst (grid.Dimension1Boundaries toCoordinate.CIndex)) &&
-                   (toCoordinate.RIndex < snd (grid.Dimension1Boundaries toCoordinate.CIndex)) &&
-                   (toCoordinate.CIndex >= fst (grid.Dimension2Boundaries toCoordinate.RIndex)) &&
-                   (toCoordinate.CIndex < snd (grid.Dimension2Boundaries toCoordinate.RIndex)) &&
-                   grid.IsCellPartOfMaze toCoordinate &&
-                   rng.NextDouble() < 0.5
-                   then
-                    grid.AddUpdateNonAdjacentNeighbor coordinate toCoordinate WallType.Normal
-            | None -> ()
+//        let rng = Random(rngSeed)
+//        for coordinate in grid.CoordinatesPartOfMaze do
+//            let toCoordinate = 
+//                if (coordinate.RIndex % 2 = 0 && coordinate.CIndex % 2 = 1) then
+//                    Some { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex + 1 }
+//                elif (coordinate.RIndex % 2 = 1 && coordinate.CIndex % 2 = 0) then
+//                    Some { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex + 1 }
+//                else
+//                    None
+//            
+//            match toCoordinate with
+//            | Some toCoordinate ->
+//                if (toCoordinate.RIndex >= fst (grid.Dimension1Boundaries toCoordinate.CIndex)) &&
+//                   (toCoordinate.RIndex < snd (grid.Dimension1Boundaries toCoordinate.CIndex)) &&
+//                   (toCoordinate.CIndex >= fst (grid.Dimension2Boundaries toCoordinate.RIndex)) &&
+//                   (toCoordinate.CIndex < snd (grid.Dimension2Boundaries toCoordinate.RIndex)) &&
+//                   grid.IsCellPartOfMaze toCoordinate &&
+//                   rng.NextDouble() < 0.5
+//                   then
+//                    grid.AddUpdateNonAdjacentNeighbor coordinate toCoordinate WallType.Normal
+//            | None -> ()
         
 //        grid.AddUpdateNonAdjacentNeighbor { RIndex = 6; CIndex = 6 } { RIndex = 5; CIndex = 5 } WallType.Normal
 //        grid.AddUpdateNonAdjacentNeighbor { RIndex = 7; CIndex = 14 } { RIndex = 9; CIndex = 14 } WallType.Normal

@@ -8,7 +8,7 @@ open Mazes.Core
 open Mazes.Core.Grid
 open Mazes.Core.Maze
 
-type private Sets<'K> when 'K : equality =
+type Sets<'K> when 'K : equality =
     private
         {
             Container : Dictionary<'K, HashSet<'K>>
@@ -26,7 +26,9 @@ type private Sets<'K> when 'K : equality =
     member this.AddNewSet key1 key2 =
         let sortedSet = HashSet<'K>()
         sortedSet.Add(key1) |> ignore
-        sortedSet.Add(key2) |> ignore
+        match key2 with
+        | Some key2 -> sortedSet.Add(key2) |> ignore
+        | None -> ()
         this.Container.Add(key1, sortedSet)
 
     member this.AddToSet keySet key =
@@ -35,6 +37,10 @@ type private Sets<'K> when 'K : equality =
     member this.MergeSets keySet1 keySet2 = 
         this.Container.Item(keySet1).UnionWith(this.Container.Item(keySet2))
         this.Container.Remove(keySet2) |> ignore
+
+    member this.GetSet keySet =
+        this.Container.Item(keySet)
+        |> Seq.toArray
 
     member this.HeadCount =
         if this.Container |> Seq.isEmpty then
@@ -80,7 +86,7 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
         match setKey1, setKey2 with
         | None, None ->
             grid.LinkCells coordinate1 coordinate2
-            forests.AddNewSet coordinate1 coordinate2
+            forests.AddNewSet coordinate1 (Some coordinate2)
         | Some setKey, None ->
             grid.LinkCells coordinate1 coordinate2
             forests.AddToSet setKey coordinate2
