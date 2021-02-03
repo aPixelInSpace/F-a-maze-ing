@@ -22,17 +22,18 @@ type TriGrid
         override this.ToSpecializedGrid =
             this
 
-    static member Create canvas =
+    static member Create internalWallType canvas =
         let cells =
             canvas.Zones |>
             Array2D.mapi(fun rowIndex columnIndex _ ->
                 TriCell.Create
                     canvas.NumberOfRows
                     canvas.NumberOfColumns
+                    internalWallType
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
         TriGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, TriPositionHandler.Instance,  TriCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
-        fun () -> TriGrid.Create canvas :> IGrid<TriGrid>
+        fun () -> TriGrid.Create Normal canvas :> IGrid<TriGrid>

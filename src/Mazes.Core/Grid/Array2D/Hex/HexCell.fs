@@ -60,7 +60,7 @@ type HexCell =
         | Bottom -> 4
         | BottomRight -> 5
 
-    static member Create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =
+    static member Create numberOfRows numberOfColumns internalWallType (coordinate : Coordinate) isCellPartOfMaze =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
 
         let getWallType isOnEdge position =
@@ -70,7 +70,7 @@ type HexCell =
                 match (HexCoordinateHandler.Instance.NeighborCoordinateAt coordinate position) with
                 | Some neighborCoordinate ->
                     let isNeighborPartOfMaze = isCellPartOfMaze neighborCoordinate
-                    WallType.getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
+                    WallType.getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isNeighborPartOfMaze
                 | None -> failwith $"Could not find a wall type for the neighbor {coordinate} at {position}"
 
         let isEven = (HexPositionHandler.IsEven coordinate)

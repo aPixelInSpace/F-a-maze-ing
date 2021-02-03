@@ -52,7 +52,7 @@ type PolarCell =
 
 module PolarCell =
 
-    let create canvas (coordinate : Coordinate) isCellPartOfMaze =
+    let create canvas internalWallType (coordinate : Coordinate) isCellPartOfMaze =
 
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
         let neighborsCoordinateAt = PolarCoordinate.neighborsCoordinateAt canvas.Zones coordinate
@@ -61,13 +61,13 @@ module PolarCell =
 
         if not (isFirstRing coordinate.RIndex) then
             let isInwardNeighborPartOfMaze = isCellPartOfMaze ((neighborsCoordinateAt Inward) |> Seq.head)
-            walls.Add({ WallType = (WallType.getWallTypeForInternal isCurrentCellPartOfMaze isInwardNeighborPartOfMaze); WallPosition = Inward })
+            walls.Add({ WallType = (WallType.getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isInwardNeighborPartOfMaze); WallPosition = Inward })
 
         let isCcwNeighborPartOfMaze = isCellPartOfMaze ((neighborsCoordinateAt Ccw) |> Seq.head)
-        walls.Add({ WallType = (WallType.getWallTypeForInternal isCurrentCellPartOfMaze isCcwNeighborPartOfMaze); WallPosition = Ccw })
+        walls.Add({ WallType = (WallType.getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isCcwNeighborPartOfMaze); WallPosition = Ccw })
 
         let isCwNeighborPartOfMaze = isCellPartOfMaze ((neighborsCoordinateAt Cw) |> Seq.head)
-        walls.Add({ WallType = (WallType.getWallTypeForInternal isCurrentCellPartOfMaze isCwNeighborPartOfMaze); WallPosition = Cw })
+        walls.Add({ WallType = (WallType.getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isCwNeighborPartOfMaze); WallPosition = Cw })
  
         if isLastRing coordinate.RIndex canvas.NumberOfRings then
             walls.Add({ WallType = (WallType.getWallTypeForEdge isCurrentCellPartOfMaze); WallPosition = Outward })

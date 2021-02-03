@@ -9,7 +9,7 @@ open Mazes.Core.Grid
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate.Kruskal
 
-// Need to refactor this
+// todo : refactor this
 // It has the same fundamentals problems as Sidewinder
 let createMaze rngSeed (grid : unit -> IGrid<'G>) =
 
@@ -31,7 +31,9 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
 
         let set =
             sets.GetSet setKey
-            |> Array.filter(fun c -> c.RIndex = current.RIndex)
+            |> Seq.filter(fun c -> c.RIndex = current.RIndex)
+            |> Seq.toArray
+
         if set.Length > 0 then
             let chosen = set.[rng.Next(set.Length)]
             linkBottom chosen
@@ -95,7 +97,7 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
                 for setKey in listOfRowSetKey do
                     let set =
                         sets.GetSet setKey
-                        |> Array.filter(fun c -> c.RIndex = index1)
+                        |> Seq.filter(fun c -> c.RIndex = index1)
                     linkBottom (set |> Seq.head) setKey true
 
     { Grid = grid }

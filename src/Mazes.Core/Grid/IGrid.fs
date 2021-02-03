@@ -29,6 +29,7 @@ type IGrid<'G> =
     abstract member CoordinatesPartOfMaze : Coordinate seq
     /// Links two cells together (allows a passage between them)
     abstract member LinkCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
+    abstract member UnLinkCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
     /// Checks if the two cells can be linked, if so then link them, if not then does nothing
     abstract member IfNotAtLimitLinkCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
     /// Puts a border between two cells

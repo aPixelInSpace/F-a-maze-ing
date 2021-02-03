@@ -2,6 +2,7 @@
 
 namespace Mazes.Core.Grid.Array2D.Hex
 
+open System
 open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
@@ -119,17 +120,21 @@ type HexGrid
         override this.ToSpecializedGrid =
             this
 
-    static member Create canvas =
+    static member Create internalWallType canvas =
         let cells =
             canvas.Zones |>
             Array2D.mapi(fun rowIndex columnIndex _ ->
                 HexCell.Create
                     canvas.NumberOfRows
                     canvas.NumberOfColumns
+                    internalWallType
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
         HexGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, HexPositionHandler.Instance,  HexCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
-        fun () -> HexGrid.Create canvas :> IGrid<HexGrid>
+        fun () -> HexGrid.Create Normal canvas :> IGrid<HexGrid>
+
+    static member CreateEmptyFunction canvas =
+        fun () -> HexGrid.Create Empty canvas :> IGrid<HexGrid>

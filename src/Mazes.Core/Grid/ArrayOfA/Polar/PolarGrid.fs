@@ -90,6 +90,10 @@ type PolarGrid =
         member this.LinkCells coordinate otherCoordinate =
             this.LinkCells coordinate otherCoordinate
 
+        member this.UnLinkCells coordinate otherCoordinate =
+            let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
+            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Normal
+
         member this.PutBorderBetweenCells coordinate otherCoordinate =
             let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
             this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Border
@@ -265,6 +269,12 @@ type PolarGrid =
             |> Seq.toArray
         snd unlinkedPartOfMazeCells.[rng.Next(unlinkedPartOfMazeCells.Length)]
 
+    member this.SliceGridVertically cIndex =
+        this
+
+    member this.SliceGridHorizontally rIndex =
+        this
+
     member this.CoordinatesPartOfMaze =
         this.Canvas.GetZoneByZone (fun zone _ -> zone.IsAPartOfMaze)
         |> Seq.map(fun (_, coordinate) -> coordinate)
@@ -347,14 +357,14 @@ type PolarGrid =
 
 module PolarGrid =
 
-    let Create (canvas : Canvas) =
+    let Create internalWallType (canvas : Canvas) =
 
         let cells =
             createPolar
                 canvas.NumberOfRings
                 canvas.WidthHeightRatio
                 canvas.NumberOfCellsForCenterRing
-                (fun rIndex cIndex -> PolarCell.create canvas { RIndex = rIndex; CIndex = cIndex } canvas.IsZonePartOfMaze)
+                (fun rIndex cIndex -> PolarCell.create canvas internalWallType { RIndex = rIndex; CIndex = cIndex } canvas.IsZonePartOfMaze)
 
         {
             Canvas = canvas
@@ -364,4 +374,7 @@ module PolarGrid =
         }
 
     let CreateFunction canvas =
-        fun () -> Create canvas :> IGrid<PolarGrid>
+        fun () -> Create Normal canvas :> IGrid<PolarGrid>
+
+    let CreateEmptyFunction canvas =
+        fun () -> Create Empty canvas :> IGrid<PolarGrid>

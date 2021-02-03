@@ -9,13 +9,13 @@ open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid.ArrayOfA.Polar
 
 [<Fact>]
-let ``Given an empty canvas, when creating a grid, then the grid should also be empty`` () =
+let ``Given a canvas, when creating a grid, then the grid should be empty`` () =
 
     // arrange
     let emptyCanvas = Canvas.createPolar 0 1.0 1 (fun _ _ -> true)
 
     // act
-    let grid = emptyCanvas |> PolarGrid.Create
+    let grid = emptyCanvas |> PolarGrid.Create Normal
 
     // assert
     grid.Cells.Length |> should equal 0
@@ -28,7 +28,7 @@ let ``Given a canvas with one ring and a single zone part of the maze, when crea
     let emptyCanvas = Canvas.createPolar 1 1.0 1 (fun _ _ -> true)
 
     // act
-    let grid = emptyCanvas |> PolarGrid.Create
+    let grid = emptyCanvas |> PolarGrid.Create Normal
     
     // assert
     grid.Cells.Length |> should equal 1
@@ -49,7 +49,7 @@ let ``Given a canvas with one ring and two zone part of the maze, when creating 
     let emptyCanvas = Canvas.createPolar 1 1.0 2 (fun _ _ -> true)
 
     // act
-    let grid = emptyCanvas |> PolarGrid.Create
+    let grid = emptyCanvas |> PolarGrid.Create Normal
     
     // assert
     grid.Cells.Length |> should equal 1
@@ -75,7 +75,7 @@ let ``Given a canvas with three rings and three zone part of the maze for the fi
     let emptyCanvas = Canvas.createPolar 3 1.0 3 (fun _ _ -> true)
 
     // act
-    let grid = emptyCanvas |> PolarGrid.Create
+    let grid = emptyCanvas |> PolarGrid.Create Normal
     
     // assert
     grid.Cells.Length |> should equal 3
@@ -108,7 +108,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be link
     // arrange
     // 3 rings with 3 cells in the first ring
     let emptyCanvas = Canvas.createPolar 3 1.0 3 (fun _ _ -> true)
-    let grid = emptyCanvas |> PolarGrid.Create
+    let grid = emptyCanvas |> PolarGrid.Create Normal
 
     // act
     let coordinate00 = { RIndex = 0; CIndex = 0 }

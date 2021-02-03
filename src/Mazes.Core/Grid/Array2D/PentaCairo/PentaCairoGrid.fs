@@ -22,17 +22,18 @@ type PentaCairoGrid
         override this.ToSpecializedGrid =
             this
 
-    static member Create canvas =
+    static member Create internalWallType canvas =
         let cells =
             canvas.Zones |>
             Array2D.mapi(fun rowIndex columnIndex _ ->
                 PentaCairoCell.Create
                     canvas.NumberOfRows
                     canvas.NumberOfColumns
+                    internalWallType
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
         PentaCairoGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, PentaCairoPositionHandler.Instance,  PentaCairoCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
-        fun () -> PentaCairoGrid.Create canvas :> IGrid<PentaCairoGrid>
+        fun () -> PentaCairoGrid.Create Normal canvas :> IGrid<PentaCairoGrid>

@@ -39,8 +39,10 @@ type Sets<'K> when 'K : equality =
         this.Container.Remove(keySet2) |> ignore
 
     member this.GetSet keySet =
-        this.Container.Item(keySet)
-        |> Seq.toArray
+        seq {
+            for item in this.Container.Item(keySet) do
+                yield item
+        }
 
     member this.HeadCount =
         if this.Container |> Seq.isEmpty then

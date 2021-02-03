@@ -55,17 +55,21 @@ type OrthoGrid
         override this.ToSpecializedGrid =
             this
 
-    static member Create canvas =
+    static member Create internalWallType canvas =
         let cells =
             canvas.Zones |>
             Array2D.mapi(fun rowIndex columnIndex _ ->
                 OrthoCell.Create
                     canvas.NumberOfRows
                     canvas.NumberOfColumns
+                    internalWallType
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
         OrthoGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, OrthoPositionHandler.Instance,  OrthoCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
-        fun () -> OrthoGrid.Create canvas :> IGrid<OrthoGrid>
+        fun () -> OrthoGrid.Create Normal canvas :> IGrid<OrthoGrid>
+
+    static member CreateEmptyFunction canvas =
+        fun () -> OrthoGrid.Create Empty canvas :> IGrid<OrthoGrid>

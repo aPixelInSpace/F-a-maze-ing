@@ -20,17 +20,18 @@ type OctaSquareGrid
         override this.ToSpecializedGrid =
             this
 
-    static member Create canvas =
+    static member Create internalWallType canvas =
         let cells =
             canvas.Zones |>
             Array2D.mapi(fun rowIndex columnIndex _ ->
                 OctaSquareCell.Create
                     canvas.NumberOfRows
                     canvas.NumberOfColumns
+                    internalWallType
                     { RIndex = rowIndex; CIndex = columnIndex }
                     canvas.IsZonePartOfMaze)
 
         OctaSquareGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, OctaSquarePositionHandler.Instance,  OctaSquareCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
-        fun () -> OctaSquareGrid.Create canvas :> IGrid<OctaSquareGrid>
+        fun () -> OctaSquareGrid.Create Normal canvas :> IGrid<OctaSquareGrid>

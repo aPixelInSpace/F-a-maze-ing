@@ -58,7 +58,7 @@ type TriCell =
         | Top -> 2
         | Bottom -> 2
 
-    static member Create numberOfRows numberOfColumns (coordinate : Coordinate) isCellPartOfMaze =
+    static member Create numberOfRows numberOfColumns internalWallType (coordinate : Coordinate) isCellPartOfMaze =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
 
         let getWallType isOnEdge position =
@@ -68,7 +68,7 @@ type TriCell =
                 match (TriCoordinateHandler.Instance.NeighborCoordinateAt coordinate position) with
                 | Some neighborCoordinate ->
                     let isNeighborPartOfMaze = isCellPartOfMaze neighborCoordinate
-                    WallType.getWallTypeForInternal isCurrentCellPartOfMaze isNeighborPartOfMaze
+                    WallType.getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isNeighborPartOfMaze
                 | None -> failwith $"Could not find a wall type for the neighbor {coordinate} at {position}"
 
         {

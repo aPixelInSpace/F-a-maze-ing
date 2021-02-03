@@ -10,7 +10,7 @@ open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Grid.Array2D.Ortho
 
 [<Fact>]
-let ``Given an empty canvas, when creating a grid, then the grid should also be empty`` () =
+let ``Given a canvas, when creating a grid, then the grid should also be empty`` () =
 
     // arrange
     let emptyStringCanvas =
@@ -20,7 +20,7 @@ let ``Given an empty canvas, when creating a grid, then the grid should also be 
     let emptyCanvas = Convert.fromString emptyStringCanvas
 
     // act
-    let grid = emptyCanvas.Value |> OrthoGrid.Create
+    let grid = emptyCanvas.Value |> OrthoGrid.Create Normal
 
     // assert
     grid.Cells.Length |> should equal 0
@@ -37,7 +37,7 @@ let ``Given a canvas with a single zone part of the maze, when creating a grid, 
     let singleZoneCanvas = Convert.fromString singleZoneStringCanvas
 
     // act
-    let grid = singleZoneCanvas.Value |> OrthoGrid.Create
+    let grid = singleZoneCanvas.Value |> OrthoGrid.Create Normal
     
     // assert
     grid.Cells.Length |> should equal 1
@@ -59,7 +59,7 @@ let ``Given a canvas with two zones part of the maze side by side horizontally, 
     let twoZonesCanvas = Convert.fromString twoZonesStringCanvas
 
     // act
-    let grid = twoZonesCanvas.Value |> OrthoGrid.Create
+    let grid = twoZonesCanvas.Value |> OrthoGrid.Create Normal
     
     // assert
     grid.Cells.Length |> should equal 2
@@ -88,7 +88,7 @@ let ``Given a canvas with two zones part of the maze side by side vertically, wh
     let twoZonesCanvas = Convert.fromString twoZonesStringCanvas
 
     // act
-    let grid = twoZonesCanvas.Value |> OrthoGrid.Create
+    let grid = twoZonesCanvas.Value |> OrthoGrid.Create Normal
 
     // assert
     grid.Cells.Length |> should equal 2
@@ -118,7 +118,7 @@ let ``Given a 3x3 canvas, when creating a grid, then it should have 3x3 cells wi
     let threeByThreeCanvas = Convert.fromString threeByThreeStringCanvas
 
     // act
-    let grid = threeByThreeCanvas.Value |> OrthoGrid.Create
+    let grid = threeByThreeCanvas.Value |> OrthoGrid.Create Normal
 
     // assert
     grid.Cells.Length |> should equal 9
@@ -195,7 +195,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
         Convert.endLineTag
 
     let threeByThreeCanvas = Convert.fromString canvas3x3
-    let grid = threeByThreeCanvas.Value |> OrthoGrid.Create
+    let grid = threeByThreeCanvas.Value |> OrthoGrid.Create Normal
 
     let coordinate11 = { RIndex = 1; CIndex = 1 }
 

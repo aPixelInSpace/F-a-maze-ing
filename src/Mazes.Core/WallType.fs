@@ -14,10 +14,10 @@ module WallType =
         | true -> Border
         | false -> Empty
 
-    let getWallTypeForInternal isCurrentCellPartOfMaze isOtherCellPartOfMaze =
+    let getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isOtherCellPartOfMaze =
         match isCurrentCellPartOfMaze, isOtherCellPartOfMaze with
         | false, false -> Empty
-        | true, true -> Normal
+        | true, true -> internalWallType
         | true, false | false, true -> Border
 
     let isALink wallType =

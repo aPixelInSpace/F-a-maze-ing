@@ -78,6 +78,9 @@ type Grid<'Grid, 'Position, 'PH, 'CH
         member this.LinkCells coordinate otherCoordinate =
             this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Empty
 
+        member this.UnLinkCells coordinate otherCoordinate =
+            this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Normal
+
         member this.PutBorderBetweenCells coordinate otherCoordinate =
             this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Border
 

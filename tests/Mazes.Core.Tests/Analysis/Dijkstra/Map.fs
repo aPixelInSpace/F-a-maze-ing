@@ -121,8 +121,8 @@ let ``Given a maze with no internal walls, when creating a map and getting all t
 
     let maze =
         (Convert.fromString simpleCanvas).Value
-        |> OrthoGrid.Create
-        |> Maze.createEmpty
+        |> OrthoGrid.CreateEmptyFunction
+        |> Maze.toMaze
 
     // act
     let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
@@ -235,8 +235,8 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
 
     let maze =
         (Convert.fromString simpleCanvas).Value    
-        |> OrthoGrid.Create
-        |> Maze.createEmpty
+        |> OrthoGrid.CreateEmptyFunction
+        |> Maze.toMaze
 
     let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
 

@@ -7,7 +7,6 @@ open Mazes.Core
 open Mazes.Core.Analysis
 open Mazes.Core.Analysis.Dijkstra.Tracker
 open Mazes.Core.Grid
-open Mazes.Core.Grid.Array2D.Ortho
 
 type Maze<'G> =
     {    
@@ -19,12 +18,8 @@ type Maze<'G> =
 
 module Maze =
 
-    let createEmpty (grid : IGrid<'G>) =
-        grid.EveryCoordinatesPartOfMaze
-        |> Seq.iter(fun coordinate ->
-             grid.NotLinkedNeighbors coordinate |> Seq.iter(grid.IfNotAtLimitLinkCells coordinate))
-        
-        { Grid = grid }
+    let toMaze grid =
+        { Grid = grid() }
 
     let braid (rngSeed : int) (ratio : float) (deadEnds : Coordinate seq) (maze : Maze<'G>) =
         let rng = Random(rngSeed)
