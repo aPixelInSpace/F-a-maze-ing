@@ -33,6 +33,12 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'XUnit'
+    testResultsFiles: '**/TEST-*.xml'
+    testRunTitle: 'Tests'
+    
 - task: UniversalPackages@0
   inputs:
     command: 'publish'
