@@ -10,8 +10,8 @@ open Mazes.Core.Maze
 
 type private Slice = (int * int * int * int)
 
-// todo : refactor this
-let createMaze rngSeed (grid : unit -> IGrid<'G>) =
+// todo : refactor this, sadly it only works with rectangular orthogonal grid for now
+let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
 
     let grid = grid()
 
@@ -19,17 +19,21 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
 
     let slices = Stack<Slice>()
 
-    let rndLinkHorizontalCell rndStartRIndex rndEndRIndex cIndex =
-        let rIndexes =
+    let rndLinkVerticalCell rndStartRIndex rndEndRIndex cIndex =
+        let candidates =
             seq {
                 for rIndex in rndStartRIndex .. rndEndRIndex - 1 do
-                    // use grid.AdjacentNeighborAbstractCoordinate
-                    if not (grid.IsLimitAt { RIndex = rIndex; CIndex = cIndex } { RIndex = rIndex; CIndex = cIndex + 1 }) then
-                        yield rIndex
+                    let c = { RIndex = rIndex; CIndex = cIndex }
+                    match (grid.AdjacentNeighborAbstractCoordinate c Right) with
+                    | Some n ->
+                        if not (grid.IsLimitAt c n) then
+                            yield (c, n)
+                    | None -> ()
             } |> Seq.toArray
 
-        let rndRIndex = rIndexes.[rng.Next(rIndexes.Length)]
-        grid.LinkCells { RIndex = rndRIndex; CIndex = cIndex } { RIndex = rndRIndex; CIndex = cIndex + 1 }
+        if candidates.Length > 0 then
+            let (c, n) = candidates.[rng.Next(candidates.Length)]
+            grid.LinkCells c n
 
     let sliceVertically (startRIndex, endRIndex, startCIndex, endCIndex) =
         let cIndex = rng.Next(startCIndex, endCIndex)
@@ -39,31 +43,44 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
 
         for rIndex in startRIndex .. endRIndex do
             let coordinate = { RIndex = rIndex; CIndex = cIndex }
-            let rightCoordinate = { RIndex = rIndex; CIndex = cIndex + 1 }
+            let rightCoordinate = grid.AdjacentNeighborAbstractCoordinate coordinate Right
 
-            if not (grid.IsLimitAt coordinate rightCoordinate) then
-                grid.UnLinkCells coordinate rightCoordinate
-            else
-                rndLinkHorizontalCell rndStartRIndex rndEndRIndex cIndex
+            match rightCoordinate with
+            | Some rightCoordinate ->
+                if grid.IsCellPartOfMaze coordinate && grid.IsCellPartOfMaze rightCoordinate then
+                    if not (grid.IsLimitAt coordinate rightCoordinate) then
+                        grid.UnLinkCells coordinate rightCoordinate
+                    else
+                        rndLinkVerticalCell rndStartRIndex rndEndRIndex cIndex
+                        rndStartRIndex <- rndEndRIndex + 1
+                else
+                    rndLinkVerticalCell rndStartRIndex (rndEndRIndex - 1) cIndex
+                    rndStartRIndex <- rndEndRIndex + 1
+            | None ->
                 rndStartRIndex <- rndEndRIndex + 1
 
             rndEndRIndex <- rndEndRIndex + 1
 
-        rndLinkHorizontalCell rndStartRIndex rndEndRIndex cIndex
+        rndLinkVerticalCell rndStartRIndex rndEndRIndex cIndex
 
         slices.Push(startRIndex, endRIndex, startCIndex, cIndex)
         slices.Push(startRIndex, endRIndex, cIndex + 1, endCIndex)
 
-    let rndLinkVerticalCell rndStartCIndex rndEndCIndex rIndex =
-        let cIndexes =
+    let rndLinkHorizontalCell rndStartCIndex rndEndCIndex rIndex =
+        let candidates =
             seq {
                 for cIndex in rndStartCIndex .. rndEndCIndex - 1 do
-                    if not (grid.IsLimitAt { RIndex = rIndex; CIndex = cIndex } { RIndex = rIndex + 1; CIndex = cIndex }) then
-                        yield cIndex
+                    let c = { RIndex = rIndex; CIndex = cIndex }
+                    match (grid.AdjacentNeighborAbstractCoordinate c Bottom) with
+                    | Some n ->
+                        if not (grid.IsLimitAt c n) then
+                            yield (c, n)
+                    | None -> ()
             } |> Seq.toArray
 
-        let rndCIndex = cIndexes.[rng.Next(cIndexes.Length)]
-        grid.LinkCells { RIndex = rIndex; CIndex = rndCIndex } { RIndex = rIndex + 1; CIndex = rndCIndex }
+        if candidates.Length > 0 then
+            let (c, n) = candidates.[rng.Next(candidates.Length)]
+            grid.LinkCells c n
 
     let sliceHorizontally (startRIndex, endRIndex, startCIndex, endCIndex) =
         let rIndex = rng.Next(startRIndex, endRIndex)
@@ -73,17 +90,25 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
 
         for cIndex in startCIndex .. endCIndex do
             let coordinate = { RIndex = rIndex; CIndex = cIndex }
-            let bottomCoordinate = { RIndex = rIndex + 1; CIndex = cIndex }
+            let bottomCoordinate = grid.AdjacentNeighborAbstractCoordinate coordinate Bottom
 
-            if not (grid.IsLimitAt coordinate bottomCoordinate) then
-                grid.UnLinkCells coordinate bottomCoordinate
-            else
-                rndLinkVerticalCell rndStartCIndex rndEndCIndex rIndex
+            match bottomCoordinate with
+            | Some bottomCoordinate ->
+                if grid.IsCellPartOfMaze coordinate && grid.IsCellPartOfMaze bottomCoordinate then
+                    if not (grid.IsLimitAt coordinate bottomCoordinate) then
+                        grid.UnLinkCells coordinate bottomCoordinate
+                    else
+                        rndLinkHorizontalCell rndStartCIndex rndEndCIndex rIndex
+                        rndStartCIndex <- rndEndCIndex + 1
+                else
+                    rndLinkHorizontalCell rndStartCIndex (rndEndCIndex - 1) rIndex
+                    rndStartCIndex <- rndEndCIndex + 1
+            | None ->
                 rndStartCIndex <- rndEndCIndex + 1
 
             rndEndCIndex <- rndEndCIndex + 1
 
-        rndLinkVerticalCell rndStartCIndex rndEndCIndex rIndex
+        rndLinkHorizontalCell rndStartCIndex rndEndCIndex rIndex
 
         slices.Push(startRIndex, rIndex, startCIndex, endCIndex)
         slices.Push(rIndex + 1, endRIndex, startCIndex, endCIndex)
@@ -102,10 +127,11 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
         let deltaR = endRIndex - startRIndex
         let deltaC = endCIndex - startCIndex
         if deltaR >= 1 && deltaC >= 1 then
-            if deltaR < deltaC then
-                sliceVertically (startRIndex, endRIndex, startCIndex, endCIndex)
-            else
-                sliceHorizontally (startRIndex, endRIndex, startCIndex, endCIndex)
+            if not (rng.NextDouble() < rooms && deltaR <= roomsHeight && deltaC <= roomsWidth) then
+                if deltaR < deltaC then
+                    sliceVertically (startRIndex, endRIndex, startCIndex, endCIndex)
+                else
+                    sliceHorizontally (startRIndex, endRIndex, startCIndex, endCIndex)
         else
             if startCIndex < endCIndex then
                 sliceVertically (startRIndex, endRIndex, startCIndex, endCIndex)

@@ -16,16 +16,16 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the recursive divi
         |> OrthoGrid.CreateEmptyFunction
     
     // act
-    let maze = grid |> RecursiveDivision.createMaze 1
+    let maze = grid |> RecursiveDivision.createMaze 1 0.2 2 2
         
     // assert
     let expectedMaze =
         " _ _ _ _ _ _ _ _ _ _ \n" + 
-        "|  _|    _ _|  _    |\n" +
-        "|_ _  |  _  |  _|_| |\n" +
-        "|  _  |_  |_|_   _|_|\n" +
-        "|  _|_| |  _ _  |_  |\n" +
-        "|_ _ _|_ _ _|_ _ _ _|\n"
+        "|_   _ _ _  |  _|  _|\n" +
+        "| |_  |      _  |_  |\n" +
+        "|_ _  |_ _|_|  _|   |\n" +
+        "|  _ _| |_  |       |\n" +
+        "|_ _ _|_ _ _ _|_|_ _|\n"
         
     maze.Grid.ToString |> should equal expectedMaze
 
