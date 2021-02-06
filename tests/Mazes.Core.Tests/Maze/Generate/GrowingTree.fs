@@ -210,16 +210,16 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree s
         |> OrthoGrid.CreateFunction
     
     // act
-    let maze = grid |> GrowingTreeSpiral.createMaze 1 0.9 0.9 3
+    let maze = grid |> GrowingTreeSpiral.createMaze 1 0.9 0.9 3 0.5
         
     // assert
     let expectedMaze =
         " _ _ _ _ _ _ _ _ _ _ \n" + 
-        "| |  _ _ _  |  _ _ _|\n" +
-        "| | |_ _ _ _|_ _    |\n" +
-        "| | |  _   _ _  | | |\n" +
-        "| | |_ _| |  _| |_| |\n" +
-        "|_ _ _ _ _|_ _ _ _ _|\n"
+        "|  _ _ _|   |  _ _  |\n" +
+        "|   |_ _ _| |  _  | |\n" +
+        "| |_ _ _  | | | | | |\n" +
+        "| | |  _ _| |_ _| | |\n" +
+        "|_ _|_ _ _ _ _ _ _|_|\n"
         
     maze.Grid.ToString |> should equal expectedMaze
 
@@ -234,15 +234,15 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the grow
         |> PolarGrid.CreateFunction
     
     // act
-    let maze = grid |> GrowingTreeSpiral.createMaze 1 0.9 0.9 3
+    let maze = grid |> GrowingTreeSpiral.createMaze 1 0.9 0.9 3 0.5
 
     // assert
     let expectedMaze =
         "| ¦ ¦ |\n" +
-        "|¨|‾¦‾¦‾¦¨¦‾|\n" +
-        "¦‾|¨¦‾¦‾¦‾¦‾¦‾¦‾|‾¦‾¦‾¦‾¦\n" +
-        "|¨|‾¦‾¦‾¦‾¦‾|‾¦‾¦‾¦‾¦‾¦‾|¨¦‾|¨|¨¦‾¦‾|‾¦‾¦‾|‾¦‾¦‾|\n" +
-        "|¨¦¨|‾¦‾¦‾¦¨¦¨|‾¦‾¦‾¦‾¦¨¦‾¦‾¦¨|‾¦‾¦¨¦¨|‾¦¨¦¨|‾¦¨|\n" +
+        "¦¨¦‾¦‾|‾¦¨|‾¦\n" +
+        "¦‾¦‾¦‾¦‾¦‾¦‾¦‾¦¨|‾¦‾¦‾¦‾¦\n" +
+        "¦‾|‾¦‾¦‾¦‾¦‾¦‾|‾¦‾¦‾¦‾¦‾¦‾¦‾¦‾|¨¦‾|‾¦‾¦‾¦‾¦‾¦‾|‾¦\n" +
+        "|¨¦¨¦‾¦‾|¨¦‾¦‾¦¨¦‾¦‾¦‾¦‾¦‾|¨¦‾¦‾¦¨|¨¦‾¦‾|¨¦‾¦‾¦¨|\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
     maze.Grid.ToString |> should equal expectedMaze

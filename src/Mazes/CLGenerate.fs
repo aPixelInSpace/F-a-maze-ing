@@ -84,7 +84,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
            | AlgoEnum.GrowingTreeMixChosenRandomAndLast -> GrowingTreeMixChosenRandomAndLast.createMaze rngSeed 0.5
            | AlgoEnum.GrowingTreeMixOldestAndLast -> GrowingTreeMixOldestAndLast.createMaze rngSeed 0.5
            | AlgoEnum.GrowingTreeDirection -> GrowingTreeDirection.createMaze rngSeed 0.3 0.2 0.3
-           | AlgoEnum.GrowingTreeSpiral -> GrowingTreeSpiral.createMaze rngSeed 1.0 1.0 5
+           | AlgoEnum.GrowingTreeSpiral -> GrowingTreeSpiral.createMaze rngSeed 1.0 1.0 5 0.8
            | AlgoEnum.Eller -> Eller.createMaze rngSeed
            | AlgoEnum.RecursiveDivision -> RecursiveDivision.createMaze rngSeed 0.0 3 3
            | _ -> failwith "Generating algorithm unknown"
@@ -256,7 +256,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     stopWatch.Restart()
 
-    let map = maze.createMap { RIndex = 29; CIndex = 160 } //maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
 
     stopWatch.Stop()
     printfn $"Created map ({stopWatch.ElapsedMilliseconds} ms)"
@@ -287,7 +287,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.OrthoGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
 
-    let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo { RIndex = 19; CIndex = 37 }) map //maze.Grid.GetLastPartOfMazeZone) map
+    let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
     //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map

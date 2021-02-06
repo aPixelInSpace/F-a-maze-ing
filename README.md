@@ -82,6 +82,8 @@ mazes
                      - GrowingTreeMixRandomAndLast
                      - GrowingTreeMixOldestAndLast
                      - GrowingTreeMixChosenRandomAndLast
+                     - GrowingTreeDirection
+                     - GrowingTreeSpiral
                      - Eller
                      - RecursiveDivision
 

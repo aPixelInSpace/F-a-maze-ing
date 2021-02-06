@@ -202,7 +202,17 @@ module GrowingTreeDirection =
 
 module GrowingTreeSpiral =
 
-    let createMaze rngSeed spiralWeight spiralUniformity spiralMaxLength (grid : unit -> IGrid<'G>) =
+    type SpiralDirection =
+        | Right
+        | Bottom
+        | Left
+        | Top
+
+    type SpiralRevolution =
+        | Clockwise
+        | CounterClockwise
+
+    let createMaze rngSeed spiralWeight spiralUniformity spiralMaxLength spiralRevolution (grid : unit -> IGrid<'G>) =
 
         let grid = grid()
 
@@ -225,39 +235,75 @@ module GrowingTreeSpiral =
 
         let mutable spiralLength = 0
         let mutable currentDirection = Right
-        let nextDirections direction =
-            if direction = Bottom then [Bottom; Left; Top; Right]
-            elif direction = Left then [Left; Top; Right; Bottom]
-            elif direction = Top then [Top; Right; Bottom; Left]
-            else [Right; Bottom; Left; Top]
+        let mutable currentRevolution = Clockwise
+
+        let baseDirectionsCw = [Right; Bottom; Left; Top]
+        let baseDirectionsCcw = [Right; Top; Left; Bottom]
+
+        let nextDirections direction revolution =
+            let shift list n =
+                list |> List.permute (fun index -> (index + n) % list.Length)
+
+            match direction, revolution with
+            | Right, Clockwise -> baseDirectionsCw
+            | Right, CounterClockwise -> baseDirectionsCcw
+            | Bottom, Clockwise -> shift baseDirectionsCw 3
+            | Bottom, CounterClockwise -> shift baseDirectionsCcw 1
+            | Left, Clockwise -> shift baseDirectionsCw 2
+            | Left, CounterClockwise -> shift baseDirectionsCcw 2
+            | Top, Clockwise -> shift baseDirectionsCw 1
+            | Top, CounterClockwise -> shift baseDirectionsCcw 3
+
+        let toPosition spiralDirection =
+            match spiralDirection with
+            | Right -> Position.Right
+            | Bottom -> Position.Bottom
+            | Left -> Position.Left
+            | Top -> Position.Top
+
+        let toSpiralDirection position =
+            match position with
+            | Position.Right -> Right
+            | Position.Bottom -> Bottom
+            | Position.Left -> Left
+            | Position.Top -> Top
 
         let chooseNeighbor coordinate (unlinked : array<Coordinate>) =
-                
-            let tryFind pos =
+
+            let tryFind spiralDirection =
+                let pos = toPosition spiralDirection
                 match grid.AdjacentNeighborAbstractCoordinate coordinate pos with
                 | Some next -> unlinked |> Array.tryFind(fun c -> c = next), pos
                 | _ -> None, pos
 
             if rng.NextDouble() < spiralWeight then
+
+                if rng.NextDouble() > spiralRevolution then
+                    currentRevolution <- Clockwise
+                else
+                    currentRevolution <- CounterClockwise
+
                 if spiralLength >= spiralMaxLength then
-                    let nextDirections = (nextDirections currentDirection)
+                    let nextDirections = nextDirections currentDirection currentRevolution
                     currentDirection <- nextDirections.[1]
                     spiralLength <- 0
 
                 let next =
-                    nextDirections currentDirection
+                    nextDirections currentDirection currentRevolution
                     |> List.map(tryFind)
                     |> List.where(fun (c, _) -> c.IsSome)
                     |> List.map(fun (c, d) -> (c.Value, d))
                     |> List.tryHead
 
                 match next with
-                | Some (nextCoordinate, nextDirection) ->
-                    if nextDirection <> currentDirection then
-                        currentDirection <- nextDirection
+                | Some (nextCoordinate, nextPosition) ->
+
+                    if nextPosition <> (toPosition currentDirection) then
+                        currentDirection <- toSpiralDirection nextPosition
                         spiralLength <- 0
+
                     if rng.NextDouble() > spiralUniformity then
-                        let nextDirections = (nextDirections currentDirection)
+                        let nextDirections = nextDirections currentDirection currentRevolution
                         currentDirection <- nextDirections.[rng.Next(nextDirections.Length)]
                         spiralLength <- 0
                     
