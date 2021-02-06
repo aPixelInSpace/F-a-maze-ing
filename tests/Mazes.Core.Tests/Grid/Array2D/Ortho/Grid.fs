@@ -206,7 +206,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     grid.Cells.[0, 1].WallTypeAtPosition Bottom |> should equal Close
     
     match (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Top) with
-    | Some n -> grid.ToInterface.ConnectCells coordinate11 n
+    | Some n -> grid.ToInterface.UpdateConnection Open coordinate11 n
     | None -> failwith "Fail"
     
     // assert top
@@ -220,7 +220,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     grid.Cells.[1, 2].WallTypeAtPosition Left |> should equal Close
     
     match (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Right) with
-    | Some n -> grid.ToInterface.ConnectCells coordinate11 n
+    | Some n -> grid.ToInterface.UpdateConnection Open coordinate11 n
     | None -> failwith "Fail"
     
     // assert right
@@ -234,7 +234,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     grid.Cells.[2, 1].WallTypeAtPosition Top |> should equal Close
     
     match (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Bottom) with
-    | Some n -> grid.ToInterface.ConnectCells coordinate11 n
+    | Some n -> grid.ToInterface.UpdateConnection Open coordinate11 n
     | None -> failwith "Fail"
     
     // assert bottom
@@ -248,7 +248,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     grid.Cells.[1, 0].WallTypeAtPosition Right |> should equal Close
     
     match (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Left) with
-    | Some n -> grid.ToInterface.ConnectCells coordinate11 n
+    | Some n -> grid.ToInterface.UpdateConnection Open coordinate11 n
     | None -> failwith "Fail"
     
     // assert left

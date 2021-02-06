@@ -45,7 +45,7 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
                 pathTracker.Add(nextCoordinate, path.Count - 1)
 
         for i in 0 .. path.Count - 2 do
-            grid.ConnectCells path.[i] path.[i + 1]
+            grid.UpdateConnection Open path.[i] path.[i + 1]
             unvisited.Remove(path.[i]) |> ignore
 
     { Grid = grid }

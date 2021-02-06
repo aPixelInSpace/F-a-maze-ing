@@ -38,7 +38,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
         member this.CostOfCoordinate coordinate =
             1 + (this.Obstacles.Cost coordinate)
 
-        member this.AdjacentNeighborAbstractCoordinate coordinate position =
+        member this.VirtualAdjacentNeighborCoordinate coordinate position =
             (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
 
         member this.IsCellConnected coordinate =
@@ -70,21 +70,15 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             this.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
             |> Seq.map(snd)
 
-        member this.ConnectCells coordinate otherCoordinate =
-            this.UpdateWallAtCoordinates coordinate otherCoordinate ConnectionType.Open
-
-        member this.UnConnectCells coordinate otherCoordinate =
-            this.UpdateWallAtCoordinates coordinate otherCoordinate ConnectionType.Close
-
-        member this.PutBorderBetweenCells coordinate otherCoordinate =
-            this.UpdateWallAtCoordinates coordinate otherCoordinate ConnectionType.ClosePersistent
+        member this.UpdateConnection connectionType coordinate otherCoordinate =
+            this.UpdateWallAtCoordinates coordinate otherCoordinate connectionType
 
         member this.AdjacentNeighbor coordinate position =
             (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
 
         member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
             if (this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate) || not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) then
-                this.ToInterface.ConnectCells coordinate otherCoordinate
+                this.ToInterface.UpdateConnection Open coordinate otherCoordinate
 
         member this.Neighbors coordinate =
             this.Neighbors coordinate

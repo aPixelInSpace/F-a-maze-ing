@@ -10,9 +10,11 @@ type IGrid<'G> =
     abstract member TotalOfMazeCells : int
     abstract member Dimension1Boundaries : dimension2Index:int -> (int * int)
     abstract member Dimension2Boundaries : dimension1Index:int -> (int * int)
+
     abstract member AddCostForCoordinate : Cost -> coordinate:Coordinate -> unit
     abstract member CostOfCoordinate : coordinate:Coordinate -> Cost
-    abstract member AdjacentNeighborAbstractCoordinate : coordinate:Coordinate -> position:Position -> Coordinate option
+
+    abstract member VirtualAdjacentNeighborCoordinate : coordinate:Coordinate -> position:Position -> Coordinate option
     /// Returns true if the cell has at least one link to another cell, false otherwise
     abstract member IsCellConnected : coordinate:Coordinate -> bool
     abstract member ExistAt : coordinate:Coordinate -> bool
@@ -26,13 +28,9 @@ type IGrid<'G> =
     abstract member GetAdjustedCoordinate : coordinate:Coordinate -> Coordinate
     /// Returns every cell that are part of the maze
     abstract member CoordinatesPartOfMaze : Coordinate seq
-    /// Links two cells together (allows a passage between them)
-    abstract member ConnectCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
-    abstract member UnConnectCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
+    abstract member UpdateConnection : connectionType:ConnectionType -> coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
     /// Checks if the two cells can be linked, if so then link them, if not then does nothing
     abstract member IfNotAtLimitLinkCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
-    /// Puts a border between two cells
-    abstract member PutBorderBetweenCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
     /// Returns the coordinate of the neighbor, if there are multiple neighbor then returns the last one
     abstract member AdjacentNeighbor : coordinate:Coordinate -> position:Position -> Coordinate option
     abstract member Neighbors : coordinate:Coordinate -> Coordinate seq

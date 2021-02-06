@@ -3,6 +3,7 @@
 module Mazes.Core.Maze.Generate.AldousBroder
 
 open System
+open Mazes.Core
 open Mazes.Core.Grid
 open Mazes.Core.Maze
 
@@ -39,7 +40,7 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
         grid.RandomCoordinatePartOfMazeAndNotLinked
         grid.Neighbors
         grid.IsCellConnected
-        grid.ConnectCells
+        (grid.UpdateConnection ConnectionType.Open)
         grid.TotalOfMazeCells
         rng
 

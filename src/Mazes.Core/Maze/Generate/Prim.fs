@@ -74,7 +74,7 @@ module PrimSimpleModified =
             let unlinkedNeighbors = next |> grid.Neighbors
             let inSetCoordinate = randomFromInset unlinkedNeighbors
 
-            grid.ConnectCells inSetCoordinate next
+            grid.UpdateConnection Open inSetCoordinate next
 
             frontierSet.UnionWith((next |> grid.NeighborsThatAreLinked false))
 

@@ -87,17 +87,17 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
 
         match setKey1, setKey2 with
         | None, None ->
-            grid.ConnectCells coordinate1 coordinate2
+            grid.UpdateConnection Open coordinate1 coordinate2
             forests.AddNewSet coordinate1 (Some coordinate2)
         | Some setKey, None ->
-            grid.ConnectCells coordinate1 coordinate2
+            grid.UpdateConnection Open coordinate1 coordinate2
             forests.AddToSet setKey coordinate2
         | None, Some setKey ->
-            grid.ConnectCells coordinate1 coordinate2
+            grid.UpdateConnection Open coordinate1 coordinate2
             forests.AddToSet setKey coordinate1
         | Some setKey1, Some setKey2 ->
             if setKey1 <> setKey2 then
-                grid.ConnectCells coordinate1 coordinate2
+                grid.UpdateConnection Open coordinate1 coordinate2
                 forests.MergeSets setKey1 setKey2
 
         incr i

@@ -32,7 +32,7 @@ module GrowingTree =
 
             if unlinked.Length > 0 then
                 let neighbor = chooseNeighbor active unlinked
-                grid.ConnectCells active neighbor
+                grid.UpdateConnection Open active neighbor
                 add neighbor
             else
                 remove active
@@ -272,7 +272,7 @@ module GrowingTreeSpiral =
 
             let tryFind spiralDirection =
                 let pos = toPosition spiralDirection
-                match grid.AdjacentNeighborAbstractCoordinate coordinate pos with
+                match grid.VirtualAdjacentNeighborCoordinate coordinate pos with
                 | Some next -> unlinked |> Array.tryFind(fun c -> c = next), pos
                 | _ -> None, pos
 

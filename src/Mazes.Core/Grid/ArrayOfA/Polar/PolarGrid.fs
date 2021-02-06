@@ -44,7 +44,7 @@ type PolarGrid =
         member this.CostOfCoordinate coordinate =
             1 + (this.Obstacles.Cost coordinate)
 
-        member this.AdjacentNeighborAbstractCoordinate coordinate position =
+        member this.VirtualAdjacentNeighborCoordinate coordinate position =
             Some (PolarCoordinate.neighborBaseCoordinateAt coordinate (PolarPosition.map position))
 
         member this.IsCellConnected coordinate =
@@ -83,16 +83,8 @@ type PolarGrid =
         member this.CoordinatesPartOfMaze =
             this.CoordinatesPartOfMaze
 
-        member this.ConnectCells coordinate otherCoordinate =
-            this.LinkCells coordinate otherCoordinate
-
-        member this.UnConnectCells coordinate otherCoordinate =
-            let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
-            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Close
-
-        member this.PutBorderBetweenCells coordinate otherCoordinate =
-            let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
-            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition ClosePersistent
+        member this.UpdateConnection connectionType coordinate otherCoordinate =
+            this.LinkCells connectionType coordinate otherCoordinate
 
         member this.AdjacentNeighbor coordinate position =
             this.AdjacentNeighbor coordinate (PolarPosition.map position)
@@ -180,16 +172,16 @@ type PolarGrid =
         | Outward ->
             this.Cells.[neighborCoordinate.RIndex].[neighborCoordinate.CIndex] <- { Walls = (getWalls neighborCoordinate neighborPosition.Opposite) }
 
-    member this.LinkCells coordinate otherCoordinate =
+    member this.LinkCells connectionType coordinate otherCoordinate =
         if this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate then
-            this.NonAdjacentNeighbors.AddUpdate coordinate otherCoordinate Open
+            this.NonAdjacentNeighbors.AddUpdate coordinate otherCoordinate connectionType
         else
             let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
-            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Open
+            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition connectionType
 
     member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
         if (this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate) || not (this.IsLimitAt coordinate otherCoordinate) then
-            this.LinkCells coordinate otherCoordinate
+            this.LinkCells Open coordinate otherCoordinate
 
     member this.AdjacentNeighbor coordinate position =
         let neighbors = PolarCoordinate.neighborsCoordinateAt this.Cells coordinate position

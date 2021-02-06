@@ -117,7 +117,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be link
     (grid.Cell coordinate00).IsLinked grid.Cells coordinate00 |> should equal false
     (grid.Cell coordinate00).AreLinked grid.Cells coordinate00 coordinate10 |> should equal false
 
-    grid.LinkCells { RIndex = 0; CIndex = 0 } { RIndex = 1; CIndex = 0 }
+    grid.LinkCells Open { RIndex = 0; CIndex = 0 } { RIndex = 1; CIndex = 0 }
 
     // assert
     (grid.Cell coordinate00).AreLinked grid.Cells coordinate00 coordinate10 |> should equal true
