@@ -17,35 +17,33 @@ variables:
 steps:
 - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
+- task: UseDotNet@2
   inputs:
-    restoreSolution: '$(solution)'
+    version: '5.0.x'
 
-- task: VSBuild@1
+- task: DotNetCoreCLI@2
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration)'
+  displayName: 'dotnet build $(buildConfiguration)'
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: test
+    projects: '**/*tests/*.fsproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
-- task: PublishTestResults@2
-  #inputs:
-    #testResultsFormat: 'XUnit'
-    #testResultsFiles: '**/TEST-*.xml'
-    #searchFolder: '$(Build.SourcesDirectory/tests'
-    #testRunTitle: 'Tests'
-    
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
+
 - task: UniversalPackages@0
   inputs:
-    command: 'download'
-    downloadDirectory: '$(System.DefaultWorkingDirectory)'
-    feedsToUse: 'internal'
-    vstsFeed: '7f32b964-27fb-43a2-96ed-b8c64401159f/31717992-4f34-4b8e-a522-f67a849f2376'
-    vstsFeedPackage: 'd0906cdf-1adc-4c43-aa03-daef738c4737'
-    vstsPackageVersion: '*'
-    verbosity: 'Debug'
+    command: 'publish'
+    publishDirectory: '$(Build.ArtifactStagingDirectory)'
+    feedsToUsePublish: 'internal'
+    vstsFeedPublish: '7f32b964-27fb-43a2-96ed-b8c64401159f/31717992-4f34-4b8e-a522-f67a849f2376'
+    vstsFeedPackagePublish: 'alpha-f-amaze-ing'
+    versionOption: 'patch'
