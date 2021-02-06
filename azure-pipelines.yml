@@ -34,17 +34,18 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'XUnit'
-    testResultsFiles: '**/TEST-*.xml'
-    searchFolder: '$(Build.SourcesDirectory/tests'
-    testRunTitle: 'Tests'
+  #inputs:
+    #testResultsFormat: 'XUnit'
+    #testResultsFiles: '**/TEST-*.xml'
+    #searchFolder: '$(Build.SourcesDirectory/tests'
+    #testRunTitle: 'Tests'
     
 - task: UniversalPackages@0
   inputs:
-    command: 'publish'
-    publishDirectory: '$(Build.SourcesDirectory)/src/Mazes/bin/Release/netcoreapp5.0'
-    feedsToUsePublish: 'internal'
-    vstsFeedPublish: '7f32b964-27fb-43a2-96ed-b8c64401159f/31717992-4f34-4b8e-a522-f67a849f2376'
-    vstsFeedPackagePublish: 'alpha-f-amaze-ing'
-    versionOption: 'patch'
+    command: 'download'
+    downloadDirectory: '$(System.DefaultWorkingDirectory)'
+    feedsToUse: 'internal'
+    vstsFeed: '7f32b964-27fb-43a2-96ed-b8c64401159f/31717992-4f34-4b8e-a522-f67a849f2376'
+    vstsFeedPackage: 'd0906cdf-1adc-4c43-aa03-daef738c4737'
+    vstsPackageVersion: '*'
+    verbosity: 'Debug'
