@@ -47,6 +47,12 @@ steps:
     publishWebProjects: false
     zipAfterPublish: false
 
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Agent.BuildDirectory)/src/Mazes/bin/Debug/netcoreapp5.0/publish/'
+    Contents: '**'
+    TargetFolder: '$(Build.StagingDirectory)'
+
 - task: UniversalPackages@0
   displayName: 'Packaging'
   inputs:
