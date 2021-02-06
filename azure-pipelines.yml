@@ -49,7 +49,7 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(Agent.BuildDirectory)/src/Mazes/bin/Debug/netcoreapp5.0/publish/'
+    SourceFolder: '$(Agent.BuildDirectory)/s/src/Mazes/bin/Debug/netcoreapp5.0/publish/'
     Contents: '**'
     TargetFolder: '$(Build.StagingDirectory)'
 
