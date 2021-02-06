@@ -10869,12 +10869,8 @@
 <path d="M 1815.67 831.78 A 900 900, 0, 0, 1, 1818.07 861.14" class="bwifc"/>
 <path d="M 1818.07 861.14 A 900 900, 0, 0, 1, 1819.52 890.55" class="bwifc"/>
 <path d="M 1819.52 890.55 A 900 900, 0, 0, 1, 1820 920" class="bwifc"/>
-<image x="435" y="1252" href="TreasureChest.png" height="60" />
-<image x="1350" y="140" href="MayaWarrior.png" height="60" />
 
-<a href='https://www.freepik.com/free-vector/treasure-chests-isometric-cartoon-icon-set_9457331.htm'><text x="60" y="1680" text-anchor="middle">Treasure chest</text></a>
-<a href='https://www.freepik.com/vectors/design'><text x="200" y="1700" text-anchor="middle">Design vector created by macrovector - www.freepik.com</text></a>
+<circle cx="467" cy="1288" r="10" fill="yellow"/>
+<circle cx="1373" cy="163" r="10" fill="red"/>
 
-<a href='https://www.freepik.com/free-vector/mayan-traditional-cartoon-set_6346170.htm'><text x="55" y="1740" text-anchor="middle">Aztec Warrior</text></a>
-<a href='https://www.freepik.com/vectors/calendar'><text x="200" y="1760" text-anchor="middle">Calendar vector created by macrovector - www.freepik.com</text></a>
 </svg>
