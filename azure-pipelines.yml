@@ -33,7 +33,7 @@ steps:
     command: 'test'
     arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
     publishTestResults: true
-    projects: 'MyTestLibrary' # update with your test project directory
+    projects: 'tests' # update with your test project directory
   
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage report'
@@ -41,16 +41,10 @@ steps:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: publish
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
-
 - task: UniversalPackages@0
   inputs:
     command: 'publish'
-    publishDirectory: '$(Build.ArtifactStagingDirectory)'
+    publishDirectory: '$(Build.BinariesDirectory)'
     feedsToUsePublish: 'internal'
     vstsFeedPublish: '7f32b964-27fb-43a2-96ed-b8c64401159f/31717992-4f34-4b8e-a522-f67a849f2376'
     vstsFeedPackagePublish: 'alpha-f-amaze-ing'
