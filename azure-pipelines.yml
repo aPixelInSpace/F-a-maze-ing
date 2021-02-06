@@ -40,10 +40,15 @@ steps:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+
 - task: UniversalPackages@0
   inputs:
     command: 'publish'
-    publishDirectory: '$(Build.BinariesDirectory)'
+    publishDirectory: '$(Build.StagingDirectory)'
     feedsToUsePublish: 'internal'
     vstsFeedPublish: '7f32b964-27fb-43a2-96ed-b8c64401159f/31717992-4f34-4b8e-a522-f67a849f2376'
     vstsFeedPackagePublish: 'alpha-f-amaze-ing'
