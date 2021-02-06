@@ -26,11 +26,6 @@ type Grid<'Grid, 'Position, 'PH, 'CH
         member this.TotalOfMazeCells =
             this.Canvas.TotalOfMazeZones
 
-        member this.EveryCoordinatesPartOfMaze =
-            this.Cells
-            |> getItemByItem RowsAscendingColumnsAscending (fun _ _ -> true)
-            |> Seq.map(snd)
-
         member this.Dimension1Boundaries _ =
             (0, this.Canvas.NumberOfRows)
 
@@ -46,7 +41,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
         member this.AdjacentNeighborAbstractCoordinate coordinate position =
             (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
 
-        member this.IsCellLinked coordinate =
+        member this.IsCellConnected coordinate =
             this.NonAdjacentNeighbors.IsLinked coordinate ||
             (this.Cell coordinate).IsLinked
 
@@ -75,21 +70,21 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             this.Canvas.GetZoneByZone RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
             |> Seq.map(snd)
 
-        member this.LinkCells coordinate otherCoordinate =
-            this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Empty
+        member this.ConnectCells coordinate otherCoordinate =
+            this.UpdateWallAtCoordinates coordinate otherCoordinate ConnectionType.Open
 
-        member this.UnLinkCells coordinate otherCoordinate =
-            this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Normal
+        member this.UnConnectCells coordinate otherCoordinate =
+            this.UpdateWallAtCoordinates coordinate otherCoordinate ConnectionType.Close
 
         member this.PutBorderBetweenCells coordinate otherCoordinate =
-            this.UpdateWallAtCoordinates coordinate otherCoordinate WallType.Border
+            this.UpdateWallAtCoordinates coordinate otherCoordinate ConnectionType.ClosePersistent
 
         member this.AdjacentNeighbor coordinate position =
             (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
 
         member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
             if (this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate) || not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) then
-                this.ToInterface.LinkCells coordinate otherCoordinate
+                this.ToInterface.ConnectCells coordinate otherCoordinate
 
         member this.Neighbors coordinate =
             this.Neighbors coordinate
@@ -124,10 +119,6 @@ type Grid<'Grid, 'Position, 'PH, 'CH
                     if not (this.AreLinked coordinate neighborCoordinate) then
                         yield neighborCoordinate
             }
-
-        member this.RandomNeighbor rng coordinate =
-            let neighbors = this.Neighbors coordinate |> Seq.toArray
-            neighbors.[rng.Next(neighbors.Length)]
 
         member this.RandomCoordinatePartOfMazeAndNotLinked rng =
             let unlinkedPartOfMazeCells =
@@ -176,7 +167,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
                 | None -> true
 
         not zone.IsAPartOfMaze ||
-        cell.WallTypeAtPosition position = Border ||
+        cell.WallTypeAtPosition position = ClosePersistent ||
         neighborCondition()
 
     member private this.UpdateWallAtPosition coordinate position wallType =
@@ -185,7 +176,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             cell.Walls
             |> Array.mapi(fun index wall ->
                 if index = (cell.WallIndex position) then
-                    { WallType = wallType; WallPosition = position }
+                    { ConnectionType = wallType; ConnectionPosition = position }
                 else
                     wall
                 )

@@ -32,7 +32,7 @@ module GrowingTree =
 
             if unlinked.Length > 0 then
                 let neighbor = chooseNeighbor active unlinked
-                grid.LinkCells active neighbor
+                grid.ConnectCells active neighbor
                 add neighbor
             else
                 remove active
@@ -202,7 +202,7 @@ module GrowingTreeDirection =
 
 module GrowingTreeSpiral =
 
-    let createMaze rngSeed (grid : unit -> IGrid<'G>) =
+    let createMaze rngSeed spiralWeight spiralUniformity spiralMaxLength (grid : unit -> IGrid<'G>) =
 
         let grid = grid()
 
@@ -223,29 +223,48 @@ module GrowingTreeSpiral =
         let remove _ =
             actives.Pop() |> ignore
 
-        let chooseNeighbor coordinate (unlinked : array<Coordinate>) =
-            let rnd = rng.NextDouble()
-            if rnd < 0.5 then
-                let height = snd (grid.Dimension1Boundaries coordinate.CIndex)
-                let width = snd (grid.Dimension2Boundaries coordinate.RIndex)
-                let heightF =  height / 3
-                let widthF =  width / 3
-                let heightL =  height - heightF
-                let widthL =  width - widthF
+        let mutable spiralLength = 0
+        let mutable currentDirection = Right
+        let nextDirections direction =
+            if direction = Bottom then [Bottom; Left; Top; Right]
+            elif direction = Left then [Left; Top; Right; Bottom]
+            elif direction = Top then [Top; Right; Bottom; Left]
+            else [Right; Bottom; Left; Top]
 
-                if coordinate.RIndex < heightF then
-                    unlinked
-                    |> Array.maxBy(fun c -> c.CIndex)
-                elif coordinate.CIndex > widthL then
-                    unlinked
-                    |> Array.maxBy(fun c -> c.RIndex)
-                elif coordinate.RIndex > heightL then
-                    unlinked
-                    |> Array.minBy(fun c -> c.CIndex)
-                elif coordinate.CIndex < widthF then
-                    unlinked
-                    |> Array.minBy(fun c -> c.RIndex)
-                else
+        let chooseNeighbor coordinate (unlinked : array<Coordinate>) =
+                
+            let tryFind pos =
+                match grid.AdjacentNeighborAbstractCoordinate coordinate pos with
+                | Some next -> unlinked |> Array.tryFind(fun c -> c = next), pos
+                | _ -> None, pos
+
+            if rng.NextDouble() < spiralWeight then
+                if spiralLength >= spiralMaxLength then
+                    let nextDirections = (nextDirections currentDirection)
+                    currentDirection <- nextDirections.[1]
+                    spiralLength <- 0
+
+                let next =
+                    nextDirections currentDirection
+                    |> List.map(tryFind)
+                    |> List.where(fun (c, _) -> c.IsSome)
+                    |> List.map(fun (c, d) -> (c.Value, d))
+                    |> List.tryHead
+
+                match next with
+                | Some (nextCoordinate, nextDirection) ->
+                    if nextDirection <> currentDirection then
+                        currentDirection <- nextDirection
+                        spiralLength <- 0
+                    if rng.NextDouble() > spiralUniformity then
+                        let nextDirections = (nextDirections currentDirection)
+                        currentDirection <- nextDirections.[rng.Next(nextDirections.Length)]
+                        spiralLength <- 0
+                    
+                    spiralLength <- spiralLength + 1
+
+                    nextCoordinate
+                | None ->
                     unlinked.[rng.Next(unlinked.Length)]
             else
                 unlinked.[rng.Next(unlinked.Length)]

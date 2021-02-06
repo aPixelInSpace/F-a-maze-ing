@@ -9,7 +9,7 @@
         <Compile Include="Coordinate.fs" />
         <Compile Include="Trigonometry.fs" />
         <Compile Include="Position.fs" />
-        <Compile Include="WallType.fs" />
+        <Compile Include="ConnectionType.fs" />
         <Compile Include="Array2D.fs" />
         <Compile Include="ArrayOfA.fs" />
         <Compile Include="Analysis\Dijkstra\ShortestPathGraph.fs" />
@@ -26,7 +26,7 @@
         <Compile Include="Canvas\ArrayOfA\Shape\Disk.fs" />
         <Compile Include="Grid\NonAdjacentNeighbors.fs" />
         <Compile Include="Grid\Obstacles.fs" />
-        <Compile Include="Grid\Wall.fs" />
+        <Compile Include="Grid\Connection.fs" />
 		<Compile Include="Grid\IGrid.fs" />
 		<Compile Include="Grid\Array2D\IPositionHandler.fs" />
 		<Compile Include="Grid\Array2D\ICoordinateHandler.fs" />
@@ -69,7 +69,7 @@
         <Compile Include="Maze\Generate\Kruskal.fs" />
         <Compile Include="Maze\Generate\Prim.fs" />
         <Compile Include="Maze\Generate\Eller.fs" />
-        <Compile Include="Maze\Generate\RecursiveDivision.fs" />        
+        <Compile Include="Maze\Generate\RecursiveDivision.fs" />
     </ItemGroup>
 
     <ItemGroup>

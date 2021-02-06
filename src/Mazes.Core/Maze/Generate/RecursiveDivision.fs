@@ -33,7 +33,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
 
         if candidates.Length > 0 then
             let (c, n) = candidates.[rng.Next(candidates.Length)]
-            grid.LinkCells c n
+            grid.ConnectCells c n
 
     let sliceVertically (startRIndex, endRIndex, startCIndex, endCIndex) =
         let cIndex = rng.Next(startCIndex, endCIndex)
@@ -49,7 +49,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
             | Some rightCoordinate ->
                 if grid.IsCellPartOfMaze coordinate && grid.IsCellPartOfMaze rightCoordinate then
                     if not (grid.IsLimitAt coordinate rightCoordinate) then
-                        grid.UnLinkCells coordinate rightCoordinate
+                        grid.UnConnectCells coordinate rightCoordinate
                     else
                         rndLinkVerticalCell rndStartRIndex rndEndRIndex cIndex
                         rndStartRIndex <- rndEndRIndex + 1
@@ -80,7 +80,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
 
         if candidates.Length > 0 then
             let (c, n) = candidates.[rng.Next(candidates.Length)]
-            grid.LinkCells c n
+            grid.ConnectCells c n
 
     let sliceHorizontally (startRIndex, endRIndex, startCIndex, endCIndex) =
         let rIndex = rng.Next(startRIndex, endRIndex)
@@ -96,7 +96,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
             | Some bottomCoordinate ->
                 if grid.IsCellPartOfMaze coordinate && grid.IsCellPartOfMaze bottomCoordinate then
                     if not (grid.IsLimitAt coordinate bottomCoordinate) then
-                        grid.UnLinkCells coordinate bottomCoordinate
+                        grid.UnConnectCells coordinate bottomCoordinate
                     else
                         rndLinkHorizontalCell rndStartCIndex rndEndCIndex rIndex
                         rndStartCIndex <- rndEndCIndex + 1

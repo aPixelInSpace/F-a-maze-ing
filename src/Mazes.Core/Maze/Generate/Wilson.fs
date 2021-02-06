@@ -31,8 +31,9 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
         pathTracker.Add(nextCoordinate, path.Count - 1)
 
         while unvisited.Contains(nextCoordinate) do
-
-            nextCoordinate <- grid.RandomNeighbor rng nextCoordinate
+            nextCoordinate <-
+                    let neighbors = grid.Neighbors nextCoordinate |> Seq.toArray
+                    neighbors.[rng.Next(neighbors.Length)]
 
             if pathTracker.ContainsKey(nextCoordinate) then
                 let index = pathTracker.Item(nextCoordinate)
@@ -44,7 +45,7 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
                 pathTracker.Add(nextCoordinate, path.Count - 1)
 
         for i in 0 .. path.Count - 2 do
-            grid.LinkCells path.[i] path.[i + 1]
+            grid.ConnectCells path.[i] path.[i + 1]
             unvisited.Remove(path.[i]) |> ignore
 
     { Grid = grid }

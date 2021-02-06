@@ -36,4 +36,7 @@ type PentaCairoGrid
         PentaCairoGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, PentaCairoPositionHandler.Instance,  PentaCairoCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
-        fun () -> PentaCairoGrid.Create Normal canvas :> IGrid<PentaCairoGrid>
+        fun () -> PentaCairoGrid.Create Close canvas :> IGrid<PentaCairoGrid>
+
+    static member CreateEmptyFunction canvas =
+        fun () -> PentaCairoGrid.Create Open canvas :> IGrid<PentaCairoGrid>

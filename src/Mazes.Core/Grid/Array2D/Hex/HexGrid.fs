@@ -134,7 +134,7 @@ type HexGrid
         HexGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, HexPositionHandler.Instance,  HexCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
-        fun () -> HexGrid.Create Normal canvas :> IGrid<HexGrid>
+        fun () -> HexGrid.Create Close canvas :> IGrid<HexGrid>
 
     static member CreateEmptyFunction canvas =
-        fun () -> HexGrid.Create Empty canvas :> IGrid<HexGrid>
+        fun () -> HexGrid.Create Open canvas :> IGrid<HexGrid>

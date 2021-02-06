@@ -11,7 +11,7 @@ open Mazes.Core.Grid.Array2D.Ortho
 [<Struct>]
 type OrthoCell =
     private
-        { Walls : Wall<OrthoPosition> array }
+        { Walls : Connection<OrthoPosition> array }
 
     interface ICell<OrthoPosition> with
         member this.Create walls =
@@ -24,7 +24,7 @@ type OrthoCell =
             OrthoCell.WallIndex position
 
         member this.WallTypeAtPosition position =
-            this.Walls.[OrthoCell.WallIndex position].WallType
+            this.Walls.[OrthoCell.WallIndex position].ConnectionType
 
         member this.IsALink wallType =
             OrthoCell.IsALink wallType
@@ -43,13 +43,13 @@ type OrthoCell =
 
     member this.IsLinked =
         (this.Walls
-        |> Array.where(fun wall -> OrthoCell.IsALink wall.WallType)).Length > 0
+        |> Array.where(fun wall -> OrthoCell.IsALink wall.ConnectionType)).Length > 0
 
     member this.ToInterface =
         this :> ICell<OrthoPosition>
 
     static member IsALink wallType =
-        wallType = Empty
+        wallType = Open
 
     static member WallIndex position =
         match position with
@@ -63,12 +63,12 @@ type OrthoCell =
 
         let getWallType isOnEdge position =
             if isOnEdge then
-                WallType.getWallTypeForEdge isCurrentCellPartOfMaze
+                ConnectionType.getConnectionTypeForEdge isCurrentCellPartOfMaze
             else
                 match (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate position) with
                 | Some neighborCoordinate ->
                     let isNeighborPartOfMaze = isCellPartOfMaze neighborCoordinate
-                    WallType.getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isNeighborPartOfMaze
+                    ConnectionType.getConnectionTypeForInternal internalWallType isCurrentCellPartOfMaze isNeighborPartOfMaze
                 | None -> failwith $"Could not find a wall type for the neighbor {coordinate} at {position}"
 
         let wallType pos =
@@ -81,5 +81,5 @@ type OrthoCell =
         {
             Walls =
                 [| for pos in OrthoPositionHandler.Instance.Values coordinate do
-                       { WallType = (wallType pos); WallPosition = pos } |]                
+                       { ConnectionType = (wallType pos); ConnectionPosition = pos } |]                
         }.ToInterface

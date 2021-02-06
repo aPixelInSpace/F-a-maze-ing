@@ -25,11 +25,11 @@ let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, t
     let grid =
         let grid =
             Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside
-            |> OrthoGrid.Create  Normal
+            |> OrthoGrid.Create  Close
             :> IGrid<OrthoGrid>
 
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 6 } { RIndex = 3; CIndex = 6 } WallType.Normal
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 6 } { RIndex = 3; CIndex = 6 } ConnectionType.Close
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 } ConnectionType.Close
 
         (fun () -> grid)
 
@@ -52,11 +52,11 @@ let ``Given a maze with a polar grid, a path and a map, when creating an SVG, th
     let grid =
         let grid =
             Shape.Disk.create 5 1.0 2
-            |> PolarGrid.Create Normal
+            |> PolarGrid.Create Close
             :> IGrid<PolarGrid>
 
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 13 } WallType.Normal
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 13 } ConnectionType.Close
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 } ConnectionType.Close
 
         (fun () -> grid)
 
@@ -79,11 +79,11 @@ let ``Given a maze with a hex grid, a path and a map, when creating an SVG, then
     let grid =
         let grid =
             Shape.Hexagon.create 5.0
-            |> HexGrid.Create Normal
+            |> HexGrid.Create Close
             :> IGrid<HexGrid>
 
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 } WallType.Normal
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 5; CIndex = 2 } { RIndex = 6; CIndex = 3 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 } ConnectionType.Close
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 5; CIndex = 2 } { RIndex = 6; CIndex = 3 } ConnectionType.Close
 
         (fun () -> grid)
 
@@ -106,11 +106,11 @@ let ``Given a maze with a tri grid, a path and a map, when creating an SVG, then
     let grid =
         let grid =
             Shape.TriangleIsosceles.create 9 Shape.TriangleIsosceles.BaseAt.Bottom 1 1
-            |> TriGrid.Create Normal
+            |> TriGrid.Create Close
             :> IGrid<TriGrid>
 
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 3 } WallType.Normal
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 3 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 3 } ConnectionType.Close
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 3 } ConnectionType.Close
 
         (fun _ -> grid)
 
@@ -133,11 +133,11 @@ let ``Given a maze with a octa-square grid, a path and a map, when creating an S
     let grid =
         let grid =
             Shape.Rectangle.create 5 7
-            |> OctaSquareGrid.Create Normal
+            |> OctaSquareGrid.Create Close
             :> IGrid<OctaSquareGrid>
 
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 } WallType.Normal
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 } ConnectionType.Close
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 } ConnectionType.Close
 
         (fun _ -> grid)
 
@@ -160,11 +160,11 @@ let ``Given a maze with a Cairo pentagonal grid, a path and a map, when creating
     let grid =
         let grid =
             Shape.Pentagon.create 5.0
-            |> PentaCairoGrid.Create Normal
+            |> PentaCairoGrid.Create Close
             :> IGrid<PentaCairoGrid>
 
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 3 } WallType.Normal
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 5; CIndex = 3 } { RIndex = 6; CIndex = 4 } WallType.Normal
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 3 } ConnectionType.Close
+        grid.AddUpdateNonAdjacentNeighbor { RIndex = 5; CIndex = 3 } { RIndex = 6; CIndex = 4 } ConnectionType.Close
 
         (fun _ -> grid)
 

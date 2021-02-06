@@ -178,30 +178,30 @@ let appendPathBridge (sBuilder : StringBuilder) id styleClass lines =
 
     sBuilder.Append($"\n")
 
-let appendWall (sBuilder : StringBuilder) lines (wallType : WallType) coordinate =
+let appendWall (sBuilder : StringBuilder) lines (wallType : ConnectionType) coordinate =
     match wallType with
-    | Normal -> appendPathElement sBuilder None normalWallClass lines coordinate
-    | Border -> appendPathElement sBuilder None borderWallClass lines coordinate
-    | Empty -> sBuilder
+    | Close -> appendPathElement sBuilder None normalWallClass lines coordinate
+    | ClosePersistent -> appendPathElement sBuilder None borderWallClass lines coordinate
+    | Open -> sBuilder
 
-let appendNormalWallBackInset (sBuilder : StringBuilder) lines (wallType : WallType) coordinate =
+let appendNormalWallBackInset (sBuilder : StringBuilder) lines (wallType : ConnectionType) coordinate =
     match wallType with
-    | Normal -> appendPathElement sBuilder None normalWallInsetBackClass lines coordinate
+    | Close -> appendPathElement sBuilder None normalWallInsetBackClass lines coordinate
     | _ -> sBuilder
 
-let appendNormalWallForeInset (sBuilder : StringBuilder) lines (wallType : WallType) coordinate =
+let appendNormalWallForeInset (sBuilder : StringBuilder) lines (wallType : ConnectionType) coordinate =
     match wallType with
-    | Normal -> appendPathElement sBuilder None normalWallInsetForeClass lines coordinate
+    | Close -> appendPathElement sBuilder None normalWallInsetForeClass lines coordinate
     | _ -> sBuilder
 
-let appendBorderWallBackInset (sBuilder : StringBuilder) lines (wallType : WallType) coordinate =
+let appendBorderWallBackInset (sBuilder : StringBuilder) lines (wallType : ConnectionType) coordinate =
     match wallType with
-    | Border -> appendPathElement sBuilder None borderWallInsetBackClass lines coordinate
+    | ClosePersistent -> appendPathElement sBuilder None borderWallInsetBackClass lines coordinate
     | _ -> sBuilder
 
-let appendBorderWallForeInset (sBuilder : StringBuilder) lines (wallType : WallType) coordinate =
+let appendBorderWallForeInset (sBuilder : StringBuilder) lines (wallType : ConnectionType) coordinate =
     match wallType with
-    | Border -> appendPathElement sBuilder None borderWallInsetForeClass lines coordinate
+    | ClosePersistent -> appendPathElement sBuilder None borderWallInsetForeClass lines coordinate
     | _ -> sBuilder
 
 let appendPathElementColor (sBuilder : StringBuilder) styleClass opacity (lines : string) coordinate =
@@ -259,7 +259,7 @@ let appendMazeDistanceBridgeColoration sequence wholeBridgeLines distanceFromRoo
     sequence
     |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
         match wallType, showClosedBridge with
-        | Empty, _ | Normal, true ->
+        | Open, _ | Close, true ->
             sBuilder |> appendCellColorWithDynamicOpacity (wholeBridgeLines fromCoordinate toCoordinate) (distanceFromRoot fromCoordinate) (maxDistanceFromRoot - 1) None |> ignore
         | _ -> ())
 
@@ -275,7 +275,7 @@ let appendMazeBridgeColoration sequence wholeBridgeLines (sBuilder : StringBuild
     sequence
     |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
         match wallType, showClosedBridge with
-        | Empty, _ | Normal, true ->
+        | Open, _ | Close, true ->
             appendPathElementColor sBuilder colorClass "1" (wholeBridgeLines fromCoordinate toCoordinate) None |> ignore
         | _ -> ())
 
@@ -380,11 +380,11 @@ let wholeBridgeLines calculatePointsBridge fromCoordinate toCoordinate =
     $"L {round rightToX} {round rightToY} " +
     $"L {round leftToX} {round leftToY} "
 
-let appendSimpleBridges calculatePointsBridge (bridges : (Coordinate * Coordinate * WallType) seq) (sBuilder : StringBuilder) =
+let appendSimpleBridges calculatePointsBridge (bridges : (Coordinate * Coordinate * ConnectionType) seq) (sBuilder : StringBuilder) =
     bridges
     |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
             match wallType, showClosedBridge with
-            | Empty, _ | Normal, true ->
+            | Open, _ | Close, true ->
                 let ((leftFromX, leftFromY), (rightFromX, rightFromY), (leftToX, leftToY), (rightToX, rightToY)) = calculatePointsBridge fromCoordinate toCoordinate
                 appendPathBridge sBuilder None normalWallBridgeClass $"M {round leftFromX} {round leftFromY} L {round leftToX} {round leftToY}" |> ignore
                 appendPathBridge sBuilder None normalWallBridgeClass $"M {round rightFromX} {round rightFromY} L {round rightToX} {round rightToY}" |> ignore
@@ -392,12 +392,12 @@ let appendSimpleBridges calculatePointsBridge (bridges : (Coordinate * Coordinat
             
     sBuilder
 
-let appendSimpleWallsBridges calculatePointsBridge (bridges : (Coordinate * Coordinate * WallType) seq) (sBuilder : StringBuilder) =
+let appendSimpleWallsBridges calculatePointsBridge (bridges : (Coordinate * Coordinate * ConnectionType) seq) (sBuilder : StringBuilder) =
     bridges
     |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
             let ((leftFromX, leftFromY), (rightFromX, rightFromY), (leftToX, leftToY), _) = calculatePointsBridge fromCoordinate toCoordinate
             match wallType, showClosedBridge with
-            | Normal, true ->
+            | Close, true ->
                 let distance = calculateDistance (leftFromX, leftFromY) (leftToX, leftToY)
                 let angle = -(calculateAngle (leftFromX, leftFromY) (leftToX, leftToY))
                 let (leftPointX, leftPointY) = calculatePoint (leftFromX, leftFromY) angle (distance / 2.0)

@@ -11,7 +11,7 @@ open Mazes.Core.Grid.Array2D.Tri
 [<Struct>]
 type TriCell =
     private
-        { Walls : Wall<TriPosition> array }
+        { Walls : Connection<TriPosition> array }
 
     interface ICell<TriPosition> with
         member this.Create walls =
@@ -24,7 +24,7 @@ type TriCell =
             TriCell.WallIndex position
 
         member this.WallTypeAtPosition position =
-            this.Walls.[TriCell.WallIndex position].WallType
+            this.Walls.[TriCell.WallIndex position].ConnectionType
 
         member this.IsALink wallType =
             TriCell.IsALink wallType
@@ -43,13 +43,13 @@ type TriCell =
 
     member this.IsLinked =
         (this.Walls
-        |> Array.where(fun wall -> TriCell.IsALink wall.WallType)).Length > 0
+        |> Array.where(fun wall -> TriCell.IsALink wall.ConnectionType)).Length > 0
 
     member this.ToInterface =
         this :> ICell<TriPosition>
 
     static member IsALink wallType =
-        wallType = Empty
+        wallType = Open
 
     static member WallIndex position =
         match position with
@@ -63,22 +63,22 @@ type TriCell =
 
         let getWallType isOnEdge position =
             if isOnEdge then
-                WallType.getWallTypeForEdge isCurrentCellPartOfMaze
+                ConnectionType.getConnectionTypeForEdge isCurrentCellPartOfMaze
             else
                 match (TriCoordinateHandler.Instance.NeighborCoordinateAt coordinate position) with
                 | Some neighborCoordinate ->
                     let isNeighborPartOfMaze = isCellPartOfMaze neighborCoordinate
-                    WallType.getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isNeighborPartOfMaze
+                    ConnectionType.getConnectionTypeForInternal internalWallType isCurrentCellPartOfMaze isNeighborPartOfMaze
                 | None -> failwith $"Could not find a wall type for the neighbor {coordinate} at {position}"
 
         {
             Walls =
                 [|
-                   { WallType = (getWallType (isFirstColumn coordinate.CIndex) Left); WallPosition = Left }
-                   { WallType = (getWallType (isLastColumn coordinate.CIndex numberOfColumns) Right); WallPosition = Right }
+                   { ConnectionType = (getWallType (isFirstColumn coordinate.CIndex) Left); ConnectionPosition = Left }
+                   { ConnectionType = (getWallType (isLastColumn coordinate.CIndex numberOfColumns) Right); ConnectionPosition = Right }
 
                    if TriPositionHandler.IsUpright coordinate then
-                       { WallType = (getWallType (isLastRow coordinate.RIndex numberOfRows) Bottom); WallPosition = Bottom }
+                       { ConnectionType = (getWallType (isLastRow coordinate.RIndex numberOfRows) Bottom); ConnectionPosition = Bottom }
                    else
-                       { WallType = (getWallType (isFirstRow coordinate.RIndex) Top); WallPosition = Top } |]                
+                       { ConnectionType = (getWallType (isFirstRow coordinate.RIndex) Top); ConnectionPosition = Top } |]                
         }.ToInterface

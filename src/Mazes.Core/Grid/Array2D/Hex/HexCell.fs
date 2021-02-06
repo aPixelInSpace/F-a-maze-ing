@@ -11,7 +11,7 @@ open Mazes.Core.Grid.Array2D.Hex
 [<Struct>]
 type HexCell =
     private
-        { Walls : Wall<HexPosition> array }
+        { Walls : Connection<HexPosition> array }
 
     interface ICell<HexPosition> with
         member this.Create walls =
@@ -24,7 +24,7 @@ type HexCell =
             HexCell.WallIndex position
 
         member this.WallTypeAtPosition position =
-            this.Walls.[HexCell.WallIndex position].WallType
+            this.Walls.[HexCell.WallIndex position].ConnectionType
 
         member this.IsALink wallType =
             HexCell.IsALink wallType
@@ -43,13 +43,13 @@ type HexCell =
 
     member this.IsLinked =
         (this.Walls
-        |> Array.where(fun wall -> HexCell.IsALink wall.WallType)).Length > 0
+        |> Array.where(fun wall -> HexCell.IsALink wall.ConnectionType)).Length > 0
 
     member this.ToInterface =
         this :> ICell<HexPosition>
 
     static member IsALink wallType =
-        wallType = Empty
+        wallType = Open
 
     static member WallIndex position =
         match position with
@@ -65,12 +65,12 @@ type HexCell =
 
         let getWallType isOnEdge position =
             if isOnEdge then
-                WallType.getWallTypeForEdge isCurrentCellPartOfMaze
+                ConnectionType.getConnectionTypeForEdge isCurrentCellPartOfMaze
             else
                 match (HexCoordinateHandler.Instance.NeighborCoordinateAt coordinate position) with
                 | Some neighborCoordinate ->
                     let isNeighborPartOfMaze = isCellPartOfMaze neighborCoordinate
-                    WallType.getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isNeighborPartOfMaze
+                    ConnectionType.getConnectionTypeForInternal internalWallType isCurrentCellPartOfMaze isNeighborPartOfMaze
                 | None -> failwith $"Could not find a wall type for the neighbor {coordinate} at {position}"
 
         let isEven = (HexPositionHandler.IsEven coordinate)
@@ -90,10 +90,10 @@ type HexCell =
 
         {
             Walls =
-                [| { WallType = wallTypeTopLeft; WallPosition = TopLeft }
-                   { WallType = wallTypeTop; WallPosition = Top }
-                   { WallType = wallTypeTopRight; WallPosition = TopRight }
-                   { WallType = wallTypeBottomLeft; WallPosition = BottomLeft }
-                   { WallType = wallTypeBottom; WallPosition = Bottom }
-                   { WallType = wallTypeBottomRight; WallPosition = BottomRight } |]
+                [| { ConnectionType = wallTypeTopLeft; ConnectionPosition = TopLeft }
+                   { ConnectionType = wallTypeTop; ConnectionPosition = Top }
+                   { ConnectionType = wallTypeTopRight; ConnectionPosition = TopRight }
+                   { ConnectionType = wallTypeBottomLeft; ConnectionPosition = BottomLeft }
+                   { ConnectionType = wallTypeBottom; ConnectionPosition = Bottom }
+                   { ConnectionType = wallTypeBottomRight; ConnectionPosition = BottomRight } |]
         }.ToInterface

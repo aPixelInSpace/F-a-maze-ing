@@ -36,4 +36,4 @@ type TriGrid
         TriGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, TriPositionHandler.Instance,  TriCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
-        fun () -> TriGrid.Create Normal canvas :> IGrid<TriGrid>
+        fun () -> TriGrid.Create Close canvas :> IGrid<TriGrid>

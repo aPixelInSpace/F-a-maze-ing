@@ -34,4 +34,4 @@ type OctaSquareGrid
         OctaSquareGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, OctaSquarePositionHandler.Instance,  OctaSquareCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
-        fun () -> OctaSquareGrid.Create Normal canvas :> IGrid<OctaSquareGrid>
+        fun () -> OctaSquareGrid.Create Close canvas :> IGrid<OctaSquareGrid>

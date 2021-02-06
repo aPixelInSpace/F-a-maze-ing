@@ -32,14 +32,14 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
 
         if headLinkedNeighbors.Length > 0 then
             let randomLinkedNeighbor = headLinkedNeighbors.[rng.Next(headLinkedNeighbors.Length)]
-            grid.LinkCells headCoordinate randomLinkedNeighbor
+            grid.ConnectCells headCoordinate randomLinkedNeighbor
 
         let mutable unlinkedNeighbors = grid.NeighborsThatAreLinked false headCoordinate |> Seq.toArray
 
         while unlinkedNeighbors.Length > 0 do
             let nextCoordinate = unlinkedNeighbors.[rng.Next(unlinkedNeighbors.Length)]
 
-            grid.LinkCells headCoordinate nextCoordinate
+            grid.ConnectCells headCoordinate nextCoordinate
             frontier.Remove(nextCoordinate) |> ignore
 
             unlinkedNeighbors <- grid.NeighborsThatAreLinked false nextCoordinate |> Seq.toArray

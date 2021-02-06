@@ -12,125 +12,125 @@ let private repetitionsMiddlePart = 1
 let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom =
     match wallTypeLeft, wallTypeTop, wallTypeRight, wallTypeBottom with
     // Empty
-    | Empty, Empty, Empty, Empty -> ' '
+    | Open, Open, Open, Open -> ' '
     
     // Normal
-    | Normal, Normal, Normal, Normal -> '┼'
+    | Close, Close, Close, Close -> '┼'
     
     // Normal - Empty
-    | Empty, Normal, Normal, Normal -> '├'
-    | Normal, Normal, Empty, Normal -> '┤'
-    | Normal, Empty, Normal, Normal -> '┬'
-    | Normal, Normal, Normal, Empty -> '┴'
+    | Open, Close, Close, Close -> '├'
+    | Close, Close, Open, Close -> '┤'
+    | Close, Open, Close, Close -> '┬'
+    | Close, Close, Close, Open -> '┴'
     
-    | Empty, Empty, Normal, Normal -> '╭' // or '┌'
-    | Empty, Normal, Normal, Empty -> '╰' // or '└'
-    | Normal, Empty, Empty, Normal -> '╮' // or '┐'
-    | Normal, Normal, Empty, Empty -> '╯' // or '┘' 
+    | Open, Open, Close, Close -> '╭' // or '┌'
+    | Open, Close, Close, Open -> '╰' // or '└'
+    | Close, Open, Open, Close -> '╮' // or '┐'
+    | Close, Close, Open, Open -> '╯' // or '┘' 
     
-    | Empty, Normal, Empty, Normal -> '│'
-    | Normal, Empty, Normal, Empty -> '─'
+    | Open, Close, Open, Close -> '│'
+    | Close, Open, Close, Open -> '─'
     
-    | Normal, Empty, Empty, Empty -> '╴'
-    | Empty, Normal, Empty, Empty -> '┴' // or '╵'
-    | Empty, Empty, Normal, Empty -> '╶'
-    | Empty, Empty, Empty, Normal -> '┬' // or '╷'
+    | Close, Open, Open, Open -> '╴'
+    | Open, Close, Open, Open -> '┴' // or '╵'
+    | Open, Open, Close, Open -> '╶'
+    | Open, Open, Open, Close -> '┬' // or '╷'
     
     // Border    
-    | Border, Border, Border, Border -> '╋'
+    | ClosePersistent, ClosePersistent, ClosePersistent, ClosePersistent -> '╋'
     
     // Border - Empty
-    | Empty, Border, Border, Border -> '┣'
-    | Border, Border, Empty, Border -> '┫'
-    | Border, Empty, Border, Border -> '┳'
-    | Border, Border, Border, Empty -> '┻'
+    | Open, ClosePersistent, ClosePersistent, ClosePersistent -> '┣'
+    | ClosePersistent, ClosePersistent, Open, ClosePersistent -> '┫'
+    | ClosePersistent, Open, ClosePersistent, ClosePersistent -> '┳'
+    | ClosePersistent, ClosePersistent, ClosePersistent, Open -> '┻'
     
-    | Empty, Empty, Border, Border -> '┏'
-    | Empty, Border, Empty, Border -> '┃'
-    | Empty, Border, Border, Empty -> '┗'
-    | Border, Empty, Empty, Border -> '┓'
-    | Border, Empty, Border, Empty -> '━'
-    | Border, Border, Empty, Empty -> '┛'
+    | Open, Open, ClosePersistent, ClosePersistent -> '┏'
+    | Open, ClosePersistent, Open, ClosePersistent -> '┃'
+    | Open, ClosePersistent, ClosePersistent, Open -> '┗'
+    | ClosePersistent, Open, Open, ClosePersistent -> '┓'
+    | ClosePersistent, Open, ClosePersistent, Open -> '━'
+    | ClosePersistent, ClosePersistent, Open, Open -> '┛'
     
-    | Border, Empty, Empty, Empty -> ' '
-    | Empty, Border, Empty, Empty -> '┻'
-    | Empty, Empty, Border, Empty -> ' '
-    | Empty, Empty, Empty, Border -> '┳'
+    | ClosePersistent, Open, Open, Open -> ' '
+    | Open, ClosePersistent, Open, Open -> '┻'
+    | Open, Open, ClosePersistent, Open -> ' '
+    | Open, Open, Open, ClosePersistent -> '┳'
     
     // Normal - Border
-    | Border, Normal, Normal, Normal -> '┽'
-    | Normal, Normal, Border, Normal -> '┾'
-    | Normal, Border, Normal, Normal -> '╀'
-    | Normal, Normal, Normal, Border -> '╁'
+    | ClosePersistent, Close, Close, Close -> '┽'
+    | Close, Close, ClosePersistent, Close -> '┾'
+    | Close, ClosePersistent, Close, Close -> '╀'
+    | Close, Close, Close, ClosePersistent -> '╁'
     
-    | Border, Border, Normal, Normal -> '╃'
-    | Border, Normal, Border, Normal -> '┿'
-    | Border, Normal, Normal, Border -> '╅'
-    | Normal, Border, Border, Normal -> '╄'
-    | Normal, Border, Normal, Border -> '╂'
-    | Normal, Normal, Border, Border -> '╆'
+    | ClosePersistent, ClosePersistent, Close, Close -> '╃'
+    | ClosePersistent, Close, ClosePersistent, Close -> '┿'
+    | ClosePersistent, Close, Close, ClosePersistent -> '╅'
+    | Close, ClosePersistent, ClosePersistent, Close -> '╄'
+    | Close, ClosePersistent, Close, ClosePersistent -> '╂'
+    | Close, Close, ClosePersistent, ClosePersistent -> '╆'
     
-    | Normal, Border, Border, Border -> '╊'
-    | Border, Normal, Border, Border -> '╈'
-    | Border, Border, Normal, Border -> '╉'
-    | Border, Border, Border, Normal -> '╇'
+    | Close, ClosePersistent, ClosePersistent, ClosePersistent -> '╊'
+    | ClosePersistent, Close, ClosePersistent, ClosePersistent -> '╈'
+    | ClosePersistent, ClosePersistent, Close, ClosePersistent -> '╉'
+    | ClosePersistent, ClosePersistent, ClosePersistent, Close -> '╇'
     
     // Normal (2) - Empty - Border
-    | Normal, Normal, Empty, Border -> '┧'
-    | Normal, Normal, Border, Empty -> '┶'
+    | Close, Close, Open, ClosePersistent -> '┧'
+    | Close, Close, ClosePersistent, Open -> '┶'
     
-    | Empty, Normal, Normal, Border -> '┟'
-    | Border, Normal, Normal, Empty -> '┵'
+    | Open, Close, Close, ClosePersistent -> '┟'
+    | ClosePersistent, Close, Close, Open -> '┵'
     
-    | Empty, Border, Normal, Normal -> '┞'
-    | Border, Empty, Normal, Normal -> '┭'
+    | Open, ClosePersistent, Close, Close -> '┞'
+    | ClosePersistent, Open, Close, Close -> '┭'
     
-    | Normal, Empty, Border, Normal -> '┮'
-    | Normal, Border, Empty, Normal -> '┦'
+    | Close, Open, ClosePersistent, Close -> '┮'
+    | Close, ClosePersistent, Open, Close -> '┦'
     
-    | Normal, Empty, Normal, Border -> '┰'
-    | Normal, Border, Normal, Empty -> '┸'
+    | Close, Open, Close, ClosePersistent -> '┰'
+    | Close, ClosePersistent, Close, Open -> '┸'
     
-    | Empty, Normal, Border, Normal -> '┝'
-    | Border, Normal, Empty, Normal -> '┥'
+    | Open, Close, ClosePersistent, Close -> '┝'
+    | ClosePersistent, Close, Open, Close -> '┥'
     
     // Normal - Empty - Border (2)
-    | Border, Border, Empty, Normal -> '┩'
-    | Border, Border, Normal, Empty -> '┹'
+    | ClosePersistent, ClosePersistent, Open, Close -> '┩'
+    | ClosePersistent, ClosePersistent, Close, Open -> '┹'
     
-    | Empty, Border, Border, Normal -> '┡'
-    | Normal, Border, Border, Empty -> '┺'
+    | Open, ClosePersistent, ClosePersistent, Close -> '┡'
+    | Close, ClosePersistent, ClosePersistent, Open -> '┺'
     
-    | Empty, Normal, Border, Border -> '┢'
-    | Normal, Empty, Border, Border -> '┲'
+    | Open, Close, ClosePersistent, ClosePersistent -> '┢'
+    | Close, Open, ClosePersistent, ClosePersistent -> '┲'
     
-    | Border, Empty, Normal, Border -> '┱'
-    | Border, Normal, Empty, Border -> '┪'
+    | ClosePersistent, Open, Close, ClosePersistent -> '┱'
+    | ClosePersistent, Close, Open, ClosePersistent -> '┪'
     
-    | Border, Empty, Border, Normal -> '┯'
-    | Border, Normal, Border, Empty -> '┷'
+    | ClosePersistent, Open, ClosePersistent, Close -> '┯'
+    | ClosePersistent, Close, ClosePersistent, Open -> '┷'
     
-    | Empty, Border, Normal, Border -> '┠'
-    | Normal, Border, Empty, Border -> '┨'
+    | Open, ClosePersistent, Close, ClosePersistent -> '┠'
+    | Close, ClosePersistent, Open, ClosePersistent -> '┨'
     
     // Normal - Empty (2) - Border
-    | Empty, Empty, Normal, Border -> '┎'
-    | Empty, Empty, Border, Normal -> '┍'
+    | Open, Open, Close, ClosePersistent -> '┎'
+    | Open, Open, ClosePersistent, Close -> '┍'
     
-    | Normal, Empty, Empty, Border -> '┒'
-    | Border, Empty, Empty, Normal -> '┑'
+    | Close, Open, Open, ClosePersistent -> '┒'
+    | ClosePersistent, Open, Open, Close -> '┑'
     
-    | Normal, Border, Empty, Empty -> '┚'
-    | Border, Normal, Empty, Empty -> '┙'
+    | Close, ClosePersistent, Open, Open -> '┚'
+    | ClosePersistent, Close, Open, Open -> '┙'
     
-    | Empty, Normal, Border, Empty -> '┖'
-    | Empty, Border, Normal, Empty -> '┕'
+    | Open, Close, ClosePersistent, Open -> '┖'
+    | Open, ClosePersistent, Close, Open -> '┕'
     
-    | Empty, Normal, Empty, Border -> '╽'
-    | Empty, Border, Empty, Normal -> '╿'
+    | Open, Close, Open, ClosePersistent -> '╽'
+    | Open, ClosePersistent, Open, Close -> '╿'
     
-    | Normal, Empty, Border, Empty -> '╼'
-    | Border, Empty, Normal, Empty -> '╾'
+    | Close, Open, ClosePersistent, Open -> '╼'
+    | ClosePersistent, Open, Close, Open -> '╾'
 
 let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty (grid : OrthoGrid) (coordinate : Coordinate) pos1 pos2 =
     let neighborAtPos1 = OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate pos1
@@ -139,14 +139,14 @@ let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty (grid : OrthoGrid) (coor
         match grid.Canvas.ExistAt neighborAtPos1 with
         | true ->
             (grid.Cell neighborAtPos1).WallTypeAtPosition pos2
-        | false -> Empty
+        | false -> Open
     | None -> failwith $"Could not find a neighbor {coordinate} at {pos1}"
 
 let private append
     (sBuilder : StringBuilder) (grid : OrthoGrid) coordinate
     (intersectionWallLeft, intersectionWallTop, intersectionWallRight, intersectionWallBottom,
      middleWall,
-     (lastIntersectionWallLeft : WallType Lazy), (lastIntersectionWallTop : WallType Lazy), lastIntersectionWallRight, lastIntersectionWallBottom) =
+     (lastIntersectionWallLeft : ConnectionType Lazy), (lastIntersectionWallTop : ConnectionType Lazy), lastIntersectionWallRight, lastIntersectionWallBottom) =
 
     // intersection
     sBuilder.Append(getPieceOfWall
@@ -159,9 +159,9 @@ let private append
     [1 .. repetitionsMiddlePart ] |> List.iter(fun _ ->
         sBuilder.Append(getPieceOfWall
                             middleWall
-                            Empty
+                            Open
                             middleWall
-                            Empty) |> ignore)
+                            Open) |> ignore)
 
     // last part only on the last column
     if (coordinate.CIndex = grid.Canvas.MaxColumnIndex) then
@@ -191,7 +191,7 @@ let private wallTypes (grid : OrthoGrid) coordinate =
 
     let lastIntersectionWallTop = (lazy (ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Top Right))
 
-    let lastIntersectionWallRight = Empty
+    let lastIntersectionWallRight = Open
 
     let lastIntersectionWallBottom = cell.WallTypeAtPosition Right
 
@@ -207,7 +207,7 @@ let private wallTypesLastRow (grid : OrthoGrid) coordinate =
 
     let intersectionWallRight = cell.WallTypeAtPosition Bottom
 
-    let intersectionWallBottom = Empty
+    let intersectionWallBottom = Open
     
     let middleWall = cell.WallTypeAtPosition Bottom
 
@@ -215,9 +215,9 @@ let private wallTypesLastRow (grid : OrthoGrid) coordinate =
 
     let lastIntersectionWallTop = (lazy (cell.WallTypeAtPosition Right))    
 
-    let lastIntersectionWallRight = Empty
+    let lastIntersectionWallRight = Open
 
-    let lastIntersectionWallBottom = Empty
+    let lastIntersectionWallBottom = Open
 
     (intersectionWallLeft, intersectionWallTop, intersectionWallRight, intersectionWallBottom, middleWall, lastIntersectionWallLeft, lastIntersectionWallTop, lastIntersectionWallRight, lastIntersectionWallBottom)
 

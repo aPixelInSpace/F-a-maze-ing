@@ -22,10 +22,6 @@ type PolarGrid =
         member this.TotalOfMazeCells =
             this.Canvas.TotalOfMazeZones
 
-        member this.EveryCoordinatesPartOfMaze =
-            this.GetCellByCell (fun _ _ -> true)
-            |> Seq.map(snd)
-
         member this.Dimension1Boundaries cellIndex =
             let maxCellsInLastRing = this.Cells.[maxD1Index this.Cells].Length
 
@@ -51,7 +47,7 @@ type PolarGrid =
         member this.AdjacentNeighborAbstractCoordinate coordinate position =
             Some (PolarCoordinate.neighborBaseCoordinateAt coordinate (PolarPosition.map position))
 
-        member this.IsCellLinked coordinate =
+        member this.IsCellConnected coordinate =
             this.NonAdjacentNeighbors.IsLinked coordinate ||
             (this.Cell coordinate).IsLinked this.Cells coordinate
 
@@ -87,16 +83,16 @@ type PolarGrid =
         member this.CoordinatesPartOfMaze =
             this.CoordinatesPartOfMaze
 
-        member this.LinkCells coordinate otherCoordinate =
+        member this.ConnectCells coordinate otherCoordinate =
             this.LinkCells coordinate otherCoordinate
 
-        member this.UnLinkCells coordinate otherCoordinate =
+        member this.UnConnectCells coordinate otherCoordinate =
             let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
-            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Normal
+            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Close
 
         member this.PutBorderBetweenCells coordinate otherCoordinate =
             let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
-            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Border
+            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition ClosePersistent
 
         member this.AdjacentNeighbor coordinate position =
             this.AdjacentNeighbor coordinate (PolarPosition.map position)
@@ -118,9 +114,6 @@ type PolarGrid =
 
         member this.NotLinkedNeighbors coordinate =
             this.NotLinkedNeighbors coordinate
-
-        member this.RandomNeighbor rng coordinate =
-            this.RandomNeighbor rng coordinate
 
         member this.RandomCoordinatePartOfMazeAndNotLinked rng =
             this.RandomCoordinatePartOfMazeAndNotLinked rng
@@ -153,13 +146,13 @@ type PolarGrid =
             if neighborPosition <> Inward then
                 not (this.Canvas.ExistAt otherCoordinate) ||
                 not (this.Canvas.Zone otherCoordinate).IsAPartOfMaze ||
-                neighborCell.WallTypeAtPosition neighborPosition.Opposite = Border                
+                neighborCell.WallTypeAtPosition neighborPosition.Opposite = ClosePersistent                
             else
                 let cell = this.Cell coordinate
                 if not (isFirstRing coordinate.RIndex) then
                     not (this.Canvas.ExistAt otherCoordinate) ||
                     not (this.Canvas.Zone otherCoordinate).IsAPartOfMaze ||
-                    cell.WallTypeAtPosition neighborPosition = Border
+                    cell.WallTypeAtPosition neighborPosition = ClosePersistent
                 else
                     true
 
@@ -170,8 +163,8 @@ type PolarGrid =
         let getWalls coordinate position =
             this.Cells.[coordinate.RIndex].[coordinate.CIndex].Walls
             |> Array.map(fun wall ->
-                if wall.WallPosition = position then
-                    { WallType = wallType; WallPosition = position }
+                if wall.ConnectionPosition = position then
+                    { ConnectionType = wallType; ConnectionPosition = position }
                 else
                     wall)
 
@@ -189,10 +182,10 @@ type PolarGrid =
 
     member this.LinkCells coordinate otherCoordinate =
         if this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate then
-            this.NonAdjacentNeighbors.AddUpdate coordinate otherCoordinate Empty
+            this.NonAdjacentNeighbors.AddUpdate coordinate otherCoordinate Open
         else
             let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
-            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Empty
+            this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition Open
 
     member this.IfNotAtLimitLinkCells coordinate otherCoordinate =
         if (this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate) || not (this.IsLimitAt coordinate otherCoordinate) then
@@ -228,10 +221,6 @@ type PolarGrid =
 
         listOfNeighborCoordinate
         |> Seq.append listOfNonAdjacentNeighborCoordinate
-
-    member this.RandomNeighbor (rng : Random) coordinate =
-        let neighbors = this.NeighborsFrom coordinate |> Seq.toArray
-        neighbors.[rng.Next(neighbors.Length)]
 
     member this.NeighborsThatAreLinked isLinked coordinate =
         this.NeighborsFrom coordinate
@@ -284,13 +273,13 @@ type PolarGrid =
 
         let appendHorizontalWall wallType (sBuilder : StringBuilder) =
             match wallType with
-                | Normal | Border -> sBuilder.Append("‾")
-                | WallType.Empty -> sBuilder.Append("¨")
+                | Close | ClosePersistent -> sBuilder.Append("‾")
+                | ConnectionType.Open -> sBuilder.Append("¨")
 
         let appendVerticalWall wallType (sBuilder : StringBuilder) =
             match wallType with
-                | Normal | Border -> sBuilder.Append("|")
-                | WallType.Empty -> sBuilder.Append("¦")
+                | Close | ClosePersistent -> sBuilder.Append("|")
+                | ConnectionType.Open -> sBuilder.Append("¦")
 
         let appendWhiteSpace (sBuilder : StringBuilder) =
             sBuilder.Append(" ")
@@ -374,7 +363,7 @@ module PolarGrid =
         }
 
     let CreateFunction canvas =
-        fun () -> Create Normal canvas :> IGrid<PolarGrid>
+        fun () -> Create Close canvas :> IGrid<PolarGrid>
 
     let CreateEmptyFunction canvas =
-        fun () -> Create Empty canvas :> IGrid<PolarGrid>
+        fun () -> Create Open canvas :> IGrid<PolarGrid>

@@ -198,7 +198,7 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
         (grid.IsLimitAt (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position)) ||
         (not (isInsideGridBoundary coordinate direction))
 
-    let linkCellAtPosition coordinate (direction : Direction) = (grid.LinkCells (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))
+    let linkCellAtPosition coordinate (direction : Direction) = (grid.ConnectCells (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))
     let ifNotAtLimitLinkCellAtPosition coordinate (direction : Direction) =
         if (grid.AdjacentNeighbor (getCoordinate coordinate) direction.Position).IsSome then
             (grid.IfNotAtLimitLinkCells (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))

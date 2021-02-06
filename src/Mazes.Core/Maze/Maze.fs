@@ -29,7 +29,7 @@ module Maze =
                 maze.Grid.NotLinkedNeighbors deadEndCoordinate
                 |> Seq.toArray
             if notLinkedNeighbors.Length > 0 then
-                maze.Grid.LinkCells deadEndCoordinate notLinkedNeighbors.[rng.Next(notLinkedNeighbors.Length)]
+                maze.Grid.ConnectCells deadEndCoordinate notLinkedNeighbors.[rng.Next(notLinkedNeighbors.Length)]
 
         deadEnds
         |> Seq.iter(fun deadEnd ->

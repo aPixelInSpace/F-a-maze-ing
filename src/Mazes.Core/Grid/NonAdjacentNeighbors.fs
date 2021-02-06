@@ -8,7 +8,7 @@ open Mazes.Core
 type NonAdjacentNeighbors =
     private
         {
-            Container : Dictionary<Coordinate, Dictionary<Coordinate, WallType>>
+            Container : Dictionary<Coordinate, Dictionary<Coordinate, ConnectionType>>
         }
 
     member this.AddUpdate fromCoordinate toCoordinate wallType =
@@ -19,7 +19,7 @@ type NonAdjacentNeighbors =
                 else
                     this.Container.Item(fromCoordinate).Add(toCoordinate, wallType)
             else
-                let dic = Dictionary<Coordinate, WallType>()
+                let dic = Dictionary<Coordinate, ConnectionType>()
                 dic.Add(toCoordinate, wallType)
                 this.Container.Add(fromCoordinate, dic)
         
@@ -40,11 +40,11 @@ type NonAdjacentNeighbors =
 
     member this.IsLinked coordinate =
         this.Container.ContainsKey(coordinate) &&
-        (this.Container.Item(coordinate) |> Seq.where(fun kv -> WallType.isALink kv.Value)) |> Seq.length > 0
+        (this.Container.Item(coordinate) |> Seq.where(fun kv -> ConnectionType.isConnected kv.Value)) |> Seq.length > 0
 
     member this.AreLinked fromCoordinate toCoordinate =
         this.ExistNeighbor fromCoordinate toCoordinate &&
-        WallType.isALink (this.Container.Item(fromCoordinate).Item(toCoordinate))
+        ConnectionType.isConnected (this.Container.Item(fromCoordinate).Item(toCoordinate))
 
     member this.All =
         seq {
@@ -54,4 +54,4 @@ type NonAdjacentNeighbors =
         } |> Seq.distinctBy(fun (c1, c2, _) -> Utils.getKey (c1, c2) )
 
     static member CreateEmpty =
-        { Container = Dictionary<Coordinate, Dictionary<Coordinate, WallType>>() }
+        { Container = Dictionary<Coordinate, Dictionary<Coordinate, ConnectionType>>() }

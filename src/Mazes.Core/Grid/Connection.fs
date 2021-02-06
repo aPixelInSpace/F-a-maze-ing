@@ -5,7 +5,7 @@ namespace Mazes.Core.Grid
 open Mazes.Core
 
 [<Struct>]
-type Wall<'Position> = {
-    WallType : WallType
-    WallPosition : 'Position
+type Connection<'Position> = {
+    ConnectionType : ConnectionType
+    ConnectionPosition : 'Position
 }

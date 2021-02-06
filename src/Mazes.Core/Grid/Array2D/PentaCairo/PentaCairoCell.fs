@@ -11,7 +11,7 @@ open Mazes.Core.Grid.Array2D.PentaCairo
 [<Struct>]
 type PentaCairoCell =
     private
-        { Walls : Wall<PentaCairoPosition> array }
+        { Walls : Connection<PentaCairoPosition> array }
 
     interface ICell<PentaCairoPosition> with
         member this.Create walls =
@@ -24,7 +24,7 @@ type PentaCairoCell =
             PentaCairoCell.WallIndex position
 
         member this.WallTypeAtPosition position =
-            this.Walls.[PentaCairoCell.WallIndex position].WallType
+            this.Walls.[PentaCairoCell.WallIndex position].ConnectionType
 
         member this.IsALink wallType =
             PentaCairoCell.IsALink wallType
@@ -43,13 +43,13 @@ type PentaCairoCell =
 
     member this.IsLinked =
         (this.Walls
-        |> Array.where(fun wall -> PentaCairoCell.IsALink wall.WallType)).Length > 0
+        |> Array.where(fun wall -> PentaCairoCell.IsALink wall.ConnectionType)).Length > 0
 
     member this.ToInterface =
         this :> ICell<PentaCairoPosition>
 
     static member IsALink wallType =
-        wallType = Empty
+        wallType = Open
 
     static member WallIndex position =
         match position with
@@ -64,12 +64,12 @@ type PentaCairoCell =
 
         let getWallType isOnEdge position =
             if isOnEdge then
-                WallType.getWallTypeForEdge isCurrentCellPartOfMaze
+                ConnectionType.getConnectionTypeForEdge isCurrentCellPartOfMaze
             else
                 match (PentaCairoCoordinateHandler.Instance.NeighborCoordinateAt coordinate position) with
                 | Some neighborCoordinate ->
                     let isNeighborPartOfMaze = isCellPartOfMaze neighborCoordinate
-                    WallType.getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isNeighborPartOfMaze
+                    ConnectionType.getConnectionTypeForInternal internalWallType isCurrentCellPartOfMaze isNeighborPartOfMaze
                 | None -> failwith $"Could not find a wall type for the neighbor {coordinate} at {position}"
 
         let quadrant = PentaCairoPositionHandler.Quadrant coordinate
@@ -113,5 +113,5 @@ type PentaCairoCell =
         {
             Walls =
                 [| for pos in PentaCairoPositionHandler.Instance.Values coordinate do
-                       { WallType = (wallType pos); WallPosition = pos } |]
+                       { ConnectionType = (wallType pos); ConnectionPosition = pos } |]
         }.ToInterface

@@ -45,22 +45,22 @@ let private appendWallsType (grid : PolarGrid) (centerX, centerY, ringHeight) ap
     let ((innerRadius, outerRadius), (bottomLeftX, bottomLeftY), (topLeftX, topLeftY), (bottomRightX, bottomRightY), (topRightX, topRightY)) =
         calculatePoints grid (centerX, centerY, ringHeight) coordinate
 
-    let wallInward = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Inward)
+    let wallInward = cell.Walls |> Array.tryFind(fun w -> w.ConnectionPosition = Inward)
     match wallInward with
     | Some wallInward ->
-        appendWall sBuilder $"M {round bottomLeftX} {round bottomLeftY} A {round innerRadius} {round innerRadius}, 0, 0, 1, {round bottomRightX} {round bottomRightY}" wallInward.WallType coordinate |> ignore
+        appendWall sBuilder $"M {round bottomLeftX} {round bottomLeftY} A {round innerRadius} {round innerRadius}, 0, 0, 1, {round bottomRightX} {round bottomRightY}" wallInward.ConnectionType coordinate |> ignore
     | None -> ()
 
-    let wallLeft = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Ccw)
+    let wallLeft = cell.Walls |> Array.tryFind(fun w -> w.ConnectionPosition = Ccw)
     match wallLeft with
     | Some wallLeft ->
-        appendWall sBuilder $"M {round bottomLeftX} {round bottomLeftY} L {round topLeftX} {round topLeftY}" wallLeft.WallType coordinate |> ignore
+        appendWall sBuilder $"M {round bottomLeftX} {round bottomLeftY} L {round topLeftX} {round topLeftY}" wallLeft.ConnectionType coordinate |> ignore
     | None -> ()
 
-    let wallOutward = cell.Walls |> Array.tryFind(fun w -> w.WallPosition = Outward)
+    let wallOutward = cell.Walls |> Array.tryFind(fun w -> w.ConnectionPosition = Outward)
     match wallOutward with
     | Some wallOutward ->
-        appendWall sBuilder $"M {round topLeftX} {round topLeftY} A {round outerRadius} {round outerRadius}, 0, 0, 1, {round topRightX} {round topRightY}" wallOutward.WallType coordinate |> ignore
+        appendWall sBuilder $"M {round topLeftX} {round topLeftY} A {round outerRadius} {round outerRadius}, 0, 0, 1, {round topRightX} {round topRightY}" wallOutward.ConnectionType coordinate |> ignore
     | None -> ()
 
 let private wholeCellLines grid (centerX, centerY, ringHeight) coordinate =
@@ -124,6 +124,8 @@ let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
     //|> appendLeaves map wholeCellLines
 
     |> appendSimpleWalls
+
+    //|> appendPathAndBridgesWithAnimation
     //|> appendWallsWithInset
 
     |> appendSimpleBridges

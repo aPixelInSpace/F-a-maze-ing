@@ -10,20 +10,20 @@ open Mazes.Core.Grid.ArrayOfA.Polar.PolarArrayOfA
 [<Struct>]
 type PolarCell =
     {
-        Walls : Wall<PolarPosition> array
+        Walls : Connection<PolarPosition> array
     }
 
     member this.WallTypeAtPosition position =
-        (this.Walls |> Array.find(fun w -> w.WallPosition = position)).WallType
+        (this.Walls |> Array.find(fun w -> w.ConnectionPosition = position)).ConnectionType
 
     static member IsALink wallType =
-        wallType = Empty
+        wallType = Open
 
     /// Returns true if the cell has at least one link
     member this.IsLinked (cells : PolarCell[][]) coordinate =
         let wallCondition =
             (this.Walls
-            |> Array.where(fun wall -> PolarCell.IsALink wall.WallType)).Length > 0
+            |> Array.where(fun wall -> PolarCell.IsALink wall.ConnectionType)).Length > 0
 
         let outwardCondition =
             let outwardNeighbors = PolarCoordinate.neighborsCoordinateAt cells coordinate Outward
@@ -31,7 +31,7 @@ type PolarCell =
                 outwardNeighbors
                 |> Seq.filter(fun n ->
                     cells.[n.RIndex].[n.CIndex].Walls
-                    |> Array.where(fun w -> w.WallPosition = Inward && PolarCell.IsALink w.WallType)
+                    |> Array.where(fun w -> w.ConnectionPosition = Inward && PolarCell.IsALink w.ConnectionType)
                     |> Array.length > 0)
                 |> Seq.length > 0
             else
@@ -57,20 +57,20 @@ module PolarCell =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
         let neighborsCoordinateAt = PolarCoordinate.neighborsCoordinateAt canvas.Zones coordinate
 
-        let walls = ResizeArray<Wall<PolarPosition>>()
+        let walls = ResizeArray<Connection<PolarPosition>>()
 
         if not (isFirstRing coordinate.RIndex) then
             let isInwardNeighborPartOfMaze = isCellPartOfMaze ((neighborsCoordinateAt Inward) |> Seq.head)
-            walls.Add({ WallType = (WallType.getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isInwardNeighborPartOfMaze); WallPosition = Inward })
+            walls.Add({ ConnectionType = (ConnectionType.getConnectionTypeForInternal internalWallType isCurrentCellPartOfMaze isInwardNeighborPartOfMaze); ConnectionPosition = Inward })
 
         let isCcwNeighborPartOfMaze = isCellPartOfMaze ((neighborsCoordinateAt Ccw) |> Seq.head)
-        walls.Add({ WallType = (WallType.getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isCcwNeighborPartOfMaze); WallPosition = Ccw })
+        walls.Add({ ConnectionType = (ConnectionType.getConnectionTypeForInternal internalWallType isCurrentCellPartOfMaze isCcwNeighborPartOfMaze); ConnectionPosition = Ccw })
 
         let isCwNeighborPartOfMaze = isCellPartOfMaze ((neighborsCoordinateAt Cw) |> Seq.head)
-        walls.Add({ WallType = (WallType.getWallTypeForInternal internalWallType isCurrentCellPartOfMaze isCwNeighborPartOfMaze); WallPosition = Cw })
+        walls.Add({ ConnectionType = (ConnectionType.getConnectionTypeForInternal internalWallType isCurrentCellPartOfMaze isCwNeighborPartOfMaze); ConnectionPosition = Cw })
  
         if isLastRing coordinate.RIndex canvas.NumberOfRings then
-            walls.Add({ WallType = (WallType.getWallTypeForEdge isCurrentCellPartOfMaze); WallPosition = Outward })
+            walls.Add({ ConnectionType = (ConnectionType.getConnectionTypeForEdge isCurrentCellPartOfMaze); ConnectionPosition = Outward })
 
         {
             Walls = walls.ToArray()

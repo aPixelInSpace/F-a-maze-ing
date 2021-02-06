@@ -84,9 +84,9 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
            | AlgoEnum.GrowingTreeMixChosenRandomAndLast -> GrowingTreeMixChosenRandomAndLast.createMaze rngSeed 0.5
            | AlgoEnum.GrowingTreeMixOldestAndLast -> GrowingTreeMixOldestAndLast.createMaze rngSeed 0.5
            | AlgoEnum.GrowingTreeDirection -> GrowingTreeDirection.createMaze rngSeed 0.3 0.2 0.3
-           | AlgoEnum.GrowingTreeSpiral -> GrowingTreeSpiral.createMaze rngSeed
+           | AlgoEnum.GrowingTreeSpiral -> GrowingTreeSpiral.createMaze rngSeed 1.0 1.0 5
            | AlgoEnum.Eller -> Eller.createMaze rngSeed
-           | AlgoEnum.RecursiveDivision -> RecursiveDivision.createMaze rngSeed 1.0 3 3
+           | AlgoEnum.RecursiveDivision -> RecursiveDivision.createMaze rngSeed 0.0 3 3
            | _ -> failwith "Generating algorithm unknown"
 
     let nameOfMaze =
@@ -114,7 +114,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.Hexagon.create 15.0 |> Ortho.OrthoGrid.CreateFunction)
     //let grid = (Shape.PentagonStar.create 32.0 20.0 |> Ortho.OrthoGrid.CreateFunction)
 
-    //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateFunction
+    let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateFunction
     //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateEmptyFunction
 
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateFunction)
@@ -130,7 +130,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> OctaSquare.OctaSquareGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 30 35 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> OctaSquare.OctaSquareGrid.CreateFunction)
 
-    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> PentaCairo.PentaCairoGrid.CreateFunction)
+    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> PentaCairo.PentaCairoGrid.CreateFunction)
     //let grid = (Shape.Hexagon.create 15.0 |> PentaCairo.PentaCairoGrid.CreateFunction)
@@ -143,6 +143,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Ortho.OrthoGrid.CreateEmptyFunction)
     //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> Ortho.OrthoGrid.CreateEmptyFunction)
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateEmptyFunction)
+    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> PentaCairo.PentaCairoGrid.CreateEmptyFunction)
 
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
@@ -225,7 +226,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //                   grid.IsCellPartOfMaze toCoordinate &&
 //                   rng.NextDouble() < 0.5
 //                   then
-//                    grid.AddUpdateNonAdjacentNeighbor coordinate toCoordinate WallType.Normal
+//                    grid.AddUpdateNonAdjacentNeighbor coordinate toCoordinate ConnectionType.Close
 //            | None -> ()
         
 //        grid.AddUpdateNonAdjacentNeighbor { RIndex = 6; CIndex = 6 } { RIndex = 5; CIndex = 5 } WallType.Normal
@@ -255,7 +256,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     stopWatch.Restart()
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap { RIndex = 29; CIndex = 160 } //maze.Grid.GetFirstPartOfMazeZone
 
     stopWatch.Stop()
     printfn $"Created map ({stopWatch.ElapsedMilliseconds} ms)"
@@ -286,7 +287,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.OrthoGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
 
-    //let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo { RIndex = 19; CIndex = 37 }) map //maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
     //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
@@ -295,7 +296,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     //let renderedGridSvg = SVG.OctaSquareGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
-    let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.LongestPaths |> Seq.head) map
 
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)

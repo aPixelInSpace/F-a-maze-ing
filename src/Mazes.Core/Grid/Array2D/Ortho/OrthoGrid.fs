@@ -21,13 +21,13 @@ type OrthoGrid
 
             let appendHorizontalWall wallType =
                 match wallType with
-                    | Normal | Border -> sBuilder.Append("_") |> ignore
-                    | WallType.Empty -> sBuilder.Append(" ") |> ignore
+                    | Close | ClosePersistent -> sBuilder.Append("_") |> ignore
+                    | ConnectionType.Open -> sBuilder.Append(" ") |> ignore
 
             let appendVerticalWall wallType =
                 match wallType with
-                    | Normal | Border -> sBuilder.Append("|") |> ignore
-                    | WallType.Empty -> sBuilder.Append(" ") |> ignore
+                    | Close | ClosePersistent -> sBuilder.Append("|") |> ignore
+                    | ConnectionType.Open -> sBuilder.Append(" ") |> ignore
 
             // first row
             let lastColumnIndex = cells |> maxColumnIndex
@@ -69,7 +69,7 @@ type OrthoGrid
         OrthoGrid(canvas, cells, NonAdjacentNeighbors.CreateEmpty, Obstacles.CreateEmpty, OrthoPositionHandler.Instance,  OrthoCoordinateHandler.Instance)
 
     static member CreateFunction canvas =
-        fun () -> OrthoGrid.Create Normal canvas :> IGrid<OrthoGrid>
+        fun () -> OrthoGrid.Create Close canvas :> IGrid<OrthoGrid>
 
     static member CreateEmptyFunction canvas =
-        fun () -> OrthoGrid.Create Empty canvas :> IGrid<OrthoGrid>
+        fun () -> OrthoGrid.Create Open canvas :> IGrid<OrthoGrid>

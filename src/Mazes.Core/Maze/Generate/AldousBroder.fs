@@ -6,23 +6,41 @@ open System
 open Mazes.Core.Grid
 open Mazes.Core.Maze
 
+let transformIntoMaze
+    randomCoordinatePartOfMazeAndNotLinked
+    neighbors
+    isCellConnected
+    connectCells
+    totalOfMazeCells
+    (rng : Random) =
+
+    let mutable currentCoordinate = randomCoordinatePartOfMazeAndNotLinked rng
+
+    let unvisitedCount = ref (totalOfMazeCells - 1)
+
+    while unvisitedCount.Value > 0 do
+        let nextCoordinate =
+            let neighbors = neighbors currentCoordinate |> Seq.toArray
+            neighbors.[rng.Next(neighbors.Length)]
+
+        if not (isCellConnected nextCoordinate) then
+            connectCells currentCoordinate nextCoordinate
+            decr unvisitedCount
+
+        currentCoordinate <- nextCoordinate
+
 let createMaze rngSeed (grid : unit -> IGrid<'G>) =
 
     let grid = grid()
 
     let rng = Random(rngSeed)
 
-    let mutable currentCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
-
-    let unvisitedCount = ref (grid.TotalOfMazeCells - 1)
-
-    while unvisitedCount.Value > 0 do
-        let nextCoordinate = grid.RandomNeighbor rng currentCoordinate
-
-        if not (grid.IsCellLinked nextCoordinate) then
-            grid.LinkCells currentCoordinate nextCoordinate
-            decr unvisitedCount
-
-        currentCoordinate <- nextCoordinate
+    transformIntoMaze
+        grid.RandomCoordinatePartOfMazeAndNotLinked
+        grid.Neighbors
+        grid.IsCellConnected
+        grid.ConnectCells
+        grid.TotalOfMazeCells
+        rng
 
     { Grid = grid }
