@@ -16,10 +16,11 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Aldous-Broder algo
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.create
+        |> Mazes.Core.GridNew.Grid.create
     
     // act
-    let maze = grid |> AldousBroder.createMaze 1
+    let maze = grid |> AldousBroder.createMazeNew 1
         
     // assert
     let expectedMaze =
@@ -29,10 +30,13 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Aldous-Broder algo
         "| | |  _ _ _| |_|_| |\n" +
         "| |      _ _ _ _| | |\n" +
         "|_ _|_|_ _ _ _|_ _ _|\n"
-        
-    maze.Grid.ToString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    Mazes.Core.GridNew.Ortho.toString
+        maze.Grid.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.ConnectionTypeAtPosition
+        maze.Grid.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.Cells
+    |> should equal expectedMaze
+
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]

@@ -68,25 +68,30 @@ type GenerateOptions = {
 
 let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
+//    let matchAlgoEnumWithFunction algoEnum rngSeed =
+//        match algoEnum with
+//           | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
+//           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top rngSeed 1 1
+//           | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
+//           | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
+//           | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
+//           | AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
+//           | AlgoEnum.Kruskal -> Kruskal.createMaze rngSeed
+//           | AlgoEnum.PrimSimple -> PrimSimple.createMaze rngSeed
+//           | AlgoEnum.PrimSimpleModified -> PrimSimpleModified.createMaze rngSeed
+//           | AlgoEnum.PrimWeighted -> PrimWeighted.createMaze rngSeed 42
+//           | AlgoEnum.GrowingTreeMixRandomAndLast -> GrowingTreeMixRandomAndLast.createMaze rngSeed 0.5
+//           | AlgoEnum.GrowingTreeMixChosenRandomAndLast -> GrowingTreeMixChosenRandomAndLast.createMaze rngSeed 0.5
+//           | AlgoEnum.GrowingTreeMixOldestAndLast -> GrowingTreeMixOldestAndLast.createMaze rngSeed 0.5
+//           | AlgoEnum.GrowingTreeDirection -> GrowingTreeDirection.createMaze rngSeed 0.3 0.2 0.3
+//           | AlgoEnum.GrowingTreeSpiral -> GrowingTreeSpiral.createMaze rngSeed 1.0 1.0 10 0.0
+//           | AlgoEnum.Eller -> Eller.createMaze rngSeed
+//           | AlgoEnum.RecursiveDivision -> RecursiveDivision.createMaze rngSeed 0.0 3 3
+//           | _ -> failwith "Generating algorithm unknown"
+    
     let matchAlgoEnumWithFunction algoEnum rngSeed =
         match algoEnum with
-           | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
-           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top rngSeed 1 1
-           | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
-           | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
-           | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
-           | AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
-           | AlgoEnum.Kruskal -> Kruskal.createMaze rngSeed
-           | AlgoEnum.PrimSimple -> PrimSimple.createMaze rngSeed
-           | AlgoEnum.PrimSimpleModified -> PrimSimpleModified.createMaze rngSeed
-           | AlgoEnum.PrimWeighted -> PrimWeighted.createMaze rngSeed 42
-           | AlgoEnum.GrowingTreeMixRandomAndLast -> GrowingTreeMixRandomAndLast.createMaze rngSeed 0.5
-           | AlgoEnum.GrowingTreeMixChosenRandomAndLast -> GrowingTreeMixChosenRandomAndLast.createMaze rngSeed 0.5
-           | AlgoEnum.GrowingTreeMixOldestAndLast -> GrowingTreeMixOldestAndLast.createMaze rngSeed 0.5
-           | AlgoEnum.GrowingTreeDirection -> GrowingTreeDirection.createMaze rngSeed 0.3 0.2 0.3
-           | AlgoEnum.GrowingTreeSpiral -> GrowingTreeSpiral.createMaze rngSeed 1.0 1.0 10 0.0
-           | AlgoEnum.Eller -> Eller.createMaze rngSeed
-           | AlgoEnum.RecursiveDivision -> RecursiveDivision.createMaze rngSeed 0.0 3 3
+           | AlgoEnum.AldousBroder -> AldousBroder.createMazeNew rngSeed
            | _ -> failwith "Generating algorithm unknown"
 
     let nameOfMaze =
@@ -104,6 +109,10 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let stopWatch = Stopwatch()
 
     stopWatch.Start()
+    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> GridNew.Ortho.create |> GridNew.Grid.create)
+
+    //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateFunction
+    
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Ortho.OrthoGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> OrthoGrid.createGridFunction)
     //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Ortho.OrthoGrid.CreateFunction)
@@ -114,7 +123,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.Hexagon.create 15.0 |> Ortho.OrthoGrid.CreateFunction)
     //let grid = (Shape.PentagonStar.create 32.0 20.0 |> Ortho.OrthoGrid.CreateFunction)
 
-    let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateFunction
+    //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateFunction
     //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateEmptyFunction
 
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateFunction)
@@ -204,8 +213,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    
 //    let maze = { Grid = grid }
 
-    let grid =
-        let grid = grid()
+//    let grid =
+//        let grid = grid()
 
 //        let rng = Random(rngSeed)
 //        for coordinate in grid.CoordinatesPartOfMaze do
@@ -243,7 +252,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //        grid.AddUpdateNonAdjacentNeighbor { RIndex = 12; CIndex = 25 } { RIndex = 17; CIndex = 27 } WallType.Normal
 //        grid.AddUpdateNonAdjacentNeighbor { RIndex = 11; CIndex = 10 } { RIndex = 14; CIndex = 11 } WallType.Normal
 
-        (fun _ -> grid)
+        //(fun _ -> grid)
 
     let maze = (algo rngSeed grid)
     //maze.Grid.AddTwoWayTeleport { RIndex = 2; CIndex = 4 } { RIndex = 41; CIndex = 8 }
@@ -256,7 +265,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     stopWatch.Restart()
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
     stopWatch.Stop()
     printfn $"Created map ({stopWatch.ElapsedMilliseconds} ms)"
@@ -283,11 +292,11 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    let rawTestOutput = Output.RawForTest.outputRawForTest maze (Text.renderGrid maze.Grid.ToSpecializedGrid)
 //    File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
-    //let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    let renderedGridSvg = SVGNew.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.OrthoGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
 
-    let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
     //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
     //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map

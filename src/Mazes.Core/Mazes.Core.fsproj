@@ -10,6 +10,7 @@
         <Compile Include="Trigonometry.fs" />
         <Compile Include="Position.fs" />
         <Compile Include="ConnectionType.fs" />
+        <Compile Include="Connection.fs" />
         <Compile Include="Array2D.fs" />
         <Compile Include="ArrayOfA.fs" />
         <Compile Include="Analysis\Dijkstra\ShortestPathGraph.fs" />
@@ -24,13 +25,12 @@
         <Compile Include="Canvas\Array2D\Shape\Pentagon.fs" />
         <Compile Include="Canvas\ArrayOfA\Canvas.fs" />
         <Compile Include="Canvas\ArrayOfA\Shape\Disk.fs" />
-        <Compile Include="Grid\NonAdjacentNeighbors.fs" />
-        <Compile Include="Grid\Obstacles.fs" />
-        <Compile Include="Grid\Connection.fs" />
+        <Compile Include="NonAdjacentNeighbors.fs" />
+        <Compile Include="Obstacles.fs" />
+        <Compile Include="IPositionHandler.fs" />
+        <Compile Include="ICoordinateHandler.fs" />
+        <Compile Include="Grid\ICell.fs" />
 		<Compile Include="Grid\IGrid.fs" />
-		<Compile Include="Grid\Array2D\IPositionHandler.fs" />
-		<Compile Include="Grid\Array2D\ICoordinateHandler.fs" />
-		<Compile Include="Grid\Array2D\ICell.fs" />
 		<Compile Include="Grid\Array2D\Grid.fs" />
 		<Compile Include="Grid\Array2D\Ortho\OrthoPosition.fs" />
 		<Compile Include="Grid\Array2D\Ortho\OrthoCoordinate.fs" />
@@ -58,7 +58,10 @@
 		<Compile Include="Grid\ArrayOfA\Polar\PolarCoordinate.fs" />
 		<Compile Include="Grid\ArrayOfA\Polar\PolarCell.fs" />
 		<Compile Include="Grid\ArrayOfA\Polar\PolarGrid.fs" />
+		<Compile Include="GridNew\Grid.fs" />
+		<Compile Include="GridNew\OrthoGrid.fs" />
 		<Compile Include="Maze\Maze.fs" />
+		<Compile Include="Maze\MazeNew.fs" />
 		<Compile Include="Maze\Generate\GrowingTree.fs" />
         <Compile Include="Maze\Generate\BinaryTree.fs" />
         <Compile Include="Maze\Generate\Sidewinder.fs" />

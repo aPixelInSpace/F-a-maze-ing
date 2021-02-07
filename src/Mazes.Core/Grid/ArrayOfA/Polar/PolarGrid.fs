@@ -48,7 +48,7 @@ type PolarGrid =
             Some (PolarCoordinate.neighborBaseCoordinateAt coordinate (PolarPosition.map position))
 
         member this.IsCellConnected coordinate =
-            this.NonAdjacentNeighbors.IsLinked coordinate ||
+            this.NonAdjacentNeighbors.IsCellConnected coordinate ||
             (this.Cell coordinate).IsLinked this.Cells coordinate
 
         member this.ExistAt coordinate =
@@ -99,7 +99,7 @@ type PolarGrid =
             this.NeighborsThatAreLinked isLinked coordinate
 
         member this.AddUpdateNonAdjacentNeighbor fromCoordinate toCoordinate wallType =
-            this.NonAdjacentNeighbors.AddUpdate fromCoordinate toCoordinate wallType
+            this.NonAdjacentNeighbors.UpdateConnection wallType fromCoordinate toCoordinate
 
         member this.LinkedNeighbors coordinate =
             this.LinkedNeighbors coordinate
@@ -174,7 +174,7 @@ type PolarGrid =
 
     member this.LinkCells connectionType coordinate otherCoordinate =
         if this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate then
-            this.NonAdjacentNeighbors.AddUpdate coordinate otherCoordinate connectionType
+            this.NonAdjacentNeighbors.UpdateConnection connectionType coordinate otherCoordinate
         else
             let neighborPosition = PolarCoordinate.neighborPositionAt this.Cells coordinate otherCoordinate
             this.UpdateWallAtPosition coordinate otherCoordinate neighborPosition connectionType
@@ -222,10 +222,10 @@ type PolarGrid =
         |> Seq.filter(fun nCoordinate ->
             if isLinked then
                 (this.Cell nCoordinate).IsLinked this.Cells nCoordinate = isLinked ||
-                (this.NonAdjacentNeighbors.IsLinked nCoordinate) = isLinked
+                (this.NonAdjacentNeighbors.IsCellConnected nCoordinate) = isLinked
             else
                 (this.Cell nCoordinate).IsLinked this.Cells nCoordinate = isLinked &&
-                (this.NonAdjacentNeighbors.IsLinked nCoordinate) = isLinked)
+                (this.NonAdjacentNeighbors.IsCellConnected nCoordinate) = isLinked)
 
     member this.LinkedNeighbors coordinate =
         seq {
@@ -331,7 +331,7 @@ type PolarGrid =
 
     member this.AreLinked coordinate otherCoordinate =
         if this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate then
-            this.NonAdjacentNeighbors.AreLinked coordinate otherCoordinate
+            this.NonAdjacentNeighbors.AreConnected coordinate otherCoordinate
         else
             not (this.IsLimitAt coordinate otherCoordinate) &&        
             (this.Cell coordinate).AreLinked this.Cells coordinate otherCoordinate

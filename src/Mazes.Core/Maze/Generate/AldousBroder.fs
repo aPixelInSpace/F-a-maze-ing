@@ -45,3 +45,17 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
         rng
 
     { Grid = grid }
+
+let createMazeNew rngSeed (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+
+    let rng = Random(rngSeed)
+
+    transformIntoMaze
+        grid.RandomCoordinatePartOfMazeAndNotConnected
+        grid.Neighbors
+        grid.IsCellConnected
+        (grid.UpdateConnection ConnectionType.Open)
+        grid.TotalOfMazeCells
+        rng
+
+    { Grid = grid }

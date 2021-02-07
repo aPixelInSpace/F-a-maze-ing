@@ -42,7 +42,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
 
         member this.IsCellConnected coordinate =
-            this.NonAdjacentNeighbors.IsLinked coordinate ||
+            this.NonAdjacentNeighbors.IsCellConnected coordinate ||
             (this.Cell coordinate).IsLinked
 
         member this.ExistAt coordinate =
@@ -88,13 +88,13 @@ type Grid<'Grid, 'Position, 'PH, 'CH
             |> Seq.filter(fun nCoordinate ->
                 if isLinked then
                     (this.Cell nCoordinate).IsLinked = isLinked ||
-                    (this.NonAdjacentNeighbors.IsLinked nCoordinate) = isLinked
+                    (this.NonAdjacentNeighbors.IsCellConnected nCoordinate) = isLinked
                 else
                     (this.Cell nCoordinate).IsLinked = isLinked &&
-                    (this.NonAdjacentNeighbors.IsLinked nCoordinate) = isLinked)
+                    (this.NonAdjacentNeighbors.IsCellConnected nCoordinate) = isLinked)
 
         member this.AddUpdateNonAdjacentNeighbor fromCoordinate toCoordinate wallType =
-            this.NonAdjacentNeighbors.AddUpdate fromCoordinate toCoordinate wallType
+            this.NonAdjacentNeighbors.UpdateConnection wallType fromCoordinate toCoordinate
 
         member this.LinkedNeighbors coordinate =
             let neighborsCoordinates = this.Neighbors coordinate
@@ -187,7 +187,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
 
     member private this.UpdateWallAtCoordinates (coordinate : Coordinate) otherCoordinate wallType =
         if this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate then
-            this.NonAdjacentNeighbors.AddUpdate coordinate otherCoordinate wallType
+            this.NonAdjacentNeighbors.UpdateConnection wallType coordinate otherCoordinate
         else
             let neighborCoordinateAt = this.CoordinateHandler.NeighborCoordinateAt coordinate
 
@@ -221,7 +221,7 @@ type Grid<'Grid, 'Position, 'PH, 'CH
 
     member this.AreLinked coordinate otherCoordinate =
         if this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate then
-            this.NonAdjacentNeighbors.AreLinked coordinate otherCoordinate
+            this.NonAdjacentNeighbors.AreConnected coordinate otherCoordinate
         else
             not (this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)) &&        
             (this.Cell coordinate).AreLinked coordinate otherCoordinate
