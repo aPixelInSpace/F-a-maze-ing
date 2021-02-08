@@ -5,19 +5,19 @@ module Mazes.Render.SVGNew.PolarGrid
 open System
 open System.Text
 open Mazes.Core
+open Mazes.Core.GridNew
 open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Render.SVG.Base
 
-let private calculatePoints (grid : PolarGrid) (centerX, centerY, ringHeight) coordinate =
+let private calculatePoints (grid : Grid<GridArrayOfA, GridNew.PolarPosition>) (centerX, centerY, ringHeight) coordinate =
     let ringIndex = coordinate.RIndex
     let cellIndex = coordinate.CIndex
 
     // these depends on the ring index but are recalculated for every cell
     // maybe find a way to pass them once for a given ring
-    let ring = grid.Cells.[ringIndex]
-    let theta = (2.0 * Math.PI) / (float)ring.Length
+    let theta = (2.0 * Math.PI) / (float)(grid.BaseGrid.ToSpecializedStructure.Cells.[ringIndex].Length)
     let innerRadius = (float)(ringIndex * ringHeight)
     let outerRadius = (float)((ringIndex + 1) * ringHeight)
 
@@ -41,23 +41,24 @@ let center calculatePoints coordinate =
 
     middlePoint topLeft bottomRight // this is a good enough approximation
 
-let private appendWallsType (grid : PolarGrid) (centerX, centerY, ringHeight) appendWall (cell, coordinate) (sBuilder : StringBuilder) =
+let private appendWallsType (grid : Grid<GridArrayOfA, GridNew.PolarPosition>) (centerX, centerY, ringHeight) appendWall coordinate (sBuilder : StringBuilder) =
     let ((innerRadius, outerRadius), (bottomLeftX, bottomLeftY), (topLeftX, topLeftY), (bottomRightX, bottomRightY), (topRightX, topRightY)) =
         calculatePoints grid (centerX, centerY, ringHeight) coordinate
 
-    let wallInward = cell.Walls |> Array.tryFind(fun w -> w.ConnectionPosition = Inward)
+    let connections = (grid.BaseGrid.Cell coordinate).Connections
+    let wallInward = connections |> Array.tryFind(fun w -> w.ConnectionPosition = GridNew.Inward)
     match wallInward with
     | Some wallInward ->
         appendWall sBuilder $"M {round bottomLeftX} {round bottomLeftY} A {round innerRadius} {round innerRadius}, 0, 0, 1, {round bottomRightX} {round bottomRightY}" wallInward.ConnectionType coordinate |> ignore
     | None -> ()
 
-    let wallLeft = cell.Walls |> Array.tryFind(fun w -> w.ConnectionPosition = Ccw)
+    let wallLeft = connections |> Array.tryFind(fun w -> w.ConnectionPosition = GridNew.Ccw)
     match wallLeft with
     | Some wallLeft ->
         appendWall sBuilder $"M {round bottomLeftX} {round bottomLeftY} L {round topLeftX} {round topLeftY}" wallLeft.ConnectionType coordinate |> ignore
     | None -> ()
 
-    let wallOutward = cell.Walls |> Array.tryFind(fun w -> w.ConnectionPosition = Outward)
+    let wallOutward = connections |> Array.tryFind(fun w -> w.ConnectionPosition = GridNew.Outward)
     match wallOutward with
     | Some wallOutward ->
         appendWall sBuilder $"M {round topLeftX} {round topLeftY} A {round outerRadius} {round outerRadius}, 0, 0, 1, {round topRightX} {round topRightY}" wallOutward.ConnectionType coordinate |> ignore
@@ -73,7 +74,7 @@ let private wholeCellLines grid (centerX, centerY, ringHeight) coordinate =
     $"L {round bottomRightX} {round bottomRightY} " +
     $"A {round innerRadius} {round innerRadius}, 0, 0, 0, {round bottomLeftX} {round bottomLeftY}"
 
-let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
+let render (grid : Grid<GridArrayOfA, GridNew.PolarPosition>) (path : Coordinate seq) (map : Map) =
     
     let sBuilder = StringBuilder()
 
@@ -84,13 +85,12 @@ let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
     let bridgeHalfWidth = 5.0
     let bridgeDistanceFromCenter = 7.0
 
-    let centerX = (float)((grid.Cells.Length * ringHeight) + marginWidth)
-    let centerY = (float)((grid.Cells.Length * ringHeight) + marginHeight)
+    let totalOfCells = grid.BaseGrid.TotalOfCells
+    let centerX = (float)((totalOfCells * ringHeight) + marginWidth)
+    let centerY = (float)((totalOfCells * ringHeight) + marginHeight)
 
-    let width = (grid.Cells.Length * ringHeight * 2) + (marginWidth * 2)
-    let height = (grid.Cells.Length * ringHeight * 2) + (marginHeight * 2)
-
-    let coordinatesPartOfMaze = (grid.GetCellByCell (fun _ _ -> true))
+    let width = (totalOfCells * ringHeight * 2) + (marginWidth * 2)
+    let height = (totalOfCells * ringHeight * 2) + (marginHeight * 2)
 
     let calculatePoints = calculatePoints grid (centerX, centerY, ringHeight)
 
@@ -103,10 +103,10 @@ let render (grid : PolarGrid) (path : Coordinate seq) (map : Map) =
     let wholeBridgeLines = wholeBridgeLines calculatePointsBridge
 
     let appendSimpleWalls sBuilder =
-        appendSimpleWalls coordinatesPartOfMaze appendWallsType sBuilder
+        appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
     
     let appendWallsWithInset sBuilder =
-        appendWallsWithInset coordinatesPartOfMaze appendWallsType sBuilder
+        appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
 
     let appendPathAndBridgesWithAnimation =
         appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines

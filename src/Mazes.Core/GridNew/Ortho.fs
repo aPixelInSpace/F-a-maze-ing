@@ -110,10 +110,10 @@ type OrthoCell =
 
         let connectionType pos =
             match pos with
-            | Top -> getConnectionType (Array2D.isFirstRow coordinate.RIndex) Top
-            | Right -> getConnectionType (Array2D.isLastColumn coordinate.CIndex numberOfColumns) Right
-            | Bottom -> getConnectionType (Array2D.isLastRow coordinate.RIndex numberOfRows) Bottom
-            | Left -> getConnectionType (Array2D.isFirstColumn coordinate.CIndex) Left
+            | Top -> getConnectionType (isFirstRow coordinate.RIndex) Top
+            | Right -> getConnectionType (isLastColumn coordinate.CIndex numberOfColumns) Right
+            | Bottom -> getConnectionType (isLastRow coordinate.RIndex numberOfRows) Bottom
+            | Left -> getConnectionType (isFirstColumn coordinate.CIndex) Left
 
         {
             Connections =
@@ -121,8 +121,10 @@ type OrthoCell =
                        { ConnectionType = (connectionType pos); ConnectionPosition = pos } |]                
         }.ToInterface
 
-let toString connectionTypeAtPosition cells =
+let toString (maze : IGrid<Grid<GridArray2D<OrthoPosition>, OrthoPosition>>) =
     let sBuilder = StringBuilder()
+    let cells = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.Cells
+    let connectionTypeAtPosition = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.ConnectionTypeAtPosition
 
     let appendHorizontalWall wallType =
         match wallType with
@@ -175,7 +177,7 @@ let private createInternal internalConnectionType (canvas : Canvas.Array2D.Canva
       CoordinateHandler = OrthoCoordinateHandler.Instance
     }
 
-let create canvas =
+let createBaseGrid canvas =
     createInternal Close canvas :> IAdjacentStructure<GridArray2D<OrthoPosition>, OrthoPosition>
 
 let createEmpty canvas =

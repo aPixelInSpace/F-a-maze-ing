@@ -13,7 +13,7 @@ type MazeNew<'Grid> =
     }
 
     member this.createMap rootCoordinate =
-        Dijkstra.Map.create (this.Grid.ConnectedNeighbors true) this.Grid.CostOfCoordinate PriorityQueueTracker.createEmpty rootCoordinate
+        Dijkstra.Map.create (this.Grid.ConnectedWithNeighbors true) this.Grid.CostOfCoordinate PriorityQueueTracker.createEmpty rootCoordinate
 
 module Maze =
 

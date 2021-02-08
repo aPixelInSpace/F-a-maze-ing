@@ -8,14 +8,14 @@ open Mazes.Core.Grid
 open Mazes.Core.Maze
 
 let transformIntoMaze
-    randomCoordinatePartOfMazeAndNotLinked
+    randomCoordinatePartOfMazeAndNotConnected
     neighbors
     isCellConnected
     connectCells
     totalOfMazeCells
     (rng : Random) =
 
-    let mutable currentCoordinate = randomCoordinatePartOfMazeAndNotLinked rng
+    let mutable currentCoordinate = randomCoordinatePartOfMazeAndNotConnected rng
 
     let unvisitedCount = ref (totalOfMazeCells - 1)
 

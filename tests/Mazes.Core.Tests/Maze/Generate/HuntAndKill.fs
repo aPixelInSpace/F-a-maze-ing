@@ -19,10 +19,11 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Hunt and Kill 
     // arrange
     let orthoGrid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
     
     // act
-    let maze = orthoGrid |> HuntAndKill.createMaze 1
+    let maze = orthoGrid |> HuntAndKill.createMazeNew 1
 
     // assert
     let expectedMaze =
@@ -33,9 +34,9 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Hunt and Kill 
         "| |  _ _ _ _|_ _  | |\n" +
         "|_ _ _ _ _ _ _ _ _|_|\n"
 
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.GridNew.Ortho.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -43,18 +44,16 @@ let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a 
     // arrange
     let orthoGrid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
-    let orthoGrid =
-        let grid = orthoGrid()
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 } ConnectionType.Close
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 4 } ConnectionType.Close
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 2 } { RIndex = 1; CIndex = 1 } ConnectionType.Close
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 4; CIndex = 8 } { RIndex = 2; CIndex = 7 } ConnectionType.Close
-        (fun _ -> grid)
-
+    orthoGrid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection ConnectionType.Close { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 }
+    orthoGrid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection ConnectionType.Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 4 }
+    orthoGrid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection ConnectionType.Close { RIndex = 3; CIndex = 2 } { RIndex = 1; CIndex = 1 }
+    orthoGrid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection ConnectionType.Close { RIndex = 4; CIndex = 8 } { RIndex = 2; CIndex = 7 }
+    
     // act
-    let maze = orthoGrid |> HuntAndKill.createMaze 1
+    let maze = orthoGrid |> HuntAndKill.createMazeNew 1
 
     // assert
     let expectedMaze =
@@ -65,10 +64,9 @@ let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a 
         "| |     |  _    |   |\n" +
         "|_ _|_|_ _|_ _|_ _|_|\n"
 
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.GridNew.Ortho.toString |> should equal expectedMaze
 
-    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
-    let map = maze.createMap rootCoordinate
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]

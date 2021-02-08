@@ -59,7 +59,8 @@
 		<Compile Include="Grid\ArrayOfA\Polar\PolarCell.fs" />
 		<Compile Include="Grid\ArrayOfA\Polar\PolarGrid.fs" />
 		<Compile Include="GridNew\Grid.fs" />
-		<Compile Include="GridNew\OrthoGrid.fs" />
+		<Compile Include="GridNew\Ortho.fs" />
+		<Compile Include="GridNew\Polar.fs" />
 		<Compile Include="Maze\Maze.fs" />
 		<Compile Include="Maze\MazeNew.fs" />
 		<Compile Include="Maze\Generate\GrowingTree.fs" />

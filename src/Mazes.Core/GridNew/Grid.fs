@@ -141,10 +141,19 @@ type GridArray2D<'Position when 'Position : equality> =
         cell.ConnectionTypeAtPosition position = ClosePersistent ||
         neighborCondition()
 
+type PolarPosition =
+    | Inward
+    | Outward
+    /// Counter-Clockwise
+    | Ccw
+    /// Clockwise
+    | Cw
+
 type GridArrayOfA =
     {
         Canvas : ArrayOfA.Canvas
         Cells : ICell<PolarPosition>[][]
+        PositionHandler : IPositionHandler<PolarPosition>
     }
 
     interface IAdjacentStructure<GridArrayOfA, PolarPosition> with
@@ -171,7 +180,7 @@ type GridArrayOfA =
                 |> Array.length > 0
 
             let outwardCondition =
-                let outwardNeighbors = PolarCoordinate.neighborsCoordinateAt this.Cells coordinate Outward
+                let outwardNeighbors = this.NeighborsCoordinateAt this.Cells coordinate Outward
                 if not (outwardNeighbors |> Seq.isEmpty) then
                     outwardNeighbors
                     |> Seq.filter(fun n ->
@@ -198,7 +207,7 @@ type GridArrayOfA =
             let listOfNeighborCoordinate =
                 let neighborsCoordinateAt = this.NeighborsCoordinateAt this.Cells coordinate
                 seq {
-                    for position in PolarPosition.values do
+                    for position in this.PositionHandler.Values coordinate do
                         for coordinate in neighborsCoordinateAt position do
                             yield (coordinate, position)
                 }
@@ -223,17 +232,17 @@ type GridArrayOfA =
                 this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- cell.Create (getNewConnections cell neighborPosition)
 
                 let otherCell = (this.ToInterface.Cell otherCoordinate)
-                this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell neighborPosition.Opposite)
+                this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell (this.PositionHandler.Opposite otherCoordinate neighborPosition))
 
-                if (this.NeighborsCoordinateAt this.Cells coordinate neighborPosition.Opposite) |> Seq.head = otherCoordinate then
-                    this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- cell.Create (getNewConnections cell neighborPosition.Opposite)
+                if (this.NeighborsCoordinateAt this.Cells coordinate (this.PositionHandler.Opposite coordinate neighborPosition)) |> Seq.head = otherCoordinate then
+                    this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- cell.Create (getNewConnections cell (this.PositionHandler.Opposite coordinate neighborPosition))
                     this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell neighborPosition)            
             | Inward ->
                 let cell = (this.ToInterface.Cell coordinate)
                 this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- cell.Create (getNewConnections cell neighborPosition)
             | Outward ->
                 let otherCell = (this.ToInterface.Cell otherCoordinate)
-                this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell neighborPosition.Opposite)
+                this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell (this.PositionHandler.Opposite otherCoordinate neighborPosition))
 
         member this.GetFirstCellPartOfMaze =
             snd this.Canvas.GetFirstPartOfMazeZone
@@ -243,8 +252,12 @@ type GridArrayOfA =
 
         member this.ToSpecializedStructure =
             this
+
     member this.ToInterface =
         this :> IAdjacentStructure<GridArrayOfA, PolarPosition>
+
+    member this.ConnectionTypeAtPosition (cell : ICell<PolarPosition>) position =
+        cell.ConnectionTypeAtPosition position
 
     member this.IsLimitAt coordinate otherCoordinate =
         let zone = this.Canvas.Zone coordinate
@@ -256,7 +269,7 @@ type GridArrayOfA =
             if neighborPosition <> Inward then
                 not (this.Canvas.ExistAt otherCoordinate) ||
                 not (this.Canvas.Zone otherCoordinate).IsAPartOfMaze ||
-                neighborCell.ConnectionTypeAtPosition neighborPosition.Opposite = ClosePersistent                
+                neighborCell.ConnectionTypeAtPosition (this.PositionHandler.Opposite otherCoordinate neighborPosition) = ClosePersistent                
             else
                 let cell = this.ToInterface.Cell coordinate
                 if not (PolarArrayOfA.isFirstRing coordinate.RIndex) then
@@ -315,8 +328,10 @@ type IGrid<'Grid> =
     abstract member IsCellConnected : Coordinate -> bool
     /// Given two coordinates, returns true if they have their connection open, false otherwise
     abstract member AreConnected : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
-    /// Returns the neighbors coordinates that are connected or not WITH the coordinate
+    /// Returns the neighbors coordinates that are connected or not NOT NECESSARILY WITH the coordinate
     abstract member ConnectedNeighbors : isConnected:bool -> coordinate:Coordinate -> Coordinate seq
+    /// Returns the neighbors coordinates that are connected or not WITH the coordinate
+    abstract member ConnectedWithNeighbors : isConnected:bool -> coordinate:Coordinate -> Coordinate seq
     abstract member UpdateConnection : ConnectionType -> Coordinate -> Coordinate -> unit
     abstract member CostOfCoordinate : coordinate:Coordinate -> Cost
     /// Returns the first (arbitrary) coordinate that is part of the maze
@@ -379,15 +394,31 @@ type Grid<'Grid, 'Position> =
             nonAdjacentCondition || adjacentCondition
 
         member this.ConnectedNeighbors isConnected coordinate =
+            this.ToInterface.Neighbors coordinate
+            |> Seq.filter(fun nCoordinate ->
+                if isConnected then
+                    (this.BaseGrid.IsCellConnected nCoordinate) = isConnected ||
+                    (this.NonAdjacentNeighbors.IsCellConnected nCoordinate) = isConnected
+                else
+                    (this.BaseGrid.IsCellConnected nCoordinate) = isConnected &&
+                    (this.NonAdjacentNeighbors.IsCellConnected nCoordinate) = isConnected)
+
+        member this.ConnectedWithNeighbors isConnected coordinate =
             let neighborsCoordinates = this.ToInterface.Neighbors coordinate
 
             seq {
                 for neighborCoordinate in neighborsCoordinates do
                     if isConnected then
-                        if (this.ToInterface.AreConnected coordinate neighborCoordinate) then
+                        if this.NonAdjacentNeighbors.ExistNeighbor coordinate neighborCoordinate then
+                            if this.NonAdjacentNeighbors.AreConnected coordinate neighborCoordinate then
+                                yield neighborCoordinate
+                        elif (this.ToInterface.AreConnected coordinate neighborCoordinate) then
                             yield neighborCoordinate
                     else
-                        if not (this.ToInterface.AreConnected coordinate neighborCoordinate) then
+                        if this.NonAdjacentNeighbors.ExistNeighbor coordinate neighborCoordinate then
+                            if not (this.NonAdjacentNeighbors.AreConnected coordinate neighborCoordinate) then
+                                yield neighborCoordinate
+                        elif not (this.ToInterface.AreConnected coordinate neighborCoordinate) then
                             yield neighborCoordinate
             }
 

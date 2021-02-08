@@ -9,16 +9,18 @@ open Mazes.Core
 open Mazes.Core.Grid
 open Mazes.Core.Maze
 
-let createMaze rngSeed (grid : unit -> IGrid<'G>) =
+let transformIntoMaze
+    randomCoordinatePartOfMazeAndNotConnected
+    coordinatesPartOfMaze
+    neighbors
+    connectCells
+    (totalOfMazeCells : int)
+    (rng : Random) =
 
-    let grid = grid()
+    let unvisited = HashSet<Coordinate>(totalOfMazeCells)
+    unvisited.UnionWith(coordinatesPartOfMaze)
 
-    let rng = Random(rngSeed)
-
-    let unvisited = HashSet<Coordinate>(grid.TotalOfMazeCells)
-    unvisited.UnionWith(grid.CoordinatesPartOfMaze)
-
-    let firstCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
+    let firstCoordinate = randomCoordinatePartOfMazeAndNotConnected rng
     unvisited.Remove(firstCoordinate) |> ignore
 
     while unvisited.Count > 0 do
@@ -32,7 +34,7 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
 
         while unvisited.Contains(nextCoordinate) do
             nextCoordinate <-
-                    let neighbors = grid.Neighbors nextCoordinate |> Seq.toArray
+                    let neighbors = neighbors nextCoordinate |> Seq.toArray
                     neighbors.[rng.Next(neighbors.Length)]
 
             if pathTracker.ContainsKey(nextCoordinate) then
@@ -45,7 +47,34 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
                 pathTracker.Add(nextCoordinate, path.Count - 1)
 
         for i in 0 .. path.Count - 2 do
-            grid.UpdateConnection Open path.[i] path.[i + 1]
+            connectCells path.[i] path.[i + 1]
             unvisited.Remove(path.[i]) |> ignore
+
+let createMaze rngSeed (grid : unit -> IGrid<'G>) =
+    let grid = grid()
+
+    let rng = Random(rngSeed)
+
+    transformIntoMaze
+        grid.RandomCoordinatePartOfMazeAndNotLinked
+        grid.CoordinatesPartOfMaze
+        grid.Neighbors
+        (grid.UpdateConnection Open)
+        grid.TotalOfMazeCells
+        rng
+
+    { Grid = grid }
+
+let createMazeNew rngSeed (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+
+    let rng = Random(rngSeed)
+
+    transformIntoMaze
+        grid.RandomCoordinatePartOfMazeAndNotConnected
+        grid.CoordinatesPartOfMaze
+        grid.Neighbors
+        (grid.UpdateConnection Open)
+        grid.TotalOfMazeCells
+        rng
 
     { Grid = grid }
