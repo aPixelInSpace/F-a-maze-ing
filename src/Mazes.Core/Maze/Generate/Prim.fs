@@ -12,13 +12,11 @@ open Mazes.Core.Maze
 
 module PrimSimple =
 
-    let createMaze rngSeed (grid : unit -> IGrid<'G>) =
-
-        let grid = grid()
+    let createMaze rngSeed (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
+        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
         let actives = HashSet<Coordinate>()
 
@@ -42,13 +40,11 @@ module PrimSimple =
 
 module PrimSimpleModified =
 
-    let createMaze rngSeed (grid : unit -> IGrid<'G>) =
-
-        let grid = grid()
+    let createMaze rngSeed (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
+        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
         let inSet = HashSet<Coordinate>()
         let frontierSet = HashSet<Coordinate>()
@@ -63,7 +59,7 @@ module PrimSimpleModified =
             found.[rng.Next(found.Length)]
 
         inSet.Add(randomStartCoordinate) |> ignore
-        frontierSet.UnionWith((randomStartCoordinate |> grid.NeighborsThatAreLinked false))
+        frontierSet.UnionWith((randomStartCoordinate |> grid.ConnectedNeighbors false))
 
         while frontierSet.Count > 0 do
             let next = frontierSet.ElementAt(rng.Next(frontierSet.Count))
@@ -76,19 +72,17 @@ module PrimSimpleModified =
 
             grid.UpdateConnection Open inSetCoordinate next
 
-            frontierSet.UnionWith((next |> grid.NeighborsThatAreLinked false))
+            frontierSet.UnionWith((next |> grid.ConnectedNeighbors false))
 
         { Grid = grid }
 
 module PrimWeighted =
 
-    let createMaze rngSeed maxWeight (grid : unit -> IGrid<'G>) =
-
-        let grid = grid()
+    let createMaze rngSeed maxWeight (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
+        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
         let actives = SimplePriorityQueue<Coordinate, int>()
 

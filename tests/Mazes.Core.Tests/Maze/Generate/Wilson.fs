@@ -19,7 +19,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Wilson's algorithm
         |> Mazes.Core.GridNew.Grid.create
     
     // act
-    let maze = grid |> Wilson.createMazeNew 1
+    let maze = grid |> Wilson.createMaze 1
         
     // assert
     let expectedMaze =
@@ -44,7 +44,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Wils
         |> Mazes.Core.GridNew.Grid.create
     
     // act
-    let maze = grid |> Wilson.createMazeNew 1
+    let maze = grid |> Wilson.createMaze 1
 
     // assert
     let expectedMaze =

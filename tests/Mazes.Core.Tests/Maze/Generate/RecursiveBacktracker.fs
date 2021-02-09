@@ -15,7 +15,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Recursive Back
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
     // act
     let maze = grid |> RecursiveBacktracker.createMaze 1
@@ -29,9 +30,9 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Recursive Back
         "| | |   |_  |   | | |\n" +
         "|_ _ _|_ _ _|_|_ _ _|\n"
 
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.GridNew.Ortho.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -39,7 +40,8 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Recu
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> PolarGrid.CreateFunction
+        |> Mazes.Core.GridNew.Polar.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
     
     // act
     let maze = grid |> RecursiveBacktracker.createMaze 1
@@ -53,7 +55,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Recu
         "¦‾¦¨¦‾|¨¦¨¦‾¦‾¦‾¦¨|¨¦‾¦‾¦‾¦‾¦¨|¨¦‾¦¨|¨¦‾¦‾¦‾¦¨|¨¦\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.GridNew.Polar.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

@@ -9,7 +9,7 @@ open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Analysis.Dijkstra
 open Mazes.Core.Grid
 open Mazes.Core.Grid.Array2D.Ortho
-open Mazes.Core.Maze
+open Mazes.Core.MazeNew
 open Mazes.Core.Maze.Generate
 
 // fixture
@@ -30,7 +30,8 @@ let maze =
 
     let grid =
         (Convert.fromString stringCanvas).Value    
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
     grid
     |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -50,7 +51,7 @@ let maze =
         ┗━┛ ┗━━━━━━━━━┛ ┗━┛  
     *)
 
-let grid5x5 =
+let canvas5x5 =
     let stringCanvas =
         Convert.startLineTag + "\n" +
         "*****\n" +
@@ -61,13 +62,12 @@ let grid5x5 =
         Convert.endLineTag
 
     (Convert.fromString stringCanvas).Value
-    |> OrthoGrid.CreateFunction
 
 [<Fact>]
 let ``Given a root inside the maze, when creating a map, then it should give all the count of the connected nodes`` () =
 
     // arrange
-    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
 
     // act
     let map = maze.createMap rootCoordinate
@@ -121,11 +121,12 @@ let ``Given a maze with no internal walls, when creating a map and getting all t
 
     let maze =
         (Convert.fromString simpleCanvas).Value
-        |> OrthoGrid.CreateEmptyFunction
+        |> Mazes.Core.GridNew.Ortho.createEmptyBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
         |> Maze.toMaze
 
     // act
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
     // assert
     let graph = map.ShortestPathGraph.ToString (fun e -> e.Source, e.Tag, e.Target)
@@ -145,11 +146,11 @@ let ``Given a maze with no internal walls, when creating a map and getting all t
 let ``Given a maze, when creating a map and getting all the distances from the root, then it should match the expected distances`` () =
 
     // arrange
-    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
 
     // act
     let map = maze.createMap rootCoordinate
-    let mapNotUsingAPriorityQueue = Mazes.Core.Analysis.Dijkstra.Map.create maze.Grid.LinkedNeighbors maze.Grid.CostOfCoordinate Tracker.SimpleTracker.createEmpty rootCoordinate
+    let mapNotUsingAPriorityQueue = Mazes.Core.Analysis.Dijkstra.Map.create (maze.Grid.ConnectedWithNeighbors true) maze.Grid.CostOfCoordinate Tracker.SimpleTracker.createEmpty rootCoordinate
 
     // assert
     let outsideOfTheMazeNode = { RIndex = 0; CIndex = 1 }
@@ -185,7 +186,7 @@ let ``Given a maze, when creating a map and getting all the distances from the r
 let ``Given a root inside the maze, when creating a map, then it should give all the dead ends (leaves) of the maze`` () =
 
     // arrange
-    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
 
     // act
     let map = maze.createMap rootCoordinate
@@ -205,7 +206,7 @@ let ``Given a root inside the maze, when creating a map, then it should give all
 let ``Given a map and a goal coordinate, when searching the shortest path between the root and the goal, then it should return the list of coordinates that forms that path`` () =
 
     // arrange
-    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
     let map = maze.createMap rootCoordinate
 
     // act
@@ -235,10 +236,11 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
 
     let maze =
         (Convert.fromString simpleCanvas).Value    
-        |> OrthoGrid.CreateEmptyFunction
+        |> Mazes.Core.GridNew.Ortho.createEmptyBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
         |> Maze.toMaze
 
-    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
 
     // act
     let map = maze.createMap rootCoordinate
@@ -255,7 +257,7 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
 let ``Given a map, when getting the farthest coordinates, then it should return the infos of the farthest coordinates from the root`` () =
 
     // arrange
-    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
 
     // act
     let map = maze.createMap rootCoordinate
@@ -274,7 +276,9 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
 
     // arrange
     let maze =
-        grid5x5
+        canvas5x5
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
         (*
@@ -287,7 +291,7 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
             ┗━━━━━┷━┷━┛
         *)
 
-    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
     let map = maze.createMap rootCoordinate
 
     // act
@@ -314,7 +318,9 @@ let ``Given a maze with a non adjacent neighbor, when getting all the distances 
 
     // arrange
     let maze =
-        grid5x5
+        canvas5x5
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
         (*
@@ -327,9 +333,9 @@ let ``Given a maze with a non adjacent neighbor, when getting all the distances 
             ┗━━━━━┷━┷━┛
         *)
 
-    maze.Grid.AddUpdateNonAdjacentNeighbor { RIndex = 0; CIndex = 0 } { RIndex = 3; CIndex = 1 } Open
+    maze.Grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Open { RIndex = 0; CIndex = 0 } { RIndex = 3; CIndex = 1 }
 
-    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
 
     // act
     let map = maze.createMap rootCoordinate
@@ -351,7 +357,9 @@ let ``Given a maze with an obstacle, when getting all the distances from the roo
 
     // arrange
     let maze =
-        grid5x5
+        canvas5x5
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
         (*
@@ -364,9 +372,9 @@ let ``Given a maze with an obstacle, when getting all the distances from the roo
             ┗━━━━━┷━┷━┛
         *)
 
-    maze.Grid.AddCostForCoordinate 50 { RIndex = 1; CIndex = 2 }
+    maze.Grid.ToSpecializedGrid.Obstacles.AddUpdateCost 50 { RIndex = 1; CIndex = 2 }
 
-    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
 
     // act
     let map = maze.createMap rootCoordinate

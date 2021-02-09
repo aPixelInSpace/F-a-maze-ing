@@ -92,8 +92,20 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let matchAlgoEnumWithFunction algoEnum rngSeed =
         match algoEnum with
            | AlgoEnum.AldousBroder -> AldousBroder.createMazeNew rngSeed
-           | AlgoEnum.Wilson -> Wilson.createMazeNew rngSeed
+           | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
            | AlgoEnum.HuntAndKill -> HuntAndKill.createMazeNew rngSeed
+           | AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
+           | AlgoEnum.Kruskal -> Kruskal.createMazeNew rngSeed
+           | AlgoEnum.PrimSimple -> PrimSimple.createMaze rngSeed
+           | AlgoEnum.PrimSimpleModified -> PrimSimpleModified.createMaze rngSeed
+           | AlgoEnum.PrimWeighted -> PrimWeighted.createMaze rngSeed 42
+           | AlgoEnum.GrowingTreeMixRandomAndLast -> GrowingTreeMixRandomAndLast.createMaze rngSeed 0.5
+           | AlgoEnum.GrowingTreeMixChosenRandomAndLast -> GrowingTreeMixChosenRandomAndLast.createMaze rngSeed 0.5
+           | AlgoEnum.GrowingTreeMixOldestAndLast -> GrowingTreeMixOldestAndLast.createMaze rngSeed 0.5
+           | AlgoEnum.GrowingTreeDirection -> GrowingTreeDirection.createMaze rngSeed 0.3 0.2 0.3
+           | AlgoEnum.GrowingTreeSpiral -> GrowingTreeSpiral.createMaze rngSeed 0.1 0.9 3 0.2
+           | AlgoEnum.Eller -> Eller.createMaze rngSeed
+           | AlgoEnum.RecursiveDivision -> RecursiveDivision.createMaze rngSeed 0.0 3 3
            | _ -> failwith "Generating algorithm unknown"
 
     let nameOfMaze =
@@ -297,9 +309,9 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let renderedGridSvg = SVGNew.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.OrthoGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
-
-    let renderedGridSvg = SVGNew.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
-    //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
+        
+    //let renderedGridSvg = SVGNew.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    let renderedGridSvg = SVGNew.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
     //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 

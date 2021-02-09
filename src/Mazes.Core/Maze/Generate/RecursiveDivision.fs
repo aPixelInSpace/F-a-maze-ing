@@ -11,9 +11,7 @@ open Mazes.Core.Maze
 type private Slice = (int * int * int * int)
 
 // todo : refactor this, sadly it only works with rectangular orthogonal grid for now
-let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
-
-    let grid = grid()
+let createMaze rngSeed rooms roomsHeight roomsWidth (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
 
     let rng = Random(rngSeed)
 
@@ -24,7 +22,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
             seq {
                 for rIndex in rndStartRIndex .. rndEndRIndex - 1 do
                     let c = { RIndex = rIndex; CIndex = cIndex }
-                    match (grid.VirtualAdjacentNeighborCoordinate c Right) with
+                    match (grid.AdjacentNeighbor c Right) with
                     | Some n ->
                         if not (grid.IsLimitAt c n) then
                             yield (c, n)
@@ -43,7 +41,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
 
         for rIndex in startRIndex .. endRIndex do
             let coordinate = { RIndex = rIndex; CIndex = cIndex }
-            let rightCoordinate = grid.VirtualAdjacentNeighborCoordinate coordinate Right
+            let rightCoordinate = grid.AdjacentNeighbor coordinate Right
 
             match rightCoordinate with
             | Some rightCoordinate ->
@@ -71,7 +69,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
             seq {
                 for cIndex in rndStartCIndex .. rndEndCIndex - 1 do
                     let c = { RIndex = rIndex; CIndex = cIndex }
-                    match (grid.VirtualAdjacentNeighborCoordinate c Bottom) with
+                    match (grid.AdjacentNeighbor c Bottom) with
                     | Some n ->
                         if not (grid.IsLimitAt c n) then
                             yield (c, n)
@@ -90,7 +88,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
 
         for cIndex in startCIndex .. endCIndex do
             let coordinate = { RIndex = rIndex; CIndex = cIndex }
-            let bottomCoordinate = grid.VirtualAdjacentNeighborCoordinate coordinate Bottom
+            let bottomCoordinate = grid.AdjacentNeighbor coordinate Bottom
 
             match bottomCoordinate with
             | Some bottomCoordinate ->
@@ -126,6 +124,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
 
         let deltaR = endRIndex - startRIndex
         let deltaC = endCIndex - startCIndex
+
         if deltaR >= 1 && deltaC >= 1 then
             if not (rng.NextDouble() < rooms && deltaR <= roomsHeight && deltaC <= roomsWidth) then
                 if deltaR < deltaC then

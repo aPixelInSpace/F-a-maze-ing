@@ -39,7 +39,8 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
     let maze =
         grid 
@@ -74,7 +75,8 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
     let maze =
         grid 
@@ -109,7 +111,8 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
     let maze =
         grid 
@@ -144,7 +147,8 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
     let maze =
         grid 
@@ -179,7 +183,8 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
     let maze =
         grid 
@@ -214,7 +219,8 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
     let maze =
         grid 
@@ -249,7 +255,8 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
     let maze =
         grid 
@@ -284,7 +291,8 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     // arrange
     let grid =
         canvas
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
     let maze =
         grid 

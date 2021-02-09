@@ -8,13 +8,11 @@ open Mazes.Core
 open Mazes.Core.Grid
 open Mazes.Core.Maze
 
-let createMaze rngSeed (grid : unit -> IGrid<'G>) =
-
-    let grid = grid()
+let createMaze rngSeed (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
 
     let rng = Random(rngSeed)
 
-    let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
+    let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
     let actives = Stack<Coordinate>()
 

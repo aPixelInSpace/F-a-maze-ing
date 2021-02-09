@@ -15,6 +15,15 @@ type ICell<'Position> =
 type IAdjacentStructure<'Structure, 'Position> =
     abstract member TotalOfCells : int
     abstract member TotalOfMazeCells : int
+    abstract member RIndexes : int seq
+    abstract member CIndexes : int seq
+    abstract member Dimension1Boundaries : dimension2Index:int -> (int * int)
+    abstract member Dimension2Boundaries : dimension1Index:int -> (int * int)
+    abstract member AdjustedCoordinate : coordinate:Coordinate -> Coordinate
+    abstract member ExistAt : coordinate:Coordinate -> bool
+    abstract member AdjustedExistAt : coordinate:Coordinate -> bool
+    /// Returns true if it is not possible to navigate from a coordinate to another coordinate (for example if there is a border between the two cells) 
+    abstract member IsLimitAt : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
     abstract member Cell : coordinate:Coordinate -> ICell<'Position>
     /// Returns every cells in the structure
     abstract member Cells : (ICell<'Position> * Coordinate) seq
@@ -26,6 +35,9 @@ type IAdjacentStructure<'Structure, 'Position> =
     abstract member AreConnected : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
     /// Given a coordinate, returns the coordinates of the neighbors
     abstract member Neighbors : coordinate:Coordinate -> Coordinate seq
+    /// Returns the coordinate of the neighbor at the position, if there are multiple neighbors then returns the last one
+    abstract member Neighbor : Coordinate -> Position -> Coordinate option
+    abstract member VirtualNeighbor : Coordinate -> Position -> Coordinate option
     /// Given two coordinates, updates the connection between them
     abstract member UpdateConnection : connectionType:ConnectionType -> coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
     /// Returns the first (arbitrary) coordinate that is part of the maze
@@ -48,6 +60,30 @@ type GridArray2D<'Position when 'Position : equality> =
 
         member this.TotalOfMazeCells =
             this.Canvas.TotalOfMazeZones
+
+        member this.RIndexes =
+            this.Cells |> Array2D.getRIndexes
+
+        member this.CIndexes =
+            this.Cells |> Array2D.getCIndexes
+
+        member this.Dimension1Boundaries _ =
+            (0, this.Canvas.NumberOfRows)
+
+        member this.Dimension2Boundaries _ =
+            (0, this.Canvas.NumberOfColumns)
+
+        member this.AdjustedCoordinate coordinate =
+            coordinate
+
+        member this.ExistAt coordinate =
+            Array2D.existAt this.Cells coordinate
+
+        member this.AdjustedExistAt coordinate =
+            Array2D.existAt this.Cells coordinate
+
+        member this.IsLimitAt coordinate otherCoordinate =
+            this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)
 
         member this.Cell coordinate =
             Array2D.get this.Cells coordinate
@@ -80,6 +116,12 @@ type GridArray2D<'Position when 'Position : equality> =
             this.Canvas.NeighborsPartOfMazeOf listOfAdjacentNeighborCoordinate
             |> Seq.filter(fun (_, nPosition) -> not (this.IsLimitAt coordinate nPosition))
             |> Seq.map(fst)
+
+        member this.Neighbor coordinate position =
+            (this.CoordinateHandler.NeighborCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
+
+        member this.VirtualNeighbor coordinate position =
+            this.ToInterface.Neighbor coordinate position
 
         member this.UpdateConnection connectionType coordinate otherCoordinate =
             let getNewConnections (cell : ICell<'Position>) position =
@@ -164,6 +206,68 @@ type GridArrayOfA =
         member this.TotalOfMazeCells =
             this.Canvas.TotalOfMazeZones
 
+        member this.RIndexes =
+            this.Cells |> ArrayOfA.getRIndexes
+
+        member this.CIndexes =
+            this.Cells |> ArrayOfA.getCIndexes
+
+        member this.Dimension1Boundaries cellIndex =
+            let maxCellsInLastRing = this.Cells.[ArrayOfA.maxD1Index this.Cells].Length
+
+            let startIndex =
+                this.Cells
+                |> Array.findIndex(fun ring ->
+                    let steps = maxCellsInLastRing / ring.Length
+                    cellIndex % steps = 0)
+
+            let length = this.Cells.Length - startIndex
+
+            (startIndex, length)
+
+        member this.Dimension2Boundaries ringIndex =
+            (0, this.Cells.[ringIndex].Length)
+
+        member this.AdjustedCoordinate coordinate =
+            let maxCellsInLastRing = this.Cells.[ArrayOfA.maxD1Index this.Cells].Length
+            let ringLength = this.Cells.[coordinate.RIndex].Length
+
+            let ratio = maxCellsInLastRing / ringLength
+
+            { coordinate with CIndex = coordinate.CIndex / ratio }
+
+        member this.ExistAt coordinate =
+            ArrayOfA.existAt this.Cells coordinate
+
+        member this.AdjustedExistAt coordinate =
+            let maxCellsInLastRing = this.Cells.[ArrayOfA.maxD1Index this.Cells].Length
+            let ringLength = this.Cells.[coordinate.RIndex].Length
+            let ratio = maxCellsInLastRing / ringLength
+            coordinate.CIndex % ratio = 0
+
+        member this.IsLimitAt coordinate otherCoordinate =
+            let zone = this.Canvas.Zone coordinate
+
+            let neighborCondition =
+                let neighborPosition = this.NeighborPositionAt this.Cells coordinate otherCoordinate
+                let neighborCell = this.ToInterface.Cell otherCoordinate
+
+                if neighborPosition <> Inward then
+                    not (this.Canvas.ExistAt otherCoordinate) ||
+                    not (this.Canvas.Zone otherCoordinate).IsAPartOfMaze ||
+                    neighborCell.ConnectionTypeAtPosition (this.PositionHandler.Opposite otherCoordinate neighborPosition) = ClosePersistent                
+                else
+                    let cell = this.ToInterface.Cell coordinate
+                    if not (PolarArrayOfA.isFirstRing coordinate.RIndex) then
+                        not (this.Canvas.ExistAt otherCoordinate) ||
+                        not (this.Canvas.Zone otherCoordinate).IsAPartOfMaze ||
+                        cell.ConnectionTypeAtPosition neighborPosition = ClosePersistent
+                    else
+                        true
+
+            (not zone.IsAPartOfMaze) ||
+            neighborCondition
+
         member this.Cell coordinate =
             ArrayOfA.get this.Cells coordinate
 
@@ -201,7 +305,7 @@ type GridArrayOfA =
                 else
                     ((this.ToInterface.Cell otherCoordinate).ConnectionTypeAtPosition Inward) = Open
 
-            not (this.IsLimitAt coordinate otherCoordinate) && connectionCondition
+            not (this.ToInterface.IsLimitAt coordinate otherCoordinate) && connectionCondition
 
         member this.Neighbors coordinate =
             let listOfNeighborCoordinate =
@@ -213,8 +317,18 @@ type GridArrayOfA =
                 }
 
             this.Canvas.NeighborsPartOfMazeOf listOfNeighborCoordinate
-            |> Seq.filter(fun (nCoordinate, _) -> not (this.IsLimitAt coordinate nCoordinate))
+            |> Seq.filter(fun (nCoordinate, _) -> not (this.ToInterface.IsLimitAt coordinate nCoordinate))
             |> Seq.map(fst)
+
+        member this.Neighbor coordinate position =
+            let neighbors = this.NeighborsCoordinateAt this.Cells coordinate (this.PositionHandler.Map coordinate position)
+            if neighbors |> Seq.isEmpty then
+                None
+            else
+                Some (neighbors |> Seq.last)
+
+        member this.VirtualNeighbor coordinate position =
+            Some (this.NeighborBaseCoordinateAt coordinate (this.PositionHandler.Map coordinate position))
 
         member this.UpdateConnection connectionType coordinate otherCoordinate =
             let getNewConnections (cell : ICell<'Position>) position =
@@ -259,29 +373,6 @@ type GridArrayOfA =
     member this.ConnectionTypeAtPosition (cell : ICell<PolarPosition>) position =
         cell.ConnectionTypeAtPosition position
 
-    member this.IsLimitAt coordinate otherCoordinate =
-        let zone = this.Canvas.Zone coordinate
-
-        let neighborCondition =
-            let neighborPosition = this.NeighborPositionAt this.Cells coordinate otherCoordinate
-            let neighborCell = this.ToInterface.Cell otherCoordinate
-
-            if neighborPosition <> Inward then
-                not (this.Canvas.ExistAt otherCoordinate) ||
-                not (this.Canvas.Zone otherCoordinate).IsAPartOfMaze ||
-                neighborCell.ConnectionTypeAtPosition (this.PositionHandler.Opposite otherCoordinate neighborPosition) = ClosePersistent                
-            else
-                let cell = this.ToInterface.Cell coordinate
-                if not (PolarArrayOfA.isFirstRing coordinate.RIndex) then
-                    not (this.Canvas.ExistAt otherCoordinate) ||
-                    not (this.Canvas.Zone otherCoordinate).IsAPartOfMaze ||
-                    cell.ConnectionTypeAtPosition neighborPosition = ClosePersistent
-                else
-                    true
-
-        (not zone.IsAPartOfMaze) ||
-        neighborCondition
-
     member private this.NeighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
         seq {
             match position with
@@ -319,20 +410,44 @@ type GridArrayOfA =
         | c when (neighborCoordinateAt Inward |> Seq.tryFind(fun n -> c = n)).IsSome -> Inward
         | _ -> failwith "Unable to match the polar coordinates with a position"
 
+    member private this.NeighborBaseCoordinateAt coordinate position =
+        match position with
+        | Outward ->  { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
+        | Cw -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
+        | Inward -> { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
+        | Ccw -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
 type IGrid<'Grid> =
     abstract member TotalOfMazeCells : int
+    abstract member RIndexes : int seq
+    abstract member CIndexes : int seq
+    abstract member Dimension1Boundaries : dimension2Index:int -> (int * int)
+    abstract member Dimension2Boundaries : dimension1Index:int -> (int * int)
+    abstract member AdjustedCoordinate : coordinate:Coordinate -> Coordinate
+    abstract member ExistAt : coordinate:Coordinate -> bool
+    abstract member AdjustedExistAt : coordinate:Coordinate -> bool
     abstract member CoordinatesPartOfMaze : Coordinate seq
     abstract member RandomCoordinatePartOfMazeAndNotConnected : rng : Random -> Coordinate
+    /// Returns true if it is not possible to navigate from a coordinate to another coordinate (for example if there is a border between the two cells) 
+    abstract member IsLimitAt : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
+    /// Returns all the neighbors adjacent and non adjacent
     abstract member Neighbors : Coordinate -> Coordinate seq
+    /// Returns all the adjacent neighbors
+    abstract member AdjacentNeighbors : Coordinate -> Coordinate seq
+    /// Returns the coordinates of the adjacent neighbors at the position
+    abstract member AdjacentNeighbor : Coordinate -> Position -> Coordinate option
+    abstract member AdjacentVirtualNeighbor : Coordinate -> Position -> Coordinate option
+    /// Given a coordinate, returns true if the cell is part of the maze, false otherwise
+    abstract member IsCellPartOfMaze : Coordinate -> bool
     /// Given a coordinate, returns true if the cell has at least one connection open, false otherwise
     abstract member IsCellConnected : Coordinate -> bool
     /// Given two coordinates, returns true if they have their connection open, false otherwise
     abstract member AreConnected : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
-    /// Returns the neighbors coordinates that are connected or not NOT NECESSARILY WITH the coordinate
+    /// Returns the neighbors coordinates that are or not connected NOT NECESSARILY WITH the coordinate
     abstract member ConnectedNeighbors : isConnected:bool -> coordinate:Coordinate -> Coordinate seq
-    /// Returns the neighbors coordinates that are connected or not WITH the coordinate
+    /// Returns the neighbors coordinates that are or not connected WITH the coordinate
     abstract member ConnectedWithNeighbors : isConnected:bool -> coordinate:Coordinate -> Coordinate seq
     abstract member UpdateConnection : ConnectionType -> Coordinate -> Coordinate -> unit
+    abstract member IfNotAtLimitUpdateConnection : ConnectionType -> Coordinate -> Coordinate -> unit
     abstract member CostOfCoordinate : coordinate:Coordinate -> Cost
     /// Returns the first (arbitrary) coordinate that is part of the maze
     abstract member GetFirstCellPartOfMaze : Coordinate
@@ -352,6 +467,27 @@ type Grid<'Grid, 'Position> =
         member this.TotalOfMazeCells =
             this.BaseGrid.TotalOfMazeCells
 
+        member this.RIndexes =
+            this.BaseGrid.RIndexes
+
+        member this.CIndexes =
+            this.BaseGrid.CIndexes
+
+        member this.Dimension1Boundaries dimension2Index =
+            this.BaseGrid.Dimension1Boundaries dimension2Index
+
+        member this.Dimension2Boundaries dimension1Index =
+            this.BaseGrid.Dimension2Boundaries dimension1Index
+
+        member this.AdjustedCoordinate coordinate =
+            this.BaseGrid.AdjustedCoordinate coordinate
+
+        member this.ExistAt coordinate =
+            this.BaseGrid.ExistAt coordinate
+
+        member this.AdjustedExistAt coordinate =
+            this.BaseGrid.AdjustedExistAt coordinate
+
         member this.CoordinatesPartOfMaze =
             this.BaseGrid.Cells
             |> Seq.filter(fun (_, coordinate) -> this.BaseGrid.IsCellPartOfMaze coordinate)
@@ -367,15 +503,26 @@ type Grid<'Grid, 'Position> =
 
             snd (unconnectedPartOfMazeCells.[rng.Next(unconnectedPartOfMazeCells.Length)])
 
+        member this.IsLimitAt coordinate otherCoordinate =
+            this.BaseGrid.IsLimitAt coordinate otherCoordinate
+
         member this.Neighbors coordinate =
-            let listOfAdjacentNeighborCoordinate = this.BaseGrid.Neighbors coordinate
-
-            let listOfNonAdjacentNeighborCoordinate =
+            (this.ToInterface.AdjacentNeighbors coordinate)
+            |> Seq.append (
                 this.NonAdjacentNeighbors.NonAdjacentNeighbors(coordinate)
-                |> Seq.map(fst)
+                |> Seq.map(fst))
 
-            listOfAdjacentNeighborCoordinate
-            |> Seq.append listOfNonAdjacentNeighborCoordinate
+        member this.AdjacentNeighbors coordinate =
+            this.BaseGrid.Neighbors coordinate
+
+        member this.AdjacentNeighbor coordinate position =
+            this.BaseGrid.Neighbor coordinate position
+
+        member this.AdjacentVirtualNeighbor coordinate position =
+            this.BaseGrid.VirtualNeighbor coordinate position
+
+        member this.IsCellPartOfMaze coordinate =
+            this.BaseGrid.IsCellPartOfMaze coordinate
 
         member this.IsCellConnected coordinate =
             this.NonAdjacentNeighbors.IsCellConnected coordinate ||
@@ -402,13 +549,14 @@ type Grid<'Grid, 'Position> =
                 else
                     (this.BaseGrid.IsCellConnected nCoordinate) = isConnected &&
                     (this.NonAdjacentNeighbors.IsCellConnected nCoordinate) = isConnected)
+            |> Seq.distinct
 
-        member this.ConnectedWithNeighbors isConnected coordinate =
+        member this.ConnectedWithNeighbors connected coordinate =
             let neighborsCoordinates = this.ToInterface.Neighbors coordinate
 
             seq {
                 for neighborCoordinate in neighborsCoordinates do
-                    if isConnected then
+                    if connected then
                         if this.NonAdjacentNeighbors.ExistNeighbor coordinate neighborCoordinate then
                             if this.NonAdjacentNeighbors.AreConnected coordinate neighborCoordinate then
                                 yield neighborCoordinate
@@ -427,6 +575,10 @@ type Grid<'Grid, 'Position> =
                 this.NonAdjacentNeighbors.UpdateConnection connectionType coordinate otherCoordinate
             else
                 this.BaseGrid.UpdateConnection connectionType coordinate otherCoordinate
+
+        member this.IfNotAtLimitUpdateConnection connectionType coordinate otherCoordinate =
+            if (this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate) || not (this.BaseGrid.IsLimitAt coordinate otherCoordinate) then
+                this.ToInterface.UpdateConnection connectionType coordinate otherCoordinate
 
         member this.CostOfCoordinate coordinate =
             1 + (this.Obstacles.Cost coordinate)

@@ -37,7 +37,7 @@ let private carveRow
     (rng : Random)
     rngTotalWeight    
     rngPosition1Weight
-    (grid : IGrid<'G>)
+    (grid : GridNew.IGrid<_>)
     rIndex
     getRowInfo =
     
@@ -89,9 +89,7 @@ let private carveRow
         | _ ->
             grid.UpdateConnection Open coordinate (neighborCoordinate direction2.Position)
 
-let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : unit -> IGrid<'G>) =
-
-    let grid = grid()
+let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
 
     let rng = Random(rngSeed)
 
@@ -103,7 +101,7 @@ let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2We
 
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
 
-    grid.GetRIndexes
+    grid.RIndexes
     |> Seq.iter(fun rIndex ->
         carveRow
             // params

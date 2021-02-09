@@ -180,5 +180,5 @@ let private createInternal internalConnectionType (canvas : Canvas.Array2D.Canva
 let createBaseGrid canvas =
     createInternal Close canvas :> IAdjacentStructure<GridArray2D<OrthoPosition>, OrthoPosition>
 
-let createEmpty canvas =
+let createEmptyBaseGrid canvas =
     createInternal Open canvas :> IAdjacentStructure<GridArray2D<OrthoPosition>,OrthoPosition>

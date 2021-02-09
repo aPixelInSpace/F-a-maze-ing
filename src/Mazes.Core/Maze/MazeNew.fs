@@ -18,7 +18,7 @@ type MazeNew<'Grid> =
 module Maze =
 
     let toMaze grid =
-        { Grid = grid() }
+        { Grid = grid }
 
     let braid (rngSeed : int) (ratio : float) (deadEnds : Coordinate seq) (maze : MazeNew<_>) =
         let rng = Random(rngSeed)

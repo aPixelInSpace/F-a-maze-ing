@@ -8,8 +8,7 @@ open Mazes.Core
 open Mazes.Core.GridNew
 open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid.ArrayOfA.Polar
-open Mazes.Render.SVG.Base
+open Mazes.Render.SVGNew.Base
 
 let private calculatePoints (grid : Grid<GridArrayOfA, GridNew.PolarPosition>) (centerX, centerY, ringHeight) coordinate =
     let ringIndex = coordinate.RIndex

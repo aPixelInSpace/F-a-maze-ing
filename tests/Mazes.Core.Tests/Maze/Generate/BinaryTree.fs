@@ -16,7 +16,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Binary Tree al
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
     
     // act
     let maze = grid |> createMaze Direction.Top Direction.Right 1 1 1
@@ -30,7 +31,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Binary Tree al
         "|  _ _ _|_|_|  _|_  |\n" +
         "|_|_ _ _ _ _ _|_ _ _|\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.GridNew.Ortho.toString |> should equal expectedMaze
 
 type BinaryTreeDirectionEnum =
     | Top = 1
@@ -74,7 +75,8 @@ let ``Given a rectangular canvas, when a creating a maze with the binary tree al
     // arrange
     let gridRectangle =
         Rectangle.create numberOfRows numberOfColumns
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
     let direction1 = mapBinaryTreeDirectionEnumToBinaryTreeDirection direction1
     let direction2 = mapBinaryTreeDirectionEnumToBinaryTreeDirection direction2
@@ -84,7 +86,7 @@ let ``Given a rectangular canvas, when a creating a maze with the binary tree al
 
     // we use the map to ensure that the total nodes accessible in the maze is equal to the total number of maze zones of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
-    let rootCoordinate = maze.Grid.GetFirstPartOfMazeZone
+    let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
     let map = maze.createMap rootCoordinate
 
     // assert
@@ -95,7 +97,8 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Bina
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> PolarGrid.CreateFunction
+        |> Mazes.Core.GridNew.Polar.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
     
     // act
     let maze = grid |> createMaze Direction.Top Direction.Right 1 1 1
@@ -109,7 +112,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Bina
         "|‾¦¨|¨|‾¦‾¦¨|¨|¨|‾¦¨|¨|‾¦¨|¨|‾¦¨|‾¦¨|‾¦¨|¨|¨|¨|¨|\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.GridNew.Polar.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
