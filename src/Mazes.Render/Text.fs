@@ -6,7 +6,7 @@ open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.GridNew
-open Mazes.Core.GridNew.Ortho
+open Mazes.Core.GridNew.Types.Ortho
 
 let private repetitionsMiddlePart = 1
 

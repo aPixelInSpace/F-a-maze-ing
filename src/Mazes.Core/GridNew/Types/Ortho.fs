@@ -1,10 +1,11 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.GridNew.Ortho
+namespace Mazes.Core.GridNew.Types.Ortho
 
 open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
+open Mazes.Core.GridNew
 
 type OrthoPosition =
     | Left
@@ -121,64 +122,66 @@ type OrthoCell =
                        { ConnectionType = (connectionType pos); ConnectionPosition = pos } |]                
         }.ToInterface
 
-let toString (maze : IGrid<Grid<GridArray2D<OrthoPosition>, OrthoPosition>>) =
-    let sBuilder = StringBuilder()
-    let cells = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.Cells
-    let connectionTypeAtPosition = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.ConnectionTypeAtPosition
+module Grid =
 
-    let appendHorizontalWall wallType =
-        match wallType with
-            | Close | ClosePersistent -> sBuilder.Append("_") |> ignore
-            | ConnectionType.Open -> sBuilder.Append(" ") |> ignore
+    let toString (maze : IGrid<Grid<GridArray2D<OrthoPosition>, OrthoPosition>>) =
+        let sBuilder = StringBuilder()
+        let cells = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.Cells
+        let connectionTypeAtPosition = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.ConnectionTypeAtPosition
 
-    let appendVerticalWall wallType =
-        match wallType with
-            | Close | ClosePersistent -> sBuilder.Append("|") |> ignore
-            | ConnectionType.Open -> sBuilder.Append(" ") |> ignore
+        let appendHorizontalWall wallType =
+            match wallType with
+                | Close | ClosePersistent -> sBuilder.Append("_") |> ignore
+                | ConnectionType.Open -> sBuilder.Append(" ") |> ignore
 
-    // first row
-    let lastColumnIndex = cells |> maxColumnIndex
-    sBuilder.Append(" ") |> ignore
-    for columnIndex in 0 .. lastColumnIndex do
-        let cell =  get cells { RIndex = 0; CIndex = columnIndex }
-        appendHorizontalWall (connectionTypeAtPosition cell Top)
+        let appendVerticalWall wallType =
+            match wallType with
+                | Close | ClosePersistent -> sBuilder.Append("|") |> ignore
+                | ConnectionType.Open -> sBuilder.Append(" ") |> ignore
+
+        // first row
+        let lastColumnIndex = cells |> maxColumnIndex
         sBuilder.Append(" ") |> ignore
-    sBuilder.Append("\n") |> ignore
-
-    // every row
-    for rowIndex in 0 .. cells |> maxRowIndex do
         for columnIndex in 0 .. lastColumnIndex do
-            let cell = get cells { RIndex = rowIndex; CIndex = columnIndex }
-            appendVerticalWall (connectionTypeAtPosition cell Left)
-            appendHorizontalWall (connectionTypeAtPosition cell Bottom)
-            
-            if columnIndex = lastColumnIndex then
-                appendVerticalWall (connectionTypeAtPosition cell Right)
-
+            let cell =  get cells { RIndex = 0; CIndex = columnIndex }
+            appendHorizontalWall (connectionTypeAtPosition cell Top)
+            sBuilder.Append(" ") |> ignore
         sBuilder.Append("\n") |> ignore
 
-    sBuilder.ToString()
+        // every row
+        for rowIndex in 0 .. cells |> maxRowIndex do
+            for columnIndex in 0 .. lastColumnIndex do
+                let cell = get cells { RIndex = rowIndex; CIndex = columnIndex }
+                appendVerticalWall (connectionTypeAtPosition cell Left)
+                appendHorizontalWall (connectionTypeAtPosition cell Bottom)
+                
+                if columnIndex = lastColumnIndex then
+                    appendVerticalWall (connectionTypeAtPosition cell Right)
 
-let private createInternal internalConnectionType (canvas : Canvas.Array2D.Canvas) =
-    let cells =
-        canvas.Zones |>
-        Array2D.mapi(fun rowIndex columnIndex _ ->
-            OrthoCell.Create
-                canvas.NumberOfRows
-                canvas.NumberOfColumns
-                internalConnectionType
-                { RIndex = rowIndex; CIndex = columnIndex }
-                canvas.IsZonePartOfMaze)
+            sBuilder.Append("\n") |> ignore
 
-    {
-      Canvas = canvas
-      Cells = cells
-      PositionHandler = OrthoPositionHandler.Instance
-      CoordinateHandler = OrthoCoordinateHandler.Instance
-    }
+        sBuilder.ToString()
 
-let createBaseGrid canvas =
-    createInternal Close canvas :> IAdjacentStructure<GridArray2D<OrthoPosition>, OrthoPosition>
+    let private createInternal internalConnectionType (canvas : Canvas.Array2D.Canvas) =
+        let cells =
+            canvas.Zones |>
+            Array2D.mapi(fun rowIndex columnIndex _ ->
+                OrthoCell.Create
+                    canvas.NumberOfRows
+                    canvas.NumberOfColumns
+                    internalConnectionType
+                    { RIndex = rowIndex; CIndex = columnIndex }
+                    canvas.IsZonePartOfMaze)
 
-let createEmptyBaseGrid canvas =
-    createInternal Open canvas :> IAdjacentStructure<GridArray2D<OrthoPosition>,OrthoPosition>
+        {
+          Canvas = canvas
+          Cells = cells
+          PositionHandler = OrthoPositionHandler.Instance
+          CoordinateHandler = OrthoCoordinateHandler.Instance
+        }
+
+    let createBaseGrid canvas =
+        createInternal Close canvas :> IAdjacentStructure<GridArray2D<OrthoPosition>, OrthoPosition>
+
+    let createEmptyBaseGrid canvas =
+        createInternal Open canvas :> IAdjacentStructure<GridArray2D<OrthoPosition>, OrthoPosition>

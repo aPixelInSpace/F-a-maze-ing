@@ -15,7 +15,7 @@ let ``Rendering a 3 by 3 maze generated with the sidewinder algorithm (Top, Righ
     // arrange
     let grid =
         (Shape.Rectangle.create 3 3)
-        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
         |> Mazes.Core.GridNew.Grid.create
 
     let maze =
@@ -39,7 +39,7 @@ let ``Rendering a 5 by 5 maze generated with the sidewinder algorithm (Top, Righ
     // arrange
     let grid =
         (Shape.Rectangle.create 5 5)
-        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
         |> Mazes.Core.GridNew.Grid.create
 
     let maze =
@@ -65,7 +65,7 @@ let ``Rendering a 5 by 10 maze generated with the sidewinder algorithm (Top, Rig
     // arrange
     let grid =
         (Shape.Rectangle.create 5 10)
-        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
         |> Mazes.Core.GridNew.Grid.create
 
     let maze =

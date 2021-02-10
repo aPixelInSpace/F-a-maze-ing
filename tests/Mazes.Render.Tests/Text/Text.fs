@@ -16,7 +16,7 @@ let ``Given a grid, when rendering the grid in text, then the result should like
     // arrange
     let grid =
         (Shape.Rectangle.create 15 25)
-        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
         |> Mazes.Core.GridNew.Grid.create
 
     let closePersistent = grid.UpdateConnection ConnectionType.ClosePersistent

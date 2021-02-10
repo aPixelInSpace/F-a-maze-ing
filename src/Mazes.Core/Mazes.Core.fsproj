@@ -58,9 +58,15 @@
 		<Compile Include="Grid\ArrayOfA\Polar\PolarCoordinate.fs" />
 		<Compile Include="Grid\ArrayOfA\Polar\PolarCell.fs" />
 		<Compile Include="Grid\ArrayOfA\Polar\PolarGrid.fs" />
+		<Compile Include="GridNew\ICell.fs" />
+		<Compile Include="GridNew\IAdjacentStructure.fs" />
+		<Compile Include="GridNew\GridArray2D.fs" />
+		<Compile Include="GridNew\GridArrayOfA.fs" />
+		<Compile Include="GridNew\IGrid.fs" />
 		<Compile Include="GridNew\Grid.fs" />
-		<Compile Include="GridNew\Ortho.fs" />
-		<Compile Include="GridNew\Polar.fs" />
+		<Compile Include="GridNew\Types\Ortho.fs" />
+		<Compile Include="GridNew\Types\Polar.fs" />
+		<Compile Include="GridNew\Types\Hex.fs" />
 		<Compile Include="Maze\Maze.fs" />
 		<Compile Include="Maze\MazeNew.fs" />
 		<Compile Include="Maze\Generate\GrowingTree.fs" />

@@ -30,7 +30,7 @@ let maze =
 
     let grid =
         (Convert.fromString stringCanvas).Value    
-        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
         |> Mazes.Core.GridNew.Grid.create
 
     grid
@@ -121,7 +121,7 @@ let ``Given a maze with no internal walls, when creating a map and getting all t
 
     let maze =
         (Convert.fromString simpleCanvas).Value
-        |> Mazes.Core.GridNew.Ortho.createEmptyBaseGrid
+        |> Mazes.Core.GridNew.Types.Ortho.Grid.createEmptyBaseGrid
         |> Mazes.Core.GridNew.Grid.create
         |> Maze.toMaze
 
@@ -236,7 +236,7 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
 
     let maze =
         (Convert.fromString simpleCanvas).Value    
-        |> Mazes.Core.GridNew.Ortho.createEmptyBaseGrid
+        |> Mazes.Core.GridNew.Types.Ortho.Grid.createEmptyBaseGrid
         |> Mazes.Core.GridNew.Grid.create
         |> Maze.toMaze
 
@@ -277,7 +277,7 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
     // arrange
     let maze =
         canvas5x5
-        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
         |> Mazes.Core.GridNew.Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
@@ -319,7 +319,7 @@ let ``Given a maze with a non adjacent neighbor, when getting all the distances 
     // arrange
     let maze =
         canvas5x5
-        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
         |> Mazes.Core.GridNew.Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
@@ -358,7 +358,7 @@ let ``Given a maze with an obstacle, when getting all the distances from the roo
     // arrange
     let maze =
         canvas5x5
-        |> Mazes.Core.GridNew.Ortho.createBaseGrid
+        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
         |> Mazes.Core.GridNew.Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 

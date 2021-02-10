@@ -1,9 +1,10 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.GridNew.Polar
+namespace Mazes.Core.GridNew.Types.Polar
 
 open System.Text
 open Mazes.Core
+open Mazes.Core.GridNew
 open Mazes.Core.ArrayOfA
 open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Grid.ArrayOfA.Polar.PolarArrayOfA
@@ -123,94 +124,96 @@ type PolarCell =
             Connections = walls.ToArray()
         }.ToInterface
 
-let toString (maze : IGrid<Grid<GridArrayOfA, PolarPosition>>) =
-    let sBuilder = StringBuilder()
+module Grid =
 
-    let cells = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.Cells
-    let connectionTypeAtPosition = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.ConnectionTypeAtPosition
+    let toString (maze : IGrid<Grid<GridArrayOfA, PolarPosition>>) =
+        let sBuilder = StringBuilder()
 
-    let appendHorizontalWall wallType (sBuilder : StringBuilder) =
-        match wallType with
-            | Close | ClosePersistent -> sBuilder.Append("‾")
-            | ConnectionType.Open -> sBuilder.Append("¨")
+        let cells = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.Cells
+        let connectionTypeAtPosition = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.ConnectionTypeAtPosition
 
-    let appendVerticalWall wallType (sBuilder : StringBuilder) =
-        match wallType with
-            | Close | ClosePersistent -> sBuilder.Append("|")
-            | ConnectionType.Open -> sBuilder.Append("¦")
+        let appendHorizontalWall wallType (sBuilder : StringBuilder) =
+            match wallType with
+                | Close | ClosePersistent -> sBuilder.Append("‾")
+                | ConnectionType.Open -> sBuilder.Append("¨")
 
-    let appendWhiteSpace (sBuilder : StringBuilder) =
-        sBuilder.Append(" ")
+        let appendVerticalWall wallType (sBuilder : StringBuilder) =
+            match wallType with
+                | Close | ClosePersistent -> sBuilder.Append("|")
+                | ConnectionType.Open -> sBuilder.Append("¦")
 
-    let appendRing appendCell appendLastCell cellsRow =
-        cellsRow
-        |> Array.iter(appendCell)
+        let appendWhiteSpace (sBuilder : StringBuilder) =
+            sBuilder.Append(" ")
 
-        cellsRow
-        |> Array.last
-        |> appendLastCell
+        let appendRing appendCell appendLastCell cellsRow =
+            cellsRow
+            |> Array.iter(appendCell)
 
-        sBuilder.Append("\n") |> ignore
+            cellsRow
+            |> Array.last
+            |> appendLastCell
 
-    let lastCell lastCell =
-        sBuilder
-        |> appendVerticalWall (connectionTypeAtPosition lastCell Cw) |> ignore
+            sBuilder.Append("\n") |> ignore
 
-    // first
-    let firstRing cell =
-        sBuilder
-        |> appendVerticalWall (connectionTypeAtPosition cell Ccw)
-        |> appendWhiteSpace
-        |> ignore
+        let lastCell lastCell =
+            sBuilder
+            |> appendVerticalWall (connectionTypeAtPosition lastCell Cw) |> ignore
 
-    getRingByRing cells
-    |> Seq.head
-    |> appendRing firstRing lastCell
+        // first
+        let firstRing cell =
+            sBuilder
+            |> appendVerticalWall (connectionTypeAtPosition cell Ccw)
+            |> appendWhiteSpace
+            |> ignore
 
-    // others
-    let everyOtherRing cell =
-        sBuilder
-        |> appendVerticalWall (connectionTypeAtPosition cell Ccw)
-        |> appendHorizontalWall (connectionTypeAtPosition cell Inward)
-        |> ignore
+        getRingByRing cells
+        |> Seq.head
+        |> appendRing firstRing lastCell
 
-    getRingByRing cells
-    |> Seq.iteri(fun ringIndex cells ->
-        if ringIndex > 0 then
-            cells
-            |> appendRing everyOtherRing lastCell
-        else
-            ())
+        // others
+        let everyOtherRing cell =
+            sBuilder
+            |> appendVerticalWall (connectionTypeAtPosition cell Ccw)
+            |> appendHorizontalWall (connectionTypeAtPosition cell Inward)
+            |> ignore
 
-    // last
-    let lastRing cell =
-        sBuilder
-        |> appendWhiteSpace
-        |> appendHorizontalWall (connectionTypeAtPosition cell Outward)
-        |> ignore
+        getRingByRing cells
+        |> Seq.iteri(fun ringIndex cells ->
+            if ringIndex > 0 then
+                cells
+                |> appendRing everyOtherRing lastCell
+            else
+                ())
 
-    getRingByRing cells
-    |> Seq.last
-    |> appendRing lastRing (fun _ -> ())
+        // last
+        let lastRing cell =
+            sBuilder
+            |> appendWhiteSpace
+            |> appendHorizontalWall (connectionTypeAtPosition cell Outward)
+            |> ignore
 
-    sBuilder.ToString()
+        getRingByRing cells
+        |> Seq.last
+        |> appendRing lastRing (fun _ -> ())
 
-let private createInternal internalConnectionType (canvas : Canvas.ArrayOfA.Canvas) =
-    let cells =
-            createPolar
-                canvas.NumberOfRings
-                canvas.WidthHeightRatio
-                canvas.NumberOfCellsForCenterRing
-                (fun rIndex cIndex -> PolarCell.Create canvas internalConnectionType { RIndex = rIndex; CIndex = cIndex } canvas.IsZonePartOfMaze)
+        sBuilder.ToString()
 
-    {
-        Canvas = canvas
-        Cells = cells
-        PositionHandler = PolarPositionHandler.Instance
-    }
+    let private createInternal internalConnectionType (canvas : Canvas.ArrayOfA.Canvas) =
+        let cells =
+                createPolar
+                    canvas.NumberOfRings
+                    canvas.WidthHeightRatio
+                    canvas.NumberOfCellsForCenterRing
+                    (fun rIndex cIndex -> PolarCell.Create canvas internalConnectionType { RIndex = rIndex; CIndex = cIndex } canvas.IsZonePartOfMaze)
 
-let createBaseGrid canvas =
-    createInternal Close canvas :> IAdjacentStructure<GridArrayOfA, PolarPosition>
+        {
+            Canvas = canvas
+            Cells = cells
+            PositionHandler = PolarPositionHandler.Instance
+        }
 
-let createEmpty canvas =
-    createInternal Open canvas :> IAdjacentStructure<GridArrayOfA, PolarPosition>
+    let createBaseGrid canvas =
+        createInternal Close canvas :> IAdjacentStructure<GridArrayOfA, PolarPosition>
+
+    let createEmpty canvas =
+        createInternal Open canvas :> IAdjacentStructure<GridArrayOfA, PolarPosition>

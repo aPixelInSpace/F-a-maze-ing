@@ -10,12 +10,10 @@ open Mazes.Core
 open Mazes.Core.Grid
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Canvas.ArrayOfA
-open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Grid.Array2D.Hex
 open Mazes.Core.Grid.Array2D.Tri
 open Mazes.Core.Grid.Array2D.OctaSquare
 open Mazes.Core.Grid.Array2D.PentaCairo
-open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -23,23 +21,21 @@ open Mazes.Render
 let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
-        let grid =
-            Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside
-            |> OrthoGrid.Create  Close
-            :> IGrid<OrthoGrid>
+        Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside
+        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 6 } { RIndex = 3; CIndex = 6 } ConnectionType.Close
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 } ConnectionType.Close
-
-        (fun () -> grid)
+    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 1; CIndex = 6 } { RIndex = 3; CIndex = 6 }
+    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 }
 
     let maze =
         grid
-        |> HuntAndKill.createMaze 1
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+        |> HuntAndKill.createMazeNew 1
+
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
     // act
-    let renderedMaze = SVG.OrthoGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    let renderedMaze = SVGNew.OrthoGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/ortho.svg", Encoding.UTF8)
@@ -50,23 +46,20 @@ let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, t
 let ``Given a maze with a polar grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
-        let grid =
-            Shape.Disk.create 5 1.0 2
-            |> PolarGrid.Create Close
-            :> IGrid<PolarGrid>
+        Shape.Disk.create 5 1.0 2
+        |> Mazes.Core.GridNew.Types.Polar.Grid.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 13 } ConnectionType.Close
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 } ConnectionType.Close
-
-        (fun () -> grid)
+    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 1; CIndex = 0 } { RIndex = 3; CIndex = 1 }
+    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 2; CIndex = 2 } { RIndex = 3; CIndex = 3 }
 
     let maze =
         grid
-        |> HuntAndKill.createMaze 1
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+        |> HuntAndKill.createMazeNew 1
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
     // act
-    let renderedMaze = SVG.PolarGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    let renderedMaze = SVGNew.PolarGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/theta.svg", Encoding.UTF8)
@@ -77,23 +70,20 @@ let ``Given a maze with a polar grid, a path and a map, when creating an SVG, th
 let ``Given a maze with a hex grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
-        let grid =
-            Shape.Hexagon.create 5.0
-            |> HexGrid.Create Close
-            :> IGrid<HexGrid>
+        Shape.Hexagon.create 5.0
+        |> Mazes.Core.GridNew.Types.Hex.Grid.createBaseGrid
+        |> Mazes.Core.GridNew.Grid.create
 
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 } ConnectionType.Close
-        grid.AddUpdateNonAdjacentNeighbor { RIndex = 5; CIndex = 2 } { RIndex = 6; CIndex = 3 } ConnectionType.Close
-
-        (fun () -> grid)
+    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 }
+    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 5; CIndex = 2 } { RIndex = 6; CIndex = 3 }
 
     let maze =
         grid
-        |> HuntAndKill.createMaze 1
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+        |> HuntAndKill.createMazeNew 1
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
     // act
-    let renderedMaze = SVG.HexGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    let renderedMaze = SVGNew.HexGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/sigma.svg", Encoding.UTF8)

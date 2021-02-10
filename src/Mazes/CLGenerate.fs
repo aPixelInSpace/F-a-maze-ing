@@ -124,8 +124,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     stopWatch.Start()
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> GridNew.Ortho.create |> GridNew.Grid.create)
-
-    let grid = Shape.Disk.create options.Value.rows 1.0 2 |> GridNew.Polar.createBaseGrid |> GridNew.Grid.create
+    //let grid = Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> GridNew.Types.Ortho.Grid.createBaseGrid |> GridNew.Grid.create
+    //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> GridNew.Types.Polar.Grid.createBaseGrid |> GridNew.Grid.create
     
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Ortho.OrthoGrid.CreateFunction)
     //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> OrthoGrid.createGridFunction)
@@ -168,6 +168,9 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateEmptyFunction)
     //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> PentaCairo.PentaCairoGrid.CreateEmptyFunction)
 
+    //let grid = Shape.Hexagon.create 5.0 |> GridNew.Types.Hex.Grid.createBaseGrid |> GridNew.Grid.create
+    let grid = Shape.Disk.create 5 1.0 2 |> Mazes.Core.GridNew.Types.Polar.Grid.createBaseGrid |> Mazes.Core.GridNew.Grid.create
+    
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
 
@@ -266,6 +269,9 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //        grid.AddUpdateNonAdjacentNeighbor { RIndex = 12; CIndex = 25 } { RIndex = 17; CIndex = 27 } WallType.Normal
 //        grid.AddUpdateNonAdjacentNeighbor { RIndex = 11; CIndex = 10 } { RIndex = 14; CIndex = 11 } WallType.Normal
 
+    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 1; CIndex = 0 } { RIndex = 3; CIndex = 1 }
+    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 2; CIndex = 2 } { RIndex = 3; CIndex = 3 }
+
         //(fun _ -> grid)
 
     let maze = (algo rngSeed grid)
@@ -310,10 +316,10 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.OrthoGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
         
-    //let renderedGridSvg = SVGNew.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
-    let renderedGridSvg = SVGNew.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
+    let renderedGridSvg = SVGNew.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    //let renderedGridSvg = SVGNew.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
-    //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVGNew.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
 
     //let renderedGridSvg = SVG.TriGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
