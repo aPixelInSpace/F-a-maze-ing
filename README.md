@@ -1,5 +1,5 @@
 ![build](https://github.com/apixelinspace/F-a-maze-ing/workflows/build/badge.svg)
-[![Build Status](https://dev.azure.com/apat21/aPixelInSpace/_apis/build/status/aPixelInSpace.F-a-maze-ing?branchName=main)](https://dev.azure.com/apat21/aPixelInSpace/_build/latest?definitionId=1&branchName=main)
+[![Build Status](https://apat21.visualstudio.com/aPixelInSpace/_apis/build/status/aPixelInSpace.F-a-maze-ing?branchName=main)](https://apat21.visualstudio.com/aPixelInSpace/_build/latest?definitionId=1&branchName=main)
 [![codecov](https://codecov.io/gh/aPixelInSpace/F-a-maze-ing/branch/main/graph/badge.svg?token=K6FQOQZ8BS)](https://codecov.io/gh/aPixelInSpace/F-a-maze-ing)
 
 # F-a-maze-ing
@@ -28,6 +28,10 @@ Here with the "Cairo" pentagonal tiling
 ### Upsilon maze
 
 <img src="docs/resources/Examples/Upsilon/SVG/UpsilonMaze.svg" width="400">
+
+### Brick maze
+
+<img src="docs/resources/Examples/Brick/SVG/BrickMaze.svg" width="400">
 
 ### Orthogonal maze
 
@@ -80,12 +84,8 @@ mazes
                      - PrimSimpleModified
                      - PrimWeighted
                      - GrowingTreeMixRandomAndLast
-                     - GrowingTreeMixOldestAndLast
                      - GrowingTreeMixChosenRandomAndLast
-                     - GrowingTreeDirection
-                     - GrowingTreeSpiral
-                     - Eller
-                     - RecursiveDivision
+                     - GrowingTreeMixOldestAndLast
 
   -s, --seed         The seed number to use for the random number generator. If empty, a random seed is picked.
 

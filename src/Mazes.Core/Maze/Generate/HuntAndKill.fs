@@ -6,8 +6,6 @@ open System
 open System.Collections.Generic
 open System.Linq
 open Mazes.Core
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 
 let transformIntoMaze
     randomCoordinatePartOfMazeAndNotConnected
@@ -48,21 +46,7 @@ let transformIntoMaze
 
             headCoordinate <- nextCoordinate
 
-let createMaze rngSeed (grid : unit -> IGrid<'G>) =
-
-    let grid = grid()
-
-    let rng = Random(rngSeed)
-
-    transformIntoMaze
-        grid.RandomCoordinatePartOfMazeAndNotLinked
-        grid.NeighborsThatAreLinked
-        (grid.UpdateConnection ConnectionType.Open)
-        rng
-
-    { Grid = grid }
-
-let createMazeNew rngSeed (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     let rng = Random(rngSeed)
 

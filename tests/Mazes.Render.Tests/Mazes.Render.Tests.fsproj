@@ -26,6 +26,9 @@
 		<Content Include="Resources\pentacairo.svg">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+		<Content Include="Resources\brick.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 		<Compile Include="Text\BinaryTree\Rectangle.fs" />
 		<Compile Include="Text\BinaryTree\TriangleIsosceles.fs" />
 		<Compile Include="Text\BinaryTree\Ellipse.fs" />

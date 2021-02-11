@@ -5,8 +5,6 @@ module Mazes.Core.Maze.Generate.Sidewinder
 open System
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 
 type Direction =
     | Top
@@ -128,7 +126,7 @@ let private carveRow
            lastIndex2WithRemovablePos2Wall <- index2
            runStartIndex2 <- index2 + increment        
 
-let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =    
+let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IGrid<_>) : Maze.Maze<_> =    
 
     let rng = Random(rngSeed)
 

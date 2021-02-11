@@ -6,8 +6,6 @@ open System
 open System.Collections.Generic
 open System.Linq
 open Mazes.Core
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 
 let transformIntoMaze
     randomCoordinatePartOfMazeAndNotConnected
@@ -50,7 +48,7 @@ let transformIntoMaze
             connectCells path.[i] path.[i + 1]
             unvisited.Remove(path.[i]) |> ignore
 
-let createMaze rngSeed (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     let rng = Random(rngSeed)
 

@@ -6,8 +6,6 @@ open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D.Shape
 open Mazes.Core.Canvas.ArrayOfA.Shape
-open Mazes.Core.Grid.Array2D.Ortho
-open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
@@ -15,8 +13,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the simple Prim's 
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     // act
     let maze = grid |> PrimSimple.createMaze 1
@@ -30,7 +28,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the simple Prim's 
         "|_| |   |   |      _|\n" +
         "|_ _|_|_|_|_|_|_|_ _|\n"
 
-    maze.Grid |> Mazes.Core.GridNew.Types.Ortho.Grid.toString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
@@ -40,8 +38,8 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the simp
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> Mazes.Core.GridNew.Types.Polar.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> PrimSimple.createMaze 1
@@ -55,7 +53,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the simp
         "¦‾|¨|¨¦¨¦‾¦‾¦‾¦‾|¨|¨¦‾|‾¦¨|¨|¨¦‾|‾¦¨|¨¦‾¦‾|¨|¨|¨¦\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid |> Mazes.Core.GridNew.Types.Polar.Grid.toString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
@@ -65,8 +63,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the modified simpl
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> PrimSimpleModified.createMaze 1
@@ -80,7 +78,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the modified simpl
         "|_|  _  |_|    _|_  |\n" +
         "|_ _|_ _|_ _|_ _ _|_|\n"
         
-    maze.Grid |> Mazes.Core.GridNew.Types.Ortho.Grid.toString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
@@ -90,8 +88,8 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the modi
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> Mazes.Core.GridNew.Types.Polar.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> PrimSimpleModified.createMaze 1
@@ -105,7 +103,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the modi
         "¦‾|¨|¨|¨|¨|‾¦¨|¨|¨|‾¦¨|¨¦‾|¨|¨|‾¦‾¦¨¦‾|¨|¨|¨¦‾|¨¦\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid |> Mazes.Core.GridNew.Types.Polar.Grid.toString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
@@ -115,8 +113,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the weighted Prim'
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> PrimWeighted.createMaze 1 42
@@ -130,7 +128,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the weighted Prim'
         "|_   _   _|_|   |_  |\n" +
         "|_ _ _|_|_ _ _|_ _ _|\n"
         
-    maze.Grid |> Mazes.Core.GridNew.Types.Ortho.Grid.toString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
@@ -140,8 +138,8 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the weig
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> Mazes.Core.GridNew.Types.Polar.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> PrimWeighted.createMaze 1 42
@@ -155,7 +153,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the weig
         "|‾¦¨¦¨¦¨¦¨¦‾|¨|¨¦‾|¨|‾¦¨|¨|¨|¨¦¨|¨|¨¦‾|¨¦‾¦¨¦‾|¨|\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid |> Mazes.Core.GridNew.Types.Polar.Grid.toString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

@@ -4,8 +4,6 @@ module Mazes.Core.Maze.Generate.AldousBroder
 
 open System
 open Mazes.Core
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 
 let transformIntoMaze
     randomCoordinatePartOfMazeAndNotConnected
@@ -30,23 +28,7 @@ let transformIntoMaze
 
         currentCoordinate <- nextCoordinate
 
-let createMaze rngSeed (grid : unit -> IGrid<'G>) =
-
-    let grid = grid()
-
-    let rng = Random(rngSeed)
-
-    transformIntoMaze
-        grid.RandomCoordinatePartOfMazeAndNotLinked
-        grid.Neighbors
-        grid.IsCellConnected
-        (grid.UpdateConnection ConnectionType.Open)
-        grid.TotalOfMazeCells
-        rng
-
-    { Grid = grid }
-
-let createMazeNew rngSeed (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     let rng = Random(rngSeed)
 

@@ -14,13 +14,7 @@
       <Compile Include="SVG\TriGrid.fs" />
       <Compile Include="SVG\OctaSquareGrid.fs" />
       <Compile Include="SVG\PentaCairoGrid.fs" />
-      <Compile Include="SVGNew\Base.fs" />
-      <Compile Include="SVGNew\OrthoGrid.fs" />
-      <Compile Include="SVGNew\PolarGrid.fs" />
-      <Compile Include="SVGNew\HexGrid.fs" />
-      <Compile Include="SVGNew\TriGrid.fs" />
-      <Compile Include="SVGNew\OctaSquareGrid.fs" />
-      <Compile Include="SVGNew\PentaCairoGrid.fs" />
+      <Compile Include="SVG\BrickGrid.fs" />
     </ItemGroup>
 
     <ItemGroup>

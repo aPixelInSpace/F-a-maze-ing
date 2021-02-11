@@ -5,13 +5,11 @@ module Mazes.Core.Maze.Generate.Eller
 open System
 open System.Collections.Generic
 open Mazes.Core
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate.Kruskal
 
 // todo : refactor this
 // It has the same fundamentals problems as Sidewinder
-let createMaze rngSeed (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     let rng = Random(rngSeed)
 

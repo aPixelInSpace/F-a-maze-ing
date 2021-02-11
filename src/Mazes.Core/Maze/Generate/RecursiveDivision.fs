@@ -5,13 +5,11 @@ module Mazes.Core.Maze.Generate.RecursiveDivision
 open System
 open System.Collections.Generic
 open Mazes.Core
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 
 type private Slice = (int * int * int * int)
 
 // todo : refactor this, sadly it only works with rectangular orthogonal grid for now
-let createMaze rngSeed rooms roomsHeight roomsWidth (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+let createMaze rngSeed rooms roomsHeight roomsWidth (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     let rng = Random(rngSeed)
 

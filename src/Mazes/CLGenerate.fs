@@ -10,8 +10,6 @@ open CommandLine
 open Mazes.Core
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Canvas.ArrayOfA
-open Mazes.Core.Grid.Array2D
-open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
 open Mazes.Render
@@ -67,35 +65,16 @@ type GenerateOptions = {
 }
 
 let handleVerbGenerate (options : Parsed<GenerateOptions>) =
-
-//    let matchAlgoEnumWithFunction algoEnum rngSeed =
-//        match algoEnum with
-//           | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
-//           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top rngSeed 1 1
-//           | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
-//           | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
-//           | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
-//           | AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
-//           | AlgoEnum.Kruskal -> Kruskal.createMaze rngSeed
-//           | AlgoEnum.PrimSimple -> PrimSimple.createMaze rngSeed
-//           | AlgoEnum.PrimSimpleModified -> PrimSimpleModified.createMaze rngSeed
-//           | AlgoEnum.PrimWeighted -> PrimWeighted.createMaze rngSeed 42
-//           | AlgoEnum.GrowingTreeMixRandomAndLast -> GrowingTreeMixRandomAndLast.createMaze rngSeed 0.5
-//           | AlgoEnum.GrowingTreeMixChosenRandomAndLast -> GrowingTreeMixChosenRandomAndLast.createMaze rngSeed 0.5
-//           | AlgoEnum.GrowingTreeMixOldestAndLast -> GrowingTreeMixOldestAndLast.createMaze rngSeed 0.5
-//           | AlgoEnum.GrowingTreeDirection -> GrowingTreeDirection.createMaze rngSeed 0.3 0.2 0.3
-//           | AlgoEnum.GrowingTreeSpiral -> GrowingTreeSpiral.createMaze rngSeed 1.0 1.0 10 0.0
-//           | AlgoEnum.Eller -> Eller.createMaze rngSeed
-//           | AlgoEnum.RecursiveDivision -> RecursiveDivision.createMaze rngSeed 0.0 3 3
-//           | _ -> failwith "Generating algorithm unknown"
     
     let matchAlgoEnumWithFunction algoEnum rngSeed =
         match algoEnum with
-           | AlgoEnum.AldousBroder -> AldousBroder.createMazeNew rngSeed
+           | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
+           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top rngSeed 1 1
+           | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
            | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
-           | AlgoEnum.HuntAndKill -> HuntAndKill.createMazeNew rngSeed
+           | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
            | AlgoEnum.RecursiveBacktracker -> RecursiveBacktracker.createMaze rngSeed
-           | AlgoEnum.Kruskal -> Kruskal.createMazeNew rngSeed
+           | AlgoEnum.Kruskal -> Kruskal.createMaze rngSeed
            | AlgoEnum.PrimSimple -> PrimSimple.createMaze rngSeed
            | AlgoEnum.PrimSimpleModified -> PrimSimpleModified.createMaze rngSeed
            | AlgoEnum.PrimWeighted -> PrimWeighted.createMaze rngSeed 42
@@ -123,54 +102,12 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let stopWatch = Stopwatch()
 
     stopWatch.Start()
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> GridNew.Ortho.create |> GridNew.Grid.create)
-    //let grid = Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> GridNew.Types.Ortho.Grid.createBaseGrid |> GridNew.Grid.create
-    //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> GridNew.Types.Polar.Grid.createBaseGrid |> GridNew.Grid.create
-    
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Ortho.OrthoGrid.CreateFunction)
-    //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> OrthoGrid.createGridFunction)
-    //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Ortho.OrthoGrid.CreateFunction)
-    //let grid = (Shape.Ellipse.create 20 15 -10.0 0.0 0 8 (Some 2.5) Shape.Ellipse.Side.Outside |> OrthoGrid.createGridFunction)
-    //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction)
-    //let grid = (Mazes.Utility.Canvas.Convert.fromImage 0.0f "d:\\temp\\Microchip.png" |> OrthoGrid.createGridFunction)
-    //let grid = Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> OrthoGrid.createGridFunction
-    //let grid = (Shape.Hexagon.create 15.0 |> Ortho.OrthoGrid.CreateFunction)
-    //let grid = (Shape.PentagonStar.create 32.0 20.0 |> Ortho.OrthoGrid.CreateFunction)
+    let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.Type.Brick.Grid.createBaseGrid |> Grid.Grid.create)
+    //let grid = Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> Grid.Type.Ortho.Grid.createBaseGrid |> Grid.Grid.create
+    //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> Grid.Type.Polar.Grid.createBaseGrid |> Grid.Grid.create
 
-    //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateFunction
-    //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> PolarGrid.CreateEmptyFunction
-
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateFunction)
-    //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> Hex.HexGrid.CreateFunction)
-    //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Hex.HexGrid.CreateFunction)
-    //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> Hex.HexGrid.CreateFunction)
-    //let grid = (Shape.Hexagon.create options.Value.rows |> Hex.HexGrid.CreateFunction)
-    //let grid = (Shape.Hexagon.create 15.0 |> Hex.HexGrid.CreateFunction)
-
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Tri.TriGrid.CreateFunction)
-    //let grid = (Shape.TriangleIsosceles.create 53 Shape.TriangleIsosceles.BaseAt.Bottom 1 1 |> Tri.TriGrid.CreateFunction)
-
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> OctaSquare.OctaSquareGrid.CreateFunction)
-    //let grid = (Shape.Ellipse.create 30 35 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> OctaSquare.OctaSquareGrid.CreateFunction)
-
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> PentaCairo.PentaCairoGrid.CreateFunction)
-    //let grid = (Shape.TriangleIsosceles.create 35 Shape.TriangleIsosceles.BaseAt.Bottom 2 1 |> PentaCairo.PentaCairoGrid.CreateFunction)
-    //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> PentaCairo.PentaCairoGrid.CreateFunction)
-    //let grid = (Shape.Hexagon.create 15.0 |> PentaCairo.PentaCairoGrid.CreateFunction)
-    //let grid = (Mazes.Utility.Canvas.Convert.fromImage 0.0f "d:\\temp\\Microchip.png" |> PentaCairo.PentaCairoGrid.CreateFunction)
-    //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> PentaCairo.PentaCairoGrid.CreateFunction)
-    //let grid = (Shape.Pentagon.create 25.0 |> PentaCairo.PentaCairoGrid.CreateFunction)
-    //let grid = (Shape.PentagonStar.create 20.0 12.0 |> PentaCairo.PentaCairoGrid.CreateFunction)
-
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Ortho.OrthoGrid.CreateEmptyFunction)
-    //let grid = (Shape.Ellipse.create 15 19 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside |> Ortho.OrthoGrid.CreateEmptyFunction)
-    //let grid = (Shape.Ellipse.create 15 17 0.0 0.0 0 0 (Some 0.1) Shape.Ellipse.Side.Inside |> Ortho.OrthoGrid.CreateEmptyFunction)
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Hex.HexGrid.CreateEmptyFunction)
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> PentaCairo.PentaCairoGrid.CreateEmptyFunction)
-
-    //let grid = Shape.Hexagon.create 5.0 |> GridNew.Types.Hex.Grid.createBaseGrid |> GridNew.Grid.create
-    let grid = Shape.Disk.create 5 1.0 2 |> Mazes.Core.GridNew.Types.Polar.Grid.createBaseGrid |> Mazes.Core.GridNew.Grid.create
-    
+    let grid = (Shape.Rectangle.create 5 7 |> Grid.Type.Brick.Grid.createBaseGrid |> Grid.Grid.create)
+        
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
 
@@ -230,51 +167,39 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    
 //    let maze = { Grid = grid }
 
-//    let grid =
-//        let grid = grid()
+    //
+    // Bridges
+    //
 
-//        let rng = Random(rngSeed)
-//        for coordinate in grid.CoordinatesPartOfMaze do
-//            let toCoordinate = 
-//                if (coordinate.RIndex % 2 = 0 && coordinate.CIndex % 2 = 1) then
-//                    Some { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex + 1 }
-//                elif (coordinate.RIndex % 2 = 1 && coordinate.CIndex % 2 = 0) then
-//                    Some { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex + 1 }
-//                else
-//                    None
-//            
-//            match toCoordinate with
-//            | Some toCoordinate ->
-//                if (toCoordinate.RIndex >= fst (grid.Dimension1Boundaries toCoordinate.CIndex)) &&
-//                   (toCoordinate.RIndex < snd (grid.Dimension1Boundaries toCoordinate.CIndex)) &&
-//                   (toCoordinate.CIndex >= fst (grid.Dimension2Boundaries toCoordinate.RIndex)) &&
-//                   (toCoordinate.CIndex < snd (grid.Dimension2Boundaries toCoordinate.RIndex)) &&
-//                   grid.IsCellPartOfMaze toCoordinate &&
-//                   rng.NextDouble() < 0.5
-//                   then
-//                    grid.AddUpdateNonAdjacentNeighbor coordinate toCoordinate ConnectionType.Close
-//            | None -> ()
-        
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 6; CIndex = 6 } { RIndex = 5; CIndex = 5 } WallType.Normal
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 7; CIndex = 14 } { RIndex = 9; CIndex = 14 } WallType.Normal
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 8; CIndex = 5 } { RIndex = 10; CIndex = 5 } WallType.Normal
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 9; CIndex = 7 } { RIndex = 10; CIndex = 8 } WallType.Normal
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 5; CIndex = 22 } { RIndex = 7; CIndex = 22 } WallType.Normal
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 9; CIndex = 21 } { RIndex = 11; CIndex = 21 } WallType.Normal
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 6; CIndex = 6 } { RIndex = 5; CIndex = 2 } WallType.Normal
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 6; CIndex = 6 } { RIndex = 7; CIndex = 5 } WallType.Normal
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 19; CIndex = 0 } { RIndex = 15; CIndex = 5 } WallType.Normal
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 16; CIndex = 19 } { RIndex = 18; CIndex = 19 } WallType.Normal
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 18; CIndex = 19 } { RIndex = 18; CIndex = 21 } WallType.Normal
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 12; CIndex = 25 } { RIndex = 17; CIndex = 27 } WallType.Normal
-//        grid.AddUpdateNonAdjacentNeighbor { RIndex = 11; CIndex = 10 } { RIndex = 14; CIndex = 11 } WallType.Normal
+//    let rng = Random(rngSeed)
+//    for coordinate in grid.CoordinatesPartOfMaze do
+//        let toCoordinate = 
+//            if (coordinate.RIndex % 2 = 0 && coordinate.CIndex % 2 = 1) then
+//                Some { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex + 1 }
+//            elif (coordinate.RIndex % 2 = 1 && coordinate.CIndex % 2 = 0) then
+//                Some { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex + 1 }
+//            else
+//                None
+//        
+//        match toCoordinate with
+//        | Some toCoordinate ->
+//            if (toCoordinate.RIndex >= fst (grid.Dimension1Boundaries toCoordinate.CIndex)) &&
+//               (toCoordinate.RIndex < snd (grid.Dimension1Boundaries toCoordinate.CIndex)) &&
+//               (toCoordinate.CIndex >= fst (grid.Dimension2Boundaries toCoordinate.RIndex)) &&
+//               (toCoordinate.CIndex < snd (grid.Dimension2Boundaries toCoordinate.RIndex)) &&
+//               grid.IsCellPartOfMaze toCoordinate &&
+//               rng.NextDouble() < 0.5
+//               then
+//                grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close coordinate toCoordinate
+//        | None -> ()
 
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 1; CIndex = 0 } { RIndex = 3; CIndex = 1 }
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 2; CIndex = 2 } { RIndex = 3; CIndex = 3 }
+    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 0; CIndex = 5 } { RIndex = 2; CIndex = 5 }
+    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 3 }
 
         //(fun _ -> grid)
 
     let maze = (algo rngSeed grid)
+
     //maze.Grid.AddTwoWayTeleport { RIndex = 2; CIndex = 4 } { RIndex = 41; CIndex = 8 }
     //maze.Grid.AddCostForCoordinate 200 { RIndex = maze.Grid.GetFirstPartOfMazeZone.RIndex + 1; CIndex = maze.Grid.GetFirstPartOfMazeZone.CIndex}
 
@@ -312,21 +237,23 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    let rawTestOutput = Output.RawForTest.outputRawForTest maze (Text.renderGrid maze.Grid.ToSpecializedGrid)
 //    File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
-    //let renderedGridSvg = SVGNew.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    //let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.OrthoGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
         
-    let renderedGridSvg = SVGNew.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
-    //let renderedGridSvg = SVGNew.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
+    //let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
-    //let renderedGridSvg = SVGNew.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
 
     //let renderedGridSvg = SVG.TriGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
     //let renderedGridSvg = SVG.OctaSquareGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
 
-    //let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
     //let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.LongestPaths |> Seq.head) map
+
+    let renderedGridSvg = SVG.BrickGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
 
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
 

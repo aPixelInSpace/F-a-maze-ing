@@ -7,9 +7,7 @@ open Xunit
 open Mazes.Core
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid
-open Mazes.Core.Grid.Array2D.Ortho
-open Mazes.Core.MazeNew
+open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
 
 // fixture
@@ -30,8 +28,8 @@ let maze =
 
     let grid =
         (Convert.fromString stringCanvas).Value    
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     grid
     |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -121,8 +119,8 @@ let ``Given a maze with no internal walls, when creating a map and getting all t
 
     let maze =
         (Convert.fromString simpleCanvas).Value
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createEmptyBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createEmptyBaseGrid
+        |> Mazes.Core.Grid.Grid.create
         |> Maze.toMaze
 
     // act
@@ -236,8 +234,8 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
 
     let maze =
         (Convert.fromString simpleCanvas).Value    
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createEmptyBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createEmptyBaseGrid
+        |> Mazes.Core.Grid.Grid.create
         |> Maze.toMaze
 
     let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
@@ -277,8 +275,8 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
     // arrange
     let maze =
         canvas5x5
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
         (*
@@ -319,8 +317,8 @@ let ``Given a maze with a non adjacent neighbor, when getting all the distances 
     // arrange
     let maze =
         canvas5x5
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
         (*
@@ -358,8 +356,8 @@ let ``Given a maze with an obstacle, when getting all the distances from the roo
     // arrange
     let maze =
         canvas5x5
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
         (*

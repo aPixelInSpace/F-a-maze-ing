@@ -7,7 +7,8 @@ open System.Text
 open Mazes.Core
 open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid.Array2D.PentaCairo
+open Mazes.Core.Grid
+open Mazes.Core.Grid.Type.PentaCairo
 open Mazes.Render.SVG.Base
 
 let private thetaDegBase = 75.0
@@ -86,8 +87,8 @@ let center calculatePoints coordinate =
 
     middlePoint middleLittleSide b // this is a good enough approximation
 
-let private appendWallsType calculatePoints (grid : PentaCairoGrid) appendWall coordinate (sBuilder : StringBuilder) =
-    let cell = grid.Cell coordinate
+let private appendWallsType calculatePoints (grid : Grid<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) appendWall coordinate (sBuilder : StringBuilder) =
+    let cell = grid.BaseGrid.Cell coordinate
 
     let ((sx,sy), (ax,ay), (bx,by), (cx,cy), (dx,dy)) =
         calculatePoints coordinate
@@ -101,7 +102,7 @@ let private appendWallsType calculatePoints (grid : PentaCairoGrid) appendWall c
             | C -> $"M {round bx} {round by} L {round cx} {round cy}"
             | D -> $"M {round cx} {round cy} L {round dx} {round dy}"
 
-        appendWall sBuilder lines (cell.WallTypeAtPosition position) coordinate |> ignore
+        appendWall sBuilder lines (cell.ConnectionTypeAtPosition position) coordinate |> ignore
 
 let private wholeCellLines calculatePoints coordinate =
     let ((sx,sy), (ax,ay), (bx,by), (cx,cy), (dx,dy)) =
@@ -113,7 +114,7 @@ let private wholeCellLines calculatePoints coordinate =
     $"L {round cx} {round cy} " +
     $"L {round dx} {round dy}"
 
-let render (grid : PentaCairoGrid) (path : Coordinate seq) (map : Map) =
+let render (grid : Grid<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) (path : Coordinate seq) (map : Map) =
 
     let sBuilder = StringBuilder()
 
@@ -149,8 +150,9 @@ let render (grid : PentaCairoGrid) (path : Coordinate seq) (map : Map) =
     let calculateLength numberOf =
         numberOf * (hypDoubleGreatSide / 2.0) + pentGreatSide
 
-    let width = calculateLength ((float)grid.NumberOfColumns) + marginWidth * 2.0
-    let height = calculateLength ((float)grid.NumberOfRows) + marginHeight * 2.0
+    let spGrid = grid.BaseGrid.ToSpecializedStructure
+    let width = calculateLength ((float)spGrid.NumberOfColumns) + marginWidth * 2.0
+    let height = calculateLength ((float)spGrid.NumberOfRows) + marginHeight * 2.0
 
     let wholeCellLines = wholeCellLines calculatePoints
     let wholeBridgeLines = wholeBridgeLines calculatePointsBridge

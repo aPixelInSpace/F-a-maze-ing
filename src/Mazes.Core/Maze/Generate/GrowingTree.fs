@@ -6,8 +6,6 @@ open System
 open System.Collections.Generic
 open System.Linq
 open Mazes.Core
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 
 module GrowingTree =
 
@@ -18,7 +16,7 @@ module GrowingTree =
             next
             remove
             chooseNeighbor
-            (grid : GridNew.IGrid<_>) =
+            (grid : Grid.IGrid<_>) =
 
         add startCoordinate
 
@@ -41,7 +39,7 @@ module GrowingTree =
 
 module GrowingTreeMixRandomAndLast =
 
-    let createMaze rngSeed longPassages (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+    let createMaze rngSeed longPassages (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let rng = Random(rngSeed)
 
@@ -76,7 +74,7 @@ module GrowingTreeMixRandomAndLast =
 
 module GrowingTreeMixOldestAndLast =
 
-    let createMaze rngSeed longPassages (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+    let createMaze rngSeed longPassages (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let rng = Random(rngSeed)
 
@@ -109,7 +107,7 @@ module GrowingTreeMixOldestAndLast =
 
 module GrowingTreeMixChosenRandomAndLast =
 
-    let createMaze rngSeed longPassages (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+    let createMaze rngSeed longPassages (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let rng = Random(rngSeed)
 
@@ -151,7 +149,7 @@ module GrowingTreeMixChosenRandomAndLast =
 
 module GrowingTreeDirection =
 
-    let createMaze rngSeed toRightWeight toBottomWeight toLeftWeight (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+    let createMaze rngSeed toRightWeight toBottomWeight toLeftWeight (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let bottomWeight = toRightWeight + toBottomWeight
         let leftWeight = bottomWeight + toLeftWeight
@@ -204,7 +202,7 @@ module GrowingTreeSpiral =
         | Clockwise
         | CounterClockwise
 
-    let createMaze rngSeed spiralWeight spiralUniformity spiralMaxLength spiralRevolution (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+    let createMaze rngSeed spiralWeight spiralUniformity spiralMaxLength spiralRevolution (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let rng = Random(rngSeed)
 

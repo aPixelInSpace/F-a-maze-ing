@@ -7,12 +7,10 @@ open System.Collections.Generic
 open System.Linq
 open Priority_Queue
 open Mazes.Core
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 
 module PrimSimple =
 
-    let createMaze rngSeed (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+    let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let rng = Random(rngSeed)
 
@@ -40,7 +38,7 @@ module PrimSimple =
 
 module PrimSimpleModified =
 
-    let createMaze rngSeed (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+    let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let rng = Random(rngSeed)
 
@@ -78,7 +76,7 @@ module PrimSimpleModified =
 
 module PrimWeighted =
 
-    let createMaze rngSeed maxWeight (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+    let createMaze rngSeed maxWeight (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let rng = Random(rngSeed)
 

@@ -5,8 +5,6 @@ module Mazes.Core.Maze.Generate.Kruskal
 open System
 open System.Collections.Generic
 open Mazes.Core
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 
 type Sets<'K> when 'K : equality =
     private
@@ -55,57 +53,7 @@ type Sets<'K> when 'K : equality =
         { Container = Dictionary<'K, HashSet<'K>>() }
 
 /// Randomized Kruskal's algorithm
-let createMaze rngSeed (grid : unit -> IGrid<'G>) =
-
-    let grid = grid()
-
-    let rng = Random(rngSeed)
-
-    let possibleLinks =
-        grid.CoordinatesPartOfMaze
-        |> Seq.collect(fun coordinate ->
-            coordinate
-            |> grid.NotLinkedNeighbors
-            |> Seq.map(fun neighbor -> (coordinate, neighbor)))
-        |> Seq.distinctBy(Utils.getKey)
-        |> Seq.toArray
-        |> Utils.shuffle rng
-
-    let forests = Sets<Coordinate>.createEmpty
-
-    let totalOfMazeCells = grid.TotalOfMazeCells
-
-    let i = ref 0
-
-    while i.Value < possibleLinks.Length &&
-          forests.HeadCount < totalOfMazeCells do
-
-        let (coordinate1, coordinate2) = possibleLinks.[i.Value]
-
-        let setKey1 = forests.GetSetKey coordinate1
-        let setKey2 = forests.GetSetKey coordinate2
-
-        match setKey1, setKey2 with
-        | None, None ->
-            grid.UpdateConnection Open coordinate1 coordinate2
-            forests.AddNewSet coordinate1 (Some coordinate2)
-        | Some setKey, None ->
-            grid.UpdateConnection Open coordinate1 coordinate2
-            forests.AddToSet setKey coordinate2
-        | None, Some setKey ->
-            grid.UpdateConnection Open coordinate1 coordinate2
-            forests.AddToSet setKey coordinate1
-        | Some setKey1, Some setKey2 ->
-            if setKey1 <> setKey2 then
-                grid.UpdateConnection Open coordinate1 coordinate2
-                forests.MergeSets setKey1 setKey2
-
-        incr i
-
-    { Grid = grid }
-
-/// Randomized Kruskal's algorithm
-let createMazeNew rngSeed (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     let rng = Random(rngSeed)
 

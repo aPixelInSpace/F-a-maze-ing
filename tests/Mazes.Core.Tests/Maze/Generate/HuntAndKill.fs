@@ -7,11 +7,6 @@ open Xunit
 open Mazes.Core
 open Mazes.Core.Canvas.Array2D.Shape
 open Mazes.Core.Canvas.ArrayOfA.Shape
-open Mazes.Core.Grid.Array2D.Ortho
-open Mazes.Core.Grid.Array2D.Tri
-open Mazes.Core.Grid.Array2D.OctaSquare
-open Mazes.Core.Grid.Array2D.PentaCairo
-open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
@@ -19,11 +14,11 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Hunt and Kill 
     // arrange
     let orthoGrid =
         (Rectangle.create 5 10)
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
-    let maze = orthoGrid |> HuntAndKill.createMazeNew 1
+    let maze = orthoGrid |> HuntAndKill.createMaze 1
 
     // assert
     let expectedMaze =
@@ -34,7 +29,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Hunt and Kill 
         "| |  _ _ _ _|_ _  | |\n" +
         "|_ _ _ _ _ _ _ _ _|_|\n"
 
-    maze.Grid |> Mazes.Core.GridNew.Types.Ortho.Grid.toString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
@@ -44,8 +39,8 @@ let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a 
     // arrange
     let orthoGrid =
         (Rectangle.create 5 10)
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     orthoGrid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection ConnectionType.Close { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 }
     orthoGrid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection ConnectionType.Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 4 }
@@ -53,7 +48,7 @@ let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a 
     orthoGrid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection ConnectionType.Close { RIndex = 4; CIndex = 8 } { RIndex = 2; CIndex = 7 }
     
     // act
-    let maze = orthoGrid |> HuntAndKill.createMazeNew 1
+    let maze = orthoGrid |> HuntAndKill.createMaze 1
 
     // assert
     let expectedMaze =
@@ -64,7 +59,7 @@ let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a 
         "| |     |  _    |   |\n" +
         "|_ _|_|_ _|_ _|_ _|_|\n"
 
-    maze.Grid |> Mazes.Core.GridNew.Types.Ortho.Grid.toString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
@@ -74,11 +69,11 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Hunt
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> Mazes.Core.GridNew.Types.Polar.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
-    let maze = grid |> HuntAndKill.createMazeNew 1
+    let maze = grid |> HuntAndKill.createMaze 1
 
     // assert
     let expectedMaze =
@@ -89,7 +84,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Hunt
         "¦‾¦¨|¨¦‾¦¨|¨¦‾¦¨|¨¦‾¦¨¦‾¦¨|¨¦¨|¨¦¨¦‾¦‾¦‾¦¨|¨¦¨¦‾¦\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid |> Mazes.Core.GridNew.Types.Polar.Grid.toString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
@@ -99,18 +94,18 @@ let ``Given a triangular grid 5 by 10, when generating a maze with the Hunt and 
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> TriGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Tri.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> HuntAndKill.createMaze 1
 
     // assert
-    let expectedMaze =
-        ""
+    //let expectedMaze = ""
         
-    maze.Grid.ToString |> should equal expectedMaze
+    //maze.Grid.ToString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -118,18 +113,18 @@ let ``Given a octagon-square grid 5 by 10, when generating a maze with the Hunt 
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> OctaSquareGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.OctaSquare.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> HuntAndKill.createMaze 1
 
     // assert
-    let expectedMaze =
-        ""
+    //let expectedMaze = ""
         
-    maze.Grid.ToString |> should equal expectedMaze
+    //maze.Grid.ToString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -137,16 +132,35 @@ let ``Given a Cairo pentagonal grid 5 by 10, when generating a maze with the Hun
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> PentaCairoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.PentaCairo.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> HuntAndKill.createMaze 1
 
     // assert
-    let expectedMaze =
-        ""
+    //let expectedMaze = ""
         
-    maze.Grid.ToString |> should equal expectedMaze
+    //maze.Grid.ToString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+
+[<Fact>]
+let ``Given a brick grid 5 by 10, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output`` () =
+    // arrange
+    let grid =
+        (Rectangle.create 5 10)
+        |> Mazes.Core.Grid.Type.Brick.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
+    
+    // act
+    let maze = grid |> HuntAndKill.createMaze 1
+
+    // assert
+    //let expectedMaze = ""
+        
+    //maze.Grid.ToString |> should equal expectedMaze
+
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

@@ -5,8 +5,6 @@ module Mazes.Core.Maze.Generate.BinaryTree
 open System
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 
 type Direction =
     | Top
@@ -37,7 +35,7 @@ let private carveRow
     (rng : Random)
     rngTotalWeight    
     rngPosition1Weight
-    (grid : GridNew.IGrid<_>)
+    (grid : Grid.IGrid<_>)
     rIndex
     getRowInfo =
     
@@ -89,7 +87,7 @@ let private carveRow
         | _ ->
             grid.UpdateConnection Open coordinate (neighborCoordinate direction2.Position)
 
-let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : GridNew.IGrid<_>) : MazeNew.MazeNew<_> =
+let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     let rng = Random(rngSeed)
 

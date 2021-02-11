@@ -5,7 +5,6 @@ module Mazes.Core.Tests.Maze.Generate.RecursiveDivision
 open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D.Shape
-open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
@@ -13,8 +12,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the recursive divi
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createEmptyBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createEmptyBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> RecursiveDivision.createMaze 1 0.2 2 2
@@ -28,7 +27,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the recursive divi
         "|  _ _| |_  |       |\n" +
         "|_ _ _|_ _ _ _|_|_ _|\n"
         
-    maze.Grid |> Mazes.Core.GridNew.Types.Ortho.Grid.toString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

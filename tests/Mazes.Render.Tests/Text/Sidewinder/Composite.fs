@@ -6,7 +6,6 @@ open System
 open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D
-open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -39,8 +38,8 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -75,8 +74,8 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -111,8 +110,8 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -147,8 +146,8 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -183,8 +182,8 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -219,8 +218,8 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -255,8 +254,8 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -291,8 +290,8 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid

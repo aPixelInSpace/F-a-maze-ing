@@ -7,7 +7,6 @@ open FsUnit
 open Mazes.Core
 open Xunit
 open Mazes.Core.Canvas.Array2D
-open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -16,8 +15,8 @@ let ``Given a grid, when rendering the grid in text, then the result should like
     // arrange
     let grid =
         (Shape.Rectangle.create 15 25)
-        |> Mazes.Core.GridNew.Types.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.GridNew.Grid.create
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let closePersistent = grid.UpdateConnection ConnectionType.ClosePersistent
 
@@ -117,7 +116,7 @@ let ``Given a grid, when rendering the grid in text, then the result should like
     closePersistent { RIndex = 10; CIndex = 17 } { RIndex = 10; CIndex = 18 }
     closePersistent { RIndex = 11; CIndex = 17 } { RIndex = 12; CIndex = 17 }
 
-    let maze = grid |> HuntAndKill.createMazeNew 1
+    let maze = grid |> HuntAndKill.createMaze 1
 
     // act
     let renderedMaze = maze.Grid.ToSpecializedGrid |> Text.renderGrid
