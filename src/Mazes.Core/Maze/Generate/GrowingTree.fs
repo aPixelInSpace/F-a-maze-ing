@@ -6,8 +6,6 @@ open System
 open System.Collections.Generic
 open System.Linq
 open Mazes.Core
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 
 module GrowingTree =
 
@@ -18,7 +16,7 @@ module GrowingTree =
             next
             remove
             chooseNeighbor
-            (grid : IGrid<'G>) =
+            (grid : Grid.IGrid<_>) =
 
         add startCoordinate
 
@@ -27,12 +25,12 @@ module GrowingTree =
 
             let unlinked =
                 active
-                |> grid.NeighborsThatAreLinked false
+                |> grid.ConnectedNeighbors false
                 |> Seq.toArray
 
             if unlinked.Length > 0 then
                 let neighbor = chooseNeighbor active unlinked
-                grid.ConnectCells active neighbor
+                grid.UpdateConnection Open active neighbor
                 add neighbor
             else
                 remove active
@@ -41,13 +39,11 @@ module GrowingTree =
 
 module GrowingTreeMixRandomAndLast =
 
-    let createMaze rngSeed longPassages (grid : unit -> IGrid<'G>) =
-
-        let grid = grid()
+    let createMaze rngSeed longPassages (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
+        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
         // SortedList is not a great replacement for a Stack,
         // but at least we can remove an item at a given index
@@ -78,13 +74,11 @@ module GrowingTreeMixRandomAndLast =
 
 module GrowingTreeMixOldestAndLast =
 
-    let createMaze rngSeed longPassages (grid : unit -> IGrid<'G>) =
-
-        let grid = grid()
+    let createMaze rngSeed longPassages (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
+        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
         let actives = SortedList<int, Coordinate>()
 
@@ -113,13 +107,11 @@ module GrowingTreeMixOldestAndLast =
 
 module GrowingTreeMixChosenRandomAndLast =
 
-    let createMaze rngSeed longPassages (grid : unit -> IGrid<'G>) =
-
-        let grid = grid()
+    let createMaze rngSeed longPassages (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
+        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
         let actives = SortedList<int, Coordinate>()
         let mutable chosenCoordinate : Coordinate option = None
@@ -157,16 +149,14 @@ module GrowingTreeMixChosenRandomAndLast =
 
 module GrowingTreeDirection =
 
-    let createMaze rngSeed toRightWeight toBottomWeight toLeftWeight (grid : unit -> IGrid<'G>) =
+    let createMaze rngSeed toRightWeight toBottomWeight toLeftWeight (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let bottomWeight = toRightWeight + toBottomWeight
         let leftWeight = bottomWeight + toLeftWeight
 
-        let grid = grid()
-
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
+        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
         let actives = Stack<Coordinate>()
 
@@ -212,13 +202,11 @@ module GrowingTreeSpiral =
         | Clockwise
         | CounterClockwise
 
-    let createMaze rngSeed spiralWeight spiralUniformity spiralMaxLength spiralRevolution (grid : unit -> IGrid<'G>) =
-
-        let grid = grid()
+    let createMaze rngSeed spiralWeight spiralUniformity spiralMaxLength spiralRevolution (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotLinked rng
+        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
         let actives = Stack<Coordinate>()
 
@@ -272,7 +260,7 @@ module GrowingTreeSpiral =
 
             let tryFind spiralDirection =
                 let pos = toPosition spiralDirection
-                match grid.AdjacentNeighborAbstractCoordinate coordinate pos with
+                match grid.AdjacentNeighbor coordinate pos with
                 | Some next -> unlinked |> Array.tryFind(fun c -> c = next), pos
                 | _ -> None, pos
 

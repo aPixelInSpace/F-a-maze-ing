@@ -6,7 +6,6 @@ open System
 open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D
-open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -15,7 +14,8 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -40,7 +40,8 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -65,7 +66,8 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -90,7 +92,8 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -115,7 +118,8 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -140,7 +144,8 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -165,7 +170,8 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -190,7 +196,8 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     // arrange
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -215,7 +222,8 @@ let ``Rendering a row radius 15, column radius 25, row translation factor 14, in
     // arrange
     let grid =
         (Shape.Ellipse.create 15 25 0.0 0.0 14 0 None Shape.Ellipse.Side.Outside)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -264,7 +272,8 @@ let ``Rendering a row radius 15, column radius 25, row translation factor 14, in
     // arrange
     let grid =
         (Shape.Ellipse.create 15 25 0.0 0.0 14 0 None Shape.Ellipse.Side.Outside)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -313,7 +322,8 @@ let ``Rendering a row radius 25, column radius 15, column translation factor 14,
     // arrange
     let grid =
         (Shape.Ellipse.create 25 15 0.0 0.0 0 14 None Shape.Ellipse.Side.Outside)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -382,7 +392,8 @@ let ``Rendering a row radius 25, column radius 15, column translation factor 14,
     // arrange
     let grid =
         (Shape.Ellipse.create 25 15 0.0 0.0 0 14 None Shape.Ellipse.Side.Outside)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid

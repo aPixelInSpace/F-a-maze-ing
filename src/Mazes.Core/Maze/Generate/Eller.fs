@@ -5,15 +5,11 @@ module Mazes.Core.Maze.Generate.Eller
 open System
 open System.Collections.Generic
 open Mazes.Core
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate.Kruskal
 
 // todo : refactor this
 // It has the same fundamentals problems as Sidewinder
-let createMaze rngSeed (grid : unit -> IGrid<'G>) =
-
-    let grid = grid()
+let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     let rng = Random(rngSeed)
 
@@ -25,7 +21,7 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
             let neighbor = grid.AdjacentNeighbor current Bottom
             match neighbor with
             | Some neighbor ->
-                grid.IfNotAtLimitLinkCells current neighbor
+                grid.IfNotAtLimitUpdateConnection Open current neighbor
                 sets.AddToSet setKey neighbor
             | None -> ()
 
@@ -49,7 +45,7 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
             if grid.IsLimitAt current neighbor then
                 linkBottom current setKey true
             else
-                grid.IfNotAtLimitLinkCells current neighbor
+                grid.IfNotAtLimitUpdateConnection Open current neighbor
                 match setKeyNeighbor with
                 | Some setKeyNeighbor ->
                     listOfRowSetKey.Remove(setKeyNeighbor) |> ignore
@@ -70,8 +66,8 @@ let createMaze rngSeed (grid : unit -> IGrid<'G>) =
                 
         | None -> linkBottom current setKey true
 
-    let lastIndex1 = grid.GetRIndexes |> Seq.last
-    for index1 in grid.GetRIndexes do
+    let lastIndex1 = grid.RIndexes |> Seq.last
+    for index1 in grid.RIndexes do
 
         let listOfRowSetKey = HashSet<Coordinate>()
         let (startIndex2, endIndex2) = grid.Dimension2Boundaries index1

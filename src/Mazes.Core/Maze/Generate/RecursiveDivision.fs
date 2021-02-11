@@ -5,15 +5,11 @@ module Mazes.Core.Maze.Generate.RecursiveDivision
 open System
 open System.Collections.Generic
 open Mazes.Core
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 
 type private Slice = (int * int * int * int)
 
 // todo : refactor this, sadly it only works with rectangular orthogonal grid for now
-let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
-
-    let grid = grid()
+let createMaze rngSeed rooms roomsHeight roomsWidth (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     let rng = Random(rngSeed)
 
@@ -24,7 +20,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
             seq {
                 for rIndex in rndStartRIndex .. rndEndRIndex - 1 do
                     let c = { RIndex = rIndex; CIndex = cIndex }
-                    match (grid.AdjacentNeighborAbstractCoordinate c Right) with
+                    match (grid.AdjacentNeighbor c Right) with
                     | Some n ->
                         if not (grid.IsLimitAt c n) then
                             yield (c, n)
@@ -33,7 +29,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
 
         if candidates.Length > 0 then
             let (c, n) = candidates.[rng.Next(candidates.Length)]
-            grid.ConnectCells c n
+            grid.UpdateConnection Open c n
 
     let sliceVertically (startRIndex, endRIndex, startCIndex, endCIndex) =
         let cIndex = rng.Next(startCIndex, endCIndex)
@@ -43,13 +39,13 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
 
         for rIndex in startRIndex .. endRIndex do
             let coordinate = { RIndex = rIndex; CIndex = cIndex }
-            let rightCoordinate = grid.AdjacentNeighborAbstractCoordinate coordinate Right
+            let rightCoordinate = grid.AdjacentNeighbor coordinate Right
 
             match rightCoordinate with
             | Some rightCoordinate ->
                 if grid.IsCellPartOfMaze coordinate && grid.IsCellPartOfMaze rightCoordinate then
                     if not (grid.IsLimitAt coordinate rightCoordinate) then
-                        grid.UnConnectCells coordinate rightCoordinate
+                        grid.UpdateConnection Close coordinate rightCoordinate
                     else
                         rndLinkVerticalCell rndStartRIndex rndEndRIndex cIndex
                         rndStartRIndex <- rndEndRIndex + 1
@@ -71,7 +67,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
             seq {
                 for cIndex in rndStartCIndex .. rndEndCIndex - 1 do
                     let c = { RIndex = rIndex; CIndex = cIndex }
-                    match (grid.AdjacentNeighborAbstractCoordinate c Bottom) with
+                    match (grid.AdjacentNeighbor c Bottom) with
                     | Some n ->
                         if not (grid.IsLimitAt c n) then
                             yield (c, n)
@@ -80,7 +76,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
 
         if candidates.Length > 0 then
             let (c, n) = candidates.[rng.Next(candidates.Length)]
-            grid.ConnectCells c n
+            grid.UpdateConnection Open c n
 
     let sliceHorizontally (startRIndex, endRIndex, startCIndex, endCIndex) =
         let rIndex = rng.Next(startRIndex, endRIndex)
@@ -90,13 +86,13 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
 
         for cIndex in startCIndex .. endCIndex do
             let coordinate = { RIndex = rIndex; CIndex = cIndex }
-            let bottomCoordinate = grid.AdjacentNeighborAbstractCoordinate coordinate Bottom
+            let bottomCoordinate = grid.AdjacentNeighbor coordinate Bottom
 
             match bottomCoordinate with
             | Some bottomCoordinate ->
                 if grid.IsCellPartOfMaze coordinate && grid.IsCellPartOfMaze bottomCoordinate then
                     if not (grid.IsLimitAt coordinate bottomCoordinate) then
-                        grid.UnConnectCells coordinate bottomCoordinate
+                        grid.UpdateConnection Close coordinate bottomCoordinate
                     else
                         rndLinkHorizontalCell rndStartCIndex rndEndCIndex rIndex
                         rndStartCIndex <- rndEndCIndex + 1
@@ -126,6 +122,7 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : unit -> IGrid<'G>) =
 
         let deltaR = endRIndex - startRIndex
         let deltaC = endCIndex - startCIndex
+
         if deltaR >= 1 && deltaC >= 1 then
             if not (rng.NextDouble() < rooms && deltaR <= roomsHeight && deltaC <= roomsWidth) then
                 if deltaR < deltaC then

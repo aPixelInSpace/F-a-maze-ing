@@ -56,6 +56,7 @@ type Map =
     {
         ShortestPathGraph : ShortestPathGraph<Coordinate>
         ConnectedNodes : int
+        Cost : Coordinate -> int
         FarthestFromRoot : FarthestFromRoot
         Leaves : Coordinate array
     }
@@ -67,13 +68,8 @@ type Map =
                     | Some nodes -> nodes
                     | None -> Seq.empty
 
-            let cost node =
-                match this.ShortestPathGraph.NodeDistanceFromRoot node with
-                | Some distance -> distance
-                | None -> failwith $"Could not find a distance for node {node}"
-
             for farthestCoordinate in this.FarthestFromRoot.Coordinates do
-                let mapFromFarthest = Map.create adjacentNodes cost PriorityQueueTracker.createEmpty farthestCoordinate
+                let mapFromFarthest = Map.create adjacentNodes this.Cost PriorityQueueTracker.createEmpty farthestCoordinate
                 for newFarthestCoordinate in mapFromFarthest.FarthestFromRoot.Coordinates do
                     yield mapFromFarthest.ShortestPathGraph.PathFromGoalToRoot newFarthestCoordinate
         }
@@ -129,5 +125,6 @@ type Map =
 
         { ShortestPathGraph = graph
           ConnectedNodes = graph.Graph.VertexCount
+          Cost = cost
           FarthestFromRoot = coordinatesByDistance.Farthest
           Leaves = leavesArray }

@@ -5,7 +5,6 @@ module Mazes.Core.Tests.Grid.Array2D.Ortho.GridView
 open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D.Shape
-open Mazes.Core.Grid.Array2D.Ortho
 
 
 //[<Fact>]

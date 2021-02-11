@@ -7,7 +7,8 @@ open System.Text
 open Mazes.Core
 open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid.Array2D.Tri
+open Mazes.Core.Grid
+open Mazes.Core.Grid.Type.Tri
 open Mazes.Render.SVG.Base
 
 let private calculatePoints (calculateWidth, calculateHeight, isUpright, triWidth, triHalfWidth, triHeight) coordinate =
@@ -37,10 +38,10 @@ let center calculatePoints isUpright halfTriHeight coordinate =
     else
         translatePoint (0.0, -halfTriHeight) middle
 
-let private appendWallsType calculatePoints (grid : TriGrid) appendWall coordinate (sBuilder : StringBuilder) =
+let private appendWallsType calculatePoints (grid : Grid<GridArray2D<TriPosition>, TriPosition>) appendWall coordinate (sBuilder : StringBuilder) =
     let ((leftX, leftY), (middleX, middleY), (rightX, rightY)) = calculatePoints coordinate
 
-    let cell = grid.Cell coordinate
+    let cell = grid.BaseGrid.Cell coordinate
 
     for position in TriPositionHandler.Instance.Values coordinate do
         let lines =
@@ -49,7 +50,7 @@ let private appendWallsType calculatePoints (grid : TriGrid) appendWall coordina
             | Right -> $"M {round rightX} {round rightY} L {round middleX} {round middleY}"
             | Top | Bottom -> $"M {round leftX} {round leftY} L {round rightX} {round rightY}"
 
-        appendWall sBuilder lines (cell.WallTypeAtPosition position) coordinate |> ignore
+        appendWall sBuilder lines (cell.ConnectionTypeAtPosition position) coordinate |> ignore
 
 let private wholeCellLines calculatePoints coordinate =
     let ((leftX, leftY), (middleX, middleY), (rightX, rightY)) = calculatePoints coordinate
@@ -58,7 +59,7 @@ let private wholeCellLines calculatePoints coordinate =
     $"L {round middleX} {round middleY} " +
     $"L {round rightX} {round rightY} "
 
-let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
+let render (grid : Grid<GridArray2D<TriPosition>, TriPosition>) (path : Coordinate seq) (map : Map) =
 
     let sBuilder = StringBuilder()
 
@@ -72,7 +73,9 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
     let bridgeHalfWidth = 4.0
     let bridgeDistanceFromCenter = 2.0
 
-    let isNumberOfColumnsEven = grid.NumberOfColumns % 2 = 0
+    let spGrid = grid.BaseGrid.ToSpecializedStructure
+
+    let isNumberOfColumnsEven = spGrid.NumberOfColumns % 2 = 0
     let calculateWidth numberOfColumns =
         if isNumberOfColumnsEven then
             marginWidth + ((numberOfColumns - 1.0) / 2.0) * triWidth + triHalfWidth
@@ -102,8 +105,8 @@ let render (grid : TriGrid) (path : Coordinate seq) (map : Map) =
     let appendPathAndBridgesWithAnimation =
         appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
 
-    let width = calculateWidth ((float)grid.NumberOfColumns) + marginWidth
-    let height = calculateHeight ((float)grid.NumberOfRows) + marginHeight
+    let width = calculateWidth ((float)spGrid.NumberOfColumns) + marginWidth
+    let height = calculateHeight ((float)spGrid.NumberOfRows) + marginHeight
 
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())

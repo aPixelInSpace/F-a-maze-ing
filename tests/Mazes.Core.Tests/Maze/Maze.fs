@@ -5,7 +5,6 @@ module Mazes.Core.Tests.Maze.Maze
 open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D.Shape
-open Mazes.Core.Grid.Array2D.Ortho
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
 
@@ -14,15 +13,16 @@ let ``Given a maze, when braiding the maze, then the number of dead ends should 
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     let maze = grid |> HuntAndKill.createMaze 1
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.Leaves.Length |> should equal 9
     
     // act
     let maze = maze |> Maze.braid 1 0.5 map.Leaves
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
         
     // assert
     map.Leaves.Length |> should equal 3
@@ -34,4 +34,4 @@ let ``Given a maze, when braiding the maze, then the number of dead ends should 
         "| |  _ _ _ _|_ _  | |\n" +
         "|_ _ _ _ _ _ _ _ _|_|\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze

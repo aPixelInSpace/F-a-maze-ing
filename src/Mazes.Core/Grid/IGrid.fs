@@ -5,51 +5,41 @@ namespace Mazes.Core.Grid
 open System
 open Mazes.Core
 
-// todo : clean the interface and remove the unnecessary functions
-type IGrid<'G> =
+type IGrid<'Grid> =
     abstract member TotalOfMazeCells : int
+    abstract member RIndexes : int seq
+    abstract member CIndexes : int seq
     abstract member Dimension1Boundaries : dimension2Index:int -> (int * int)
     abstract member Dimension2Boundaries : dimension1Index:int -> (int * int)
-    abstract member AddCostForCoordinate : Cost -> coordinate:Coordinate -> unit
-    abstract member CostOfCoordinate : coordinate:Coordinate -> Cost
-    abstract member AdjacentNeighborAbstractCoordinate : coordinate:Coordinate -> position:Position -> Coordinate option
-    /// Returns true if the cell has at least one link to another cell, false otherwise
-    abstract member IsCellConnected : coordinate:Coordinate -> bool
+    abstract member AdjustedCoordinate : coordinate:Coordinate -> Coordinate
     abstract member ExistAt : coordinate:Coordinate -> bool
-    abstract member GetAdjustedExistAt : coordinate:Coordinate -> bool
+    abstract member AdjustedExistAt : coordinate:Coordinate -> bool
+    abstract member CoordinatesPartOfMaze : Coordinate seq
+    abstract member RandomCoordinatePartOfMazeAndNotConnected : rng : Random -> Coordinate
     /// Returns true if it is not possible to navigate from a coordinate to another coordinate (for example if there is a border between the two cells) 
     abstract member IsLimitAt : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
-    /// Indicate if the cell is part of maze
-    abstract member IsCellPartOfMaze : coordinate:Coordinate -> bool
-    abstract member GetRIndexes : int seq
-    abstract member GetCIndexes : int seq
-    abstract member GetAdjustedCoordinate : coordinate:Coordinate -> Coordinate
-    /// Returns every cell that are part of the maze
-    abstract member CoordinatesPartOfMaze : Coordinate seq
-    /// Links two cells together (allows a passage between them)
-    abstract member ConnectCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
-    abstract member UnConnectCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
-    /// Checks if the two cells can be linked, if so then link them, if not then does nothing
-    abstract member IfNotAtLimitLinkCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
-    /// Puts a border between two cells
-    abstract member PutBorderBetweenCells : coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
-    /// Returns the coordinate of the neighbor, if there are multiple neighbor then returns the last one
-    abstract member AdjacentNeighbor : coordinate:Coordinate -> position:Position -> Coordinate option
-    abstract member Neighbors : coordinate:Coordinate -> Coordinate seq
-    /// Returns the neighbors coordinates that are linked, NOT NECESSARILY WITH the coordinate
-    abstract member NeighborsThatAreLinked : isLinked:bool -> coordinate:Coordinate -> Coordinate seq
-    abstract member AddUpdateNonAdjacentNeighbor : Coordinate -> Coordinate -> ConnectionType -> unit
-    /// Returns the neighbors coordinates that are linked WITH the coordinate
-    abstract member LinkedNeighbors : coordinate:Coordinate -> Coordinate seq
-    /// Returns the neighbors coordinates that are NOT linked WITH the coordinate
-    abstract member NotLinkedNeighbors : coordinate:Coordinate -> Coordinate seq
-    /// Returns a random coordinate from the grid that is part of the maze but isn't yet linked
-    abstract member RandomCoordinatePartOfMazeAndNotLinked : rng:Random -> Coordinate
+    /// Returns all the neighbors adjacent and non adjacent
+    abstract member Neighbors : Coordinate -> Coordinate seq
+    /// Returns all the adjacent neighbors
+    abstract member AdjacentNeighbors : Coordinate -> Coordinate seq
+    /// Returns the coordinates of the adjacent neighbors at the position
+    abstract member AdjacentNeighbor : Coordinate -> Position -> Coordinate option
+    abstract member AdjacentVirtualNeighbor : Coordinate -> Position -> Coordinate option
+    /// Given a coordinate, returns true if the cell is part of the maze, false otherwise
+    abstract member IsCellPartOfMaze : Coordinate -> bool
+    /// Given a coordinate, returns true if the cell has at least one connection open, false otherwise
+    abstract member IsCellConnected : Coordinate -> bool
+    /// Given two coordinates, returns true if they have their connection open, false otherwise
+    abstract member AreConnected : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
+    /// Returns the neighbors coordinates that are or not connected NOT NECESSARILY WITH the coordinate
+    abstract member ConnectedNeighbors : isConnected:bool -> coordinate:Coordinate -> Coordinate seq
+    /// Returns the neighbors coordinates that are or not connected WITH the coordinate
+    abstract member ConnectedWithNeighbors : isConnected:bool -> coordinate:Coordinate -> Coordinate seq
+    abstract member UpdateConnection : ConnectionType -> Coordinate -> Coordinate -> unit
+    abstract member IfNotAtLimitUpdateConnection : ConnectionType -> Coordinate -> Coordinate -> unit
+    abstract member CostOfCoordinate : coordinate:Coordinate -> Cost
     /// Returns the first (arbitrary) coordinate that is part of the maze
-    abstract member GetFirstPartOfMazeZone : Coordinate
+    abstract member GetFirstCellPartOfMaze : Coordinate
     /// Returns the last (arbitrary) coordinate that is part of the maze
-    abstract member GetLastPartOfMazeZone : Coordinate
-    /// Returns the string representation of the grid
-    abstract member ToString : string
-    /// Returns the sub-typed grid
-    abstract member ToSpecializedGrid : 'G
+    abstract member GetLastCellPartOfMaze : Coordinate
+    abstract member ToSpecializedGrid : 'Grid

@@ -11,7 +11,7 @@ type NonAdjacentNeighbors =
             Container : Dictionary<Coordinate, Dictionary<Coordinate, ConnectionType>>
         }
 
-    member this.AddUpdate fromCoordinate toCoordinate wallType =
+    member this.UpdateConnection connectionType fromCoordinate toCoordinate =
         let addUpdate fromCoordinate toCoordinate wallType =
             if this.Container.ContainsKey(fromCoordinate) then
                 if this.Container.Item(fromCoordinate).ContainsKey(toCoordinate) then
@@ -23,8 +23,8 @@ type NonAdjacentNeighbors =
                 dic.Add(toCoordinate, wallType)
                 this.Container.Add(fromCoordinate, dic)
         
-        addUpdate fromCoordinate toCoordinate wallType
-        addUpdate toCoordinate fromCoordinate wallType
+        addUpdate fromCoordinate toCoordinate connectionType
+        addUpdate toCoordinate fromCoordinate connectionType
 
     member this.NonAdjacentNeighbors coordinate =
         seq {
@@ -38,11 +38,11 @@ type NonAdjacentNeighbors =
         this.Container.ContainsKey(fromCoordinate) &&
         this.Container.Item(fromCoordinate).ContainsKey(toCoordinate)
 
-    member this.IsLinked coordinate =
+    member this.IsCellConnected coordinate =
         this.Container.ContainsKey(coordinate) &&
         (this.Container.Item(coordinate) |> Seq.where(fun kv -> ConnectionType.isConnected kv.Value)) |> Seq.length > 0
 
-    member this.AreLinked fromCoordinate toCoordinate =
+    member this.AreConnected fromCoordinate toCoordinate =
         this.ExistNeighbor fromCoordinate toCoordinate &&
         ConnectionType.isConnected (this.Container.Item(fromCoordinate).Item(toCoordinate))
 

@@ -5,8 +5,6 @@ module Mazes.Core.Maze.Generate.BinaryTree
 open System
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Grid
-open Mazes.Core.Maze
 
 type Direction =
     | Top
@@ -37,7 +35,7 @@ let private carveRow
     (rng : Random)
     rngTotalWeight    
     rngPosition1Weight
-    (grid : IGrid<'G>)
+    (grid : Grid.IGrid<_>)
     rIndex
     getRowInfo =
     
@@ -55,7 +53,7 @@ let private carveRow
         let isPosALimit position = ((grid.AdjacentNeighbor coordinate position).IsNone) || (grid.IsLimitAt coordinate (neighborCoordinate position))
         let ifNotAtLimitLinkCells position =
             if not (isPosALimit position) then
-                grid.ConnectCells coordinate (neighborCoordinate position)
+                grid.UpdateConnection Open coordinate (neighborCoordinate position)
         
         // if the cell is not part of the maze, we do nothing
         if not (grid.IsCellPartOfMaze coordinate) then ()
@@ -72,26 +70,24 @@ let private carveRow
 
         // if the pos 1 is a limit then we always choose remove pos 2 (and the opposite pos 2 if possible)
         if isPos1ALimit then
-            grid.ConnectCells coordinate (neighborCoordinate direction2.Position)
+            grid.UpdateConnection Open coordinate (neighborCoordinate direction2.Position)
             ifNotAtLimitLinkCells direction2.Opposite.Position
         else
 
         // if the pos 2 is a limit then we always choose remove pos 1 (and the opposite pos 1 if possible)
         if isPos2ALimit then
-            grid.ConnectCells coordinate (neighborCoordinate direction1.Position)
+            grid.UpdateConnection Open coordinate (neighborCoordinate direction1.Position)
             ifNotAtLimitLinkCells direction1.Opposite.Position
         else
 
         // if pos 1 and pos 2 are both not a limit we flip a coin to decide which one we remove
         match rng.Next(rngTotalWeight) with
         | rng when rng < rngPosition1Weight ->
-            grid.ConnectCells coordinate (neighborCoordinate direction1.Position)
+            grid.UpdateConnection Open coordinate (neighborCoordinate direction1.Position)
         | _ ->
-            grid.ConnectCells coordinate (neighborCoordinate direction2.Position)
+            grid.UpdateConnection Open coordinate (neighborCoordinate direction2.Position)
 
-let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : unit -> IGrid<'G>) =
-
-    let grid = grid()
+let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     let rng = Random(rngSeed)
 
@@ -103,7 +99,7 @@ let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2We
 
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
 
-    grid.GetRIndexes
+    grid.RIndexes
     |> Seq.iter(fun rIndex ->
         carveRow
             // params

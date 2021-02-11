@@ -7,7 +7,8 @@ open System.Text
 open Mazes.Core
 open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid.Array2D.Hex
+open Mazes.Core.Grid
+open Mazes.Core.Grid.Type.Hex
 open Mazes.Render.SVG.Base
 
 let private calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeight, hexHeight, marginWidth, marginHeight) coordinate =
@@ -42,11 +43,11 @@ let center calculatePoints coordinate =
 
     middlePoint topLeft bottomRight
 
-let private appendWallsType calculatePoints (grid : HexGrid) appendWall coordinate (sBuilder : StringBuilder) =
+let private appendWallsType calculatePoints (grid : Grid<GridArray2D<HexPosition>, HexPosition>) appendWall coordinate (sBuilder : StringBuilder) =
     let ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY)) =
         calculatePoints coordinate
 
-    let cell = grid.Cell coordinate
+    let cell = grid.BaseGrid.Cell coordinate
 
     for position in HexPositionHandler.Instance.Values coordinate do
         let lines =
@@ -58,7 +59,7 @@ let private appendWallsType calculatePoints (grid : HexGrid) appendWall coordina
             | Bottom -> $"M {round bottomLeftX} {round bottomLeftY} L {round bottomRightX} {round bottomRightY}"
             | BottomRight -> $"M {round bottomRightX} {round bottomRightY} L {round rightX} {round rightY}"
 
-        appendWall sBuilder lines (cell.WallTypeAtPosition position) coordinate |> ignore
+        appendWall sBuilder lines (cell.ConnectionTypeAtPosition position) coordinate |> ignore
 
 let private wholeCellLines calculatePoints coordinate =
     let ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY)) =
@@ -71,7 +72,7 @@ let private wholeCellLines calculatePoints coordinate =
     $"L {round bottomRightX} {round bottomRightY} " +
     $"L {round bottomLeftX} {round bottomLeftY} "
 
-let render (grid : HexGrid) (path : Coordinate seq) (map : Map) =
+let render (grid : Grid<GridArray2D<HexPosition>, HexPosition>) (path : Coordinate seq) (map : Map) =
 
     let sBuilder = StringBuilder()
 
@@ -87,8 +88,9 @@ let render (grid : HexGrid) (path : Coordinate seq) (map : Map) =
     let bridgeHalfWidth = 9.0
     let bridgeDistanceFromCenter = 13.0
 
-    let width = (3.0 * hexHalfEdgeSize * (float)grid.NumberOfColumns) + hexHalfEdgeSize + (float)(marginWidth * 2)
-    let height = (hexHeight * (float)grid.NumberOfRows) + hexHalfHeight + (float)(marginHeight * 2)
+    let spGrid = grid.BaseGrid.ToSpecializedStructure
+    let width = (3.0 * hexHalfEdgeSize * (float)spGrid.NumberOfColumns) + hexHalfEdgeSize + (float)(marginWidth * 2)
+    let height = (hexHeight * (float)spGrid.NumberOfRows) + hexHalfHeight + (float)(marginHeight * 2)
 
     let calculatePoints = calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeight, hexHeight, (float)marginWidth, (float)marginHeight)
 

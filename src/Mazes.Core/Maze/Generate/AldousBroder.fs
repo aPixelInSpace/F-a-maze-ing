@@ -3,18 +3,17 @@
 module Mazes.Core.Maze.Generate.AldousBroder
 
 open System
-open Mazes.Core.Grid
-open Mazes.Core.Maze
+open Mazes.Core
 
 let transformIntoMaze
-    randomCoordinatePartOfMazeAndNotLinked
+    randomCoordinatePartOfMazeAndNotConnected
     neighbors
     isCellConnected
     connectCells
     totalOfMazeCells
     (rng : Random) =
 
-    let mutable currentCoordinate = randomCoordinatePartOfMazeAndNotLinked rng
+    let mutable currentCoordinate = randomCoordinatePartOfMazeAndNotConnected rng
 
     let unvisitedCount = ref (totalOfMazeCells - 1)
 
@@ -29,17 +28,15 @@ let transformIntoMaze
 
         currentCoordinate <- nextCoordinate
 
-let createMaze rngSeed (grid : unit -> IGrid<'G>) =
-
-    let grid = grid()
+let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     let rng = Random(rngSeed)
 
     transformIntoMaze
-        grid.RandomCoordinatePartOfMazeAndNotLinked
+        grid.RandomCoordinatePartOfMazeAndNotConnected
         grid.Neighbors
         grid.IsCellConnected
-        grid.ConnectCells
+        (grid.UpdateConnection ConnectionType.Open)
         grid.TotalOfMazeCells
         rng
 

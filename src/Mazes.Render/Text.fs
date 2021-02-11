@@ -5,7 +5,8 @@ module Mazes.Render.Text
 open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Grid.Array2D.Ortho
+open Mazes.Core.Grid
+open Mazes.Core.Grid.Type.Ortho
 
 let private repetitionsMiddlePart = 1
 
@@ -132,18 +133,18 @@ let private getPieceOfWall wallTypeLeft wallTypeTop wallTypeRight wallTypeBottom
     | Close, Open, ClosePersistent, Open -> '╼'
     | ClosePersistent, Open, Close, Open -> '╾'
 
-let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty (grid : OrthoGrid) (coordinate : Coordinate) pos1 pos2 =
+let private ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty (grid : Grid.Grid<GridArray2D<OrthoPosition>, OrthoPosition>) (coordinate : Coordinate) pos1 pos2 =
     let neighborAtPos1 = OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate pos1
     match neighborAtPos1 with
     | Some neighborAtPos1 ->
-        match grid.Canvas.ExistAt neighborAtPos1 with
+        match grid.BaseGrid.ToSpecializedStructure.Canvas.ExistAt neighborAtPos1 with
         | true ->
-            (grid.Cell neighborAtPos1).WallTypeAtPosition pos2
+            (grid.BaseGrid.Cell neighborAtPos1).ConnectionTypeAtPosition pos2
         | false -> Open
     | None -> failwith $"Could not find a neighbor {coordinate} at {pos1}"
 
 let private append
-    (sBuilder : StringBuilder) (grid : OrthoGrid) coordinate
+    (sBuilder : StringBuilder) (grid : Grid.Grid<GridArray2D<OrthoPosition>, OrthoPosition>) coordinate
     (intersectionWallLeft, intersectionWallTop, intersectionWallRight, intersectionWallBottom,
      middleWall,
      (lastIntersectionWallLeft : ConnectionType Lazy), (lastIntersectionWallTop : ConnectionType Lazy), lastIntersectionWallRight, lastIntersectionWallBottom) =
@@ -164,7 +165,7 @@ let private append
                             Open) |> ignore)
 
     // last part only on the last column
-    if (coordinate.CIndex = grid.Canvas.MaxColumnIndex) then
+    if (coordinate.CIndex = grid.BaseGrid.ToSpecializedStructure.Canvas.MaxColumnIndex) then
         sBuilder.Append(getPieceOfWall
                             lastIntersectionWallLeft.Value
                             lastIntersectionWallTop.Value
@@ -172,8 +173,8 @@ let private append
                             lastIntersectionWallBottom) |> ignore
     ()
 
-let private wallTypes (grid : OrthoGrid) coordinate =
-    let cell = grid.Cell coordinate
+let private wallTypes (grid : Grid.Grid<GridArray2D<OrthoPosition>, OrthoPosition>) coordinate =
+    let cell = grid.BaseGrid.Cell coordinate
     
     let ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate
     
@@ -181,39 +182,39 @@ let private wallTypes (grid : OrthoGrid) coordinate =
 
     let intersectionWallTop = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Top Left
     
-    let intersectionWallRight = cell.WallTypeAtPosition Top
+    let intersectionWallRight = cell.ConnectionTypeAtPosition Top
 
-    let intersectionWallBottom = cell.WallTypeAtPosition Left
+    let intersectionWallBottom = cell.ConnectionTypeAtPosition Left
     
-    let middleWall = cell.WallTypeAtPosition Top
+    let middleWall = cell.ConnectionTypeAtPosition Top
 
-    let lastIntersectionWallLeft = (lazy (cell.WallTypeAtPosition Top))
+    let lastIntersectionWallLeft = (lazy (cell.ConnectionTypeAtPosition Top))
 
     let lastIntersectionWallTop = (lazy (ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Top Right))
 
     let lastIntersectionWallRight = Open
 
-    let lastIntersectionWallBottom = cell.WallTypeAtPosition Right
+    let lastIntersectionWallBottom = cell.ConnectionTypeAtPosition Right
 
     (intersectionWallLeft, intersectionWallTop, intersectionWallRight, intersectionWallBottom, middleWall, lastIntersectionWallLeft, lastIntersectionWallTop, lastIntersectionWallRight, lastIntersectionWallBottom)
 
-let private wallTypesLastRow (grid : OrthoGrid) coordinate =
-    let cell = grid.Cell coordinate    
+let private wallTypesLastRow (grid : Grid.Grid<GridArray2D<OrthoPosition>, OrthoPosition>) coordinate =
+    let cell = grid.BaseGrid.Cell coordinate    
     let ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty grid coordinate
     
     let intersectionWallLeft = ifExistAtPos1ThenGetWallTypeAtPos2ElseEmpty Left Bottom
 
-    let intersectionWallTop = cell.WallTypeAtPosition Left
+    let intersectionWallTop = cell.ConnectionTypeAtPosition Left
 
-    let intersectionWallRight = cell.WallTypeAtPosition Bottom
+    let intersectionWallRight = cell.ConnectionTypeAtPosition Bottom
 
     let intersectionWallBottom = Open
     
-    let middleWall = cell.WallTypeAtPosition Bottom
+    let middleWall = cell.ConnectionTypeAtPosition Bottom
 
-    let lastIntersectionWallLeft = (lazy (cell.WallTypeAtPosition Bottom))
+    let lastIntersectionWallLeft = (lazy (cell.ConnectionTypeAtPosition Bottom))
 
-    let lastIntersectionWallTop = (lazy (cell.WallTypeAtPosition Right))    
+    let lastIntersectionWallTop = (lazy (cell.ConnectionTypeAtPosition Right))    
 
     let lastIntersectionWallRight = Open
 
@@ -229,8 +230,8 @@ let private appendColumns rowIndex lastColumnIndex append wallTypes =
 let private appendRows sBuilder grid =
     let append = append sBuilder grid
 
-    let lastRowIndex = grid.Cells |> maxRowIndex
-    let lastColumnIndex = grid.Cells |> maxColumnIndex
+    let lastRowIndex = grid.BaseGrid.ToSpecializedStructure.Cells |> maxRowIndex
+    let lastColumnIndex = grid.BaseGrid.ToSpecializedStructure.Cells |> maxColumnIndex
 
     for rowIndex in 0 .. lastRowIndex do
         let appendColumns = appendColumns rowIndex lastColumnIndex append
@@ -241,7 +242,7 @@ let private appendRows sBuilder grid =
         if rowIndex = lastRowIndex then
             appendColumns (wallTypesLastRow grid)
 
-let renderGrid grid =
+let renderGrid (grid : Grid.Grid<GridArray2D<OrthoPosition>, OrthoPosition>) =
     let sBuilder = StringBuilder()
 
     appendRows sBuilder grid

@@ -6,9 +6,6 @@ open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D.Shape
 open Mazes.Core.Canvas.ArrayOfA.Shape
-open Mazes.Core.Grid.Array2D.Ortho
-open Mazes.Core.Grid.Array2D.Hex
-open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
@@ -16,7 +13,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Kruskal's algorith
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> Kruskal.createMaze 1
@@ -30,9 +28,9 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Kruskal's algorith
         "|    _ _| |_ _|    _|\n" +
         "|_|_ _|_ _|_ _ _|_ _|\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -40,7 +38,8 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Krus
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> PolarGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> Kruskal.createMaze 1
@@ -54,7 +53,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Krus
         "¦¨¦‾|¨|‾¦¨|¨|¨¦‾¦‾|¨|¨|¨¦‾|‾¦‾¦¨¦¨¦‾¦‾¦¨|¨|¨|¨|‾¦\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

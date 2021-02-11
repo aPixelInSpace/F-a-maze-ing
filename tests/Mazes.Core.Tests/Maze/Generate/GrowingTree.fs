@@ -6,8 +6,6 @@ open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D.Shape
 open Mazes.Core.Canvas.ArrayOfA.Shape
-open Mazes.Core.Grid.Array2D.Ortho
-open Mazes.Core.Grid.ArrayOfA.Polar
 open Mazes.Core.Maze.Generate
 
 [<Fact>]
@@ -15,7 +13,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree m
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> GrowingTreeMixRandomAndLast.createMaze 1 0.5
@@ -29,9 +28,9 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree m
         "|_| |_|  _ _ _|  _ _|\n" +
         "|_ _ _ _|_ _ _ _ _ _|\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -39,7 +38,8 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the grow
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> PolarGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> GrowingTreeMixRandomAndLast.createMaze 1 0.5
@@ -53,9 +53,9 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the grow
         "|‾¦‾¦‾¦‾¦‾¦¨|¨¦‾¦¨|¨¦¨|‾¦‾¦‾¦¨¦¨¦‾¦‾|¨|¨¦¨|¨|‾¦¨|\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -63,7 +63,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree m
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> GrowingTreeMixOldestAndLast.createMaze 1 0.5
@@ -77,9 +78,9 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree m
         "|_| | | | |_ _  |_  |\n" +
         "|_ _ _ _|_ _ _|_ _ _|\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -87,7 +88,8 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the grow
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> PolarGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> GrowingTreeMixOldestAndLast.createMaze 1 0.5
@@ -101,9 +103,9 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the grow
         "¦¨|¨|¨¦¨|¨¦‾¦‾¦‾¦‾¦‾¦¨|¨|¨|‾¦‾¦¨|¨|¨¦‾¦‾¦‾¦‾¦‾¦‾¦\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -111,7 +113,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree m
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> GrowingTreeMixChosenRandomAndLast.createMaze 1 0.5
@@ -125,9 +128,9 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree m
         "|    _|_|_|   |_    |\n" +
         "|_|_|_ _ _ _|_ _|_|_|\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -135,7 +138,8 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the grow
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> PolarGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> GrowingTreeMixChosenRandomAndLast.createMaze 1 0.5
@@ -149,9 +153,9 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the grow
         "¦‾¦‾|¨|¨|¨|‾¦‾¦‾¦¨¦‾|‾¦¨¦‾¦¨|‾¦‾¦¨|¨|‾¦‾¦‾¦¨¦‾¦‾¦\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -159,7 +163,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree d
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> GrowingTreeDirection.createMaze 1 0.3 0.2 0.3
@@ -173,9 +178,9 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree d
         "| | | |  _|  _|  _| |\n" +
         "|_ _|_ _ _ _|_ _ _ _|\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -183,7 +188,8 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the grow
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> PolarGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> GrowingTreeDirection.createMaze 1 0.3 0.2 0.3
@@ -197,9 +203,9 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the grow
         "¦‾¦¨|¨¦¨|¨¦¨|¨¦¨¦‾¦¨|¨¦‾¦¨|¨¦‾¦‾¦‾¦¨|‾¦¨¦¨|¨¦¨|¨¦\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -207,7 +213,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree s
     // arrange
     let grid =
         (Rectangle.create 5 10)
-        |> OrthoGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> GrowingTreeSpiral.createMaze 1 0.9 0.9 3 0.5
@@ -220,10 +227,10 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree s
         "| |_ _ _  | | | | | |\n" +
         "| | |  _ _| |_ _| | |\n" +
         "|_ _|_ _ _ _ _ _ _|_|\n"
-        
-    maze.Grid.ToString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
+
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
 
 [<Fact>]
@@ -231,21 +238,22 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the grow
     // arrange
     let grid =
         (Disk.create 5 1.0 3)
-        |> PolarGrid.CreateFunction
+        |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> GrowingTreeSpiral.createMaze 1 0.9 0.9 3 0.5
 
     // assert
     let expectedMaze =
-        "| ¦ ¦ |\n" +
-        "¦¨¦‾¦‾|‾¦¨|‾¦\n" +
-        "¦‾¦‾¦‾¦‾¦‾¦‾¦‾¦¨|‾¦‾¦‾¦‾¦\n" +
-        "¦‾|‾¦‾¦‾¦‾¦‾¦‾|‾¦‾¦‾¦‾¦‾¦‾¦‾¦‾|¨¦‾|‾¦‾¦‾¦‾¦‾¦‾|‾¦\n" +
-        "|¨¦¨¦‾¦‾|¨¦‾¦‾¦¨¦‾¦‾¦‾¦‾¦‾|¨¦‾¦‾¦¨|¨¦‾¦‾|¨¦‾¦‾¦¨|\n" +
+        "¦ | ¦ ¦\n" +
+        "|¨¦‾¦‾¦‾|‾¦¨|\n" +
+        "¦‾|¨|‾¦‾¦‾¦‾|‾|¨|‾¦‾¦‾¦‾¦\n" +
+        "¦‾|¨|‾|¨|‾¦¨|¨|‾¦‾¦‾¦‾|¨|¨|‾¦‾¦¨¦‾|‾¦‾¦‾¦‾¦‾¦‾¦‾¦\n" +
+        "¦‾¦¨|¨¦¨¦‾¦‾¦¨|¨|¨¦‾¦‾¦¨¦¨|¨¦‾¦‾¦‾¦¨¦‾¦‾¦‾¦‾|¨¦‾¦\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid.ToString |> should equal expectedMaze
+    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstPartOfMazeZone
+    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells

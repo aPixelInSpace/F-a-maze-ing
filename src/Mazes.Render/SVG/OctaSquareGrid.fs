@@ -7,7 +7,8 @@ open System.Text
 open Mazes.Core
 open Mazes.Core.Trigonometry
 open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid.Array2D.OctaSquare
+open Mazes.Core.Grid
+open Mazes.Core.Grid.Type.OctaSquare
 open Mazes.Render.SVG.Base
 
 let private calculatePointsOctagon (calculateLength, (octaSquareSideSize : float), (otherSideSize : float)) coordinate =
@@ -83,9 +84,9 @@ let center calculatePointsOctagon calculatePointsSquare isOctagon coordinate =
 
     middlePoint pointA pointB
 
-let private appendWallsType (calculateLength, isOctagon, octaSquareSideSize, otherSideSize) (grid : OctaSquareGrid) appendWall coordinate (sBuilder : StringBuilder) =
+let private appendWallsType (calculateLength, isOctagon, octaSquareSideSize, otherSideSize) (grid : Grid<GridArray2D<OctaSquarePosition>, OctaSquarePosition>) appendWall coordinate (sBuilder : StringBuilder) =
 
-    let cell = grid.Cell coordinate
+    let cell = grid.BaseGrid.Cell coordinate
 
     if (isOctagon coordinate) then
         let ((leftTopX, leftTopY),(topLeftX, topLeftY),(topRightX, topRightY),(rightTopX, rightTopY),(leftBottomX, leftBottomY),(bottomLeftX, bottomLeftY),(bottomRightX, bottomRightY),(rightBottomX, rightBottomY)) =
@@ -103,7 +104,7 @@ let private appendWallsType (calculateLength, isOctagon, octaSquareSideSize, oth
                 | Bottom -> $"M {round bottomLeftX} {round bottomLeftY} L {round bottomRightX} {round bottomRightY}"
                 | BottomRight -> $"M {round bottomRightX} {round bottomRightY} L {round rightBottomX} {round rightBottomY}"
 
-            appendWall sBuilder lines (cell.WallTypeAtPosition position) coordinate |> ignore
+            appendWall sBuilder lines (cell.ConnectionTypeAtPosition position) coordinate |> ignore
     else
         let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
             calculatePointsSquare (calculateLength, octaSquareSideSize, otherSideSize) coordinate
@@ -117,7 +118,7 @@ let private appendWallsType (calculateLength, isOctagon, octaSquareSideSize, oth
                 | Bottom -> $"M {round leftBottomX} {round leftBottomY} L {round rightBottomX} {round rightBottomY}"
                 | _ -> failwith $"Could not match position {coordinate} at {position}"
 
-            appendWall sBuilder lines (cell.WallTypeAtPosition position) coordinate |> ignore
+            appendWall sBuilder lines (cell.ConnectionTypeAtPosition position) coordinate |> ignore
 
 let private wholeCellLines (calculateLength, isOctagon, octaSquareSideSize, otherSideSize) coordinate =
     
@@ -142,7 +143,7 @@ let private wholeCellLines (calculateLength, isOctagon, octaSquareSideSize, othe
         $"L {round rightTopX} {round rightTopY} " +
         $"L {round rightBottomX} {round rightBottomY}"
 
-let render (grid : OctaSquareGrid) (path : Coordinate seq) (map : Map) =
+let render (grid : Grid<GridArray2D<OctaSquarePosition>, OctaSquarePosition>) (path : Coordinate seq) (map : Map) =
 
     let sBuilder = StringBuilder()
 
@@ -180,8 +181,10 @@ let render (grid : OctaSquareGrid) (path : Coordinate seq) (map : Map) =
     let appendPathAndBridgesWithAnimation =
         appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
 
-    let width = calculateLength ((float)grid.NumberOfColumns) + marginWidth + 20.0 // because of the size of the border
-    let height = calculateLength ((float)grid.NumberOfRows) + marginHeight + 20.0 // because of the size of the border
+    let spGrid = grid.BaseGrid.ToSpecializedStructure
+
+    let width = calculateLength ((float)spGrid.NumberOfColumns) + marginWidth + 20.0 // because of the size of the border
+    let height = calculateLength ((float)spGrid.NumberOfRows) + marginHeight + 20.0 // because of the size of the border
 
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())
