@@ -126,6 +126,9 @@ type Grid<'Grid, 'Position> =
             else
                 this.BaseGrid.UpdateConnection connectionType coordinate otherCoordinate
 
+        member this.AddUpdateConnectionNonAdjacentNeighbor connectionType coordinate otherCoordinate =
+            this.NonAdjacentNeighbors.UpdateConnection connectionType coordinate otherCoordinate
+
         member this.IfNotAtLimitUpdateConnection connectionType coordinate otherCoordinate =
             if (this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate) || not (this.BaseGrid.IsLimitAt coordinate otherCoordinate) then
                 this.ToInterface.UpdateConnection connectionType coordinate otherCoordinate

@@ -20,8 +20,8 @@ let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, t
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 1; CIndex = 6 } { RIndex = 3; CIndex = 6 }
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 1; CIndex = 6 } { RIndex = 3; CIndex = 6 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 }
 
     let maze =
         grid
@@ -45,8 +45,8 @@ let ``Given a maze with a polar grid, a path and a map, when creating an SVG, th
         |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 1; CIndex = 0 } { RIndex = 3; CIndex = 1 }
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 2; CIndex = 2 } { RIndex = 3; CIndex = 3 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 1; CIndex = 0 } { RIndex = 3; CIndex = 1 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 2; CIndex = 2 } { RIndex = 3; CIndex = 3 }
 
     let maze =
         grid
@@ -58,7 +58,8 @@ let ``Given a maze with a polar grid, a path and a map, when creating an SVG, th
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/theta.svg", Encoding.UTF8)
-        
+
+    let t = String.Compare(expectedRenderedMaze,renderedMaze, StringComparison.InvariantCultureIgnoreCase)
     renderedMaze |> should equal expectedRenderedMaze
 
 [<Fact>]
@@ -69,8 +70,8 @@ let ``Given a maze with a hex grid, a path and a map, when creating an SVG, then
         |> Mazes.Core.Grid.Type.Hex.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 }
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 5; CIndex = 2 } { RIndex = 6; CIndex = 3 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 5; CIndex = 2 } { RIndex = 6; CIndex = 3 }
 
     let maze =
         grid
@@ -93,8 +94,8 @@ let ``Given a maze with a tri grid, a path and a map, when creating an SVG, then
         |> Mazes.Core.Grid.Type.Tri.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 3 }
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 3 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 3 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 3 }
 
     let maze =
         grid
@@ -117,8 +118,8 @@ let ``Given a maze with a octa-square grid, a path and a map, when creating an S
         |> Mazes.Core.Grid.Type.OctaSquare.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 }
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 }
 
 
     let maze =
@@ -142,8 +143,8 @@ let ``Given a maze with a Cairo pentagonal grid, a path and a map, when creating
         |> Mazes.Core.Grid.Type.PentaCairo.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 3 }
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 5; CIndex = 3 } { RIndex = 6; CIndex = 4 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 3 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 5; CIndex = 3 } { RIndex = 6; CIndex = 4 }
 
     let maze =
         grid
@@ -167,8 +168,8 @@ let ``Given a maze with a brick grid, a path and a map, when creating an SVG, th
         |> Mazes.Core.Grid.Type.Brick.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 0; CIndex = 5 } { RIndex = 2; CIndex = 5 }
-    grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 3 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 0; CIndex = 5 } { RIndex = 2; CIndex = 5 }
+    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 3 }
 
 
     let maze =

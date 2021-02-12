@@ -74,7 +74,7 @@ type Map =
                     yield mapFromFarthest.ShortestPathGraph.PathFromGoalToRoot newFarthestCoordinate
         }
 
-    static member create (linkedNeighbors : Coordinate -> Coordinate seq) (cost : Coordinate -> int) (unvisitedTracker : Tracker<Coordinate, Distance>) rootCoordinate =
+    static member create (linkedNeighbors : Coordinate -> Coordinate seq) (cost : Coordinate -> int) (unvisitedTracker : ITracker<Coordinate, Distance>) rootCoordinate =
 
         let coordinatesByDistance = CoordinatesByDistance.createEmpty
 

@@ -6,7 +6,7 @@ open System
 open System.Collections.Generic
 open Priority_Queue
 
-type Tracker<'Key, 'Priority when 'Key : equality and 'Priority :> IComparable<'Priority>> =
+type ITracker<'Key, 'Priority when 'Key : equality and 'Priority :> IComparable<'Priority>> =
     abstract member Add : 'Key -> 'Priority -> unit
     abstract member HasItems : bool
     abstract member Pop : 'Key * 'Priority
@@ -18,7 +18,7 @@ type PriorityQueueTracker<'Key, 'Priority when 'Key : equality and 'Priority :> 
             Queue : SimplePriorityQueue<'Key, 'Priority>
         }
 
-    interface Tracker<'Key, 'Priority> with
+    interface ITracker<'Key, 'Priority> with
         member this.Add key priority =
             if this.Queue.Contains(key) then
                 this.Queue.UpdatePriority(key, priority)
@@ -43,7 +43,7 @@ type SimpleTracker<'Key, 'Priority when 'Key : equality and 'Priority :> ICompar
             Queue : Dictionary<'Key, 'Priority>
         }
 
-    interface Tracker<'Key, 'Priority> with
+    interface ITracker<'Key, 'Priority> with
         member this.Add key priority =
             if this.Queue.ContainsKey(key) then
                 ()

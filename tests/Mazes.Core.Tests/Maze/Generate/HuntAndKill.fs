@@ -42,10 +42,10 @@ let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a 
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    orthoGrid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection ConnectionType.Close { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 }
-    orthoGrid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection ConnectionType.Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 4 }
-    orthoGrid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection ConnectionType.Close { RIndex = 3; CIndex = 2 } { RIndex = 1; CIndex = 1 }
-    orthoGrid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection ConnectionType.Close { RIndex = 4; CIndex = 8 } { RIndex = 2; CIndex = 7 }
+    orthoGrid.AddUpdateConnectionNonAdjacentNeighbor ConnectionType.Close { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 }
+    orthoGrid.AddUpdateConnectionNonAdjacentNeighbor ConnectionType.Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 4 }
+    orthoGrid.AddUpdateConnectionNonAdjacentNeighbor ConnectionType.Close { RIndex = 3; CIndex = 2 } { RIndex = 1; CIndex = 1 }
+    orthoGrid.AddUpdateConnectionNonAdjacentNeighbor ConnectionType.Close { RIndex = 4; CIndex = 8 } { RIndex = 2; CIndex = 7 }
     
     // act
     let maze = orthoGrid |> HuntAndKill.createMaze 1

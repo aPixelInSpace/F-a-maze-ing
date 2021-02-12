@@ -14,9 +14,7 @@ module Convert =
         let isZoneImagePartOfMaze rowIndex columnIndex =
             let pixelRow = image.GetPixelRowSpan(rowIndex)
             let pixel = pixelRow.Item(columnIndex).ToVector4()
-            if pixel.X <= grey && pixel.Y <= grey && pixel.Z <= grey then
-                true
-            else
-                false     
+
+            pixel.X <= grey && pixel.Y <= grey && pixel.Z <= grey     
 
         Canvas.create image.Height image.Width isZoneImagePartOfMaze

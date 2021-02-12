@@ -331,7 +331,7 @@ let ``Given a maze with a non adjacent neighbor, when getting all the distances 
             ┗━━━━━┷━┷━┛
         *)
 
-    maze.Grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Open { RIndex = 0; CIndex = 0 } { RIndex = 3; CIndex = 1 }
+    maze.Grid.AddUpdateConnectionNonAdjacentNeighbor Open { RIndex = 0; CIndex = 0 } { RIndex = 3; CIndex = 1 }
 
     let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
 
