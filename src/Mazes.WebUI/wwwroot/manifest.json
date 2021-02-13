@@ -1,6 +1,6 @@
 {
-    "name": "fsharp_pwa3",
-    "short_name": "fsharp_pwa3",
+    "name": "F-a-maze-ing",
+    "short_name": "F-a-maze-ing",
     "start_url": "./",
     "display": "standalone",
     "background_color": "#ffffff",

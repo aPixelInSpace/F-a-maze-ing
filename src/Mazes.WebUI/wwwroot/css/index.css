@@ -8,11 +8,11 @@ body {
 }
 
 #main {
-  flex: 1;
+  
 }
 
 #main > .columns {
-  min-height: 100%;
+  
 }
 
 .sidebar {

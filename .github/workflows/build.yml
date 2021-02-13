@@ -29,9 +29,8 @@ jobs:
       run: dotnet publish -c Release "./src/Mazes.WebUI" -o publishoutput
     - name: Deploy to Netlify
       uses: netlify/actions/cli@master #uses Netlify Cli actions
+      with:
+        args: deploy --dir=publishoutput/wwwroot --prod #push this folder to Netlify
       env: # These are the environment variables added in GitHub Secrets for this repo
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      with:
-        args: deploy --dir=publishoutput/wwwroot --prod #push this folder to Netlify
-        secrets: '["NETLIFY_TOKEN", "NETLIFY_SITE_ID"]'

@@ -1,6 +1,6 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Grid.Type.Brick
+namespace Mazes.Core.Grid.Type.Brick
 
 open Mazes.Core
 open Mazes.Core.Array2D

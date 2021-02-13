@@ -5,6 +5,8 @@
 # F-a-maze-ing
 An easy-to-use, highly composable and configurable maze generator and solver. Several types of grid tiles with multiple possible shapes.
 
+You may visit https://mazes.apixelinspace.com to randomly generate a few examples (website in preview version, work in progress)
+
 ## Examples
 
 ### Penta maze

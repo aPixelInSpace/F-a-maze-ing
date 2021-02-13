@@ -16,4 +16,8 @@
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mazes.Core\Mazes.Core.fsproj" />
+    <ProjectReference Include="..\Mazes.Render\Mazes.Render.fsproj" />
+  </ItemGroup>
 </Project>
