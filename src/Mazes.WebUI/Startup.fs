@@ -2,6 +2,9 @@ namespace Mazes.WebUI.Client
 
 open Microsoft.AspNetCore.Components.WebAssembly.Hosting
 open Bolero.Remoting.Client
+open Blazorise
+open Blazorise.Bootstrap
+open Blazorise.Icons.FontAwesome
 
 module Program =
 
@@ -10,5 +13,17 @@ module Program =
         let builder = WebAssemblyHostBuilder.CreateDefault(args)
         builder.RootComponents.Add<Main.MyApp>("#main")
         builder.Services.AddRemoting(builder.HostEnvironment) |> ignore
-        builder.Build().RunAsync() |> ignore
+        builder.Services
+            .AddBlazorise(fun opt -> opt.ChangeTextOnKeyPress <- true)
+            .AddBootstrapProviders()
+            .AddFontAwesomeIcons()
+            |> ignore
+
+        let host = builder.Build()
+        host.Services
+            .UseBootstrapProviders()
+            .UseFontAwesomeIcons()
+            |> ignore
+
+        host.RunAsync() |> ignore
         0

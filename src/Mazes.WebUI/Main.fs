@@ -5,6 +5,7 @@ open System.Runtime.Serialization.Json
 open Elmish
 open Bolero
 open Bolero.Html
+open Blazorise.Sidebar
 open Mazes.Core
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Canvas.Array2D.Shape
@@ -16,6 +17,7 @@ open Microsoft.JSInterop
 
 /// Our application has three URL endpoints.
 type Page =
+    | [<EndPoint "/">] HomePage
     | [<EndPoint "/random">] RandomMaze
 
 type Model =
@@ -26,7 +28,7 @@ type Model =
 
 let initModel =
     {
-        page = RandomMaze
+        page = HomePage
         displayedMaze = ""
     }
 
@@ -49,9 +51,9 @@ let newRandomMaze () =
 
     let canvas =
         match rng.Next(6) with
-        | 0 -> Rectangle.create 15 24
+        | 0 -> Rectangle.create 25 45
         | 1 -> TriangleIsosceles.create 25 TriangleIsosceles.Bottom 1 1
-        | 2 -> Ellipse.create 11 12 0.0 0.0 0 0 None Ellipse.Side.Inside
+        | 2 -> Ellipse.create 12 15 0.1 0.0 0 0 None Ellipse.Side.Inside
         | 3 -> Hexagon.create 11.0
         | 4 -> Pentagon.create 22.0
         | 5 -> PentagonStar.create 22.0 15.0        
@@ -101,15 +103,76 @@ let router = Router.infer SetPage (fun model -> model.page)
 
 type Main = Template<"wwwroot/main.html">
 
-let randomMaze (model : Model) dispatch =
+let myButton model dispatch =
+    comp<Blazorise.Button>
+        [ "Color" => Blazorise.Color.Primary
+          "class" => "random-maze-button"
+          attr.callback "onclick" (fun _ -> (dispatch GenerateRandomMaze)) ]
+        [ text "Generate" ]
+
+let myButtonWithTooltip model dispatch =
+    comp<Blazorise.Tooltip>
+        [
+            "Text" => "Generate a random maze\nwith a random shape and tiling"
+            "Placement" => Blazorise.Placement.Right
+        ]
+        [ myButton model dispatch ]
+
+let homePage model dispatch =
+    Main.Home().Elt()
+
+let randomMazePage (model : Model) dispatch =
     Main.SVG()
-        .GenerateRandomMaze(fun _ -> dispatch GenerateRandomMaze)
+        .ButtonRandomMaze(myButtonWithTooltip model dispatch)
         .Elt()
+
+let mySidebar model dispatch =
+    comp<Sidebar>
+        []
+        [
+          comp<SidebarContent> [] [
+              comp<SidebarBrand> [] [
+                  Main.Brand().Elt()
+              ]
+              comp<SidebarNavigation> [] [
+                  comp<SidebarLabel> [] []
+                  comp<SidebarItem> [] [
+                      comp<SidebarLink> [
+                          "To" => router.Link HomePage
+                          "Title" => "Home"
+                      ] [
+                          comp<Blazorise.Icon> [
+                              "Name" => Blazorise.IconName.Home
+                              "Margin" => Blazorise.Margin.Is3.FromRight
+                          ] []
+                          text "Home"
+                      ]
+                  ]
+                  comp<SidebarItem> [] [
+                      comp<SidebarLink> [
+                          "To" => router.Link RandomMaze
+                          "Title" => "Random"
+                      ] [
+                          comp<Blazorise.Icon> [
+                              "Name" => Blazorise.IconName.Random
+                              "Margin" => Blazorise.Margin.Is3.FromRight
+                          ] []
+                          text "Random maze"
+                      ]
+                  ]
+              ]
+          ]
+        ]
 
 let view model dispatch =
     Main()
+        .Menu(
+            mySidebar model dispatch
+        )
         .Body(
-            randomMaze model dispatch
+            cond model.page <| function
+            | HomePage -> homePage model dispatch
+            | RandomMaze -> randomMazePage model dispatch
         )
         .Elt()
 

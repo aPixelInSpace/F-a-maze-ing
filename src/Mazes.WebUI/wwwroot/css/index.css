@@ -7,12 +7,35 @@ body {
   flex-direction: column;
 }
 
+.flex-content {
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.no-decoration:link {
+  text-decoration: none;
+}
+.no-decoration:visited {
+  text-decoration: none;
+}
+.no-decoration:hover {
+  text-decoration: none;
+}
+.no-decoration:active {
+  text-decoration: none;
+}
+
 #main {
   
 }
 
 #main > .columns {
   
+}
+
+.random-maze-button {
+  margin: 0.5rem;
 }
 
 .sidebar {

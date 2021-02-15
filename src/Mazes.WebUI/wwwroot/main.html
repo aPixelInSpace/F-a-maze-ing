@@ -1,10 +1,52 @@
 ﻿<div>
-    <section class="section">
-        ${Body}
+    <section class="flex-content">
+        ${Menu}
+        <section class="flex-content">
+            ${Body}
+        </section>
     </section>
 </div>
 
+<template id="Brand">
+    <nav role="navigation" aria-label="main navigation">
+        <div>
+            <a target="_blank" href="https://github.com/aPixelInSpace/F-a-maze-ing" class="no-decoration">
+                <img style="height:40px" src="./icon-512.png" />
+                &nbsp;
+                F-a-maze-ing
+            </a>
+        </div>
+    </nav>
+</template>
+
+<template id="Home">
+    <div class="content">
+        <h1 class="title">Welcome to the F-a-maze-ing maze generator !</h1>
+        <p>This application is a fun pet project that I initiated to learn the <a target="_blank" href="https://fsharp.org/">F# langage</a>.</p>
+        <p>You can find the entire source code on <a target="_blank" href="https://github.com/aPixelInSpace/F-a-maze-ing">github</a> under the MIT license.</p>
+        <p>Special thanks to these projects/ressources and the people that created/mantain them wich this app relies on :</p>
+        <ul>
+            <li>
+                <a target="_blank" href="https://fsbolero.io/">The Bolero web framework with the Elmish architecture</a>
+            </li>
+            <li>
+                <a target="_blank" href="https://github.com/BlueRaja/High-Speed-Priority-Queue-for-C-Sharp">The high speed priority queue for C#</a>
+            </li>
+            <li>
+                <a target="_blank" href="https://github.com/KeRNeLith/QuikGraph">QuikGraph (a graph data structure library)</a>
+            </li>
+            <li>
+                <a target="_blank" href="https://github.com/stsrki/Blazorise">Blazorise (a Blazor UI library components) </a>
+            </li>
+        </ul>
+        <p>This app will have futures updates that will add more tilings, generators, general improvements and more.</p>
+        <p>Enjoy solving some maze !</p>
+
+        <a href="https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE" target="_blank">Created by Patrizio Amella. See License file for more information.</a>
+    </div>
+</template>
+
 <template id="SVG">
-    <button onclick="${GenerateRandomMaze}">New random maze</button>
+    <div>${ButtonRandomMaze}</div>
     <div id="svgContainer"></div>
 </template>
