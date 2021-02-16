@@ -143,7 +143,7 @@ let private wholeCellLines (calculateLength, isOctagon, octaSquareSideSize, othe
         $"L {round rightTopX} {round rightTopY} " +
         $"L {round rightBottomX} {round rightBottomY}"
 
-let render (grid : Grid<GridArray2D<OctaSquarePosition>, OctaSquarePosition>) (path : Coordinate seq) (map : Map) =
+let render (grid : Grid<GridArray2D<OctaSquarePosition>, OctaSquarePosition>) path map entrance exit =
 
     let sBuilder = StringBuilder()
 
@@ -164,7 +164,9 @@ let render (grid : Grid<GridArray2D<OctaSquarePosition>, OctaSquarePosition>) (p
     let calculatePointsOctagon = calculatePointsOctagon (calculateLength, octaSquareSideSize, otherSideSize)
     let calculatePointsSquare = calculatePointsSquare (calculateLength, octaSquareSideSize, otherSideSize)
 
-    let calculatePointsBridge = calculatePointsBridge (center calculatePointsOctagon calculatePointsSquare isOctagon) bridgeHalfWidth bridgeDistanceFromCenter
+    let center = (center calculatePointsOctagon calculatePointsSquare isOctagon)
+    
+    let calculatePointsBridge = calculatePointsBridge center bridgeHalfWidth bridgeDistanceFromCenter
     let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
     let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
 
@@ -200,9 +202,12 @@ let render (grid : Grid<GridArray2D<OctaSquarePosition>, OctaSquarePosition>) (p
 
     |> appendSimpleBridges
     |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
-    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines map.ShortestPathGraph.NodeDistanceFromRoot map.FarthestFromRoot.Distance
+    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
+
+    |> textCell center entrance "start"
+    |> textCell center exit "exit"
 
     |> appendFooter
     |> ignore

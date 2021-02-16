@@ -30,7 +30,7 @@ let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, t
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
     // act
-    let renderedMaze = SVG.OrthoGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    let renderedMaze = SVG.OrthoGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/ortho.svg", Encoding.UTF8)
@@ -54,7 +54,7 @@ let ``Given a maze with a polar grid, a path and a map, when creating an SVG, th
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
     // act
-    let renderedMaze = SVG.PolarGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    let renderedMaze = SVG.PolarGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/theta.svg", Encoding.UTF8)
@@ -79,7 +79,7 @@ let ``Given a maze with a hex grid, a path and a map, when creating an SVG, then
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
     // act
-    let renderedMaze = SVG.HexGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    let renderedMaze = SVG.HexGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/sigma.svg", Encoding.UTF8)
@@ -103,7 +103,7 @@ let ``Given a maze with a tri grid, a path and a map, when creating an SVG, then
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
     // act
-    let renderedMaze = SVG.TriGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    let renderedMaze = SVG.TriGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/delta.svg", Encoding.UTF8)
@@ -128,7 +128,7 @@ let ``Given a maze with a octa-square grid, a path and a map, when creating an S
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
     // act
-    let renderedMaze = SVG.OctaSquareGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    let renderedMaze = SVG.OctaSquareGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/upsilon.svg", Encoding.UTF8)
@@ -153,7 +153,7 @@ let ``Given a maze with a Cairo pentagonal grid, a path and a map, when creating
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
     // act
-    let renderedMaze = SVG.PentaCairoGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    let renderedMaze = SVG.PentaCairoGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/pentacairo.svg", Encoding.UTF8)
@@ -178,7 +178,7 @@ let ``Given a maze with a brick grid, a path and a map, when creating an SVG, th
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
     // act
-    let renderedMaze = SVG.BrickGrid.render  maze.Grid.ToSpecializedGrid (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    let renderedMaze = SVG.BrickGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/brick.svg", Encoding.UTF8)

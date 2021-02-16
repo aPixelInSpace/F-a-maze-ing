@@ -55,7 +55,7 @@ let private wholeCellLines calculatePoints coordinate =
     $"L {rightTopX} {rightTopY} " +
     $"L {leftTopX} {leftTopY} "
 
-let render (grid : Grid<GridArray2D<OrthoPosition>, OrthoPosition>) (path : Coordinate seq) (map : Map) =
+let render (grid : Grid<GridArray2D<OrthoPosition>, OrthoPosition>) path map entrance exit =
     let sBuilder = StringBuilder()
 
     let calculateHeight numberOfRows =
@@ -85,7 +85,7 @@ let render (grid : Grid<GridArray2D<OrthoPosition>, OrthoPosition>) (path : Coor
         appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
 
     let appendMazeDistanceBridgeColoration =
-        appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines (map.ShortestPathGraph.NodeDistanceFromRoot) (map.FarthestFromRoot.Distance)
+        appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All map wholeBridgeLines
 
     let appendPathAndBridgesWithAnimation =
         appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
@@ -113,6 +113,9 @@ let render (grid : Grid<GridArray2D<OrthoPosition>, OrthoPosition>) (path : Coor
     |> appendMazeDistanceBridgeColoration
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
+
+    |> textCell (center calculatePoints) entrance "start"
+    |> textCell (center calculatePoints) exit "exit"
 
     |> appendFooter
     |> ignore

@@ -37,66 +37,77 @@ type Message =
     | GenerateRandomMaze
     | Ping
 
-type GridChoice =
-    | Ortho
-    | Hex
-    | Tri
-    | OctaSquare
-    | PentaCairo
-    | Brick
-    | Polar
-
 let newRandomMaze () =
     let rng = Random()
 
     let canvas =
-        match rng.Next(6) with
-        | 0 -> Rectangle.create 25 45
-        | 1 -> TriangleIsosceles.create 25 TriangleIsosceles.Bottom 1 1
-        | 2 -> Ellipse.create 12 15 0.1 0.0 0 0 None Ellipse.Side.Inside
-        | 3 -> Hexagon.create 11.0
-        | 4 -> Pentagon.create 22.0
-        | 5 -> PentagonStar.create 22.0 15.0        
-        | _ -> failwith "rng problem"
-        
-    let gridChoice =
+        let shapes =
+            [|
+                Rectangle.create 25 45
+                TriangleIsosceles.create 25 TriangleIsosceles.Bottom 1 1
+                Ellipse.create 12 15 0.1 0.0 0 0 None Ellipse.Side.Inside
+                Hexagon.create 11.0
+                Pentagon.create 22.0
+                PentagonStar.create 22.0 15.0
+            |]
+        shapes.[rng.Next(shapes.Length)]
+
+    let rngSeed = rng.Next()
+
+    let maze grid =
+        let algo =
+            [|
+                AldousBroder.createMaze rngSeed
+                Wilson.createMaze rngSeed
+                HuntAndKill.createMaze rngSeed
+                RecursiveBacktracker.createMaze rngSeed
+                Kruskal.createMaze rngSeed
+                PrimSimple.createMaze rngSeed
+                PrimSimpleModified.createMaze rngSeed
+                PrimWeighted.createMaze rngSeed (rng.Next(50))
+                GrowingTreeMixRandomAndLast.createMaze rngSeed (rng.NextDouble())
+                GrowingTreeMixChosenRandomAndLast.createMaze rngSeed (rng.NextDouble())
+                GrowingTreeMixOldestAndLast.createMaze rngSeed (rng.NextDouble())
+                GrowingTreeDirection.createMaze rngSeed (rng.NextDouble()) (rng.NextDouble()) (rng.NextDouble())
+                GrowingTreeSpiral.createMaze rngSeed (rng.NextDouble()) (rng.NextDouble()) (rng.Next(3, 8)) (rng.NextDouble())
+            |]
+
+        algo.[rng.Next(algo.Length)] grid
+
+    let generateMaze grid render =
+        let maze = maze grid
+        //let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
+        //render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+        maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
+        render (maze.Grid.ToSpecializedGrid) None None (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)
+
+    let gridType canvas =
         match rng.Next(7) with
-        | 0 -> GridChoice.Ortho
-        | 1 -> GridChoice.Hex
-        | 2 -> GridChoice.Tri
-        | 3 -> GridChoice.OctaSquare
-        | 4 -> GridChoice.PentaCairo
-        | 5 -> GridChoice.Brick
-        | 6 -> GridChoice.Polar
+        | 0 -> generateMaze (canvas |> Grid.Type.Ortho.Grid.createBaseGrid |> Grid.Grid.create) SVG.OrthoGrid.render
+        | 1 -> generateMaze (canvas |> Grid.Type.Hex.Grid.createBaseGrid |> Grid.Grid.create) SVG.HexGrid.render
+        | 2 -> generateMaze (canvas |> Grid.Type.Tri.Grid.createBaseGrid |> Grid.Grid.create) SVG.TriGrid.render
+        | 3 -> generateMaze (canvas |> Grid.Type.OctaSquare.Grid.createBaseGrid |> Grid.Grid.create) SVG.OctaSquareGrid.render
+        | 4 -> generateMaze (canvas |> Grid.Type.PentaCairo.Grid.createBaseGrid |> Grid.Grid.create) SVG.PentaCairoGrid.render
+        | 5 -> generateMaze (canvas |> Grid.Type.Brick.Grid.createBaseGrid |> Grid.Grid.create) SVG.BrickGrid.render
+        | 6 -> generateMaze (Disk.create 16 1.0 5 |> Grid.Type.Polar.Grid.createBaseGrid |> Grid.Grid.create) SVG.PolarGrid.render
         | _ -> failwith "rng problem"
 
-    let rndSeed = rng.Next()
-
-    let generate grid render =
-        let maze = HuntAndKill.createMaze rndSeed grid
-        let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-        render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
-
-    let gridType canvas gridChoice =
-        match gridChoice with
-        | GridChoice.Ortho -> generate (canvas |> Grid.Type.Ortho.Grid.createBaseGrid |> Grid.Grid.create) SVG.OrthoGrid.render
-        | GridChoice.Hex -> generate (canvas |> Grid.Type.Hex.Grid.createBaseGrid |> Grid.Grid.create) SVG.HexGrid.render
-        | GridChoice.Tri -> generate (canvas |> Grid.Type.Tri.Grid.createBaseGrid |> Grid.Grid.create) SVG.TriGrid.render
-        | GridChoice.OctaSquare -> generate (canvas |> Grid.Type.OctaSquare.Grid.createBaseGrid |> Grid.Grid.create) SVG.OctaSquareGrid.render
-        | GridChoice.PentaCairo -> generate (canvas |> Grid.Type.PentaCairo.Grid.createBaseGrid |> Grid.Grid.create) SVG.PentaCairoGrid.render
-        | GridChoice.Brick -> generate (canvas |> Grid.Type.Brick.Grid.createBaseGrid |> Grid.Grid.create) SVG.BrickGrid.render
-        | GridChoice.Polar -> generate (Disk.create 16 1.0 5 |> Grid.Type.Polar.Grid.createBaseGrid |> Grid.Grid.create) SVG.PolarGrid.render
-
-    gridType canvas gridChoice
+    gridType canvas
 
 let update (jsRuntime : IJSRuntime) message model =
     match message with
     | SetPage page ->
         { model with page = page }
     | GenerateRandomMaze ->
-        let newRandomMaze = newRandomMaze()
-        jsRuntime.InvokeAsync("displaySVG", "svgContainer", newRandomMaze) |> ignore
-        { model with displayedMaze = newRandomMaze }
+        try
+            let newRandomMaze = newRandomMaze()
+            jsRuntime.InvokeAsync("displaySVG", "svgContainer", newRandomMaze) |> ignore
+            { model with displayedMaze = newRandomMaze }
+        with
+        | ex ->
+            printfn "%A" ex
+            model
+
     | Ping -> model
 
 let router = Router.infer SetPage (fun model -> model.page)

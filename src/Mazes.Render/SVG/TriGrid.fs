@@ -59,7 +59,7 @@ let private wholeCellLines calculatePoints coordinate =
     $"L {round middleX} {round middleY} " +
     $"L {round rightX} {round rightY} "
 
-let render (grid : Grid<GridArray2D<TriPosition>, TriPosition>) (path : Coordinate seq) (map : Map) =
+let render (grid : Grid<GridArray2D<TriPosition>, TriPosition>) path map entrance exit =
 
     let sBuilder = StringBuilder()
 
@@ -87,8 +87,9 @@ let render (grid : Grid<GridArray2D<TriPosition>, TriPosition>) (path : Coordina
     let isUpright = TriPositionHandler.IsUpright
 
     let calculatePoints = calculatePoints (calculateWidth, calculateHeight, isUpright, triWidth, triHalfWidth, triHeight)
+    let center = (center calculatePoints isUpright (triHeight / 2.0))
 
-    let calculatePointsBridge = calculatePointsBridge (center calculatePoints isUpright (triHeight / 2.0)) bridgeHalfWidth bridgeDistanceFromCenter
+    let calculatePointsBridge = calculatePointsBridge center bridgeHalfWidth bridgeDistanceFromCenter
     let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
     let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
 
@@ -123,9 +124,12 @@ let render (grid : Grid<GridArray2D<TriPosition>, TriPosition>) (path : Coordina
 
     |> appendSimpleBridges
     |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
-    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines map.ShortestPathGraph.NodeDistanceFromRoot map.FarthestFromRoot.Distance
+    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
+
+    |> textCell center entrance "start"
+    |> textCell center exit "exit"
 
     |> appendFooter
     |> ignore

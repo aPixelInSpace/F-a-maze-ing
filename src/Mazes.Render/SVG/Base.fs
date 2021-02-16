@@ -239,29 +239,35 @@ let appendCellColorWithDynamicOpacity lines distanceFromRoot maxDistance coordin
     appendPathElementColor sBuilder colorDistanceClass sOpacity lines coordinate
 
 let appendMazeDistanceColoration map wholeCellLines (sBuilder : StringBuilder) =
-    let distanceFromRoot coordinate =
-        match (map.ShortestPathGraph.NodeDistanceFromRoot coordinate) with
-        | Some distance when distance = 0 -> 0
-        | Some distance -> distance - 1
-        | None -> 0
-    map.ShortestPathGraph.Graph.Vertices
-    |> Seq.iter(fun coordinate -> sBuilder |> appendCellColorWithDynamicOpacity (wholeCellLines coordinate) (distanceFromRoot coordinate) (map.FarthestFromRoot.Distance - 1) (Some coordinate) |> ignore)
+    match map with
+    | Some map ->
+        let distanceFromRoot coordinate =
+            match (map.ShortestPathGraph.NodeDistanceFromRoot coordinate) with
+            | Some distance when distance = 0 -> 0
+            | Some distance -> distance - 1
+            | None -> 0
+        map.ShortestPathGraph.Graph.Vertices
+        |> Seq.iter(fun coordinate -> sBuilder |> appendCellColorWithDynamicOpacity (wholeCellLines coordinate) (distanceFromRoot coordinate) (map.FarthestFromRoot.Distance - 1) (Some coordinate) |> ignore)
+    | None -> ()
 
     sBuilder
 
-let appendMazeDistanceBridgeColoration sequence wholeBridgeLines distanceFromRoot maxDistanceFromRoot (sBuilder : StringBuilder) =
-    let distanceFromRoot coordinate =
-        match (distanceFromRoot coordinate) with
-        | Some distance when distance = 0 -> 0
-        | Some distance -> distance - 1
-        | None -> 0
+let appendMazeDistanceBridgeColoration sequence map wholeBridgeLines (sBuilder : StringBuilder) =
+    match map with
+    | Some map ->
+        let distanceFromRoot coordinate =
+            match (map.ShortestPathGraph.NodeDistanceFromRoot coordinate) with
+            | Some distance when distance = 0 -> 0
+            | Some distance -> distance - 1
+            | None -> 0
 
-    sequence
-    |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
-        match wallType, showClosedBridge with
-        | Open, _ | Close, true ->
-            sBuilder |> appendCellColorWithDynamicOpacity (wholeBridgeLines fromCoordinate toCoordinate) (distanceFromRoot fromCoordinate) (maxDistanceFromRoot - 1) None |> ignore
-        | _ -> ())
+        sequence
+        |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
+            match wallType, showClosedBridge with
+            | Open, _ | Close, true ->
+                sBuilder |> appendCellColorWithDynamicOpacity (wholeBridgeLines fromCoordinate toCoordinate) (distanceFromRoot fromCoordinate) (map.FarthestFromRoot.Distance - 1) None |> ignore
+            | _ -> ())
+    | None -> ()
 
     sBuilder
 
@@ -298,24 +304,27 @@ let appendPathWithAnimation path wholeCellLines (sBuilder : StringBuilder) =
     sBuilder
 
 let appendPathAndBridgesWithAnimation path wholeCellLines existBridge wholeBridgeLines (sBuilder : StringBuilder) =
-    let mutable previous = None
-    path
-    |> Seq.iteri(
-        fun i coordinate ->
-            let i = i * 2
-            let related = if i > 0 then Some ((i - 2).ToString()) else None
-            
-            appendPathElement sBuilder (Some i) pathAnimatedClass (wholeCellLines coordinate) coordinate |> ignore
-            appendAnimationElement sBuilder (i.ToString()) related |> ignore
-            
-            match previous with
-            | Some previousCoordinate ->
-                if existBridge previousCoordinate coordinate then
-                    appendPathElement sBuilder (Some (i - 1)) pathAnimatedClass (wholeBridgeLines previousCoordinate coordinate) coordinate |> ignore
-                    appendAnimationElement sBuilder ((i - 1).ToString()) related |> ignore
-            | None -> ()
+    match path with
+    | Some path ->
+        let mutable previous = None
+        path
+        |> Seq.iteri(
+            fun i coordinate ->
+                let i = i * 2
+                let related = if i > 0 then Some ((i - 2).ToString()) else None
+                
+                appendPathElement sBuilder (Some i) pathAnimatedClass (wholeCellLines coordinate) coordinate |> ignore
+                appendAnimationElement sBuilder (i.ToString()) related |> ignore
+                
+                match previous with
+                | Some previousCoordinate ->
+                    if existBridge previousCoordinate coordinate then
+                        appendPathElement sBuilder (Some (i - 1)) pathAnimatedClass (wholeBridgeLines previousCoordinate coordinate) coordinate |> ignore
+                        appendAnimationElement sBuilder ((i - 1).ToString()) related |> ignore
+                | None -> ()
 
-            previous <- Some coordinate)
+                previous <- Some coordinate)
+    | None -> ()
 
     sBuilder
 
@@ -406,3 +415,11 @@ let appendSimpleWallsBridges calculatePointsBridge (bridges : (Coordinate * Coor
             | _ -> ())
 
     sBuilder
+
+let textCell center coordinate text (sBuilder : StringBuilder) =
+    match coordinate with
+    | Some coordinate ->
+        let (x, y) = center coordinate
+        sBuilder.Append($"<text x=\"{round (x - 10.0)}\" y=\"{round y}\" style=\"font: bold 10px sans-serif;\">{text}</text>")
+    | None ->
+        sBuilder

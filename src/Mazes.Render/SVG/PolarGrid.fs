@@ -73,7 +73,7 @@ let private wholeCellLines grid (centerX, centerY, ringHeight) coordinate =
     $"L {round bottomRightX} {round bottomRightY} " +
     $"A {round innerRadius} {round innerRadius}, 0, 0, 0, {round bottomLeftX} {round bottomLeftY}"
 
-let render (grid : Grid<GridArrayOfA, Grid.PolarPosition>) (path : Coordinate seq) (map : Map) =
+let render (grid : Grid<GridArrayOfA, Grid.PolarPosition>) path map entrance exit =
     
     let sBuilder = StringBuilder()
 
@@ -129,9 +129,12 @@ let render (grid : Grid<GridArrayOfA, Grid.PolarPosition>) (path : Coordinate se
 
     |> appendSimpleBridges
     |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
-    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines map.ShortestPathGraph.NodeDistanceFromRoot map.FarthestFromRoot.Distance
+    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
+
+    |> textCell (center calculatePoints) entrance "start"
+    |> textCell (center calculatePoints) exit "exit"
 
     |> appendFooter
     |> ignore

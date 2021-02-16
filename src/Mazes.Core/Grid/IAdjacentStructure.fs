@@ -32,6 +32,7 @@ type IAdjacentStructure<'Structure, 'Position> =
     abstract member VirtualNeighbor : Coordinate -> Position -> Coordinate option
     /// Given two coordinates, updates the connection between them
     abstract member UpdateConnection : connectionType:ConnectionType -> coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
+    abstract member UpdateConnectionForOpening : Coordinate -> unit
     /// Returns the first (arbitrary) coordinate that is part of the maze
     abstract member GetFirstCellPartOfMaze : Coordinate
     /// Returns the last (arbitrary) coordinate that is part of the maze

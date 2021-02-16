@@ -10,4 +10,4 @@ type Coordinate =
     }
 
     override this.ToString() =
-        $"{this.RIndex};{this.CIndex}"
+        $"{this.RIndex};{this.CIndex}" 

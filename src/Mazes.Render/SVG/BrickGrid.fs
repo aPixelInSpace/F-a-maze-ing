@@ -66,7 +66,7 @@ let private wholeCellLines calculatePoints coordinate =
     $"L {rightTopX} {rightTopY} " +
     $"L {leftTopX} {leftTopY} "
 
-let render (grid : Grid<GridArray2D<BrickPosition>, BrickPosition>) (path : Coordinate seq) (map : Map) =
+let render (grid : Grid<GridArray2D<BrickPosition>, BrickPosition>) path map entrance exit =
     let sBuilder = StringBuilder()
 
     let calculateHeight numberOfRows =
@@ -81,7 +81,8 @@ let render (grid : Grid<GridArray2D<BrickPosition>, BrickPosition>) (path : Coor
 
     let calculatePoints = calculatePoints (calculateHeight, calculateWidth)
 
-    let calculatePointsBridge = calculatePointsBridge (center calculatePoints) bridgeHalfWidth bridgeDistanceFromCenter
+    let center = (center calculatePoints)
+    let calculatePointsBridge = calculatePointsBridge center bridgeHalfWidth bridgeDistanceFromCenter
     let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
     let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
 
@@ -96,7 +97,7 @@ let render (grid : Grid<GridArray2D<BrickPosition>, BrickPosition>) (path : Coor
         appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
 
     let appendMazeDistanceBridgeColoration =
-        appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines (map.ShortestPathGraph.NodeDistanceFromRoot) (map.FarthestFromRoot.Distance)
+        appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All map wholeBridgeLines
 
     let appendPathAndBridgesWithAnimation =
         appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
@@ -124,6 +125,9 @@ let render (grid : Grid<GridArray2D<BrickPosition>, BrickPosition>) (path : Coor
     |> appendMazeDistanceBridgeColoration
     //|> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
+
+    |> textCell center entrance "start"
+    |> textCell center exit "exit"
 
     |> appendFooter
     |> ignore

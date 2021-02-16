@@ -131,15 +131,7 @@ type GridArrayOfA =
             not (this.ToInterface.IsLimitAt coordinate otherCoordinate) && connectionCondition
 
         member this.Neighbors coordinate =
-            let listOfNeighborCoordinate =
-                let neighborsCoordinateAt = this.NeighborsCoordinateAt this.Cells coordinate
-                seq {
-                    for position in this.PositionHandler.Values coordinate do
-                        for coordinate in neighborsCoordinateAt position do
-                            yield (coordinate, position)
-                }
-
-            this.Canvas.NeighborsPartOfMazeOf listOfNeighborCoordinate
+            this.Canvas.NeighborsPartOfMazeOf (this.ListOfAdjacentNeighborCoordinate coordinate)
             |> Seq.filter(fun (nCoordinate, _) -> not (this.ToInterface.IsLimitAt coordinate nCoordinate))
             |> Seq.map(fst)
 
@@ -180,6 +172,26 @@ type GridArrayOfA =
             | Outward ->
                 let otherCell = (this.ToInterface.Cell otherCoordinate)
                 this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell (this.PositionHandler.Opposite otherCoordinate neighborPosition))
+
+        member this.UpdateConnectionForOpening coordinate =
+            let candidate =
+                (this.ListOfAdjacentNeighborCoordinate coordinate)
+                |> Seq.tryFind(fun (c, _) -> (not (this.ToInterface.ExistAt c)) || (not (this.ToInterface.IsCellPartOfMaze c)))
+
+            match candidate with
+            | Some candidate -> this.ToInterface.UpdateConnection Open coordinate (fst candidate)
+            | None ->
+                if (PolarArrayOfA.isLastRing coordinate.RIndex (PolarArrayOfA.numberOfRings this.Cells)) then
+                    let getNewConnections (cell : ICell<'Position>) position =
+                        cell.Connections
+                        |> Array.map(fun connection ->
+                            if connection.ConnectionPosition = position then
+                                { ConnectionType = Open; ConnectionPosition = position }
+                            else
+                                connection)
+
+                    let cell = (this.ToInterface.Cell coordinate)
+                    this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- cell.Create (getNewConnections cell Outward)
 
         member this.GetFirstCellPartOfMaze =
             snd this.Canvas.GetFirstPartOfMazeZone
@@ -239,3 +251,11 @@ type GridArrayOfA =
         | Cw -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
         | Inward -> { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }
         | Ccw -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
+
+    member private this.ListOfAdjacentNeighborCoordinate coordinate =
+        let neighborsCoordinateAt = this.NeighborsCoordinateAt this.Cells coordinate
+        seq {
+            for position in this.PositionHandler.Values coordinate do
+                for coordinate in neighborsCoordinateAt position do
+                    yield (coordinate, position)
+        }

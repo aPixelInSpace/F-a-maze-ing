@@ -114,7 +114,7 @@ let private wholeCellLines calculatePoints coordinate =
     $"L {round cx} {round cy} " +
     $"L {round dx} {round dy}"
 
-let render (grid : Grid<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) (path : Coordinate seq) (map : Map) =
+let render (grid : Grid<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) path map entrance exit =
 
     let sBuilder = StringBuilder()
 
@@ -143,7 +143,9 @@ let render (grid : Grid<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) (p
     let calculatePointsQuadrant = calculatePointsQuadrant pentGreatSide
     let calculatePoints = calculatePoints calculatePointD calculatePointsQuadrant (pentGreatSide, hypGreatSide)
 
-    let calculatePointsBridge = calculatePointsBridge (center calculatePoints) bridgeHalfWidth bridgeDistanceFromCenter
+    let center = (center calculatePoints)
+
+    let calculatePointsBridge = calculatePointsBridge center bridgeHalfWidth bridgeDistanceFromCenter
     let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
     let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
 
@@ -184,9 +186,12 @@ let render (grid : Grid<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) (p
 
     |> appendSimpleBridges
     |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
-    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines map.ShortestPathGraph.NodeDistanceFromRoot map.FarthestFromRoot.Distance
+    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
+
+    |> textCell center entrance "start"
+    |> textCell center exit "exit"
 
     |> appendFooter
     |> ignore

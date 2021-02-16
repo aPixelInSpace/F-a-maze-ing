@@ -72,7 +72,7 @@ let private wholeCellLines calculatePoints coordinate =
     $"L {round bottomRightX} {round bottomRightY} " +
     $"L {round bottomLeftX} {round bottomLeftY} "
 
-let render (grid : Grid<GridArray2D<HexPosition>, HexPosition>) (path : Coordinate seq) (map : Map) =
+let render (grid : Grid<GridArray2D<HexPosition>, HexPosition>) path map entrance exit =
 
     let sBuilder = StringBuilder()
 
@@ -126,9 +126,12 @@ let render (grid : Grid<GridArray2D<HexPosition>, HexPosition>) (path : Coordina
 
     |> appendSimpleBridges
     |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
-    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines map.ShortestPathGraph.NodeDistanceFromRoot map.FarthestFromRoot.Distance
+    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
+
+    |> textCell (center calculatePoints) entrance "start"
+    |> textCell (center calculatePoints) exit "exit"
 
     |> appendFooter
     |> ignore

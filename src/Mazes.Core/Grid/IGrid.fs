@@ -36,6 +36,7 @@ type IGrid<'Grid> =
     /// Returns the neighbors coordinates that are or not connected WITH the coordinate
     abstract member ConnectedWithNeighbors : isConnected:bool -> coordinate:Coordinate -> Coordinate seq
     abstract member UpdateConnection : ConnectionType -> Coordinate -> Coordinate -> unit
+    abstract member UpdateConnectionForOpening : Coordinate -> unit
     abstract member AddUpdateConnectionNonAdjacentNeighbor : ConnectionType -> Coordinate -> Coordinate -> unit
     abstract member IfNotAtLimitUpdateConnection : ConnectionType -> Coordinate -> Coordinate -> unit
     abstract member CostOfCoordinate : coordinate:Coordinate -> Cost
