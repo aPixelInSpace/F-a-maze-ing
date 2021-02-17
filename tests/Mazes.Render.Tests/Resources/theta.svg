@@ -239,7 +239,6 @@
 <path d="M 273.92 110 A 120 120, 0, 0, 1, 285.91 138.94" class="nwc"/>
 <path d="M 299.9 95 A 150 150, 0, 0, 1, 314.89 131.18" class="bwc"/>
 <path d="M 285.91 138.94 A 120 120, 0, 0, 1, 290 170" class="nwc"/>
-<path d="M 314.89 131.18 A 150 150, 0, 0, 1, 320 170" class="bwc"/>
 <path d="M 212.01 190.32 L 258.53 209.92" class="nwbc"/>
 <path d="M 215.89 181.1 L 262.42 200.7" class="nwbc"/>
 <path d="M 197.81 245.74 L 226.8 254.23" class="nwbc"/>
@@ -270,4 +269,4 @@
 <animate id="aipeip18" xlink:href="#eip18" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip16.end"/>
 <path id="eip20" d="M 285.91 138.94 L 314.89 131.18 A 150 150, 0, 0, 1, 320 170 L 290 170 A 120 120, 0, 0, 0, 285.91 138.94" class="pac"/>
 <animate id="aipeip20" xlink:href="#eip20" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip18.end"/>
-</svg>
+<text x="175" y="170" style="font: bold 10px sans-serif;">start</text><text x="292.44" y="150.59" style="font: bold 10px sans-serif;">exit</text></svg>

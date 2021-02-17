@@ -89,6 +89,22 @@ type OctaSquareCoordinateHandler private () =
                             | Some neighborCoordinate -> neighborCoordinate = otherCoordinate
                             | None -> false)
 
+        member this.WeaveCoordinates coordinates =
+            let filtered =
+                coordinates
+                |> Seq.filter(fun c -> (c.RIndex % 2 = 0 && c.CIndex % 2 = 1))
+
+            let vertical =
+                filtered
+                |> Seq.map(fun c -> (c, { RIndex = c.RIndex + 2; CIndex = c.CIndex }))
+            
+            let horizontal =
+                filtered
+                |> Seq.map(fun c -> (c, { RIndex = c.RIndex; CIndex = c.CIndex + 2 }))
+
+            vertical
+            |> Seq.append horizontal
+
     member this.ToInterface =
         this :> ICoordinateHandler<OctaSquarePosition>
 

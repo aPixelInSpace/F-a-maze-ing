@@ -160,7 +160,6 @@
 <animate id="aipeip40" xlink:href="#eip40" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip38.end"/>
 <path id="eip42" d="M 308 170 L 356 170 L 356 140 L 308 140 " class="pac"/>
 <animate id="aipeip42" xlink:href="#eip42" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip40.end"/>
-<path d="M 20 50 L 20 20" class="bwc"/>
 <path d="M 20 20 L 44 20" class="bwc"/>
 <path d="M 44 20 L 68 20" class="bwc"/>
 <path d="M 20 50 L 44 50" class="bwc"/>
@@ -303,7 +302,6 @@
 <path d="M 260 170 L 284 170" class="bwc"/>
 <path d="M 284 170 L 308 170" class="bwc"/>
 <path d="M 308 170 L 308 140" class="nwc"/>
-<path d="M 356 140 L 356 170" class="bwc"/>
 <path d="M 308 170 L 332 170" class="bwc"/>
 <path d="M 332 170 L 356 170" class="bwc"/>
 <path d="M 280 44 L 280 86" class="nwbc"/>
@@ -314,4 +312,4 @@
 <path d="M 166.5 134.53 L 172.75 129.53 L 185.5 145.47 L 179.25 150.47 " class="cc" fill-opacity="1"/>
 <path d="M 280 44 L 288 44 L 288 86 L 280 86 " class="cdc" fill-opacity="0.65"/>
 <path d="M 166.5 134.53 L 172.75 129.53 L 185.5 145.47 L 179.25 150.47 " class="cdc" fill-opacity="0.13"/>
-</svg>
+<text x="34" y="35" style="font: bold 10px sans-serif;">start</text><text x="322" y="155" style="font: bold 10px sans-serif;">exit</text></svg>

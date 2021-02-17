@@ -80,6 +80,11 @@ type TriCoordinateHandler private () =
                             | Some neighborCoordinate -> neighborCoordinate = otherCoordinate
                             | None -> false)
 
+        member this.WeaveCoordinates coordinates =
+            coordinates
+            |> Seq.filter(fun c -> c.CIndex % 2 = 0)
+            |> Seq.map(fun c -> (c, { RIndex = c.RIndex; CIndex = c.CIndex + 2 }))
+
     member this.ToInterface =
         this :> ICoordinateHandler<TriPosition>
 

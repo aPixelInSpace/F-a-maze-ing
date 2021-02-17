@@ -95,7 +95,10 @@ type GridArray2D<'Position when 'Position : equality> =
                         this.Cells.[neighbor.RIndex, neighbor.CIndex] <- neighborCell.Create (getNewConnections neighborCell (this.PositionHandler.Opposite coordinate position))
                     | None -> ()
 
-        member this.UpdateConnectionForOpening coordinate =
+        member this.WeaveCoordinates coordinates =
+            this.CoordinateHandler.WeaveCoordinates coordinates
+
+        member this.OpenCell coordinate =
             let candidatePosition =
                 (this.ListOfAdjacentNeighborCoordinate coordinate)
                 |> Seq.tryFind(fun (c, _) -> (not (this.ToInterface.ExistAt c)) || (not (this.ToInterface.IsCellPartOfMaze c)))

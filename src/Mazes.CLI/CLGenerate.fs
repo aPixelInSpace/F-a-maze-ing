@@ -102,12 +102,15 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     let stopWatch = Stopwatch()
 
     stopWatch.Start()
-    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.Type.Brick.Grid.createBaseGrid |> Grid.Grid.create)
+    //let grid = (Shape.Rectangle.create options.Value.rows options.Value.columns |> Grid.Type.PentaCairo.Grid.createBaseGrid |> Grid.Grid.create)
     //let grid = Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside |> Grid.Type.Ortho.Grid.createBaseGrid |> Grid.Grid.create
     //let grid = Shape.Disk.create options.Value.rows 1.0 2 |> Grid.Type.Polar.Grid.createBaseGrid |> Grid.Grid.create
 
-    let grid = (Shape.Rectangle.create 5 7 |> Grid.Type.Brick.Grid.createBaseGrid |> Grid.Grid.create)
-        
+    let grid =
+        Shape.Ellipse.create 6 7 0.0 0.0 0 0 (Some 0.05) Shape.Ellipse.Side.Inside
+        |> Grid.Type.Ortho.Grid.createBaseGrid
+        |> Grid.Grid.create
+
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
 
@@ -134,6 +137,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
         | None -> 0
 
     //
+
+    grid.Weave (Random(rngSeed)) 1.0
 
     stopWatch.Restart()
 
@@ -193,8 +198,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //                grid.ToSpecializedGrid.NonAdjacentNeighbors.UpdateConnection Close coordinate toCoordinate
 //        | None -> ()
 
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 0; CIndex = 5 } { RIndex = 2; CIndex = 5 }
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 3 }
+//    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 0; CIndex = 5 } { RIndex = 2; CIndex = 5 }
+//    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 3 }
 
         //(fun _ -> grid)
 
@@ -217,6 +222,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     //
 
+    maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
+
     stopWatch.Restart()
 
     //
@@ -237,23 +244,23 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 //    let rawTestOutput = Output.RawForTest.outputRawForTest maze (Text.renderGrid maze.Grid.ToSpecializedGrid)
 //    File.WriteAllText(filePath.Replace(".html", ".txt"), rawTestOutput, Encoding.UTF8)
 
-    //let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    let renderedGridSvg = SVG.OrthoGrid.render (maze.Grid.ToSpecializedGrid) (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map)  (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.OrthoGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
         
-    //let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    //let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map)  (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)
     //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
-    //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map)  (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)
 
-    //let renderedGridSvg = SVG.TriGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVG.TriGrid.render (maze.Grid.ToSpecializedGrid) (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map)  (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)
 
-    //let renderedGridSvg = SVG.OctaSquareGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastPartOfMazeZone) map
+    //let renderedGridSvg = SVG.OctaSquareGrid.render (maze.Grid.ToSpecializedGrid) (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map)  (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)
 
-    //let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
+    //let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map)  (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)
     //let renderedGridSvg = SVG.PentaCairoGrid.render (maze.Grid.ToSpecializedGrid) (map.LongestPaths |> Seq.head) map
 
-    let renderedGridSvg = SVG.BrickGrid.render (maze.Grid.ToSpecializedGrid) (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map)  None None
+    //let renderedGridSvg = SVG.BrickGrid.render (maze.Grid.ToSpecializedGrid) (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map)  (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)
 
     File.WriteAllText(filePath.Replace(".html", ".svg"), renderedGridSvg, Encoding.UTF8)
 

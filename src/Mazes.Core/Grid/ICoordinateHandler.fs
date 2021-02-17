@@ -8,3 +8,4 @@ type ICoordinateHandler<'Position> =
 
     abstract member NeighborCoordinateAt : coordinate:Coordinate -> position:'Position -> Coordinate option
     abstract member NeighborPositionAt : coordinate:Coordinate -> otherCoordinate:Coordinate -> 'Position
+    abstract member WeaveCoordinates : Coordinate seq -> (Coordinate * Coordinate) seq

@@ -15,7 +15,7 @@ type IGrid<'Grid> =
     abstract member ExistAt : coordinate:Coordinate -> bool
     abstract member AdjustedExistAt : coordinate:Coordinate -> bool
     abstract member CoordinatesPartOfMaze : Coordinate seq
-    abstract member RandomCoordinatePartOfMazeAndNotConnected : rng : Random -> Coordinate
+    abstract member RandomCoordinatePartOfMazeAndNotConnected : rng:Random -> Coordinate
     /// Returns true if it is not possible to navigate from a coordinate to another coordinate (for example if there is a border between the two cells) 
     abstract member IsLimitAt : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
     /// Returns all the neighbors adjacent and non adjacent
@@ -36,9 +36,10 @@ type IGrid<'Grid> =
     /// Returns the neighbors coordinates that are or not connected WITH the coordinate
     abstract member ConnectedWithNeighbors : isConnected:bool -> coordinate:Coordinate -> Coordinate seq
     abstract member UpdateConnection : ConnectionType -> Coordinate -> Coordinate -> unit
-    abstract member UpdateConnectionForOpening : Coordinate -> unit
+    abstract member OpenCell : Coordinate -> unit
     abstract member AddUpdateConnectionNonAdjacentNeighbor : ConnectionType -> Coordinate -> Coordinate -> unit
     abstract member IfNotAtLimitUpdateConnection : ConnectionType -> Coordinate -> Coordinate -> unit
+    abstract member Weave : rng:Random -> weight:float -> unit
     abstract member CostOfCoordinate : coordinate:Coordinate -> Cost
     /// Returns the first (arbitrary) coordinate that is part of the maze
     abstract member GetFirstCellPartOfMaze : Coordinate

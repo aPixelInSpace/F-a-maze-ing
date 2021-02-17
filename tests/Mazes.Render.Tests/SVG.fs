@@ -20,17 +20,24 @@ let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, t
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 1; CIndex = 6 } { RIndex = 3; CIndex = 6 }
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 }
+    grid.Weave (Random(1)) 1.0
 
     let maze =
         grid
         |> HuntAndKill.createMaze 1
 
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
+    
+    maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
 
     // act
-    let renderedMaze = SVG.OrthoGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
+    let renderedMaze =
+        SVG.OrthoGrid.render
+            maze.Grid.ToSpecializedGrid
+            (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze))
+            (Some map)
+            (Some maze.Grid.GetFirstCellPartOfMaze)
+            (Some maze.Grid.GetLastCellPartOfMaze)
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/ortho.svg", Encoding.UTF8)
@@ -51,15 +58,23 @@ let ``Given a maze with a polar grid, a path and a map, when creating an SVG, th
     let maze =
         grid
         |> HuntAndKill.createMaze 1
+
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
+    maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
+
     // act
-    let renderedMaze = SVG.PolarGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
+    let renderedMaze =
+        SVG.PolarGrid.render
+            maze.Grid.ToSpecializedGrid
+            (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze))
+            (Some map)
+            (Some maze.Grid.GetFirstCellPartOfMaze)
+            (Some maze.Grid.GetLastCellPartOfMaze)
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/theta.svg", Encoding.UTF8)
 
-    let t = String.Compare(expectedRenderedMaze,renderedMaze, StringComparison.InvariantCultureIgnoreCase)
     renderedMaze |> should equal expectedRenderedMaze
 
 [<Fact>]
@@ -70,16 +85,24 @@ let ``Given a maze with a hex grid, a path and a map, when creating an SVG, then
         |> Mazes.Core.Grid.Type.Hex.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 }
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 5; CIndex = 2 } { RIndex = 6; CIndex = 3 }
+    grid.Weave (Random(1)) 1.0
 
     let maze =
         grid
         |> HuntAndKill.createMaze 1
+
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
+    maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
+
     // act
-    let renderedMaze = SVG.HexGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
+    let renderedMaze =
+        SVG.HexGrid.render
+            maze.Grid.ToSpecializedGrid
+            (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze))
+            (Some map)
+            (Some maze.Grid.GetFirstCellPartOfMaze)
+            (Some maze.Grid.GetLastCellPartOfMaze)
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/sigma.svg", Encoding.UTF8)
@@ -94,16 +117,24 @@ let ``Given a maze with a tri grid, a path and a map, when creating an SVG, then
         |> Mazes.Core.Grid.Type.Tri.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 3 }
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 3 }
+    grid.Weave (Random(1)) 1.0
 
     let maze =
         grid
         |> HuntAndKill.createMaze 1
+
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
+    maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
+
     // act
-    let renderedMaze = SVG.TriGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
+    let renderedMaze =
+        SVG.TriGrid.render
+            maze.Grid.ToSpecializedGrid
+            (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze))
+            (Some map)
+            (Some maze.Grid.GetFirstCellPartOfMaze)
+            (Some maze.Grid.GetLastCellPartOfMaze)
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/delta.svg", Encoding.UTF8)
@@ -118,17 +149,25 @@ let ``Given a maze with a octa-square grid, a path and a map, when creating an S
         |> Mazes.Core.Grid.Type.OctaSquare.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 1; CIndex = 2 } { RIndex = 3; CIndex = 2 }
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 3; CIndex = 3 } { RIndex = 4; CIndex = 4 }
+    grid.Weave (Random(1)) 1.0
 
 
     let maze =
         grid
         |> HuntAndKill.createMaze 1
+
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
+    maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
+
     // act
-    let renderedMaze = SVG.OctaSquareGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
+    let renderedMaze =
+        SVG.OctaSquareGrid.render
+            maze.Grid.ToSpecializedGrid
+            (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze))
+            (Some map)
+            (Some maze.Grid.GetFirstCellPartOfMaze)
+            (Some maze.Grid.GetLastCellPartOfMaze)
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/upsilon.svg", Encoding.UTF8)
@@ -143,8 +182,7 @@ let ``Given a maze with a Cairo pentagonal grid, a path and a map, when creating
         |> Mazes.Core.Grid.Type.PentaCairo.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 1; CIndex = 3 } { RIndex = 3; CIndex = 3 }
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 5; CIndex = 3 } { RIndex = 6; CIndex = 4 }
+    grid.Weave (Random(1)) 1.0
 
     let maze =
         grid
@@ -152,8 +190,16 @@ let ``Given a maze with a Cairo pentagonal grid, a path and a map, when creating
 
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
+    maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
+
     // act
-    let renderedMaze = SVG.PentaCairoGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
+    let renderedMaze =
+        SVG.PentaCairoGrid.render
+            maze.Grid.ToSpecializedGrid
+            (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze))
+            (Some map)
+            (Some maze.Grid.GetFirstCellPartOfMaze)
+            (Some maze.Grid.GetLastCellPartOfMaze)
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/pentacairo.svg", Encoding.UTF8)
@@ -175,10 +221,19 @@ let ``Given a maze with a brick grid, a path and a map, when creating an SVG, th
     let maze =
         grid
         |> HuntAndKill.createMaze 1
+
     let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
 
+    maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
+
     // act
-    let renderedMaze = SVG.BrickGrid.render  maze.Grid.ToSpecializedGrid (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map) None None
+    let renderedMaze =
+        SVG.BrickGrid.render
+            maze.Grid.ToSpecializedGrid
+            (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze))
+            (Some map)
+            (Some maze.Grid.GetFirstCellPartOfMaze)
+            (Some maze.Grid.GetLastCellPartOfMaze)
         
     // assert
     let expectedRenderedMaze = IO.File.ReadAllText("Resources/brick.svg", Encoding.UTF8)

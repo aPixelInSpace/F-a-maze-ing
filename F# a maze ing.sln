@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mazes.Core", "src\Mazes.Core\Mazes.Core.fsproj", "{E5B5F827-2B60-4995-9667-2364C4D670BA}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mazes", "src\Mazes\Mazes.fsproj", "{8CE1987E-78C1-42C2-B826-71020CF376A6}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mazes.CLI", "src\Mazes.CLI\Mazes.CLI.fsproj", "{8CE1987E-78C1-42C2-B826-71020CF376A6}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Mazes.Render", "src\Mazes.Render\Mazes.Render.fsproj", "{E7CB0A4F-5835-4E99-AC35-2E909EA1F1A6}"
 EndProject

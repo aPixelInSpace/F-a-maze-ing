@@ -76,6 +76,9 @@ type BrickCoordinateHandler private () =
                             | Some neighborCoordinate -> neighborCoordinate = otherCoordinate
                             | None -> false)
 
+        member this.WeaveCoordinates coordinates =
+            Seq.empty
+
     member this.ToInterface =
         this :> ICoordinateHandler<BrickPosition>
 

@@ -173,7 +173,10 @@ type GridArrayOfA =
                 let otherCell = (this.ToInterface.Cell otherCoordinate)
                 this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell (this.PositionHandler.Opposite otherCoordinate neighborPosition))
 
-        member this.UpdateConnectionForOpening coordinate =
+        member this.WeaveCoordinates coordinates =
+            Seq.empty
+
+        member this.OpenCell coordinate =
             let candidate =
                 (this.ListOfAdjacentNeighborCoordinate coordinate)
                 |> Seq.tryFind(fun (c, _) -> (not (this.ToInterface.ExistAt c)) || (not (this.ToInterface.IsCellPartOfMaze c)))

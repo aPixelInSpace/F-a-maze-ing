@@ -134,6 +134,11 @@ type PentaCairoCoordinateHandler private () =
                             | Some neighborCoordinate -> neighborCoordinate = otherCoordinate
                             | None -> false)
 
+        member this.WeaveCoordinates coordinates =
+            coordinates
+            |> Seq.filter(fun c -> (c.RIndex % 2 = 0 && c.CIndex % 2 = 1) || (c.RIndex % 2 = 1 && c.CIndex % 2 = 0))
+            |> Seq.map(fun c -> (c, { RIndex = c.RIndex + 1; CIndex = c.CIndex + 1 }))
+
     member this.ToInterface =
         this :> ICoordinateHandler<PentaCairoPosition>
 

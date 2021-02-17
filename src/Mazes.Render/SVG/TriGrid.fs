@@ -71,7 +71,7 @@ let render (grid : Grid<GridArray2D<TriPosition>, TriPosition>) path map entranc
     let triHeight = (triWidth * Math.Sqrt(3.0)) / 2.0
 
     let bridgeHalfWidth = 4.0
-    let bridgeDistanceFromCenter = 2.0
+    let bridgeDistanceFromCenter = 3.0
 
     let spGrid = grid.BaseGrid.ToSpecializedStructure
 

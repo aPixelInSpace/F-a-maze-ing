@@ -126,8 +126,8 @@ type Grid<'Grid, 'Position> =
             else
                 this.BaseGrid.UpdateConnection connectionType coordinate otherCoordinate
 
-        member this.UpdateConnectionForOpening coordinate =
-            this.BaseGrid.UpdateConnectionForOpening coordinate
+        member this.OpenCell coordinate =
+            this.BaseGrid.OpenCell coordinate
 
         member this.AddUpdateConnectionNonAdjacentNeighbor connectionType coordinate otherCoordinate =
             this.NonAdjacentNeighbors.UpdateConnection connectionType coordinate otherCoordinate
@@ -135,6 +135,18 @@ type Grid<'Grid, 'Position> =
         member this.IfNotAtLimitUpdateConnection connectionType coordinate otherCoordinate =
             if (this.NonAdjacentNeighbors.ExistNeighbor coordinate otherCoordinate) || not (this.BaseGrid.IsLimitAt coordinate otherCoordinate) then
                 this.ToInterface.UpdateConnection connectionType coordinate otherCoordinate
+
+        member this.Weave rng weight =
+            let weaveCoordinates = this.BaseGrid.WeaveCoordinates this.ToInterface.CoordinatesPartOfMaze 
+            for (fromCoordinate, toCoordinate) in weaveCoordinates do
+                if (toCoordinate.RIndex >= fst (this.ToInterface.Dimension1Boundaries toCoordinate.CIndex)) &&
+                   (toCoordinate.RIndex < snd (this.ToInterface.Dimension1Boundaries toCoordinate.CIndex)) &&
+                   (toCoordinate.CIndex >= fst (this.ToInterface.Dimension2Boundaries toCoordinate.RIndex)) &&
+                   (toCoordinate.CIndex < snd (this.ToInterface.Dimension2Boundaries toCoordinate.RIndex)) &&
+                   this.ToInterface.IsCellPartOfMaze toCoordinate &&
+                   rng.NextDouble() < weight
+                   then
+                    this.ToInterface.AddUpdateConnectionNonAdjacentNeighbor Close fromCoordinate toCoordinate
 
         member this.CostOfCoordinate coordinate =
             1 + (this.Obstacles.Cost coordinate)

@@ -12,8 +12,8 @@ open Mazes.Render.SVG.Base
 
 let private cellWidth = 30
 let private cellHeight = 30
-let private bridgeHalfWidth = 7.0
-let private bridgeDistanceFromCenter = 9.0
+let private bridgeHalfWidth = 5.0
+let private bridgeDistanceFromCenter = 12.0
 let private marginWidth = 20
 let private marginHeight = 20
 

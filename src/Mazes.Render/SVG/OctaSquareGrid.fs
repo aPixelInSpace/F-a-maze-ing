@@ -153,8 +153,8 @@ let render (grid : Grid<GridArray2D<OctaSquarePosition>, OctaSquarePosition>) pa
     let octaSquareSideSize = 30.0 // also hypotenuse of the triangle
     let otherSideSize = Math.Sqrt((octaSquareSideSize ** 2.0) / 2.0) // by good old Pythagoras's theorem
 
-    let bridgeHalfWidth = 7.0
-    let bridgeDistanceFromCenter = 5.0
+    let bridgeHalfWidth = 6.0
+    let bridgeDistanceFromCenter = 12.0
 
     let calculateLength numberOf =
         marginWidth + numberOf * (otherSideSize + octaSquareSideSize) + otherSideSize

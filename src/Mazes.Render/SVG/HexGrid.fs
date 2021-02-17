@@ -85,8 +85,8 @@ let render (grid : Grid<GridArray2D<HexPosition>, HexPosition>) path map entranc
     let hexHalfHeight = (hexEdgeSize * Math.Sqrt(3.0)) / 2.0
     let hexHeight = hexHalfHeight * 2.0
 
-    let bridgeHalfWidth = 9.0
-    let bridgeDistanceFromCenter = 13.0
+    let bridgeHalfWidth = 6.0
+    let bridgeDistanceFromCenter = 20.0
 
     let spGrid = grid.BaseGrid.ToSpecializedStructure
     let width = (3.0 * hexHalfEdgeSize * (float)spGrid.NumberOfColumns) + hexHalfEdgeSize + (float)(marginWidth * 2)
