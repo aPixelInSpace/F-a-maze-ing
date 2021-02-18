@@ -48,12 +48,11 @@ let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, t
 let ``Given a maze with a polar grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
     let grid =
-        Shape.Disk.create 5 1.0 2
+        Shape.Disk.create 9 1.0 2
         |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 1; CIndex = 0 } { RIndex = 3; CIndex = 1 }
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 2; CIndex = 2 } { RIndex = 3; CIndex = 3 }
+    grid.Weave (Random(1)) 1.0
 
     let maze =
         grid
@@ -214,9 +213,7 @@ let ``Given a maze with a brick grid, a path and a map, when creating an SVG, th
         |> Mazes.Core.Grid.Type.Brick.Grid.createBaseGrid
         |> Mazes.Core.Grid.Grid.create
 
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 0; CIndex = 5 } { RIndex = 2; CIndex = 5 }
-    grid.AddUpdateConnectionNonAdjacentNeighbor Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 3 }
-
+    grid.Weave (Random(1)) 1.0
 
     let maze =
         grid

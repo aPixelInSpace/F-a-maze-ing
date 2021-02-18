@@ -81,101 +81,55 @@
                 </style>
             </defs><rect width="100%" height="100%" fill="transparent"/><path d="M 20 50 L 68 50 L 68 20 L 20 20 " class="cdc" fill-opacity="0"/>
 <path d="M 68 50 L 116 50 L 116 20 L 68 20 " class="cdc" fill-opacity="0"/>
-<path d="M 44 80 L 92 80 L 92 50 L 44 50 " class="cdc" fill-opacity="0"/>
-<path d="M 20 110 L 68 110 L 68 80 L 20 80 " class="cdc" fill-opacity="0.04"/>
-<path d="M 68 110 L 116 110 L 116 80 L 68 80 " class="cdc" fill-opacity="0.04"/>
-<path d="M 44 140 L 92 140 L 92 110 L 44 110 " class="cdc" fill-opacity="0.09"/>
-<path d="M 92 140 L 140 140 L 140 110 L 92 110 " class="cdc" fill-opacity="0.09"/>
-<path d="M 20 170 L 68 170 L 68 140 L 20 140 " class="cdc" fill-opacity="0.13"/>
-<path d="M 68 170 L 116 170 L 116 140 L 68 140 " class="cdc" fill-opacity="0.13"/>
-<path d="M 140 140 L 188 140 L 188 110 L 140 110 " class="cdc" fill-opacity="0.13"/>
-<path d="M 116 170 L 164 170 L 164 140 L 116 140 " class="cdc" fill-opacity="0.17"/>
-<path d="M 164 170 L 212 170 L 212 140 L 164 140 " class="cdc" fill-opacity="0.17"/>
-<path d="M 188 140 L 236 140 L 236 110 L 188 110 " class="cdc" fill-opacity="0.22"/>
-<path d="M 236 140 L 284 140 L 284 110 L 236 110 " class="cdc" fill-opacity="0.26"/>
-<path d="M 212 110 L 260 110 L 260 80 L 212 80 " class="cdc" fill-opacity="0.3"/>
-<path d="M 164 110 L 212 110 L 212 80 L 164 80 " class="cdc" fill-opacity="0.35"/>
-<path d="M 116 110 L 164 110 L 164 80 L 116 80 " class="cdc" fill-opacity="0.39"/>
-<path d="M 140 80 L 188 80 L 188 50 L 140 50 " class="cdc" fill-opacity="0.43"/>
-<path d="M 116 50 L 164 50 L 164 20 L 116 20 " class="cdc" fill-opacity="0.48"/>
-<path d="M 164 50 L 212 50 L 212 20 L 164 20 " class="cdc" fill-opacity="0.48"/>
-<path d="M 92 80 L 140 80 L 140 50 L 92 50 " class="cdc" fill-opacity="0.52"/>
-<path d="M 188 80 L 236 80 L 236 50 L 188 50 " class="cdc" fill-opacity="0.52"/>
-<path d="M 236 80 L 284 80 L 284 50 L 236 50 " class="cdc" fill-opacity="0.57"/>
-<path d="M 260 110 L 308 110 L 308 80 L 260 80 " class="cdc" fill-opacity="0.61"/>
-<path d="M 260 50 L 308 50 L 308 20 L 260 20 " class="cdc" fill-opacity="0.65"/>
-<path d="M 284 80 L 332 80 L 332 50 L 284 50 " class="cdc" fill-opacity="0.65"/>
-<path d="M 212 50 L 260 50 L 260 20 L 212 20 " class="cdc" fill-opacity="0.7"/>
-<path d="M 308 50 L 356 50 L 356 20 L 308 20 " class="cdc" fill-opacity="0.7"/>
-<path d="M 332 80 L 380 80 L 380 50 L 332 50 " class="cdc" fill-opacity="0.74"/>
-<path d="M 308 110 L 356 110 L 356 80 L 308 80 " class="cdc" fill-opacity="0.78"/>
-<path d="M 332 140 L 380 140 L 380 110 L 332 110 " class="cdc" fill-opacity="0.83"/>
-<path d="M 308 170 L 356 170 L 356 140 L 308 140 " class="cdc" fill-opacity="0.87"/>
-<path d="M 284 140 L 332 140 L 332 110 L 284 110 " class="cdc" fill-opacity="0.91"/>
-<path d="M 260 170 L 308 170 L 308 140 L 260 140 " class="cdc" fill-opacity="0.96"/>
-<path d="M 212 170 L 260 170 L 260 140 L 212 140 " class="cdc" fill-opacity="1"/>
-<path id="eip0" d="M 20 50 L 68 50 L 68 20 L 20 20 " class="pac"/>
-<animate id="aipeip0" xlink:href="#eip0" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" />
-<path id="eip2" d="M 44 80 L 92 80 L 92 50 L 44 50 " class="pac"/>
-<animate id="aipeip2" xlink:href="#eip2" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip0.end"/>
-<path id="eip4" d="M 68 110 L 116 110 L 116 80 L 68 80 " class="pac"/>
-<animate id="aipeip4" xlink:href="#eip4" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip2.end"/>
-<path id="eip6" d="M 92 140 L 140 140 L 140 110 L 92 110 " class="pac"/>
-<animate id="aipeip6" xlink:href="#eip6" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip4.end"/>
-<path id="eip8" d="M 140 140 L 188 140 L 188 110 L 140 110 " class="pac"/>
-<animate id="aipeip8" xlink:href="#eip8" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip6.end"/>
-<path id="eip10" d="M 164 170 L 212 170 L 212 140 L 164 140 " class="pac"/>
-<animate id="aipeip10" xlink:href="#eip10" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip8.end"/>
-<path id="eip9" d="M 166.5 134.53 L 172.75 129.53 L 185.5 145.47 L 179.25 150.47 " class="pac"/>
-<animate id="aipeip9" xlink:href="#eip9" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip8.end"/>
-<path id="eip12" d="M 188 140 L 236 140 L 236 110 L 188 110 " class="pac"/>
-<animate id="aipeip12" xlink:href="#eip12" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip10.end"/>
-<path id="eip14" d="M 236 140 L 284 140 L 284 110 L 236 110 " class="pac"/>
-<animate id="aipeip14" xlink:href="#eip14" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip12.end"/>
-<path id="eip16" d="M 212 110 L 260 110 L 260 80 L 212 80 " class="pac"/>
-<animate id="aipeip16" xlink:href="#eip16" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip14.end"/>
-<path id="eip18" d="M 164 110 L 212 110 L 212 80 L 164 80 " class="pac"/>
-<animate id="aipeip18" xlink:href="#eip18" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip16.end"/>
-<path id="eip20" d="M 116 110 L 164 110 L 164 80 L 116 80 " class="pac"/>
-<animate id="aipeip20" xlink:href="#eip20" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip18.end"/>
-<path id="eip22" d="M 140 80 L 188 80 L 188 50 L 140 50 " class="pac"/>
-<animate id="aipeip22" xlink:href="#eip22" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip20.end"/>
-<path id="eip24" d="M 164 50 L 212 50 L 212 20 L 164 20 " class="pac"/>
-<animate id="aipeip24" xlink:href="#eip24" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip22.end"/>
-<path id="eip26" d="M 188 80 L 236 80 L 236 50 L 188 50 " class="pac"/>
-<animate id="aipeip26" xlink:href="#eip26" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip24.end"/>
-<path id="eip28" d="M 236 80 L 284 80 L 284 50 L 236 50 " class="pac"/>
-<animate id="aipeip28" xlink:href="#eip28" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip26.end"/>
-<path id="eip30" d="M 260 110 L 308 110 L 308 80 L 260 80 " class="pac"/>
-<animate id="aipeip30" xlink:href="#eip30" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip28.end"/>
-<path id="eip32" d="M 284 80 L 332 80 L 332 50 L 284 50 " class="pac"/>
-<animate id="aipeip32" xlink:href="#eip32" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip30.end"/>
-<path id="eip34" d="M 308 50 L 356 50 L 356 20 L 308 20 " class="pac"/>
-<animate id="aipeip34" xlink:href="#eip34" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip32.end"/>
-<path id="eip36" d="M 332 80 L 380 80 L 380 50 L 332 50 " class="pac"/>
-<animate id="aipeip36" xlink:href="#eip36" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip34.end"/>
-<path id="eip38" d="M 308 110 L 356 110 L 356 80 L 308 80 " class="pac"/>
-<animate id="aipeip38" xlink:href="#eip38" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip36.end"/>
-<path id="eip40" d="M 332 140 L 380 140 L 380 110 L 332 110 " class="pac"/>
-<animate id="aipeip40" xlink:href="#eip40" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip38.end"/>
-<path id="eip42" d="M 308 170 L 356 170 L 356 140 L 308 140 " class="pac"/>
-<animate id="aipeip42" xlink:href="#eip42" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip40.end"/>
+<path d="M 44 80 L 92 80 L 92 50 L 44 50 " class="cdc" fill-opacity="0.05"/>
+<path d="M 68 110 L 116 110 L 116 80 L 68 80 " class="cdc" fill-opacity="0.1"/>
+<path d="M 20 110 L 68 110 L 68 80 L 20 80 " class="cdc" fill-opacity="0.15"/>
+<path d="M 116 110 L 164 110 L 164 80 L 116 80 " class="cdc" fill-opacity="0.2"/>
+<path d="M 92 140 L 140 140 L 140 110 L 92 110 " class="cdc" fill-opacity="0.25"/>
+<path d="M 68 170 L 116 170 L 116 140 L 68 140 " class="cdc" fill-opacity="0.3"/>
+<path d="M 44 140 L 92 140 L 92 110 L 44 110 " class="cdc" fill-opacity="0.35"/>
+<path d="M 20 170 L 68 170 L 68 140 L 20 140 " class="cdc" fill-opacity="0.4"/>
+<path d="M 116 170 L 164 170 L 164 140 L 116 140 " class="cdc" fill-opacity="0.45"/>
+<path d="M 212 170 L 260 170 L 260 140 L 212 140 " class="cdc" fill-opacity="0.5"/>
+<path d="M 164 170 L 212 170 L 212 140 L 164 140 " class="cdc" fill-opacity="0.5"/>
+<path d="M 260 170 L 308 170 L 308 140 L 260 140 " class="cdc" fill-opacity="0.55"/>
+<path d="M 188 140 L 236 140 L 236 110 L 188 110 " class="cdc" fill-opacity="0.55"/>
+<path d="M 140 140 L 188 140 L 188 110 L 140 110 " class="cdc" fill-opacity="0.6"/>
+<path d="M 212 110 L 260 110 L 260 80 L 212 80 " class="cdc" fill-opacity="0.6"/>
+<path d="M 236 140 L 284 140 L 284 110 L 236 110 " class="cdc" fill-opacity="0.65"/>
+<path d="M 164 110 L 212 110 L 212 80 L 164 80 " class="cdc" fill-opacity="0.65"/>
+<path d="M 260 110 L 308 110 L 308 80 L 260 80 " class="cdc" fill-opacity="0.65"/>
+<path d="M 284 140 L 332 140 L 332 110 L 284 110 " class="cdc" fill-opacity="0.7"/>
+<path d="M 236 80 L 284 80 L 284 50 L 236 50 " class="cdc" fill-opacity="0.7"/>
+<path d="M 308 170 L 356 170 L 356 140 L 308 140 " class="cdc" fill-opacity="0.75"/>
+<path d="M 188 80 L 236 80 L 236 50 L 188 50 " class="cdc" fill-opacity="0.75"/>
+<path d="M 332 140 L 380 140 L 380 110 L 332 110 " class="cdc" fill-opacity="0.8"/>
+<path d="M 140 80 L 188 80 L 188 50 L 140 50 " class="cdc" fill-opacity="0.8"/>
+<path d="M 308 110 L 356 110 L 356 80 L 308 80 " class="cdc" fill-opacity="0.85"/>
+<path d="M 164 50 L 212 50 L 212 20 L 164 20 " class="cdc" fill-opacity="0.85"/>
+<path d="M 284 80 L 332 80 L 332 50 L 284 50 " class="cdc" fill-opacity="0.9"/>
+<path d="M 116 50 L 164 50 L 164 20 L 116 20 " class="cdc" fill-opacity="0.9"/>
+<path d="M 260 50 L 308 50 L 308 20 L 260 20 " class="cdc" fill-opacity="0.95"/>
+<path d="M 308 50 L 356 50 L 356 20 L 308 20 " class="cdc" fill-opacity="0.95"/>
+<path d="M 92 80 L 140 80 L 140 50 L 92 50 " class="cdc" fill-opacity="0.95"/>
+<path d="M 212 50 L 260 50 L 260 20 L 212 20 " class="cdc" fill-opacity="1"/>
+<path d="M 332 80 L 380 80 L 380 50 L 332 50 " class="cdc" fill-opacity="1"/>
 <path d="M 20 20 L 44 20" class="bwc"/>
 <path d="M 44 20 L 68 20" class="bwc"/>
 <path d="M 20 50 L 44 50" class="bwc"/>
+<path d="M 44 50 L 68 50" class="nwc"/>
 <path d="M 68 20 L 92 20" class="bwc"/>
 <path d="M 92 20 L 116 20" class="bwc"/>
 <path d="M 116 20 L 116 50" class="nwc"/>
-<path d="M 68 50 L 92 50" class="nwc"/>
 <path d="M 92 50 L 116 50" class="nwc"/>
 <path d="M 116 50 L 116 20" class="nwc"/>
 <path d="M 116 20 L 140 20" class="bwc"/>
 <path d="M 140 20 L 164 20" class="bwc"/>
-<path d="M 164 20 L 164 50" class="nwc"/>
-<path d="M 164 50 L 164 20" class="nwc"/>
+<path d="M 140 50 L 164 50" class="nwc"/>
 <path d="M 164 20 L 188 20" class="bwc"/>
 <path d="M 188 20 L 212 20" class="bwc"/>
 <path d="M 212 20 L 212 50" class="nwc"/>
+<path d="M 188 50 L 212 50" class="nwc"/>
 <path d="M 212 50 L 212 20" class="nwc"/>
 <path d="M 212 20 L 236 20" class="bwc"/>
 <path d="M 236 20 L 260 20" class="bwc"/>
@@ -185,23 +139,24 @@
 <path d="M 284 20 L 308 20" class="bwc"/>
 <path d="M 308 20 L 308 50" class="nwc"/>
 <path d="M 260 50 L 284 50" class="nwc"/>
-<path d="M 284 50 L 308 50" class="nwc"/>
 <path d="M 308 50 L 308 20" class="nwc"/>
 <path d="M 308 20 L 332 20" class="bwc"/>
 <path d="M 332 20 L 356 20" class="bwc"/>
 <path d="M 356 20 L 356 50" class="bwc"/>
 <path d="M 44 80 L 44 50" class="bwc"/>
-<path d="M 68 50 L 92 50" class="nwc"/>
+<path d="M 44 50 L 68 50" class="nwc"/>
 <path d="M 92 50 L 92 80" class="nwc"/>
+<path d="M 44 80 L 68 80" class="nwc"/>
 <path d="M 92 80 L 92 50" class="nwc"/>
 <path d="M 92 50 L 116 50" class="nwc"/>
 <path d="M 140 50 L 140 80" class="nwc"/>
 <path d="M 92 80 L 116 80" class="nwc"/>
 <path d="M 116 80 L 140 80" class="nwc"/>
 <path d="M 140 80 L 140 50" class="nwc"/>
-<path d="M 188 50 L 188 80" class="nwc"/>
+<path d="M 140 50 L 164 50" class="nwc"/>
+<path d="M 140 80 L 164 80" class="nwc"/>
 <path d="M 164 80 L 188 80" class="nwc"/>
-<path d="M 188 80 L 188 50" class="nwc"/>
+<path d="M 188 50 L 212 50" class="nwc"/>
 <path d="M 212 50 L 236 50" class="nwc"/>
 <path d="M 188 80 L 212 80" class="nwc"/>
 <path d="M 212 80 L 236 80" class="nwc"/>
@@ -210,65 +165,68 @@
 <path d="M 284 50 L 284 80" class="nwc"/>
 <path d="M 236 80 L 260 80" class="nwc"/>
 <path d="M 284 80 L 284 50" class="nwc"/>
-<path d="M 284 50 L 308 50" class="nwc"/>
 <path d="M 332 50 L 332 80" class="nwc"/>
-<path d="M 308 80 L 332 80" class="nwc"/>
+<path d="M 284 80 L 308 80" class="nwc"/>
 <path d="M 332 80 L 332 50" class="nwc"/>
 <path d="M 356 50 L 380 50" class="bwc"/>
 <path d="M 380 50 L 380 80" class="bwc"/>
+<path d="M 332 80 L 356 80" class="nwc"/>
 <path d="M 356 80 L 380 80" class="bwc"/>
 <path d="M 20 110 L 20 80" class="bwc"/>
 <path d="M 20 80 L 44 80" class="bwc"/>
-<path d="M 68 80 L 68 110" class="nwc"/>
+<path d="M 44 80 L 68 80" class="nwc"/>
 <path d="M 20 110 L 44 110" class="bwc"/>
 <path d="M 44 110 L 68 110" class="nwc"/>
-<path d="M 68 110 L 68 80" class="nwc"/>
 <path d="M 92 80 L 116 80" class="nwc"/>
 <path d="M 116 80 L 116 110" class="nwc"/>
+<path d="M 68 110 L 92 110" class="nwc"/>
+<path d="M 92 110 L 116 110" class="nwc"/>
 <path d="M 116 110 L 116 80" class="nwc"/>
 <path d="M 116 80 L 140 80" class="nwc"/>
-<path d="M 116 110 L 140 110" class="nwc"/>
+<path d="M 140 80 L 164 80" class="nwc"/>
+<path d="M 164 80 L 164 110" class="nwc"/>
 <path d="M 140 110 L 164 110" class="nwc"/>
+<path d="M 164 110 L 164 80" class="nwc"/>
 <path d="M 164 80 L 188 80" class="nwc"/>
 <path d="M 188 80 L 212 80" class="nwc"/>
 <path d="M 164 110 L 188 110" class="nwc"/>
 <path d="M 188 110 L 212 110" class="nwc"/>
 <path d="M 212 80 L 236 80" class="nwc"/>
 <path d="M 236 80 L 260 80" class="nwc"/>
-<path d="M 260 80 L 260 110" class="nwc"/>
-<path d="M 212 110 L 236 110" class="nwc"/>
-<path d="M 260 110 L 260 80" class="nwc"/>
+<path d="M 236 110 L 260 110" class="nwc"/>
+<path d="M 284 80 L 308 80" class="nwc"/>
 <path d="M 308 80 L 308 110" class="nwc"/>
 <path d="M 260 110 L 284 110" class="nwc"/>
 <path d="M 284 110 L 308 110" class="nwc"/>
 <path d="M 308 110 L 308 80" class="nwc"/>
-<path d="M 308 80 L 332 80" class="nwc"/>
+<path d="M 332 80 L 356 80" class="nwc"/>
 <path d="M 356 80 L 356 110" class="bwc"/>
 <path d="M 308 110 L 332 110" class="nwc"/>
 <path d="M 44 140 L 44 110" class="bwc"/>
 <path d="M 44 110 L 68 110" class="nwc"/>
+<path d="M 68 110 L 92 110" class="nwc"/>
 <path d="M 92 110 L 92 140" class="nwc"/>
 <path d="M 92 140 L 92 110" class="nwc"/>
-<path d="M 116 110 L 140 110" class="nwc"/>
-<path d="M 92 140 L 116 140" class="nwc"/>
+<path d="M 92 110 L 116 110" class="nwc"/>
+<path d="M 140 110 L 140 140" class="nwc"/>
 <path d="M 116 140 L 140 140" class="nwc"/>
+<path d="M 140 140 L 140 110" class="nwc"/>
 <path d="M 140 110 L 164 110" class="nwc"/>
 <path d="M 164 110 L 188 110" class="nwc"/>
-<path d="M 188 110 L 188 140" class="nwc"/>
 <path d="M 140 140 L 164 140" class="nwc"/>
 <path d="M 164 140 L 188 140" class="nwc"/>
-<path d="M 188 140 L 188 110" class="nwc"/>
 <path d="M 188 110 L 212 110" class="nwc"/>
-<path d="M 212 110 L 236 110" class="nwc"/>
+<path d="M 236 110 L 236 140" class="nwc"/>
 <path d="M 212 140 L 236 140" class="nwc"/>
+<path d="M 236 140 L 236 110" class="nwc"/>
+<path d="M 236 110 L 260 110" class="nwc"/>
 <path d="M 260 110 L 284 110" class="nwc"/>
-<path d="M 284 110 L 284 140" class="nwc"/>
 <path d="M 236 140 L 260 140" class="nwc"/>
 <path d="M 260 140 L 284 140" class="nwc"/>
-<path d="M 284 140 L 284 110" class="nwc"/>
 <path d="M 284 110 L 308 110" class="nwc"/>
 <path d="M 308 110 L 332 110" class="nwc"/>
 <path d="M 332 110 L 332 140" class="nwc"/>
+<path d="M 284 140 L 308 140" class="nwc"/>
 <path d="M 332 140 L 332 110" class="nwc"/>
 <path d="M 356 110 L 380 110" class="bwc"/>
 <path d="M 380 110 L 380 140" class="bwc"/>
@@ -279,15 +237,14 @@
 <path d="M 20 170 L 44 170" class="bwc"/>
 <path d="M 44 170 L 68 170" class="bwc"/>
 <path d="M 68 170 L 68 140" class="nwc"/>
-<path d="M 92 140 L 116 140" class="nwc"/>
+<path d="M 116 140 L 116 170" class="nwc"/>
 <path d="M 68 170 L 92 170" class="bwc"/>
 <path d="M 92 170 L 116 170" class="bwc"/>
+<path d="M 116 170 L 116 140" class="nwc"/>
 <path d="M 116 140 L 140 140" class="nwc"/>
 <path d="M 140 140 L 164 140" class="nwc"/>
-<path d="M 164 140 L 164 170" class="nwc"/>
 <path d="M 116 170 L 140 170" class="bwc"/>
 <path d="M 140 170 L 164 170" class="bwc"/>
-<path d="M 164 170 L 164 140" class="nwc"/>
 <path d="M 164 140 L 188 140" class="nwc"/>
 <path d="M 212 140 L 212 170" class="nwc"/>
 <path d="M 164 170 L 188 170" class="bwc"/>
@@ -298,18 +255,67 @@
 <path d="M 212 170 L 236 170" class="bwc"/>
 <path d="M 236 170 L 260 170" class="bwc"/>
 <path d="M 260 140 L 284 140" class="nwc"/>
+<path d="M 284 140 L 308 140" class="nwc"/>
 <path d="M 308 140 L 308 170" class="nwc"/>
 <path d="M 260 170 L 284 170" class="bwc"/>
 <path d="M 284 170 L 308 170" class="bwc"/>
 <path d="M 308 170 L 308 140" class="nwc"/>
 <path d="M 308 170 L 332 170" class="bwc"/>
 <path d="M 332 170 L 356 170" class="bwc"/>
-<path d="M 280 44 L 280 86" class="nwbc"/>
-<path d="M 288 44 L 288 86" class="nwbc"/>
-<path d="M 166.5 134.53 L 179.25 150.47" class="nwbc"/>
-<path d="M 172.75 129.53 L 185.5 145.47" class="nwbc"/>
-<path d="M 280 44 L 288 44 L 288 86 L 280 86 " class="cc" fill-opacity="1"/>
-<path d="M 166.5 134.53 L 172.75 129.53 L 185.5 145.47 L 179.25 150.47 " class="cc" fill-opacity="1"/>
-<path d="M 280 44 L 288 44 L 288 86 L 280 86 " class="cdc" fill-opacity="0.65"/>
-<path d="M 166.5 134.53 L 172.75 129.53 L 185.5 145.47 L 179.25 150.47 " class="cdc" fill-opacity="0.13"/>
+<path d="M 56 101 L 128 101" class="nwbc"/>
+<path d="M 56 89 L 128 89" class="nwbc"/>
+<path d="M 176 131 L 248 131" class="nwbc"/>
+<path d="M 176 119 L 248 119" class="nwbc"/>
+<path d="M 56 161 L 128 161" class="nwbc"/>
+<path d="M 56 149 L 128 149" class="nwbc"/>
+<path d="M 152 161 L 224 161" class="nwbc"/>
+<path d="M 152 149 L 224 149" class="nwbc"/>
+<path d="M 56 101 L 56 89 L 128 89 L 128 101 " class="cc" fill-opacity="1"/>
+<path d="M 176 131 L 176 119 L 248 119 L 248 131 " class="cc" fill-opacity="1"/>
+<path d="M 56 161 L 56 149 L 128 149 L 128 161 " class="cc" fill-opacity="1"/>
+<path d="M 152 161 L 152 149 L 224 149 L 224 161 " class="cc" fill-opacity="1"/>
+<path d="M 56 101 L 56 89 L 128 89 L 128 101 " class="cdc" fill-opacity="0.15"/>
+<path d="M 176 131 L 176 119 L 248 119 L 248 131 " class="cdc" fill-opacity="0.6"/>
+<path d="M 56 161 L 56 149 L 128 149 L 128 161 " class="cdc" fill-opacity="0.4"/>
+<path d="M 152 161 L 152 149 L 224 149 L 224 161 " class="cdc" fill-opacity="0.45"/>
+<path id="eip0" d="M 20 50 L 68 50 L 68 20 L 20 20 " class="pac"/>
+<animate id="aipeip0" xlink:href="#eip0" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" />
+<path id="eip2" d="M 68 50 L 116 50 L 116 20 L 68 20 " class="pac"/>
+<animate id="aipeip2" xlink:href="#eip2" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip0.end"/>
+<path id="eip4" d="M 44 80 L 92 80 L 92 50 L 44 50 " class="pac"/>
+<animate id="aipeip4" xlink:href="#eip4" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip2.end"/>
+<path id="eip6" d="M 68 110 L 116 110 L 116 80 L 68 80 " class="pac"/>
+<animate id="aipeip6" xlink:href="#eip6" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip4.end"/>
+<path id="eip8" d="M 20 110 L 68 110 L 68 80 L 20 80 " class="pac"/>
+<animate id="aipeip8" xlink:href="#eip8" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip6.end"/>
+<path id="eip10" d="M 116 110 L 164 110 L 164 80 L 116 80 " class="pac"/>
+<animate id="aipeip10" xlink:href="#eip10" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip8.end"/>
+<path id="eip9" d="M 56 101 L 56 89 L 128 89 L 128 101 " class="pac"/>
+<animate id="aipeip9" xlink:href="#eip9" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip8.end"/>
+<path id="eip12" d="M 92 140 L 140 140 L 140 110 L 92 110 " class="pac"/>
+<animate id="aipeip12" xlink:href="#eip12" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip10.end"/>
+<path id="eip14" d="M 68 170 L 116 170 L 116 140 L 68 140 " class="pac"/>
+<animate id="aipeip14" xlink:href="#eip14" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip12.end"/>
+<path id="eip16" d="M 44 140 L 92 140 L 92 110 L 44 110 " class="pac"/>
+<animate id="aipeip16" xlink:href="#eip16" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip14.end"/>
+<path id="eip18" d="M 20 170 L 68 170 L 68 140 L 20 140 " class="pac"/>
+<animate id="aipeip18" xlink:href="#eip18" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip16.end"/>
+<path id="eip20" d="M 116 170 L 164 170 L 164 140 L 116 140 " class="pac"/>
+<animate id="aipeip20" xlink:href="#eip20" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip18.end"/>
+<path id="eip19" d="M 56 161 L 56 149 L 128 149 L 128 161 " class="pac"/>
+<animate id="aipeip19" xlink:href="#eip19" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip18.end"/>
+<path id="eip22" d="M 164 170 L 212 170 L 212 140 L 164 140 " class="pac"/>
+<animate id="aipeip22" xlink:href="#eip22" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip20.end"/>
+<path id="eip24" d="M 188 140 L 236 140 L 236 110 L 188 110 " class="pac"/>
+<animate id="aipeip24" xlink:href="#eip24" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip22.end"/>
+<path id="eip26" d="M 140 140 L 188 140 L 188 110 L 140 110 " class="pac"/>
+<animate id="aipeip26" xlink:href="#eip26" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip24.end"/>
+<path id="eip28" d="M 236 140 L 284 140 L 284 110 L 236 110 " class="pac"/>
+<animate id="aipeip28" xlink:href="#eip28" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip26.end"/>
+<path id="eip27" d="M 176 131 L 176 119 L 248 119 L 248 131 " class="pac"/>
+<animate id="aipeip27" xlink:href="#eip27" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip26.end"/>
+<path id="eip30" d="M 284 140 L 332 140 L 332 110 L 284 110 " class="pac"/>
+<animate id="aipeip30" xlink:href="#eip30" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip28.end"/>
+<path id="eip32" d="M 308 170 L 356 170 L 356 140 L 308 140 " class="pac"/>
+<animate id="aipeip32" xlink:href="#eip32" attributeName="fill-opacity" fill="freeze" from="0" to="0.4" dur="0.02s" begin="aipeip30.end"/>
 <text x="34" y="35" style="font: bold 10px sans-serif;">start</text><text x="322" y="155" style="font: bold 10px sans-serif;">exit</text></svg>

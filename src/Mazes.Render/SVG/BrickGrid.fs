@@ -12,8 +12,8 @@ open Mazes.Render.SVG.Base
 
 let private cellWidth = 48
 let private cellHeight = 30
-let private bridgeHalfWidth = 4.0
-let private bridgeDistanceFromCenter = 9.0
+let private bridgeHalfWidth = 6.0
+let private bridgeDistanceFromCenter = 12.0
 let private marginWidth = 20
 let private marginHeight = 20
 
@@ -113,7 +113,7 @@ let render (grid : Grid<GridArray2D<BrickPosition>, BrickPosition>) path map ent
     //|> appendPath path wholeCellLines
     //|> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves wholeCellLines
-    |> appendPathAndBridgesWithAnimation
+    //|> appendPathAndBridgesWithAnimation
 
     |> appendSimpleWalls
 
@@ -123,7 +123,7 @@ let render (grid : Grid<GridArray2D<BrickPosition>, BrickPosition>) path map ent
     |> appendSimpleBridges
     |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
     |> appendMazeDistanceBridgeColoration
-    //|> appendPathAndBridgesWithAnimation
+    |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
 
     |> textCell center entrance "start"

@@ -46,8 +46,8 @@ let newRandomMaze () =
     let canvas =
         let shapes =
             [|
-                Rectangle.create 25 45
-                TriangleIsosceles.create 25 TriangleIsosceles.Bottom 1 1
+                Rectangle.create (rng.Next(15, 30)) (rng.Next(15, 45))
+                TriangleIsosceles.create 33 TriangleIsosceles.Bottom 1 1
                 Ellipse.create 12 15 0.1 0.0 0 0 None Ellipse.Side.Inside
                 Hexagon.create 11.0
                 Pentagon.create 22.0
@@ -96,7 +96,7 @@ let newRandomMaze () =
         | 3 -> generateMaze (canvas |> Grid.Type.OctaSquare.Grid.createBaseGrid |> Grid.create) SVG.OctaSquareGrid.render
         | 4 -> generateMaze (canvas |> Grid.Type.PentaCairo.Grid.createBaseGrid |> Grid.create) SVG.PentaCairoGrid.render
         | 5 -> generateMaze (canvas |> Grid.Type.Brick.Grid.createBaseGrid |> Grid.create) SVG.BrickGrid.render
-        | 6 -> generateMaze (Disk.create 16 1.0 5 |> Grid.Type.Polar.Grid.createBaseGrid |> Grid.create) SVG.PolarGrid.render
+        | 6 -> generateMaze (Disk.create (rng.Next(15, 25)) 1.0 (rng.Next(1, 7)) |> Grid.Type.Polar.Grid.createBaseGrid |> Grid.create) SVG.PolarGrid.render
         | _ -> failwith "rng problem"
 
     gridType canvas

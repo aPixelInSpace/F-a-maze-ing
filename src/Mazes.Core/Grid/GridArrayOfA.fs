@@ -157,14 +157,18 @@ type GridArrayOfA =
             let neighborPosition = this.NeighborPositionAt this.Cells coordinate otherCoordinate
             match neighborPosition with
             | Ccw | Cw ->
+                let oppositePosition = this.PositionHandler.Opposite coordinate neighborPosition
+
                 let cell = (this.ToInterface.Cell coordinate)
                 this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- cell.Create (getNewConnections cell neighborPosition)
 
                 let otherCell = (this.ToInterface.Cell otherCoordinate)
-                this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell (this.PositionHandler.Opposite otherCoordinate neighborPosition))
+                this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell oppositePosition)
 
-                if (this.NeighborsCoordinateAt this.Cells coordinate (this.PositionHandler.Opposite coordinate neighborPosition)) |> Seq.head = otherCoordinate then
-                    this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- cell.Create (getNewConnections cell (this.PositionHandler.Opposite coordinate neighborPosition))
+                if (this.NeighborsCoordinateAt this.Cells coordinate oppositePosition) |> Seq.head = otherCoordinate then
+                    let cell = (this.ToInterface.Cell coordinate)
+                    this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- cell.Create (getNewConnections cell oppositePosition)
+                    let otherCell = (this.ToInterface.Cell otherCoordinate)
                     this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell neighborPosition)            
             | Inward ->
                 let cell = (this.ToInterface.Cell coordinate)
@@ -174,7 +178,13 @@ type GridArrayOfA =
                 this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell (this.PositionHandler.Opposite otherCoordinate neighborPosition))
 
         member this.WeaveCoordinates coordinates =
-            Seq.empty
+            coordinates
+            |> Seq.filter(fun c ->
+                let toCoordinate = { RIndex = c.RIndex + 2; CIndex = c.CIndex }
+                this.ToInterface.ExistAt toCoordinate &&
+                this.ToInterface.Dimension2Boundaries c.RIndex = (this.ToInterface.Dimension2Boundaries toCoordinate.RIndex) && 
+                c.RIndex % 2 = 0)
+            |> Seq.map(fun c -> (c, { RIndex = c.RIndex + 2; CIndex = c.CIndex }))
 
         member this.OpenCell coordinate =
             let candidate =

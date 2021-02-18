@@ -77,7 +77,9 @@ type BrickCoordinateHandler private () =
                             | None -> false)
 
         member this.WeaveCoordinates coordinates =
-            Seq.empty
+            coordinates
+            |> Seq.filter(fun c -> c.CIndex % 2 = 0)
+            |> Seq.map(fun c -> (c, { RIndex = c.RIndex; CIndex = c.CIndex + 2 }))
 
     member this.ToInterface =
         this :> ICoordinateHandler<BrickPosition>
