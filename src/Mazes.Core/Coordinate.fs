@@ -2,6 +2,7 @@
 
 namespace Mazes.Core
 
+/// 2D coordinate
 [<Struct>]
 type Coordinate =
     {
@@ -10,4 +11,14 @@ type Coordinate =
     }
 
     override this.ToString() =
-        $"{this.RIndex};{this.CIndex}" 
+        $"{this.RIndex};{this.CIndex}"
+
+/// Coordinate for N dimensions
+[<Struct>]
+type NCoordinate =
+    {
+        DIndexes : int array
+    }
+
+    override this.ToString() =
+        ("", this.DIndexes) ||> Array.fold(fun s n -> s + $"{n};")

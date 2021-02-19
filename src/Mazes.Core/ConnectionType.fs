@@ -10,9 +10,8 @@ type ConnectionType =
 module ConnectionType =
 
     let getConnectionTypeForEdge isEdge =
-        match isEdge with
-        | true -> ClosePersistent
-        | false -> Open
+        if isEdge then ClosePersistent
+        else Open
 
     let getConnectionTypeForInternal internalConnectionType isCurrentCellPartOfMaze isOtherCellPartOfMaze =
         match isCurrentCellPartOfMaze, isOtherCellPartOfMaze with
