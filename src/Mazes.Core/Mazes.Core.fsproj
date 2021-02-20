@@ -36,6 +36,7 @@
 		<Compile Include="Grid\GridArray2D.fs" />
 		<Compile Include="Grid\PolarArrayOfA.fs" />
 		<Compile Include="Grid\GridArrayOfA.fs" />
+		<Compile Include="Grid\NDimensionalStructure.fs" />
 		<Compile Include="Grid\Type\Ortho.fs" />
 		<Compile Include="Grid\Type\Polar.fs" />
 		<Compile Include="Grid\Type\Hex.fs" />

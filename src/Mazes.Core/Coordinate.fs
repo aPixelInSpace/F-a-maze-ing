@@ -13,12 +13,31 @@ type Coordinate =
     override this.ToString() =
         $"{this.RIndex};{this.CIndex}"
 
+/// Indicate the dimension, starting from the third
+type Dimension = int array
+
 /// Coordinate for N dimensions
 [<Struct>]
 type NCoordinate =
-    {
-        DIndexes : int array
-    }
+    private
+        {
+            DIndexes : int array
+        }
+
+    member this.ToCoordinate2D =
+        { RIndex = this.DIndexes.[0]; CIndex = this.DIndexes.[1] }
+
+    member this.ToDimension : Dimension =
+        Array.sub this.DIndexes 2 (this.DIndexes.Length - 2)
 
     override this.ToString() =
         ("", this.DIndexes) ||> Array.fold(fun s n -> s + $"{n};")
+
+module NCoordinate =
+
+    let create (coordinate : Coordinate) (dimension : Dimension) =
+        {
+            DIndexes =
+                [| coordinate.RIndex; coordinate.CIndex |]
+                |> Array.append dimension
+        }
