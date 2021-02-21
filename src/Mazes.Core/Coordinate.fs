@@ -30,12 +30,15 @@ type NCoordinate =
     member this.ToDimension : Dimension =
         Array.sub this.DIndexes 2 (this.DIndexes.Length - 2)
 
+    member this.IsSame2DDimension (otherNCoordinate : NCoordinate) =
+        this.ToDimension = otherNCoordinate.ToDimension
+
     override this.ToString() =
         ("", this.DIndexes) ||> Array.fold(fun s n -> s + $"{n};")
 
 module NCoordinate =
 
-    let create (coordinate : Coordinate) (dimension : Dimension) =
+    let create (dimension : Dimension) (coordinate : Coordinate) =
         {
             DIndexes =
                 [| coordinate.RIndex; coordinate.CIndex |]

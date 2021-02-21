@@ -56,7 +56,7 @@ type NonAdjacentNeighbors =
     static member CreateEmpty =
         { Container = Dictionary<Coordinate, Dictionary<Coordinate, ConnectionType>>() }
 
-type N_NonAdjacentNeighbors =
+type NonAdjacent2DConnections =
     private
         {
             Container : Dictionary<NCoordinate, Dictionary<NCoordinate, ConnectionType>>
@@ -77,12 +77,12 @@ type N_NonAdjacentNeighbors =
         addUpdate fromCoordinate toCoordinate connectionType
         addUpdate toCoordinate fromCoordinate connectionType
 
-    member this.NonAdjacentNeighbors coordinate =
+    member this.Neighbors coordinate =
         seq {
             if this.Container.ContainsKey(coordinate) then
-                let neighbors = this.Container.Item(coordinate)
-                for neighbor in neighbors do
-                    yield (neighbor.Key, neighbor.Value)
+                let connections = this.Container.Item(coordinate)
+                for connection in connections do
+                    yield (connection.Key, connection.Value)
         }
 
     member this.ExistNeighbor fromCoordinate toCoordinate =
