@@ -111,6 +111,13 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
         |> Grid.Type.Polar.Grid.createBaseGrid
         |> Grid.Grid.create
 
+    let baseAdjacentStructure =
+        fun () ->
+            Shape.Rectangle.create 10 10
+            |> Grid.Type.Ortho.Grid.createBaseGrid
+
+    let gridN = baseAdjacentStructure |> Grid.NDimensionalStructure.create [| 2; 2; 3; |]
+
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
 
@@ -204,6 +211,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
         //(fun _ -> grid)
 
     let maze = (algo rngSeed grid)
+    let hyperMaze = AldousBroder.createMazeNDimensions 1 gridN
 
     //maze.Grid.AddTwoWayTeleport { RIndex = 2; CIndex = 4 } { RIndex = 41; CIndex = 8 }
     //maze.Grid.AddCostForCoordinate 200 { RIndex = maze.Grid.GetFirstPartOfMazeZone.RIndex + 1; CIndex = maze.Grid.GetFirstPartOfMazeZone.CIndex}

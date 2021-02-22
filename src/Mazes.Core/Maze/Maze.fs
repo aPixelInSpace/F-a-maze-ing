@@ -19,6 +19,18 @@ type Maze<'Grid> =
         this.Grid.OpenCell entrance
         this.Grid.OpenCell exit
 
+type HyperMaze<'Grid, 'Position> =
+    {    
+        NDimensionalStructure : Grid.NDimensionalStructure<'Grid, 'Position>
+    }
+
+//    member this.createMap rootCoordinate =
+//        Dijkstra.Map.create (this.Grid.ConnectedWithNeighbors true) this.Grid.CostOfCoordinate PriorityQueueTracker.createEmpty rootCoordinate
+//
+//    member this.OpenMaze (entrance, exit) =
+//        this.Grid.OpenCell entrance
+//        this.Grid.OpenCell exit
+
 module Maze =
 
     let toMaze grid =

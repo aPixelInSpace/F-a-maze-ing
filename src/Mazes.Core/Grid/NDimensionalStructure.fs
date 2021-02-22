@@ -30,7 +30,7 @@ type NDimensionalStructure<'Grid, 'Position> =
             false
 
     member this.CoordinatesPartOfMaze =
-        let cells (dimension : Dimension) (adjStruct : IAdjacentStructure<'Grid, 'Position>) =
+        let cells (dimension : Dimension) (adjStruct : IAdjacentStructure<_, _>) =
             adjStruct.Cells
             |> Seq.filter(fun (_, coordinate) -> adjStruct.IsCellPartOfMaze coordinate)
             |> Seq.map(fun (_, coordinate) -> NCoordinate.create dimension coordinate)
@@ -81,9 +81,9 @@ type NDimensionalStructure<'Grid, 'Position> =
 
     member this.ConnectedNeighbors isConnected (nCoordinate : NCoordinate) =
         this.Neighbors nCoordinate
-        |> Seq.filter(fun c ->
-            let isConnectedAdjacent2d = (this.Slice2D nCoordinate.ToDimension).IsCellConnected nCoordinate.ToCoordinate2D
-            let isConnectedNonAdjacent2d = this.NonAdjacent2DConnections.IsCellConnected nCoordinate
+        |> Seq.filter(fun neighbor ->
+            let isConnectedAdjacent2d = (this.Slice2D neighbor.ToDimension).IsCellConnected neighbor.ToCoordinate2D
+            let isConnectedNonAdjacent2d = this.NonAdjacent2DConnections.IsCellConnected neighbor
 
             if isConnected then isConnectedAdjacent2d || isConnectedNonAdjacent2d
             else isConnectedAdjacent2d && isConnectedNonAdjacent2d)
@@ -135,21 +135,68 @@ type NDimensionalStructure<'Grid, 'Position> =
 
         NCoordinate.create dimension (this.Slice2D dimension).GetLastCellPartOfMaze
 
+type ArrayEqualityComparer() =
+    interface IEqualityComparer<int[]> with
+        member this.Equals (a,b) = (Array.forall2 (=) a b)
+        member this.GetHashCode (a) = hash (a |> Array.map hash)
+
 module NDimensionalStructure =
 
-    let create (dimensions : Dimension) (baseGrid : (unit -> IAdjacentStructure<_, _>)) =
-//        let dimensionsSeq (dimensionBase : Dimension) =
-//            let next dimension position =
-//                let newDimension = dimension |> Array.copy
-//                if newDimension.[position] < dimensions.[position] then
-//                    newDimension.[position] <- newDimension.[position] + 1
-//                else
-//                    
-//            
-//            let mutable dimension = dimensionBase
-//            seq {
-//                while dimension <> dimensions do
-//                    
-//            }
-                
-        ()
+    let create (dimensions : Dimension) (newAdjacentStructureInstance : (unit -> IAdjacentStructure<_, _>)) =
+        let baseAdjStruct = newAdjacentStructureInstance()
+        let coordinates2D =
+            baseAdjStruct.Cells
+            |> Seq.filter(fun (_, coordinate) -> baseAdjStruct.IsCellPartOfMaze coordinate)
+            |> Seq.map(snd)
+
+        let dimensionsSeq =
+            let nextDimension (dimension : Dimension) =
+                let newDimension = dimension |> Array.copy
+                let mutable isFound = false 
+                for d in 0 .. newDimension.Length - 1 do
+                    if not isFound && newDimension.[d] < dimensions.[d] then
+                        newDimension.[d] <- newDimension.[d] + 1
+                        isFound <- true
+                    elif not isFound then
+                        newDimension.[d] <- 0
+
+                newDimension
+
+            let countSlices2D = (1, dimensions) ||> Array.fold(fun count d -> (d + 1) * count)
+
+            let mutable currentDimension = Array.create dimensions.Length 0
+            seq {
+                yield currentDimension
+                for _ in 1 .. countSlices2D - 1 do
+                    currentDimension <- nextDimension currentDimension
+                    yield currentDimension
+            }
+
+        let structure = Dictionary<Dimension, IAdjacentStructure<_, _>>(ArrayEqualityComparer())
+        for dimension in dimensionsSeq do
+            structure.Add(dimension, newAdjacentStructureInstance())
+
+        // orthogonally connect every slice 2d to the next one
+        let nonAdjacent2DConnections = NonAdjacent2DConnections.CreateEmpty
+        for d in 0 .. dimensions.Length - 1 do
+            let startDimensions = dimensionsSeq |> Seq.filter(fun dimension -> dimension.[d] = 0)
+            for startDimension in startDimensions do
+
+                let currentDimensionIndex = ref 0
+                let mutable currentDimension = startDimension
+                while currentDimensionIndex.Value < dimensions.[d] do                    
+                    incr currentDimensionIndex
+                    let newDimension = currentDimension |> Array.copy
+                    newDimension.[d] <- newDimension.[d] + 1
+
+                    for coordinate2D in coordinates2D do
+                        let nCoordinate = NCoordinate.create currentDimension coordinate2D
+                        let nOtherCoordinate = NCoordinate.create newDimension coordinate2D
+                        nonAdjacent2DConnections.UpdateConnection Close nCoordinate nOtherCoordinate
+
+                    currentDimension <- newDimension
+        {
+            Structure = structure
+            NonAdjacent2DConnections = nonAdjacent2DConnections
+            Obstacles = N_Obstacles.CreateEmpty
+        }

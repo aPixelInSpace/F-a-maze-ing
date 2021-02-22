@@ -16,6 +16,7 @@ type Coordinate =
 /// Indicate the dimension, starting from the third
 type Dimension = int array
 
+
 /// Coordinate for N dimensions
 [<Struct>]
 type NCoordinate =
@@ -40,7 +41,5 @@ module NCoordinate =
 
     let create (dimension : Dimension) (coordinate : Coordinate) =
         {
-            DIndexes =
-                [| coordinate.RIndex; coordinate.CIndex |]
-                |> Array.append dimension
+            DIndexes = Array.append [| coordinate.RIndex; coordinate.CIndex |] dimension
         }
