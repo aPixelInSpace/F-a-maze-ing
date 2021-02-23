@@ -39,7 +39,6 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -75,7 +74,6 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -111,7 +109,6 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -147,7 +144,6 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -183,7 +179,6 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -219,7 +214,6 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -255,7 +249,6 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid
@@ -291,7 +284,6 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
 
     let maze =
         grid

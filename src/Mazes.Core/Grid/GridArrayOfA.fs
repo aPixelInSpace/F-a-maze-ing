@@ -68,6 +68,11 @@ type GridArrayOfA =
             let ratio = maxCellsInLastRing / ringLength
             coordinate.CIndex % ratio = 0
 
+        member this.CoordinatesPartOfMaze =
+            this.ToInterface.Cells
+            |> Seq.filter(fun (_, c) -> this.ToInterface.IsCellPartOfMaze c)
+            |> Seq.map(snd)
+
         member this.IsLimitAt coordinate otherCoordinate =
             let zone = this.Canvas.Zone coordinate
 
@@ -176,6 +181,10 @@ type GridArrayOfA =
             | Outward ->
                 let otherCell = (this.ToInterface.Cell otherCoordinate)
                 this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell (this.PositionHandler.Opposite otherCoordinate neighborPosition))
+
+        member this.IfNotAtLimitUpdateConnection connectionType coordinate otherCoordinate =
+            if not (this.ToInterface.IsLimitAt coordinate otherCoordinate) then
+                this.ToInterface.UpdateConnection connectionType coordinate otherCoordinate
 
         member this.WeaveCoordinates coordinates =
             coordinates

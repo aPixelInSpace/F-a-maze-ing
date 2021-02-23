@@ -42,6 +42,11 @@ type GridArray2D<'Position when 'Position : equality> =
         member this.AdjustedExistAt coordinate =
             existAt this.Cells coordinate
 
+        member this.CoordinatesPartOfMaze =
+            this.ToInterface.Cells
+            |> Seq.filter(fun (_, c) -> this.ToInterface.IsCellPartOfMaze c)
+            |> Seq.map(snd)
+
         member this.IsLimitAt coordinate otherCoordinate =
             this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)
 
@@ -94,6 +99,10 @@ type GridArray2D<'Position when 'Position : equality> =
                         let neighborCell = this.ToInterface.Cell neighbor
                         this.Cells.[neighbor.RIndex, neighbor.CIndex] <- neighborCell.Create (getNewConnections neighborCell (this.PositionHandler.Opposite coordinate position))
                     | None -> ()
+
+        member this.IfNotAtLimitUpdateConnection connectionType coordinate otherCoordinate =
+            if not (this.ToInterface.IsLimitAt coordinate otherCoordinate) then
+                this.ToInterface.UpdateConnection connectionType coordinate otherCoordinate
 
         member this.WeaveCoordinates coordinates =
             this.CoordinateHandler.WeaveCoordinates coordinates

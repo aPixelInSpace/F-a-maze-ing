@@ -15,8 +15,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Sidewinder alg
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
-    
+
     // act
     let maze = grid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
         
@@ -74,7 +73,6 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
     let gridRectangle =
         Rectangle.create numberOfRows numberOfColumns
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
 
     let map = mapSidewinderDirectionEnumToSidewinderDirection
 
@@ -154,7 +152,6 @@ let ``Given a triangular ortho grid, when creating a maze with the sidewinder al
     let gridTriangle =
         TriangleIsosceles.create baseLength baseAt baseDecrement heightIncrement
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
 
     let map = mapSidewinderDirectionEnumToSidewinderDirection
 
@@ -175,8 +172,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Side
     let grid =
         (Disk.create 5 1.0 3)
         |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
-    
+
     // act
     let maze = grid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
@@ -236,8 +232,7 @@ let ``Given a disc polar grid, when creating a maze with the sidewinder algorith
     let grid =
         (Disk.create numberOfRings widthHeightRatio numberOfCellsForCenterRing)
         |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
-    
+
     // act
     let maze = grid |> Sidewinder.createMaze (map direction1) (map direction2) rngSeed direction1Weight direction2Weight
 

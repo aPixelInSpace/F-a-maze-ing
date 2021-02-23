@@ -35,7 +35,7 @@ let private carveRow
     (rng : Random)
     rngTotalWeight    
     rngPosition1Weight
-    (grid : Grid.IGrid<_>)
+    (grid : Grid.IAdjacentStructure<_,_>)
     rIndex
     getRowInfo =
     
@@ -46,11 +46,11 @@ let private carveRow
         let coordinate = { RIndex = rIndex; CIndex = columnIndex }
 
         let neighborCoordinate position =
-            match (grid.AdjacentNeighbor coordinate position) with
+            match (grid.Neighbor coordinate position) with
             | Some neighbor -> neighbor
             | None -> failwith "Binary Tree, unable to find the neighbor coordinate"
 
-        let isPosALimit position = ((grid.AdjacentNeighbor coordinate position).IsNone) || (grid.IsLimitAt coordinate (neighborCoordinate position))
+        let isPosALimit position = ((grid.Neighbor coordinate position).IsNone) || (grid.IsLimitAt coordinate (neighborCoordinate position))
         let ifNotAtLimitLinkCells position =
             if not (isPosALimit position) then
                 grid.UpdateConnection Open coordinate (neighborCoordinate position)
@@ -87,7 +87,7 @@ let private carveRow
         | _ ->
             grid.UpdateConnection Open coordinate (neighborCoordinate direction2.Position)
 
-let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IGrid<_>) : Maze.Maze<_> =
+let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_> =
 
     let rng = Random(rngSeed)
 
@@ -112,4 +112,4 @@ let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2We
             rIndex
             (getRowInfo rIndex))    
 
-    { Grid = grid }
+    { Grid = (Grid.Grid.create grid) }

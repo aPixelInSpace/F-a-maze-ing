@@ -99,3 +99,51 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
         incr i
 
     { Grid = grid }
+
+/// Randomized Kruskal's algorithm
+let createMazeNDimensions rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.HyperMaze<_,_> =
+
+    let rng = Random(rngSeed)
+
+    let possibleLinks =
+        grid.CoordinatesPartOfMaze
+        |> Seq.collect(fun coordinate ->
+            coordinate
+            |> grid.ConnectedWithNeighbors false
+            |> Seq.map(fun neighbor -> (coordinate, neighbor)))
+        |> Seq.distinctBy(Utils.getKey)
+        |> Seq.toArray
+        |> Utils.shuffle rng
+
+    let forests = Sets<_>.createEmpty
+
+    let totalOfMazeCells = grid.TotalOfMazeCells
+
+    let i = ref 0
+
+    while i.Value < possibleLinks.Length &&
+          forests.HeadCount < totalOfMazeCells do
+
+        let (coordinate1, coordinate2) = possibleLinks.[i.Value]
+
+        let setKey1 = forests.GetSetKey coordinate1
+        let setKey2 = forests.GetSetKey coordinate2
+
+        match setKey1, setKey2 with
+        | None, None ->
+            grid.UpdateConnection Open coordinate1 coordinate2
+            forests.AddNewSet coordinate1 (Some coordinate2)
+        | Some setKey, None ->
+            grid.UpdateConnection Open coordinate1 coordinate2
+            forests.AddToSet setKey coordinate2
+        | None, Some setKey ->
+            grid.UpdateConnection Open coordinate1 coordinate2
+            forests.AddToSet setKey coordinate1
+        | Some setKey1, Some setKey2 ->
+            if setKey1 <> setKey2 then
+                grid.UpdateConnection Open coordinate1 coordinate2
+                forests.MergeSets setKey1 setKey2
+
+        incr i
+
+    { NDimensionalStructure = grid }

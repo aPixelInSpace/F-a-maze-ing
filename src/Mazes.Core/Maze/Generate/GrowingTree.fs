@@ -10,13 +10,14 @@ open Mazes.Core
 module GrowingTree =
 
     let baseAlgorithm
+            notConnectedNeighbors
+            openConnection
             startCoordinate
             count
             add
             next
             remove
-            chooseNeighbor
-            (grid : Grid.IGrid<_>) =
+            chooseNeighbor =
 
         add startCoordinate
 
@@ -25,15 +26,55 @@ module GrowingTree =
 
             let unlinked =
                 active
-                |> grid.ConnectedNeighbors false
+                |> notConnectedNeighbors
                 |> Seq.toArray
 
             if unlinked.Length > 0 then
                 let neighbor = chooseNeighbor active unlinked
-                grid.UpdateConnection Open active neighbor
+                openConnection active neighbor
                 add neighbor
             else
                 remove active
+
+    let baseAlgorithmNDimensionalStructure
+            startCoordinate
+            count
+            add
+            next
+            remove
+            chooseNeighbor
+            (grid : Grid.NDimensionalStructure<_,_>) =
+
+        baseAlgorithm
+            (grid.ConnectedNeighbors false)
+            (grid.UpdateConnection Open)
+            startCoordinate
+            count
+            add
+            next
+            remove
+            chooseNeighbor
+
+        grid
+
+    let baseAlgorithmGrid
+            startCoordinate
+            count
+            add
+            next
+            remove
+            chooseNeighbor
+            (grid : Grid.IGrid<_>) =
+
+        baseAlgorithm
+            (grid.ConnectedNeighbors false)
+            (grid.UpdateConnection Open)
+            startCoordinate
+            count
+            add
+            next
+            remove
+            chooseNeighbor
 
         grid
 
@@ -68,7 +109,7 @@ module GrowingTreeMixRandomAndLast =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        let grid = grid |> GrowingTree.baseAlgorithm randomStartCoordinate count add next remove chooseNeighbor
+        let grid = grid |> GrowingTree.baseAlgorithmGrid randomStartCoordinate count add next remove chooseNeighbor
 
         { Grid = grid }
 
@@ -101,7 +142,7 @@ module GrowingTreeMixOldestAndLast =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        let grid = grid |> GrowingTree.baseAlgorithm randomStartCoordinate count add next remove chooseNeighbor
+        let grid = grid |> GrowingTree.baseAlgorithmGrid randomStartCoordinate count add next remove chooseNeighbor
 
         { Grid = grid }
 
@@ -143,7 +184,7 @@ module GrowingTreeMixChosenRandomAndLast =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        let grid = grid |> GrowingTree.baseAlgorithm randomStartCoordinate count add next remove chooseNeighbor
+        let grid = grid |> GrowingTree.baseAlgorithmGrid randomStartCoordinate count add next remove chooseNeighbor
 
         { Grid = grid }
 
@@ -186,7 +227,7 @@ module GrowingTreeDirection =
                 unlinked
                 |> Array.minBy(fun c -> c.RIndex)
 
-        let grid = grid |> GrowingTree.baseAlgorithm randomStartCoordinate count add next remove chooseNeighbor
+        let grid = grid |> GrowingTree.baseAlgorithmGrid randomStartCoordinate count add next remove chooseNeighbor
 
         { Grid = grid }
 
@@ -303,6 +344,6 @@ module GrowingTreeSpiral =
             else
                 unlinked.[rng.Next(unlinked.Length)]
 
-        let grid = grid |> GrowingTree.baseAlgorithm randomStartCoordinate count add next remove chooseNeighbor
+        let grid = grid |> GrowingTree.baseAlgorithmGrid randomStartCoordinate count add next remove chooseNeighbor
 
         { Grid = grid }

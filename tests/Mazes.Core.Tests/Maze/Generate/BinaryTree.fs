@@ -14,7 +14,6 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Binary Tree al
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> createMaze Direction.Top Direction.Right 1 1 1
@@ -73,7 +72,6 @@ let ``Given a rectangular canvas, when a creating a maze with the binary tree al
     let gridRectangle =
         Rectangle.create numberOfRows numberOfColumns
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
 
     let direction1 = mapBinaryTreeDirectionEnumToBinaryTreeDirection direction1
     let direction2 = mapBinaryTreeDirectionEnumToBinaryTreeDirection direction2
@@ -95,7 +93,6 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Bina
     let grid =
         (Disk.create 5 1.0 3)
         |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
     
     // act
     let maze = grid |> createMaze Direction.Top Direction.Right 1 1 1

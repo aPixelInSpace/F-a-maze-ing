@@ -29,7 +29,6 @@ let maze =
     let grid =
         (Convert.fromString stringCanvas).Value    
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
 
     grid
     |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -276,7 +275,6 @@ let ``Given a map, when getting the longest paths in the map, then it should ret
     let maze =
         canvas5x5
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
         (*
@@ -318,7 +316,6 @@ let ``Given a maze with a non adjacent neighbor, when getting all the distances 
     let maze =
         canvas5x5
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
         (*
@@ -357,7 +354,6 @@ let ``Given a maze with an obstacle, when getting all the distances from the roo
     let maze =
         canvas5x5
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
         (*

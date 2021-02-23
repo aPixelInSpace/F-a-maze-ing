@@ -14,6 +14,7 @@ type IAdjacentStructure<'Structure, 'Position> =
     abstract member AdjustedCoordinate : coordinate:Coordinate -> Coordinate
     abstract member ExistAt : coordinate:Coordinate -> bool
     abstract member AdjustedExistAt : coordinate:Coordinate -> bool
+    abstract member CoordinatesPartOfMaze : Coordinate seq
     /// Returns true if it is not possible to navigate from a coordinate to another coordinate (for example if there is a border between the two cells) 
     abstract member IsLimitAt : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
     abstract member Cell : coordinate:Coordinate -> ICell<'Position>
@@ -32,6 +33,7 @@ type IAdjacentStructure<'Structure, 'Position> =
     abstract member VirtualNeighbor : Coordinate -> Position -> Coordinate option
     /// Given two coordinates, updates the connection between them
     abstract member UpdateConnection : connectionType:ConnectionType -> coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
+    abstract member IfNotAtLimitUpdateConnection : connectionType:ConnectionType -> coordinate:Coordinate -> otherCoordinate:Coordinate -> unit
     abstract member WeaveCoordinates : Coordinate seq -> (Coordinate * Coordinate) seq
     /// Special function to "open" the grid ie. make a connection to the outside if possible, usually to make an entrance and an exit
     abstract member OpenCell : Coordinate -> unit

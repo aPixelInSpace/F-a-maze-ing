@@ -15,7 +15,7 @@ let transformIntoMaze
     (totalOfMazeCells : int)
     (rng : Random) =
 
-    let unvisited = HashSet<Coordinate>(totalOfMazeCells)
+    let unvisited = HashSet<_>(totalOfMazeCells)
     unvisited.UnionWith(coordinatesPartOfMaze)
 
     let firstCoordinate = randomCoordinatePartOfMazeAndNotConnected rng
@@ -23,8 +23,8 @@ let transformIntoMaze
 
     while unvisited.Count > 0 do
 
-        let path = ResizeArray<Coordinate>()
-        let pathTracker = Dictionary<Coordinate, int>()
+        let path = ResizeArray<_>()
+        let pathTracker = Dictionary<_, int>()
 
         let mutable nextCoordinate = unvisited.ElementAt(rng.Next(unvisited.Count))
         path.Add(nextCoordinate) |> ignore
@@ -61,3 +61,17 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
         rng
 
     { Grid = grid }
+
+let createMazeNDimensions rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.HyperMaze<_,_> =
+
+    let rng = Random(rngSeed)
+
+    transformIntoMaze
+        grid.RandomCoordinatePartOfMazeAndNotConnected
+        grid.CoordinatesPartOfMaze
+        grid.Neighbors
+        (grid.UpdateConnection Open)
+        grid.TotalOfMazeCells
+        rng
+
+    { NDimensionalStructure = grid }

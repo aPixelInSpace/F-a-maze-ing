@@ -126,7 +126,7 @@ let private carveRow
            lastIndex2WithRemovablePos2Wall <- index2
            runStartIndex2 <- index2 + increment        
 
-let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IGrid<_>) : Maze.Maze<_> =    
+let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_> =    
 
     let rng = Random(rngSeed)
 
@@ -172,7 +172,7 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
              (startIndex, getIndex (length + startIndex))
 
     let neighborCoordinate coordinate position =
-            match (grid.AdjacentNeighbor (getCoordinate coordinate) position) with
+            match (grid.Neighbor (getCoordinate coordinate) position) with
             | Some neighbor -> neighbor
             | None -> failwith "Sidewinder, unable to find the neighbor coordinate"
 
@@ -185,18 +185,18 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
             | true -> grid.ExistAt
             | false -> grid.AdjustedExistAt
 
-        match (grid.AdjacentVirtualNeighbor coordinate direction.Position) with
+        match (grid.VirtualNeighbor coordinate direction.Position) with
         | Some neighbor -> existAt neighbor
         | None -> false
 
     let isALimitAt coordinate (direction : Direction) =
-        (grid.AdjacentNeighbor (getCoordinate coordinate) direction.Position).IsNone ||
+        (grid.Neighbor (getCoordinate coordinate) direction.Position).IsNone ||
         (grid.IsLimitAt (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position)) ||
         (not (isInsideGridBoundary coordinate direction))
 
     let linkCellAtPosition coordinate (direction : Direction) = (grid.UpdateConnection Open (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))
     let ifNotAtLimitLinkCellAtPosition coordinate (direction : Direction) =
-        if (grid.AdjacentNeighbor (getCoordinate coordinate) direction.Position).IsSome then
+        if (grid.Neighbor (getCoordinate coordinate) direction.Position).IsSome then
             (grid.IfNotAtLimitUpdateConnection Open (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))
 
     let getRandomIndex2FromRange = (getRandomIndex2AtPos1ForFromRange isALimitAt rng increment direction1)
@@ -222,4 +222,4 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
             index1
             increment)
 
-    { Grid = grid }
+    { Grid = (Grid.Grid.create grid) }

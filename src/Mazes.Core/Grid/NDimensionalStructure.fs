@@ -9,7 +9,6 @@ open Mazes.Core
 type NDimensionalStructure<'Grid, 'Position> =
     private
         {
-            //Dimensions : Dimension
             Structure : Dictionary<Dimension, IAdjacentStructure<'Grid, 'Position>>
             NonAdjacent2DConnections : NonAdjacent2DConnections
             Obstacles : N_Obstacles
@@ -31,9 +30,8 @@ type NDimensionalStructure<'Grid, 'Position> =
 
     member this.CoordinatesPartOfMaze =
         let cells (dimension : Dimension) (adjStruct : IAdjacentStructure<_, _>) =
-            adjStruct.Cells
-            |> Seq.filter(fun (_, coordinate) -> adjStruct.IsCellPartOfMaze coordinate)
-            |> Seq.map(fun (_, coordinate) -> NCoordinate.create dimension coordinate)
+            adjStruct.CoordinatesPartOfMaze
+            |> Seq.map(NCoordinate.create dimension)
 
         this.Structure
         |> Seq.collect(fun kv -> cells kv.Key kv.Value)
@@ -113,6 +111,24 @@ type NDimensionalStructure<'Grid, 'Position> =
     member this.UpdateConnectionNonAdjacent2DNeighbor connectionType nCoordinate otherNCoordinate =
          this.NonAdjacent2DConnections.UpdateConnection connectionType nCoordinate otherNCoordinate
 
+    member this.Weave (rng : Random) weight =
+        for slice2D in this.Structure do
+            let dimension = slice2D.Key
+            let adjStruct = slice2D.Value
+
+            let weaveCoordinates = adjStruct.WeaveCoordinates adjStruct.CoordinatesPartOfMaze
+            for (fromCoordinate, toCoordinate) in weaveCoordinates do
+                if (toCoordinate.RIndex >= fst (adjStruct.Dimension1Boundaries toCoordinate.CIndex)) &&
+                   (toCoordinate.RIndex < snd (adjStruct.Dimension1Boundaries toCoordinate.CIndex)) &&
+                   (toCoordinate.CIndex >= fst (adjStruct.Dimension2Boundaries toCoordinate.RIndex)) &&
+                   (toCoordinate.CIndex < snd (adjStruct.Dimension2Boundaries toCoordinate.RIndex)) &&
+                   adjStruct.IsCellPartOfMaze toCoordinate &&
+                   rng.NextDouble() < weight
+                   then
+
+                    this.NonAdjacent2DConnections.UpdateConnection
+                        Close (NCoordinate.create dimension fromCoordinate) (NCoordinate.create dimension toCoordinate)
+
     member this.OpenCell (nCoordinate : NCoordinate) =
         (this.Slice2D nCoordinate.ToDimension).OpenCell nCoordinate.ToCoordinate2D
 
@@ -144,10 +160,7 @@ module NDimensionalStructure =
 
     let create (dimensions : Dimension) (newAdjacentStructureInstance : (unit -> IAdjacentStructure<_, _>)) =
         let baseAdjStruct = newAdjacentStructureInstance()
-        let coordinates2D =
-            baseAdjStruct.Cells
-            |> Seq.filter(fun (_, coordinate) -> baseAdjStruct.IsCellPartOfMaze coordinate)
-            |> Seq.map(snd)
+        let coordinates2D = baseAdjStruct.CoordinatesPartOfMaze
 
         let dimensionsSeq =
             let nextDimension (dimension : Dimension) =

@@ -15,7 +15,7 @@ let transformIntoMaze
 
     let randomStartCoordinate = randomCoordinatePartOfMazeAndNotConnected rng
 
-    let frontier = HashSet<Coordinate>()
+    let frontier = HashSet<_>()
     frontier.Add(randomStartCoordinate) |> ignore
 
     while frontier.Count > 0 do
@@ -57,3 +57,15 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
         rng
 
     { Grid = grid }
+
+let createMazeNDimensions rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.HyperMaze<_,_> =
+
+    let rng = Random(rngSeed)
+
+    transformIntoMaze
+        grid.RandomCoordinatePartOfMazeAndNotConnected
+        grid.ConnectedNeighbors
+        (grid.UpdateConnection ConnectionType.Open)
+        rng
+
+    { NDimensionalStructure = grid }

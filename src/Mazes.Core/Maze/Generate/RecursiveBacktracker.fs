@@ -28,6 +28,6 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
     let chooseNeighbor _ (unlinked : array<'T>) =
         unlinked.[rng.Next(unlinked.Length)]
 
-    let grid = grid |> GrowingTree.baseAlgorithm randomStartCoordinate count add next remove chooseNeighbor
+    let grid = grid |> GrowingTree.baseAlgorithmGrid randomStartCoordinate count add next remove chooseNeighbor
 
     { Grid = grid }

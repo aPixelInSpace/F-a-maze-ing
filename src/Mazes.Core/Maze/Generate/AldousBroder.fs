@@ -42,7 +42,7 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     { Grid = grid }
 
-let createMazeNDimensions rngSeed (grid : Grid.NDimensionalStructure<_, _>) : Maze.HyperMaze<_, _> =
+let createMazeNDimensions rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.HyperMaze<_,_> =
 
     let rng = Random(rngSeed)
 

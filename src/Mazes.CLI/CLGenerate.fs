@@ -68,8 +68,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     
     let matchAlgoEnumWithFunction algoEnum rngSeed =
         match algoEnum with
-           | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
-           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top rngSeed 1 1
+           //| AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
+           //| AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top rngSeed 1 1
            | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
            | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
            | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed
@@ -116,7 +116,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
             Shape.Rectangle.create 10 10
             |> Grid.Type.Ortho.Grid.createBaseGrid
 
-    let gridN = baseAdjacentStructure |> Grid.NDimensionalStructure.create [| 2; 2; 3; |]
+    let gridN = baseAdjacentStructure |> Grid.NDimensionalStructure.create [| 1; 2; 1; |]
 
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
@@ -211,7 +211,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
         //(fun _ -> grid)
 
     let maze = (algo rngSeed grid)
-    let hyperMaze = AldousBroder.createMazeNDimensions 1 gridN
+    let hyperMaze = PrimWeighted.createMazeNDimensions 1 42 gridN
 
     //maze.Grid.AddTwoWayTeleport { RIndex = 2; CIndex = 4 } { RIndex = 41; CIndex = 8 }
     //maze.Grid.AddCostForCoordinate 200 { RIndex = maze.Grid.GetFirstPartOfMazeZone.RIndex + 1; CIndex = maze.Grid.GetFirstPartOfMazeZone.CIndex}
