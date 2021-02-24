@@ -87,7 +87,7 @@ let private carveRow
         | _ ->
             grid.UpdateConnection Open coordinate (neighborCoordinate direction2.Position)
 
-let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_> =
+let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =
 
     let rng = Random(rngSeed)
 
@@ -112,4 +112,4 @@ let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2We
             rIndex
             (getRowInfo rIndex))    
 
-    { Grid = (Grid.Grid.create grid) }
+    { NDimensionalStructure = (Grid.NDimensionalStructure.create2D grid) }

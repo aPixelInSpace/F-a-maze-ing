@@ -2,6 +2,7 @@
 
 namespace Mazes.Core.Grid
 
+open System
 open Mazes.Core
 open Mazes.Core.Canvas
 open Mazes.Core.Grid
@@ -72,6 +73,15 @@ type GridArrayOfA =
             this.ToInterface.Cells
             |> Seq.filter(fun (_, c) -> this.ToInterface.IsCellPartOfMaze c)
             |> Seq.map(snd)
+
+        member this.RandomCoordinatePartOfMazeAndNotConnected (rng : Random) =
+            let unconnectedPartOfMazeCells =
+                this.ToInterface.CoordinatesPartOfMaze
+                |> Seq.filter(fun c ->
+                    not (this.ToInterface.IsCellConnected c || this.ToInterface.IsCellConnected c))
+                |> Seq.toArray
+
+            unconnectedPartOfMazeCells.[rng.Next(unconnectedPartOfMazeCells.Length)]
 
         member this.IsLimitAt coordinate otherCoordinate =
             let zone = this.Canvas.Zone coordinate

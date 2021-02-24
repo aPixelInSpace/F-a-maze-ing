@@ -126,7 +126,7 @@ let private carveRow
            lastIndex2WithRemovablePos2Wall <- index2
            runStartIndex2 <- index2 + increment        
 
-let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_> =    
+let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =    
 
     let rng = Random(rngSeed)
 
@@ -222,4 +222,4 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
             index1
             increment)
 
-    { Grid = (Grid.Grid.create grid) }
+    { NDimensionalStructure = (Grid.NDimensionalStructure.create2D grid) }

@@ -48,21 +48,7 @@ let transformIntoMaze
             connectCells path.[i] path.[i + 1]
             unvisited.Remove(path.[i]) |> ignore
 
-let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
-
-    let rng = Random(rngSeed)
-
-    transformIntoMaze
-        grid.RandomCoordinatePartOfMazeAndNotConnected
-        grid.CoordinatesPartOfMaze
-        grid.Neighbors
-        (grid.UpdateConnection Open)
-        grid.TotalOfMazeCells
-        rng
-
-    { Grid = grid }
-
-let createMazeNDimensions rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.HyperMaze<_,_> =
+let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
     let rng = Random(rngSeed)
 

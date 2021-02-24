@@ -14,7 +14,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Aldous-Broder algo
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
     
     // act
     let maze = grid |> AldousBroder.createMaze 1

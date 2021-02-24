@@ -7,15 +7,22 @@ open System.Collections.Generic
 open Mazes.Core
 
 type NDimensionalStructure<'Grid, 'Position> =
-    private
-        {
-            Structure : Dictionary<Dimension, IAdjacentStructure<'Grid, 'Position>>
-            NonAdjacent2DConnections : NonAdjacent2DConnections
-            Obstacles : N_Obstacles
-        }
+    {
+        Structure : Dictionary<Dimension, IAdjacentStructure<'Grid, 'Position>>
+        NonAdjacent2DConnections : NonAdjacent2DConnections
+        Obstacles : N_Obstacles
+    }
 
     member this.Slice2D dimension =
         this.Structure.Item(dimension)
+
+    member this.FirstSlice2D =
+        let firstDimension =
+            this.Structure.Keys
+            |> Seq.sort
+            |> Seq.head
+
+        (firstDimension, this.Slice2D firstDimension)
 
     member this.TotalOfMazeCells =
         this.Structure
@@ -29,7 +36,7 @@ type NDimensionalStructure<'Grid, 'Position> =
             false
 
     member this.CoordinatesPartOfMaze =
-        let cells (dimension : Dimension) (adjStruct : IAdjacentStructure<_, _>) =
+        let cells (dimension : Dimension) (adjStruct : IAdjacentStructure<_,_>) =
             adjStruct.CoordinatesPartOfMaze
             |> Seq.map(NCoordinate.create dimension)
 
@@ -213,3 +220,6 @@ module NDimensionalStructure =
             NonAdjacent2DConnections = nonAdjacent2DConnections
             Obstacles = N_Obstacles.CreateEmpty
         }
+
+    let create2D adjStruct =
+        create [| 0 |] (fun () -> adjStruct)

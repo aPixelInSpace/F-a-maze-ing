@@ -97,12 +97,21 @@ type NonAdjacent2DConnections =
         this.ExistNeighbor fromCoordinate toCoordinate &&
         ConnectionType.isConnected (this.Container.Item(fromCoordinate).Item(toCoordinate))
 
-    member this.All =
+    member this.All (dimension : Dimension option) =
         seq {
             for fromItem in this.Container do
                 for toItem in this.Container.Item(fromItem.Key) do
-                    yield (fromItem.Key, toItem.Key, toItem.Value)
+                    match dimension with
+                    | Some dimension ->
+                        if fromItem.Key.ToDimension = dimension && toItem.Key.ToDimension = dimension then 
+                            yield (fromItem.Key, toItem.Key, toItem.Value)
+                    | None ->
+                        yield (fromItem.Key, toItem.Key, toItem.Value)
         } |> Seq.distinctBy(fun (c1, c2, _) -> Utils.getKey (c1, c2) )
+
+    member this.All2D dimension =
+        this.All (Some dimension)
+        |> Seq.map(fun (f, t, c) -> (f.ToCoordinate2D, t.ToCoordinate2D, c))
 
     static member CreateEmpty =
         { Container = Dictionary<NCoordinate, Dictionary<NCoordinate, ConnectionType>>() }

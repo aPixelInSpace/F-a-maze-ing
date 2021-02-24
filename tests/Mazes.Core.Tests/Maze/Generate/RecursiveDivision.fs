@@ -13,8 +13,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the recursive divi
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createEmptyBaseGrid
-        |> Mazes.Core.Grid.Grid.create
-    
+
     // act
     let maze = grid |> RecursiveDivision.createMaze 1 0.2 2 2
         

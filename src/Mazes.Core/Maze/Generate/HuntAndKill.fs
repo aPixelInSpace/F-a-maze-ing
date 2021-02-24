@@ -46,19 +46,7 @@ let transformIntoMaze
 
             headCoordinate <- nextCoordinate
 
-let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
-
-    let rng = Random(rngSeed)
-
-    transformIntoMaze
-        grid.RandomCoordinatePartOfMazeAndNotConnected
-        grid.ConnectedNeighbors
-        (grid.UpdateConnection ConnectionType.Open)
-        rng
-
-    { Grid = grid }
-
-let createMazeNDimensions rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.HyperMaze<_,_> =
+let createMazeNDimensions rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
     let rng = Random(rngSeed)
 

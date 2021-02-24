@@ -7,44 +7,32 @@ open Mazes.Core
 open Mazes.Core.Analysis
 open Mazes.Core.Analysis.Dijkstra.Tracker
 
-type Maze<'Grid> =
-    {    
-        Grid : Grid.IGrid<'Grid>
-    }
-
-    member this.createMap rootCoordinate =
-        Dijkstra.Map.create (this.Grid.ConnectedWithNeighbors true) this.Grid.CostOfCoordinate PriorityQueueTracker.createEmpty rootCoordinate
-
-    member this.OpenMaze (entrance, exit) =
-        this.Grid.OpenCell entrance
-        this.Grid.OpenCell exit
-
-type HyperMaze<'Grid, 'Position> =
+type Maze<'Grid, 'Position> =
     {    
         NDimensionalStructure : Grid.NDimensionalStructure<'Grid, 'Position>
     }
 
-//    member this.createMap rootCoordinate =
-//        Dijkstra.Map.create (this.Grid.ConnectedWithNeighbors true) this.Grid.CostOfCoordinate PriorityQueueTracker.createEmpty rootCoordinate
-//
-//    member this.OpenMaze (entrance, exit) =
-//        this.Grid.OpenCell entrance
-//        this.Grid.OpenCell exit
+    member this.createMap rootCoordinate =
+        Dijkstra.Map.create (this.NDimensionalStructure.ConnectedWithNeighbors true) this.NDimensionalStructure.CostOfCoordinate PriorityQueueTracker.createEmpty rootCoordinate
+
+    member this.OpenMaze (entrance, exit) =
+        this.NDimensionalStructure.OpenCell entrance
+        this.NDimensionalStructure.OpenCell exit
 
 module Maze =
 
-    let toMaze grid =
-        { Grid = grid }
+    let toMaze nDStruct =
+        { NDimensionalStructure = nDStruct }
 
-    let braid (rngSeed : int) (ratio : float) (deadEnds : Coordinate seq) (maze : Maze<_>) =
+    let braid (rngSeed : int) (ratio : float) (deadEnds : NCoordinate seq) (maze : Maze<_,_>) =
         let rng = Random(rngSeed)
 
         let linkToNotAlreadyLinkedNeighbor deadEndCoordinate =
             let notLinkedNeighbors =
-                maze.Grid.ConnectedWithNeighbors false deadEndCoordinate
+                maze.NDimensionalStructure.ConnectedWithNeighbors false deadEndCoordinate
                 |> Seq.toArray
             if notLinkedNeighbors.Length > 0 then
-                maze.Grid.UpdateConnection Open deadEndCoordinate notLinkedNeighbors.[rng.Next(notLinkedNeighbors.Length)]
+                maze.NDimensionalStructure.UpdateConnection Open deadEndCoordinate notLinkedNeighbors.[rng.Next(notLinkedNeighbors.Length)]
 
         deadEnds
         |> Seq.iter(fun deadEnd ->

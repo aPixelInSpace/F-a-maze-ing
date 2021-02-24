@@ -2,6 +2,7 @@
 
 namespace Mazes.Core.Grid
 
+open System
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas.Array2D
@@ -46,6 +47,15 @@ type GridArray2D<'Position when 'Position : equality> =
             this.ToInterface.Cells
             |> Seq.filter(fun (_, c) -> this.ToInterface.IsCellPartOfMaze c)
             |> Seq.map(snd)
+
+        member this.RandomCoordinatePartOfMazeAndNotConnected (rng : Random) =
+            let unconnectedPartOfMazeCells =
+                this.ToInterface.CoordinatesPartOfMaze
+                |> Seq.filter(fun c ->
+                    not (this.ToInterface.IsCellConnected c || this.ToInterface.IsCellConnected c))
+                |> Seq.toArray
+
+            unconnectedPartOfMazeCells.[rng.Next(unconnectedPartOfMazeCells.Length)]
 
         member this.IsLimitAt coordinate otherCoordinate =
             this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)

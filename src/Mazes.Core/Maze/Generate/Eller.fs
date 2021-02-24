@@ -9,7 +9,7 @@ open Mazes.Core.Maze.Generate.Kruskal
 
 // todo : refactor this
 // It has the same fundamentals problems as Sidewinder
-let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
+let createMaze rngSeed (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =
 
     let rng = Random(rngSeed)
 
@@ -18,7 +18,7 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
 
     let linkBottom current setKey addOtherBottoms =
         let linkBottom current =
-            let neighbor = grid.AdjacentNeighbor current Bottom
+            let neighbor = grid.Neighbor current Bottom
             match neighbor with
             | Some neighbor ->
                 grid.IfNotAtLimitUpdateConnection Open current neighbor
@@ -53,7 +53,7 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
                 | None ->                    
                     sets.AddToSet setKey neighbor
 
-        let neighbor = grid.AdjacentNeighbor current Right
+        let neighbor = grid.Neighbor current Right
         match neighbor with
         | Some neighbor ->
             let setKeyNeighbor = sets.GetSetKey neighbor
@@ -96,4 +96,4 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
                         |> Seq.filter(fun c -> c.RIndex = index1)
                     linkBottom (set |> Seq.head) setKey true
 
-    { Grid = grid }
+    { NDimensionalStructure = (Grid.NDimensionalStructure.create2D grid) }

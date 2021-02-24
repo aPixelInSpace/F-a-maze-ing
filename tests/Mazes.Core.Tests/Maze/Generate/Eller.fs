@@ -14,8 +14,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Eller's algorithm 
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
-    
+
     // act
     let maze = grid |> Eller.createMaze 1
         
@@ -39,8 +38,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with Eller's 
     let grid =
         (Disk.create 5 1.0 3)
         |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
-    
+
     // act
     let maze = grid |> Eller.createMaze 1
 

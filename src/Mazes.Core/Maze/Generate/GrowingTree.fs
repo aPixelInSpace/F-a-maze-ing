@@ -57,17 +57,24 @@ module GrowingTree =
 
         grid
 
-    let baseAlgorithmGrid
+    let baseAlgorithmAdjacentStructure
             startCoordinate
             count
             add
             next
             remove
             chooseNeighbor
-            (grid : Grid.IGrid<_>) =
+            (grid : Grid.IAdjacentStructure<_,_>) =
 
+        let unConnectedNeighbors coordinate =
+            grid.Neighbors coordinate
+            |> Seq.filter(fun neighbor ->
+                not (grid.IsCellConnected neighbor))
+            |> Seq.distinct
+            
+            
         baseAlgorithm
-            (grid.ConnectedNeighbors false)
+            unConnectedNeighbors
             (grid.UpdateConnection Open)
             startCoordinate
             count
@@ -80,7 +87,7 @@ module GrowingTree =
 
 module GrowingTreeMixRandomAndLast =
 
-    let createMaze rngSeed longPassages (grid : Grid.IGrid<_>) : Maze.Maze<_> =
+    let createMaze rngSeed longPassages (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
         let rng = Random(rngSeed)
 
@@ -88,7 +95,7 @@ module GrowingTreeMixRandomAndLast =
 
         // SortedList is not a great replacement for a Stack,
         // but at least we can remove an item at a given index
-        let actives = SortedList<int, Coordinate>()
+        let actives = SortedList<int, _>()
 
         let count () = actives.Count
 
@@ -109,19 +116,19 @@ module GrowingTreeMixRandomAndLast =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        let grid = grid |> GrowingTree.baseAlgorithmGrid randomStartCoordinate count add next remove chooseNeighbor
+        let grid = grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
-        { Grid = grid }
+        { NDimensionalStructure = grid }
 
 module GrowingTreeMixOldestAndLast =
 
-    let createMaze rngSeed longPassages (grid : Grid.IGrid<_>) : Maze.Maze<_> =
+    let createMaze rngSeed longPassages (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
         let rng = Random(rngSeed)
 
         let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
-        let actives = SortedList<int, Coordinate>()
+        let actives = SortedList<int, _>()
 
         let count () = actives.Count
 
@@ -142,20 +149,20 @@ module GrowingTreeMixOldestAndLast =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        let grid = grid |> GrowingTree.baseAlgorithmGrid randomStartCoordinate count add next remove chooseNeighbor
+        let grid = grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
-        { Grid = grid }
+        { NDimensionalStructure = grid }
 
 module GrowingTreeMixChosenRandomAndLast =
 
-    let createMaze rngSeed longPassages (grid : Grid.IGrid<_>) : Maze.Maze<_> =
+    let createMaze rngSeed longPassages (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
         let rng = Random(rngSeed)
 
         let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
-        let actives = SortedList<int, Coordinate>()
-        let mutable chosenCoordinate : Coordinate option = None
+        let actives = SortedList<int, _>()
+        let mutable chosenCoordinate : _ option = None
 
         let count () = actives.Count
 
@@ -184,13 +191,13 @@ module GrowingTreeMixChosenRandomAndLast =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        let grid = grid |> GrowingTree.baseAlgorithmGrid randomStartCoordinate count add next remove chooseNeighbor
+        let grid = grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
-        { Grid = grid }
+        { NDimensionalStructure = grid }
 
 module GrowingTreeDirection =
 
-    let createMaze rngSeed toRightWeight toBottomWeight toLeftWeight (grid : Grid.IGrid<_>) : Maze.Maze<_> =
+    let createMaze rngSeed toRightWeight toBottomWeight toLeftWeight (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =
 
         let bottomWeight = toRightWeight + toBottomWeight
         let leftWeight = bottomWeight + toLeftWeight
@@ -199,7 +206,7 @@ module GrowingTreeDirection =
 
         let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
-        let actives = Stack<Coordinate>()
+        let actives = Stack<_>()
 
         let count () = actives.Count
 
@@ -212,7 +219,7 @@ module GrowingTreeDirection =
         let remove _ =
             actives.Pop() |> ignore
 
-        let chooseNeighbor _ (unlinked : array<Coordinate>) =
+        let chooseNeighbor _ (unlinked : array<_>) =
             let rnd = rng.NextDouble()
             if rnd < toRightWeight then
                 unlinked
@@ -227,9 +234,9 @@ module GrowingTreeDirection =
                 unlinked
                 |> Array.minBy(fun c -> c.RIndex)
 
-        let grid = grid |> GrowingTree.baseAlgorithmGrid randomStartCoordinate count add next remove chooseNeighbor
+        let grid = grid |> GrowingTree.baseAlgorithmAdjacentStructure randomStartCoordinate count add next remove chooseNeighbor
 
-        { Grid = grid }
+        { NDimensionalStructure = (Grid.NDimensionalStructure.create2D grid) }
 
 module GrowingTreeSpiral =
 
@@ -243,13 +250,13 @@ module GrowingTreeSpiral =
         | Clockwise
         | CounterClockwise
 
-    let createMaze rngSeed spiralWeight spiralUniformity spiralMaxLength spiralRevolution (grid : Grid.IGrid<_>) : Maze.Maze<_> =
+    let createMaze rngSeed spiralWeight spiralUniformity spiralMaxLength spiralRevolution (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =
 
         let rng = Random(rngSeed)
 
         let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
-        let actives = Stack<Coordinate>()
+        let actives = Stack<_>()
 
         let count () = actives.Count
 
@@ -297,11 +304,11 @@ module GrowingTreeSpiral =
             | Position.Left -> Left
             | Position.Top -> Top
 
-        let chooseNeighbor coordinate (unlinked : array<Coordinate>) =
+        let chooseNeighbor coordinate (unlinked : array<_>) =
 
             let tryFind spiralDirection =
                 let pos = toPosition spiralDirection
-                match grid.AdjacentNeighbor coordinate pos with
+                match grid.Neighbor coordinate pos with
                 | Some next -> unlinked |> Array.tryFind(fun c -> c = next), pos
                 | _ -> None, pos
 
@@ -344,6 +351,6 @@ module GrowingTreeSpiral =
             else
                 unlinked.[rng.Next(unlinked.Length)]
 
-        let grid = grid |> GrowingTree.baseAlgorithmGrid randomStartCoordinate count add next remove chooseNeighbor
+        let grid = grid |> GrowingTree.baseAlgorithmAdjacentStructure randomStartCoordinate count add next remove chooseNeighbor
 
-        { Grid = grid }
+        { NDimensionalStructure = (Grid.NDimensionalStructure.create2D grid) }

@@ -6,13 +6,13 @@ open System
 open System.Collections.Generic
 open Mazes.Core
 
-let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
+let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
     let rng = Random(rngSeed)
 
     let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
 
-    let actives = Stack<Coordinate>()
+    let actives = Stack<_>()
 
     let count () = actives.Count
 
@@ -28,6 +28,6 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
     let chooseNeighbor _ (unlinked : array<'T>) =
         unlinked.[rng.Next(unlinked.Length)]
 
-    let grid = grid |> GrowingTree.baseAlgorithmGrid randomStartCoordinate count add next remove chooseNeighbor
+    let grid = grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
-    { Grid = grid }
+    { NDimensionalStructure = grid }

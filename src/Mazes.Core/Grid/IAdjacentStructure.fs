@@ -2,6 +2,7 @@
 
 namespace Mazes.Core.Grid
 
+open System
 open Mazes.Core
 
 type IAdjacentStructure<'Structure, 'Position> =
@@ -15,6 +16,7 @@ type IAdjacentStructure<'Structure, 'Position> =
     abstract member ExistAt : coordinate:Coordinate -> bool
     abstract member AdjustedExistAt : coordinate:Coordinate -> bool
     abstract member CoordinatesPartOfMaze : Coordinate seq
+    abstract member RandomCoordinatePartOfMazeAndNotConnected : rng:Random -> Coordinate
     /// Returns true if it is not possible to navigate from a coordinate to another coordinate (for example if there is a border between the two cells) 
     abstract member IsLimitAt : coordinate:Coordinate -> otherCoordinate:Coordinate -> bool
     abstract member Cell : coordinate:Coordinate -> ICell<'Position>

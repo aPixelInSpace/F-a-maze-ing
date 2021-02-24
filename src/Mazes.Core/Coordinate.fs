@@ -43,3 +43,7 @@ module NCoordinate =
         {
             DIndexes = Array.append [| coordinate.RIndex; coordinate.CIndex |] dimension
         }
+
+    let convertSeqToCoordinate2D (nCoordinates : NCoordinate seq) =
+        nCoordinates
+        |> Seq.map(fun c -> c.ToCoordinate2D)

@@ -9,12 +9,12 @@ open Mazes.Core.Analysis.Dijkstra.Tracker
 [<Struct>]
 type FarthestFromRoot = {
         Distance : Distance
-        Coordinates : Coordinate array
+        Coordinates : NCoordinate array
     }
 
 type CoordinatesByDistance =
     {
-        Container : Dictionary<Distance, HashSet<Coordinate>>
+        Container : Dictionary<Distance, HashSet<NCoordinate>>
     }
 
     member private this.RemoveBase distance coordinate =
@@ -33,7 +33,7 @@ type CoordinatesByDistance =
             let distanceSet = this.Container.Item(distance)
             distanceSet.Add(coordinate) |> ignore
         else
-            let distanceSet = HashSet<Coordinate>()
+            let distanceSet = HashSet<_>()
             distanceSet.Add(coordinate) |> ignore
             this.Container.Add(distance, distanceSet)
 
@@ -41,7 +41,7 @@ type CoordinatesByDistance =
         this.Container.Keys |> Seq.max
 
     member this.CoordinatesWithDistance distance =
-        let coordinates = Array.zeroCreate<Coordinate>(this.Container.Item(distance).Count)
+        let coordinates = Array.zeroCreate<_>(this.Container.Item(distance).Count)
         this.Container.Item(distance).CopyTo(coordinates)
 
         coordinates
@@ -50,15 +50,15 @@ type CoordinatesByDistance =
         { Distance = this.MaxDistance - 1; Coordinates = this.CoordinatesWithDistance(this.MaxDistance) }
 
     static member createEmpty =
-        { Container = Dictionary<Distance, HashSet<Coordinate>>() }
+        { Container = Dictionary<Distance, HashSet<_>>() }
 
 type Map =
     {
-        ShortestPathGraph : ShortestPathGraph<Coordinate>
+        ShortestPathGraph : ShortestPathGraph<NCoordinate>
         ConnectedNodes : int
-        Cost : Coordinate -> int
+        Cost : NCoordinate -> int
         FarthestFromRoot : FarthestFromRoot
-        Leaves : Coordinate array
+        Leaves : NCoordinate array
     }
 
     member this.LongestPaths =
@@ -74,11 +74,11 @@ type Map =
                     yield mapFromFarthest.ShortestPathGraph.PathFromGoalToRoot newFarthestCoordinate
         }
 
-    static member create (linkedNeighbors : Coordinate -> Coordinate seq) (cost : Coordinate -> int) (unvisitedTracker : ITracker<Coordinate, Distance>) rootCoordinate =
+    static member create (linkedNeighbors : NCoordinate -> NCoordinate seq) (cost : NCoordinate -> int) (unvisitedTracker : ITracker<NCoordinate, Distance>) rootCoordinate =
 
         let coordinatesByDistance = CoordinatesByDistance.createEmpty
 
-        let leaves = HashSet<Coordinate>()
+        let leaves = HashSet<_>()
 
         unvisitedTracker.Add rootCoordinate -1
 
@@ -120,7 +120,7 @@ type Map =
                             graph.AddEdge coordinate neighbor newDistance
                     | None -> ()
         
-        let leavesArray = Array.zeroCreate<Coordinate>(leaves.Count)
+        let leavesArray = Array.zeroCreate<_>(leaves.Count)
         leaves.CopyTo(leavesArray)
 
         { ShortestPathGraph = graph

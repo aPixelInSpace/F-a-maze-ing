@@ -28,21 +28,7 @@ let transformIntoMaze
 
         currentCoordinate <- nextCoordinate
 
-let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
-
-    let rng = Random(rngSeed)
-
-    transformIntoMaze
-        grid.RandomCoordinatePartOfMazeAndNotConnected
-        grid.Neighbors
-        grid.IsCellConnected
-        (grid.UpdateConnection ConnectionType.Open)
-        grid.TotalOfMazeCells
-        rng
-
-    { Grid = grid }
-
-let createMazeNDimensions rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.HyperMaze<_,_> =
+let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
     let rng = Random(rngSeed)
 
