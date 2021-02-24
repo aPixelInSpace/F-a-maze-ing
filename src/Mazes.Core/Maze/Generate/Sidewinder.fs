@@ -126,7 +126,9 @@ let private carveRow
            lastIndex2WithRemovablePos2Wall <- index2
            runStartIndex2 <- index2 + increment        
 
-let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =    
+let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =    
+
+    let slice2D = snd grid.FirstSlice2D
 
     let rng = Random(rngSeed)
 
@@ -148,56 +150,56 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
         let getCoordinate isByRows coordinate =
             match isByRows with
             | true -> getTraverseCoordinate isByRows coordinate
-            | false -> grid.AdjustedCoordinate (getTraverseCoordinate isByRows coordinate)
+            | false -> slice2D.AdjustedCoordinate (getTraverseCoordinate isByRows coordinate)
 
         match direction1, direction2 with
-         | _, Right -> (grid.RIndexes), (getCoordinate isByRows), (getTraverseCoordinate isByRows), 1, isByRows
-         | _, Left -> (grid.RIndexes), (getCoordinate isByRows), (getTraverseCoordinate isByRows), -1, isByRows
-         | _, Top -> (grid.CIndexes), (getCoordinate isByRows), (getTraverseCoordinate isByRows), -1, isByRows
-         | _, Bottom -> (grid.CIndexes), (getCoordinate isByRows), (getTraverseCoordinate isByRows), 1, isByRows
+         | _, Right -> (slice2D.RIndexes), (getCoordinate isByRows), (getTraverseCoordinate isByRows), 1, isByRows
+         | _, Left -> (slice2D.RIndexes), (getCoordinate isByRows), (getTraverseCoordinate isByRows), -1, isByRows
+         | _, Top -> (slice2D.CIndexes), (getCoordinate isByRows), (getTraverseCoordinate isByRows), -1, isByRows
+         | _, Bottom -> (slice2D.CIndexes), (getCoordinate isByRows), (getTraverseCoordinate isByRows), 1, isByRows
 
     let getDimension1Limits dimensionIndex =
          match direction1, direction2 with
          | _, Right ->
-             let (startIndex, length) = grid.Dimension2Boundaries dimensionIndex
+             let (startIndex, length) = slice2D.Dimension2Boundaries dimensionIndex
              (startIndex, getIndex (length + startIndex))
          | _, Left ->
-             let (startIndex, length) = grid.Dimension2Boundaries dimensionIndex
+             let (startIndex, length) = slice2D.Dimension2Boundaries dimensionIndex
              (getIndex (length + startIndex), startIndex)
          | _, Top ->
-             let (startIndex, length) = grid.Dimension1Boundaries dimensionIndex
+             let (startIndex, length) = slice2D.Dimension1Boundaries dimensionIndex
              (getIndex (length + startIndex), startIndex)
          | _, Bottom ->
-             let (startIndex, length) = grid.Dimension1Boundaries dimensionIndex
+             let (startIndex, length) = slice2D.Dimension1Boundaries dimensionIndex
              (startIndex, getIndex (length + startIndex))
 
     let neighborCoordinate coordinate position =
-            match (grid.Neighbor (getCoordinate coordinate) position) with
+            match (slice2D.Neighbor (getCoordinate coordinate) position) with
             | Some neighbor -> neighbor
             | None -> failwith "Sidewinder, unable to find the neighbor coordinate"
 
-    let isPartOfMaze coordinate = (grid.IsCellPartOfMaze (getCoordinate coordinate))
+    let isPartOfMaze coordinate = (slice2D.IsCellPartOfMaze (getCoordinate coordinate))
     
     let isInsideGridBoundary coordinate (direction : Direction) =
         let coordinate = getTraverseCoordinate coordinate
         let existAt =
             match isByRows with
-            | true -> grid.ExistAt
-            | false -> grid.AdjustedExistAt
+            | true -> slice2D.ExistAt
+            | false -> slice2D.AdjustedExistAt
 
-        match (grid.VirtualNeighbor coordinate direction.Position) with
+        match (slice2D.VirtualNeighbor coordinate direction.Position) with
         | Some neighbor -> existAt neighbor
         | None -> false
 
     let isALimitAt coordinate (direction : Direction) =
-        (grid.Neighbor (getCoordinate coordinate) direction.Position).IsNone ||
-        (grid.IsLimitAt (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position)) ||
+        (slice2D.Neighbor (getCoordinate coordinate) direction.Position).IsNone ||
+        (slice2D.IsLimitAt (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position)) ||
         (not (isInsideGridBoundary coordinate direction))
 
-    let linkCellAtPosition coordinate (direction : Direction) = (grid.UpdateConnection Open (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))
+    let linkCellAtPosition coordinate (direction : Direction) = (slice2D.UpdateConnection Open (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))
     let ifNotAtLimitLinkCellAtPosition coordinate (direction : Direction) =
-        if (grid.Neighbor (getCoordinate coordinate) direction.Position).IsSome then
-            (grid.IfNotAtLimitUpdateConnection Open (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))
+        if (slice2D.Neighbor (getCoordinate coordinate) direction.Position).IsSome then
+            (slice2D.IfNotAtLimitUpdateConnection Open (getCoordinate coordinate) (neighborCoordinate coordinate direction.Position))
 
     let getRandomIndex2FromRange = (getRandomIndex2AtPos1ForFromRange isALimitAt rng increment direction1)
 
@@ -222,4 +224,4 @@ let createMaze (direction1 : Direction) (direction2 : Direction) rngSeed rngDire
             index1
             increment)
 
-    { NDimensionalStructure = (Grid.NDimensionalStructure.create2D grid) }
+    { NDimensionalStructure = grid }

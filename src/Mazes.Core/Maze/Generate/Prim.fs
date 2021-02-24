@@ -38,7 +38,7 @@ module PrimSimple =
 
 module PrimSimpleModified =
 
-    let createMazeNDimensions rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+    let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
         let rng = Random(rngSeed)
 
@@ -76,7 +76,7 @@ module PrimSimpleModified =
 
 module PrimWeighted =
 
-    let createMazeNDimensions rngSeed maxWeight (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+    let createMaze rngSeed maxWeight (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
         let rng = Random(rngSeed)
 

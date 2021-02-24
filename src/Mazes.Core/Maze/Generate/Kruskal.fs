@@ -53,7 +53,7 @@ type Sets<'K> when 'K : equality =
         { Container = Dictionary<'K, HashSet<'K>>() }
 
 /// Randomized Kruskal's algorithm
-let createMazeNDimensions rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
     let rng = Random(rngSeed)
 

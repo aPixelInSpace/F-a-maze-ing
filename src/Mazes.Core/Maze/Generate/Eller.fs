@@ -9,7 +9,9 @@ open Mazes.Core.Maze.Generate.Kruskal
 
 // todo : refactor this
 // It has the same fundamentals problems as Sidewinder
-let createMaze rngSeed (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =
+let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+
+    let slice2D = snd grid.FirstSlice2D
 
     let rng = Random(rngSeed)
 
@@ -18,10 +20,10 @@ let createMaze rngSeed (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =
 
     let linkBottom current setKey addOtherBottoms =
         let linkBottom current =
-            let neighbor = grid.Neighbor current Bottom
+            let neighbor = slice2D.Neighbor current Bottom
             match neighbor with
             | Some neighbor ->
-                grid.IfNotAtLimitUpdateConnection Open current neighbor
+                slice2D.IfNotAtLimitUpdateConnection Open current neighbor
                 sets.AddToSet setKey neighbor
             | None -> ()
 
@@ -42,10 +44,10 @@ let createMaze rngSeed (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =
     let linkRight current setKey (listOfRowSetKey : HashSet<Coordinate>) =
 
         let linkRight neighbor setKeyNeighbor =
-            if grid.IsLimitAt current neighbor then
+            if slice2D.IsLimitAt current neighbor then
                 linkBottom current setKey true
             else
-                grid.IfNotAtLimitUpdateConnection Open current neighbor
+                slice2D.IfNotAtLimitUpdateConnection Open current neighbor
                 match setKeyNeighbor with
                 | Some setKeyNeighbor ->
                     listOfRowSetKey.Remove(setKeyNeighbor) |> ignore
@@ -53,7 +55,7 @@ let createMaze rngSeed (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =
                 | None ->                    
                     sets.AddToSet setKey neighbor
 
-        let neighbor = grid.Neighbor current Right
+        let neighbor = slice2D.Neighbor current Right
         match neighbor with
         | Some neighbor ->
             let setKeyNeighbor = sets.GetSetKey neighbor
@@ -66,11 +68,11 @@ let createMaze rngSeed (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =
                 
         | None -> linkBottom current setKey true
 
-    let lastIndex1 = grid.RIndexes |> Seq.last
-    for index1 in grid.RIndexes do
+    let lastIndex1 = slice2D.RIndexes |> Seq.last
+    for index1 in slice2D.RIndexes do
 
         let listOfRowSetKey = HashSet<Coordinate>()
-        let (startIndex2, endIndex2) = grid.Dimension2Boundaries index1
+        let (startIndex2, endIndex2) = slice2D.Dimension2Boundaries index1
 
         for index2 in startIndex2 .. endIndex2 - 1 do
             let current = { RIndex = index1; CIndex = index2 }
@@ -96,4 +98,4 @@ let createMaze rngSeed (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =
                         |> Seq.filter(fun c -> c.RIndex = index1)
                     linkBottom (set |> Seq.head) setKey true
 
-    { NDimensionalStructure = (Grid.NDimensionalStructure.create2D grid) }
+    { NDimensionalStructure = grid }

@@ -87,19 +87,21 @@ let private carveRow
         | _ ->
             grid.UpdateConnection Open coordinate (neighborCoordinate direction2.Position)
 
-let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.IAdjacentStructure<_,_>) : Maze.Maze<_,_> =
+let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2Weight (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+
+    let slice2D = snd grid.FirstSlice2D
 
     let rng = Random(rngSeed)
 
     let getRowInfo rowIndex =
-        let (startIndex, length) = grid.Dimension2Boundaries rowIndex
+        let (startIndex, length) = slice2D.Dimension2Boundaries rowIndex
         match direction1, direction2 with
         | _, Left | Left, _ -> (getIndex length , -1, startIndex)
         | _ -> (startIndex, 1, getIndex length)
 
     let rngTotalWeight = rngDirection1Weight + rngDirection2Weight
 
-    grid.RIndexes
+    slice2D.RIndexes
     |> Seq.iter(fun rIndex ->
         carveRow
             // params
@@ -108,8 +110,8 @@ let createMaze direction1 direction2 rngSeed rngDirection1Weight rngDirection2We
             rng
             rngTotalWeight
             rngDirection1Weight
-            grid
+            slice2D
             rIndex
             (getRowInfo rIndex))    
 
-    { NDimensionalStructure = (Grid.NDimensionalStructure.create2D grid) }
+    { NDimensionalStructure = grid }

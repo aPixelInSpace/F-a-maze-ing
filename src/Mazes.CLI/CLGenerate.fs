@@ -68,8 +68,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     
     let matchAlgoEnumWithFunction algoEnum rngSeed =
         match algoEnum with
-           //| AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
-           //| AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top rngSeed 1 1
+           | AlgoEnum.BinaryTree -> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom rngSeed 1 1
+           | AlgoEnum.Sidewinder -> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top rngSeed 1 1
            | AlgoEnum.AldousBroder -> AldousBroder.createMaze rngSeed
            | AlgoEnum.Wilson -> Wilson.createMaze rngSeed
            | AlgoEnum.HuntAndKill -> HuntAndKill.createMaze rngSeed

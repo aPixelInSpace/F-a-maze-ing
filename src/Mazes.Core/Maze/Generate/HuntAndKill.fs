@@ -46,7 +46,7 @@ let transformIntoMaze
 
             headCoordinate <- nextCoordinate
 
-let createMazeNDimensions rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
     let rng = Random(rngSeed)
 
