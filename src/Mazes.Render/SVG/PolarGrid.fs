@@ -86,11 +86,11 @@ let render (grid : NDimensionalStructure<GridArrayOfA, PolarPosition>) path map 
     let bridgeHalfWidth = 5.0
     let bridgeDistanceFromCenter = 7.0
 
-    let totalOfCells = grid.TotalOfMazeCells
+    let (dimension, slice2D) = grid.FirstSlice2D
+    let totalOfCells = slice2D.TotalOfCells
+
     let centerX = (float)((totalOfCells * ringHeight) + marginWidth)
     let centerY = (float)((totalOfCells * ringHeight) + marginHeight)
-
-    let (dimension, slice2D) = grid.FirstSlice2D
 
     let width = (totalOfCells * ringHeight * 2) + (marginWidth * 2)
     let height = (totalOfCells * ringHeight * 2) + (marginHeight * 2)

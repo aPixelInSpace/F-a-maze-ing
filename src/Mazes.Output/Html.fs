@@ -55,7 +55,7 @@ let private rowNumber numberOfRows rowIndex =
         String.replicate (rowIndex.ToString().Length) " "
         + " "
 
-let outputHtml (maze : Maze<Grid<GridArray2D<OrthoPosition>, OrthoPosition>>) mazeInfo (textRenderedMaze : string) =
+let outputHtml (maze : IAdjacentStructure<GridArray2D<OrthoPosition>, OrthoPosition>) mazeInfo (textRenderedMaze : string) =
     let resourcesDir = Path.Combine(Directory.GetCurrentDirectory(), "Output.Resources/")
 
     let mainHtml = File.ReadAllText(Path.Combine(resourcesDir, "Main.html-template"))
@@ -64,7 +64,7 @@ let outputHtml (maze : Maze<Grid<GridArray2D<OrthoPosition>, OrthoPosition>>) ma
 
     let sbMaze = StringBuilder()
 
-    let spGrid = maze.Grid.ToSpecializedGrid.BaseGrid.ToSpecializedStructure
+    let spGrid = maze.ToSpecializedStructure
 
     textRenderedMaze.Split("\n")
     |> Array.iteri(fun rowIndex mazeTextRow ->

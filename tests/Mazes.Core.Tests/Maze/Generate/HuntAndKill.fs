@@ -9,13 +9,15 @@ open Mazes.Core.Canvas.Array2D.Shape
 open Mazes.Core.Canvas.ArrayOfA.Shape
 open Mazes.Core.Maze.Generate
 
+let createCoordinate2D = NCoordinate.create [| 0 |]
+
 [<Fact>]
 let ``Given a ortho grid 5 by 10, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let orthoGrid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
     
     // act
     let maze = orthoGrid |> HuntAndKill.createMaze 1
@@ -29,10 +31,10 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Hunt and Kill 
         "| |  _ _ _ _|_ _  | |\n" +
         "|_ _ _ _ _ _ _ _ _|_|\n"
 
-    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
+    snd maze.NDimensionalStructure.FirstSlice2D |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
 
 [<Fact>]
 let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output and every cell should be accessible`` () =
@@ -40,12 +42,12 @@ let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a 
     let orthoGrid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
-    orthoGrid.AddUpdateConnectionNonAdjacentNeighbor ConnectionType.Close { RIndex = 2; CIndex = 4 } { RIndex = 4; CIndex = 4 }
-    orthoGrid.AddUpdateConnectionNonAdjacentNeighbor ConnectionType.Close { RIndex = 3; CIndex = 2 } { RIndex = 4; CIndex = 4 }
-    orthoGrid.AddUpdateConnectionNonAdjacentNeighbor ConnectionType.Close { RIndex = 3; CIndex = 2 } { RIndex = 1; CIndex = 1 }
-    orthoGrid.AddUpdateConnectionNonAdjacentNeighbor ConnectionType.Close { RIndex = 4; CIndex = 8 } { RIndex = 2; CIndex = 7 }
+    orthoGrid.NonAdjacent2DConnections.UpdateConnection ConnectionType.Close (createCoordinate2D { RIndex = 2; CIndex = 4 }) (createCoordinate2D { RIndex = 4; CIndex = 4 })
+    orthoGrid.NonAdjacent2DConnections.UpdateConnection ConnectionType.Close (createCoordinate2D { RIndex = 3; CIndex = 2 }) (createCoordinate2D { RIndex = 4; CIndex = 4 })
+    orthoGrid.NonAdjacent2DConnections.UpdateConnection ConnectionType.Close (createCoordinate2D { RIndex = 3; CIndex = 2 }) (createCoordinate2D { RIndex = 1; CIndex = 1 })
+    orthoGrid.NonAdjacent2DConnections.UpdateConnection ConnectionType.Close (createCoordinate2D { RIndex = 4; CIndex = 8 }) (createCoordinate2D { RIndex = 2; CIndex = 7 })
     
     // act
     let maze = orthoGrid |> HuntAndKill.createMaze 1
@@ -59,10 +61,10 @@ let ``Given a ortho grid 5 by 10 with non adjacent neighbors, when generating a 
         "| |     |  _    |   |\n" +
         "|_ _|_|_ _|_ _|_ _|_|\n"
 
-    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
+    snd maze.NDimensionalStructure.FirstSlice2D |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
 
 [<Fact>]
 let ``Given a polar disc grid with 5 rings, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output`` () =
@@ -70,7 +72,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Hunt
     let grid =
         (Disk.create 5 1.0 3)
         |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
     
     // act
     let maze = grid |> HuntAndKill.createMaze 1
@@ -84,10 +86,10 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Hunt
         "¦‾¦¨|¨¦‾¦¨|¨¦‾¦¨|¨¦‾¦¨¦‾¦¨|¨¦¨|¨¦¨¦‾¦‾¦‾¦¨|¨¦¨¦‾¦\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
+    snd maze.NDimensionalStructure.FirstSlice2D |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
 
 [<Fact>]
 let ``Given a triangular grid 5 by 10, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output`` () =
@@ -95,7 +97,7 @@ let ``Given a triangular grid 5 by 10, when generating a maze with the Hunt and 
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Tri.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
     
     // act
     let maze = grid |> HuntAndKill.createMaze 1
@@ -105,8 +107,8 @@ let ``Given a triangular grid 5 by 10, when generating a maze with the Hunt and 
         
     //maze.Grid.ToString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
 
 [<Fact>]
 let ``Given a octagon-square grid 5 by 10, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output`` () =
@@ -114,18 +116,18 @@ let ``Given a octagon-square grid 5 by 10, when generating a maze with the Hunt 
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.OctaSquare.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
     
     // act
     let maze = grid |> HuntAndKill.createMaze 1
 
     // assert
     //let expectedMaze = ""
-        
+
     //maze.Grid.ToString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
 
 [<Fact>]
 let ``Given a Cairo pentagonal grid 5 by 10, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output`` () =
@@ -133,7 +135,7 @@ let ``Given a Cairo pentagonal grid 5 by 10, when generating a maze with the Hun
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.PentaCairo.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
     
     // act
     let maze = grid |> HuntAndKill.createMaze 1
@@ -143,8 +145,8 @@ let ``Given a Cairo pentagonal grid 5 by 10, when generating a maze with the Hun
         
     //maze.Grid.ToString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
 
 [<Fact>]
 let ``Given a brick grid 5 by 10, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output`` () =
@@ -152,15 +154,15 @@ let ``Given a brick grid 5 by 10, when generating a maze with the Hunt and Kill 
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Brick.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
-    
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
+
     // act
     let maze = grid |> HuntAndKill.createMaze 1
 
     // assert
     //let expectedMaze = ""
-        
+
     //maze.Grid.ToString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells

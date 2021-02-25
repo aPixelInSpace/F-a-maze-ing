@@ -14,15 +14,15 @@ let ``Given a maze, when braiding the maze, then the number of dead ends should 
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
     
     let maze = grid |> HuntAndKill.createMaze 1
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
     map.Leaves.Length |> should equal 9
     
     // act
     let maze = maze |> Maze.braid 1 0.5 map.Leaves
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
         
     // assert
     map.Leaves.Length |> should equal 3
@@ -34,4 +34,4 @@ let ``Given a maze, when braiding the maze, then the number of dead ends should 
         "| |  _ _ _ _|_ _  | |\n" +
         "|_ _ _ _ _ _ _ _ _|_|\n"
         
-    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
+    snd maze.NDimensionalStructure.FirstSlice2D |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze

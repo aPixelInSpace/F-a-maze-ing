@@ -19,7 +19,7 @@ let private theta180 = convertToRadian 180.0
 let private theta270 = convertToRadian 270.0
 let private theta360 = convertToRadian 360.0
 
-let private calculatePointD (marginWidth, marginHeight, hypDoubleGreatSide, lenghtSmallSide) coordinate =
+let private calculatePointD (marginWidth, marginHeight, hypDoubleGreatSide, lenghtSmallSide) (coordinate : Coordinate) =
     (marginWidth + (float)(coordinate.CIndex / 2) * hypDoubleGreatSide, marginHeight + (float)(coordinate.RIndex / 2) * hypDoubleGreatSide + lenghtSmallSide)
 
 let private calculatePointsQuadrant pentGreatSide pointD thetaRotation =
@@ -36,8 +36,8 @@ let private calculatePointsQuadrant pentGreatSide pointD thetaRotation =
 
     ((sx,sy), (ax,ay), (bx,by), (cx,cy), pointD)
 
-let private calculatePointsQuadrantOne calculatePointD calculatePointsQuadrant coordinate =
-    let quadrantOnePointD = calculatePointD coordinate
+let private calculatePointsQuadrantOne calculatePointD calculatePointsQuadrant (coordinate : NCoordinate) =
+    let quadrantOnePointD = calculatePointD coordinate.ToCoordinate2D
     
     calculatePointsQuadrant
         quadrantOnePointD
@@ -45,8 +45,8 @@ let private calculatePointsQuadrantOne calculatePointD calculatePointsQuadrant c
 
 let private thetaQuadrantTwoTranslation = convertToRadian (thetaDegBase + 45.0)
 let private thetaQuadrantTwoRotation = thetaRadBase + theta270
-let private calculatePointsQuadrantTwo calculatePointD calculatePointsQuadrant hypGreatSide coordinate =
-    let quadrantOnePointD = calculatePointD {coordinate with CIndex = coordinate.CIndex + 1}
+let private calculatePointsQuadrantTwo calculatePointD calculatePointsQuadrant hypGreatSide (coordinate : NCoordinate) =
+    let quadrantOnePointD = calculatePointD {coordinate.ToCoordinate2D with CIndex = coordinate.ToCoordinate2D.CIndex + 1}
     let quadrantTwoPointD = calculatePoint quadrantOnePointD thetaQuadrantTwoTranslation hypGreatSide
 
     calculatePointsQuadrant
@@ -55,8 +55,8 @@ let private calculatePointsQuadrantTwo calculatePointD calculatePointsQuadrant h
 
 let private thetaQuadrantThreeTranslation = convertToRadian (thetaDegBase - 45.0)
 let private thetaQuadrantThreeRotation = thetaRadBase + theta90
-let private calculatePointsQuadrantThree calculatePointD calculatePointsQuadrant hypGreatSide coordinate =
-    let quadrantOnePointD = calculatePointD coordinate
+let private calculatePointsQuadrantThree calculatePointD calculatePointsQuadrant hypGreatSide (coordinate : NCoordinate) =
+    let quadrantOnePointD = calculatePointD coordinate.ToCoordinate2D
     let quadrantThreePointD = calculatePoint quadrantOnePointD thetaQuadrantThreeTranslation hypGreatSide
 
     calculatePointsQuadrant
@@ -64,16 +64,16 @@ let private calculatePointsQuadrantThree calculatePointD calculatePointsQuadrant
         thetaQuadrantThreeRotation
 
 let private thetaQuadrantFourRotation = thetaRadBase + theta180
-let private calculatePointsQuadrantFour calculatePointD calculatePointsQuadrant pentGreatSide coordinate =
-    let quadrantOnePointD = calculatePointD { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex + 1}
+let private calculatePointsQuadrantFour calculatePointD calculatePointsQuadrant pentGreatSide (coordinate : NCoordinate) =
+    let quadrantOnePointD = calculatePointD { RIndex = coordinate.ToCoordinate2D.RIndex - 1; CIndex = coordinate.ToCoordinate2D.CIndex + 1}
     let quadrantFourPointD = calculatePoint quadrantOnePointD thetaRadBase (2.0 * pentGreatSide)
 
     calculatePointsQuadrant
         quadrantFourPointD
         thetaQuadrantFourRotation
 
-let private calculatePoints calculatePointD calculatePointsQuadrant (pentGreatSide, hypGreatSide) coordinate =
-    match PentaCairoPositionHandler.Quadrant coordinate with
+let private calculatePoints calculatePointD calculatePointsQuadrant (pentGreatSide, hypGreatSide) (coordinate : NCoordinate) =
+    match PentaCairoPositionHandler.Quadrant coordinate.ToCoordinate2D with
     | One -> calculatePointsQuadrantOne calculatePointD calculatePointsQuadrant coordinate
     | Two -> calculatePointsQuadrantTwo calculatePointD calculatePointsQuadrant hypGreatSide coordinate
     | Three -> calculatePointsQuadrantThree calculatePointD calculatePointsQuadrant hypGreatSide coordinate
@@ -87,13 +87,14 @@ let center calculatePoints coordinate =
 
     middlePoint middleLittleSide b // this is a good enough approximation
 
-let private appendWallsType calculatePoints (grid : Grid<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) appendWall coordinate (sBuilder : StringBuilder) =
-    let cell = grid.BaseGrid.Cell coordinate
+let private appendWallsType calculatePoints (grid : IAdjacentStructure<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) appendWall (coordinate : NCoordinate) (sBuilder : StringBuilder) =
+    let coordinate2D = coordinate.ToCoordinate2D
+    let cell = grid.Cell coordinate2D
 
     let ((sx,sy), (ax,ay), (bx,by), (cx,cy), (dx,dy)) =
         calculatePoints coordinate
 
-    for position in PentaCairoPositionHandler.Instance.Values coordinate do
+    for position in PentaCairoPositionHandler.Instance.Values coordinate2D do
         let lines =
             match position with
             | S -> $"M {round dx} {round dy} L {round sx} {round sy}"
@@ -114,7 +115,7 @@ let private wholeCellLines calculatePoints coordinate =
     $"L {round cx} {round cy} " +
     $"L {round dx} {round dy}"
 
-let render (grid : Grid<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) path map entrance exit =
+let render (grid : NDimensionalStructure<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) path map entrance exit =
 
     let sBuilder = StringBuilder()
 
@@ -139,6 +140,11 @@ let render (grid : Grid<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) pa
     let bridgeHalfWidth = 7.0
     let bridgeDistanceFromCenter = 5.0
 
+    let (dimension, slice2D) = grid.FirstSlice2D
+
+    let coordinatesPartOfMaze = grid.CoordinatesPartOfMaze
+    let nonAdjacentNeighbors = (grid.NonAdjacent2DConnections.All (Some dimension))
+
     let calculatePointD = calculatePointD (marginWidth, marginHeight, hypDoubleGreatSide, lenghtSmallSide)
     let calculatePointsQuadrant = calculatePointsQuadrant pentGreatSide
     let calculatePoints = calculatePoints calculatePointD calculatePointsQuadrant (pentGreatSide, hypGreatSide)
@@ -146,29 +152,28 @@ let render (grid : Grid<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) pa
     let center = (center calculatePoints)
 
     let calculatePointsBridge = calculatePointsBridge center bridgeHalfWidth bridgeDistanceFromCenter
-    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
-    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
+    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge nonAdjacentNeighbors
+    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge nonAdjacentNeighbors
 
     let calculateLength numberOf =
         numberOf * (hypDoubleGreatSide / 2.0) + pentGreatSide
 
-    let spGrid = grid.BaseGrid.ToSpecializedStructure
-    let width = calculateLength ((float)spGrid.NumberOfColumns) + marginWidth * 2.0
-    let height = calculateLength ((float)spGrid.NumberOfRows) + marginHeight * 2.0
+    let width = calculateLength ((float)slice2D.ToSpecializedStructure.NumberOfColumns) + marginWidth * 2.0
+    let height = calculateLength ((float)slice2D.ToSpecializedStructure.NumberOfRows) + marginHeight * 2.0
 
     let wholeCellLines = wholeCellLines calculatePoints
     let wholeBridgeLines = wholeBridgeLines calculatePointsBridge
 
-    let appendWallsType = appendWallsType calculatePoints grid
+    let appendWallsType = appendWallsType calculatePoints slice2D
 
     let appendSimpleWalls sBuilder =
-        appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+        appendSimpleWalls coordinatesPartOfMaze appendWallsType sBuilder
     
     let appendWallsWithInset sBuilder =
-        appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+        appendWallsWithInset coordinatesPartOfMaze appendWallsType sBuilder
 
     let appendPathAndBridgesWithAnimation =
-        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
+        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacent2DConnections.ExistNeighbor wholeBridgeLines
 
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())
@@ -185,8 +190,8 @@ let render (grid : Grid<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) pa
     //|> appendWallsWithInset
 
     |> appendSimpleBridges
-    |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
-    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All map wholeBridgeLines
+    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines
+    |> appendMazeDistanceBridgeColoration nonAdjacentNeighbors map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
 

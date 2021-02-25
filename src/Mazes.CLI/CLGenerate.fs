@@ -108,15 +108,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let grid =
         Shape.Disk.create 9 1.0 2
-        |> Grid.Type.Polar.Grid.createBaseGrid
-        |> Grid.Grid.create
-
-    let baseAdjacentStructure =
-        fun () ->
-            Shape.Rectangle.create 10 10
-            |> Grid.Type.Ortho.Grid.createBaseGrid
-
-    let gridN = baseAdjacentStructure |> Grid.NDimensionalStructure.create [| 1; 2; 1; |]
+        |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
@@ -211,7 +204,6 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
         //(fun _ -> grid)
 
     let maze = (algo rngSeed grid)
-    let hyperMaze = PrimWeighted.createMazeNDimensions 1 42 gridN
 
     //maze.Grid.AddTwoWayTeleport { RIndex = 2; CIndex = 4 } { RIndex = 41; CIndex = 8 }
     //maze.Grid.AddCostForCoordinate 200 { RIndex = maze.Grid.GetFirstPartOfMazeZone.RIndex + 1; CIndex = maze.Grid.GetFirstPartOfMazeZone.CIndex}
@@ -223,14 +215,14 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     stopWatch.Restart()
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
 
     stopWatch.Stop()
     printfn $"Created map ({stopWatch.ElapsedMilliseconds} ms)"
 
     //
 
-    maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
+    maze.OpenMaze (maze.NDimensionalStructure.GetFirstCellPartOfMaze, maze.NDimensionalStructure.GetLastCellPartOfMaze)
 
     stopWatch.Restart()
 
@@ -256,7 +248,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.OrthoGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
         
-    let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map)  (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)
+    let renderedGridSvg = SVG.PolarGrid.render (maze.NDimensionalStructure) (Some (map.ShortestPathGraph.PathFromRootTo maze.NDimensionalStructure.GetLastCellPartOfMaze)) (Some map)  (Some maze.NDimensionalStructure.GetFirstCellPartOfMaze) (Some maze.NDimensionalStructure.GetLastCellPartOfMaze)
     //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
     //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map)  (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)

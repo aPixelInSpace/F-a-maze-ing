@@ -15,6 +15,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Sidewinder alg
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     // act
     let maze = grid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -28,7 +29,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Sidewinder alg
         "| | |_ _|_| |_  |_  |\n" +
         "|_|_ _ _ _|_ _|_ _|_|\n"
         
-    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
+    snd maze.NDimensionalStructure.FirstSlice2D |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
 type SidewinderDirectionEnum =
     | Top = 1
@@ -73,6 +74,7 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
     let gridRectangle =
         Rectangle.create numberOfRows numberOfColumns
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let map = mapSidewinderDirectionEnumToSidewinderDirection
 
@@ -81,11 +83,11 @@ let ``Given a rectangular canvas, when creating a maze with the sidewinder algor
 
     // we use the map to ensure that the total nodes accessible in the maze is equal to the total number of maze nodes of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
-    let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
+    let rootCoordinate = maze.NDimensionalStructure.GetFirstCellPartOfMaze
     let map = maze.createMap rootCoordinate
 
     // assert
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
 
 [<Theory>]
 [<InlineData(1, TBE.Top, 1, 1, SDE.Top, SDE.Right, 1, 1, 1)>]
@@ -152,6 +154,7 @@ let ``Given a triangular ortho grid, when creating a maze with the sidewinder al
     let gridTriangle =
         TriangleIsosceles.create baseLength baseAt baseDecrement heightIncrement
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let map = mapSidewinderDirectionEnumToSidewinderDirection
 
@@ -160,11 +163,11 @@ let ``Given a triangular ortho grid, when creating a maze with the sidewinder al
 
     // we use the map to ensure that the total nodes accessible in the maze is equal to the total number of maze zones of the canvas
     // thus ensuring that the every cell in the maze is accessible after creating the maze
-    let rootCoordinate = maze.Grid.GetFirstCellPartOfMaze
+    let rootCoordinate = maze.NDimensionalStructure.GetFirstCellPartOfMaze
     let map = maze.createMap rootCoordinate
 
     // assert
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
 
 [<Fact>]
 let ``Given a polar disc grid with 5 rings, when generating a maze with the Sidewinder algorithm (rng 1), then the output should be like the expected output`` () =
@@ -172,6 +175,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Side
     let grid =
         (Disk.create 5 1.0 3)
         |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     // act
     let maze = grid |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
@@ -185,10 +189,10 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Side
         "|¨|¨|¨|‾¦¨|‾¦‾¦¨|¨¦‾¦‾¦‾|¨¦‾|¨¦‾|¨|¨|‾¦¨¦‾¦‾¦‾|¨|\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
+    snd maze.NDimensionalStructure.FirstSlice2D |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
 
 [<Theory>]
 [<InlineData(1, 1.0, 1, SDE.Top, SDE.Left, 1, 1, 1)>]
@@ -232,10 +236,11 @@ let ``Given a disc polar grid, when creating a maze with the sidewinder algorith
     let grid =
         (Disk.create numberOfRings widthHeightRatio numberOfCellsForCenterRing)
         |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     // act
     let maze = grid |> Sidewinder.createMaze (map direction1) (map direction2) rngSeed direction1Weight direction2Weight
 
     // assert
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells

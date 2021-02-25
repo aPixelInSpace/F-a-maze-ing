@@ -28,6 +28,6 @@ let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_>
     let chooseNeighbor _ (unlinked : array<'T>) =
         unlinked.[rng.Next(unlinked.Length)]
 
-    let grid = grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
+    grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
     { NDimensionalStructure = grid }

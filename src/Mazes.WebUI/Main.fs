@@ -77,7 +77,7 @@ let newRandomMaze () =
 
         algo.[rng.Next(algo.Length)] grid
 
-    let generateMaze (grid : IGrid<'G>) render =
+    let generateMaze (grid : NDimensionalStructure<_,_>) render =
         if rng.NextDouble() < 0.5 then
             grid.Weave rng (rng.NextDouble())
         
@@ -85,18 +85,18 @@ let newRandomMaze () =
         
         //let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
         //render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
-        maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
-        render (maze.Grid.ToSpecializedGrid) None None (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)
+        maze.OpenMaze (maze.NDimensionalStructure.GetFirstCellPartOfMaze, maze.NDimensionalStructure.GetLastCellPartOfMaze)
+        render maze.NDimensionalStructure None None (Some maze.NDimensionalStructure.GetFirstCellPartOfMaze) (Some maze.NDimensionalStructure.GetLastCellPartOfMaze)
 
     let gridType canvas =
         match rng.Next(7) with
-        | 0 -> generateMaze (canvas |> Grid.Type.Ortho.Grid.createBaseGrid |> Grid.create) SVG.OrthoGrid.render
-        | 1 -> generateMaze (canvas |> Grid.Type.Hex.Grid.createBaseGrid |> Grid.create) SVG.HexGrid.render
-        | 2 -> generateMaze (canvas |> Grid.Type.Tri.Grid.createBaseGrid |> Grid.create) SVG.TriGrid.render
-        | 3 -> generateMaze (canvas |> Grid.Type.OctaSquare.Grid.createBaseGrid |> Grid.create) SVG.OctaSquareGrid.render
-        | 4 -> generateMaze (canvas |> Grid.Type.PentaCairo.Grid.createBaseGrid |> Grid.create) SVG.PentaCairoGrid.render
-        | 5 -> generateMaze (canvas |> Grid.Type.Brick.Grid.createBaseGrid |> Grid.create) SVG.BrickGrid.render
-        | 6 -> generateMaze (Disk.create (rng.Next(15, 25)) 1.0 (rng.Next(1, 7)) |> Grid.Type.Polar.Grid.createBaseGrid |> Grid.create) SVG.PolarGrid.render
+        | 0 -> generateMaze (canvas |> Grid.Type.Ortho.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.OrthoGrid.render
+        | 1 -> generateMaze (canvas |> Grid.Type.Hex.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.HexGrid.render
+        | 2 -> generateMaze (canvas |> Grid.Type.Tri.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.TriGrid.render
+        | 3 -> generateMaze (canvas |> Grid.Type.OctaSquare.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.OctaSquareGrid.render
+        | 4 -> generateMaze (canvas |> Grid.Type.PentaCairo.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.PentaCairoGrid.render
+        | 5 -> generateMaze (canvas |> Grid.Type.Brick.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.BrickGrid.render
+        | 6 -> generateMaze (Disk.create (rng.Next(15, 25)) 1.0 (rng.Next(1, 7)) |> Grid.Type.Polar.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.PolarGrid.render
         | _ -> failwith "rng problem"
 
     gridType canvas

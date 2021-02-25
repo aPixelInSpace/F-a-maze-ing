@@ -11,12 +11,12 @@ open Mazes.Core.Grid
 open Mazes.Core.Grid.Type.Hex
 open Mazes.Render.SVG.Base
 
-let private calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeight, hexHeight, marginWidth, marginHeight) coordinate =
-    let lengthAtLeft = (float)coordinate.CIndex * (3.0 * hexHalfEdgeSize) + marginWidth
+let private calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeight, hexHeight, marginWidth, marginHeight) (coordinate : NCoordinate) =
+    let lengthAtLeft = (float)coordinate.ToCoordinate2D.CIndex * (3.0 * hexHalfEdgeSize) + marginWidth
     let lengthAtTop =
-        match (HexPositionHandler.IsEven coordinate) with
-        | true -> (float)coordinate.RIndex * hexHeight + hexHalfHeight + marginHeight
-        | false -> (float)coordinate.RIndex * hexHeight + marginHeight
+        match (HexPositionHandler.IsEven coordinate.ToCoordinate2D) with
+        | true -> (float)coordinate.ToCoordinate2D.RIndex * hexHeight + hexHalfHeight + marginHeight
+        | false -> (float)coordinate.ToCoordinate2D.RIndex * hexHeight + marginHeight
 
     let leftX = lengthAtLeft
     let leftY = lengthAtTop + hexHalfHeight
@@ -43,13 +43,14 @@ let center calculatePoints coordinate =
 
     middlePoint topLeft bottomRight
 
-let private appendWallsType calculatePoints (grid : Grid<GridArray2D<HexPosition>, HexPosition>) appendWall coordinate (sBuilder : StringBuilder) =
+let private appendWallsType calculatePoints (grid : IAdjacentStructure<GridArray2D<HexPosition>, HexPosition>) appendWall (coordinate : NCoordinate) (sBuilder : StringBuilder) =
     let ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY)) =
         calculatePoints coordinate
 
-    let cell = grid.BaseGrid.Cell coordinate
+    let coordinate2D = coordinate.ToCoordinate2D
+    let cell = grid.Cell coordinate2D
 
-    for position in HexPositionHandler.Instance.Values coordinate do
+    for position in HexPositionHandler.Instance.Values coordinate2D do
         let lines =
             match position with
             | TopLeft -> $"M {round leftX} {round leftY} L {round topLeftX} {round topLeftY}"
@@ -72,7 +73,7 @@ let private wholeCellLines calculatePoints coordinate =
     $"L {round bottomRightX} {round bottomRightY} " +
     $"L {round bottomLeftX} {round bottomLeftY} "
 
-let render (grid : Grid<GridArray2D<HexPosition>, HexPosition>) path map entrance exit =
+let render (grid : NDimensionalStructure<GridArray2D<HexPosition>, HexPosition>) path map entrance exit =
 
     let sBuilder = StringBuilder()
 
@@ -88,28 +89,32 @@ let render (grid : Grid<GridArray2D<HexPosition>, HexPosition>) path map entranc
     let bridgeHalfWidth = 6.0
     let bridgeDistanceFromCenter = 20.0
 
-    let spGrid = grid.BaseGrid.ToSpecializedStructure
-    let width = (3.0 * hexHalfEdgeSize * (float)spGrid.NumberOfColumns) + hexHalfEdgeSize + (float)(marginWidth * 2)
-    let height = (hexHeight * (float)spGrid.NumberOfRows) + hexHalfHeight + (float)(marginHeight * 2)
+    let (dimension, slice2D) = grid.FirstSlice2D
+
+    let width = (3.0 * hexHalfEdgeSize * (float)slice2D.ToSpecializedStructure.NumberOfColumns) + hexHalfEdgeSize + (float)(marginWidth * 2)
+    let height = (hexHeight * (float)slice2D.ToSpecializedStructure.NumberOfRows) + hexHalfHeight + (float)(marginHeight * 2)
+
+    let coordinatesPartOfMaze = grid.CoordinatesPartOfMaze
+    let nonAdjacentNeighbors = (grid.NonAdjacent2DConnections.All (Some dimension))
 
     let calculatePoints = calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeight, hexHeight, (float)marginWidth, (float)marginHeight)
 
     let calculatePointsBridge = calculatePointsBridge (center calculatePoints) bridgeHalfWidth bridgeDistanceFromCenter
-    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
-    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
+    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge nonAdjacentNeighbors
+    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge nonAdjacentNeighbors
 
-    let appendWallsType = appendWallsType calculatePoints grid
+    let appendWallsType = appendWallsType calculatePoints slice2D
     let wholeCellLines = wholeCellLines calculatePoints
     let wholeBridgeLines = wholeBridgeLines calculatePointsBridge
 
     let appendSimpleWalls sBuilder =
-        appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+        appendSimpleWalls coordinatesPartOfMaze appendWallsType sBuilder
     
     let appendWallsWithInset sBuilder =
-        appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+        appendWallsWithInset coordinatesPartOfMaze appendWallsType sBuilder
 
     let appendPathAndBridgesWithAnimation =
-        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
+        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacent2DConnections.ExistNeighbor wholeBridgeLines
 
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())
@@ -125,8 +130,8 @@ let render (grid : Grid<GridArray2D<HexPosition>, HexPosition>) path map entranc
     //|> appendWallsWithInset
 
     |> appendSimpleBridges
-    |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
-    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All map wholeBridgeLines
+    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines
+    |> appendMazeDistanceBridgeColoration nonAdjacentNeighbors map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
 

@@ -39,14 +39,15 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid 
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid  |> Text.renderGrid
-        
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D  |> Text.renderGrid
+
     // assert
     let expectedRenderedMaze =
         "                      ┏━┓   ┏━┓                             ┏━━━━━━━━━━━━━━━━━━━━━━━━━┓                 ┏━━━━━━━━━━━━━┓                            \n" +
@@ -65,7 +66,7 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
         "            ┠─╯ ┗━━━┛ ┬ ┃   ┃ ┃         ┃ ┗━━━━━━━━━━━━━━━┛ │ ┬ ├─┴───╯ ┬ │ ┬ ├─────╴ │ ┗━━━━━━━━━━━━━━━╋━┛         ┃ ┃ ┠─╯ ┃                      \n" +
         "            ┃ ╭─╴ ┬ ┬ │ ┃   ┃ ┃         ┗━━━━━━━━━━━━━━━━━━━┪ ├─╯ ┬ ╭─╴ ├─╯ │ │ ┬ ╭─╴ ┢━━━━━━━━━━━━━━━━━┛           ┃ ┃ ┗━━━┛                      \n" +
         "            ┗━┷━━━┷━┷━┷━┛   ┗━┛                             ┗━┷━━━┷━┷━━━┷━━━┷━┷━┷━┷━━━┛                             ┗━┛                            "
-        
+
     renderedMaze |> should equal expectedRenderedMaze
 
 [<Fact>]
@@ -74,13 +75,14 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid 
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Left 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid  |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D  |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -109,13 +111,14 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid 
         |> BinaryTree.createMaze BinaryTree.Direction.Bottom BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid  |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D  |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -144,13 +147,14 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid 
         |> BinaryTree.createMaze BinaryTree.Direction.Bottom BinaryTree.Direction.Left 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid  |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D  |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -179,13 +183,14 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid 
         |> BinaryTree.createMaze BinaryTree.Direction.Right BinaryTree.Direction.Top 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid  |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D  |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -214,13 +219,14 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid 
         |> BinaryTree.createMaze BinaryTree.Direction.Right BinaryTree.Direction.Bottom 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid  |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D  |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -249,13 +255,14 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid 
         |> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Top 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid  |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D  |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -284,13 +291,14 @@ let ``Rendering a customized composite canvas generated with the binary tree alg
     let grid =
         canvas
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid 
         |> BinaryTree.createMaze BinaryTree.Direction.Left BinaryTree.Direction.Bottom 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid  |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D  |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

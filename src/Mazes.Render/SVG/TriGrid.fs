@@ -11,13 +11,13 @@ open Mazes.Core.Grid
 open Mazes.Core.Grid.Type.Tri
 open Mazes.Render.SVG.Base
 
-let private calculatePoints (calculateWidth, calculateHeight, isUpright, triWidth, triHalfWidth, triHeight) coordinate =
-    let baseLengthAtRight = calculateWidth ((float)(coordinate.CIndex + 1))
-    let baseLengthAtBottom = calculateHeight ((float)(coordinate.RIndex + 1))
+let private calculatePoints (calculateWidth, calculateHeight, isUpright, triWidth, triHalfWidth, triHeight) (coordinate : NCoordinate) =
+    let baseLengthAtRight = calculateWidth ((float)(coordinate.ToCoordinate2D.CIndex + 1))
+    let baseLengthAtBottom = calculateHeight ((float)(coordinate.ToCoordinate2D.RIndex + 1))
     let baseLengthAtLeft = baseLengthAtRight - triWidth
     let baseLengthAtTop = baseLengthAtBottom - triHeight
 
-    let isUpright = isUpright coordinate 
+    let isUpright = isUpright coordinate.ToCoordinate2D
 
     let leftX = baseLengthAtLeft
     let middleX = baseLengthAtLeft + triHalfWidth
@@ -30,20 +30,21 @@ let private calculatePoints (calculateWidth, calculateHeight, isUpright, triWidt
 
     ((leftX, leftY), (middleX, middleY), (rightX, rightY))
 
-let center calculatePoints isUpright halfTriHeight coordinate =
+let center calculatePoints isUpright halfTriHeight (coordinate : NCoordinate) =
     let (_, middle, _) = calculatePoints coordinate
 
-    if isUpright coordinate then
+    if isUpright coordinate.ToCoordinate2D then
         translatePoint (0.0, halfTriHeight) middle
     else
         translatePoint (0.0, -halfTriHeight) middle
 
-let private appendWallsType calculatePoints (grid : Grid<GridArray2D<TriPosition>, TriPosition>) appendWall coordinate (sBuilder : StringBuilder) =
+let private appendWallsType calculatePoints (grid : IAdjacentStructure<GridArray2D<TriPosition>, TriPosition>) appendWall (coordinate : NCoordinate) (sBuilder : StringBuilder) =
     let ((leftX, leftY), (middleX, middleY), (rightX, rightY)) = calculatePoints coordinate
 
-    let cell = grid.BaseGrid.Cell coordinate
+    let coordinate2D = coordinate.ToCoordinate2D
+    let cell = grid.Cell coordinate2D
 
-    for position in TriPositionHandler.Instance.Values coordinate do
+    for position in TriPositionHandler.Instance.Values coordinate.ToCoordinate2D do
         let lines =
             match position with
             | Left -> $"M {round leftX} {round leftY} L {round middleX} {round middleY}"
@@ -59,7 +60,7 @@ let private wholeCellLines calculatePoints coordinate =
     $"L {round middleX} {round middleY} " +
     $"L {round rightX} {round rightY} "
 
-let render (grid : Grid<GridArray2D<TriPosition>, TriPosition>) path map entrance exit =
+let render (grid : NDimensionalStructure<GridArray2D<TriPosition>, TriPosition>) path map entrance exit =
 
     let sBuilder = StringBuilder()
 
@@ -73,9 +74,9 @@ let render (grid : Grid<GridArray2D<TriPosition>, TriPosition>) path map entranc
     let bridgeHalfWidth = 4.0
     let bridgeDistanceFromCenter = 3.0
 
-    let spGrid = grid.BaseGrid.ToSpecializedStructure
+    let (dimension, slice2D) = grid.FirstSlice2D
 
-    let isNumberOfColumnsEven = spGrid.NumberOfColumns % 2 = 0
+    let isNumberOfColumnsEven = slice2D.ToSpecializedStructure.NumberOfColumns % 2 = 0
     let calculateWidth numberOfColumns =
         if isNumberOfColumnsEven then
             marginWidth + ((numberOfColumns - 1.0) / 2.0) * triWidth + triHalfWidth
@@ -86,28 +87,31 @@ let render (grid : Grid<GridArray2D<TriPosition>, TriPosition>) path map entranc
 
     let isUpright = TriPositionHandler.IsUpright
 
+    let coordinatesPartOfMaze = grid.CoordinatesPartOfMaze
+    let nonAdjacentNeighbors = (grid.NonAdjacent2DConnections.All (Some dimension))
+
     let calculatePoints = calculatePoints (calculateWidth, calculateHeight, isUpright, triWidth, triHalfWidth, triHeight)
     let center = (center calculatePoints isUpright (triHeight / 2.0))
 
     let calculatePointsBridge = calculatePointsBridge center bridgeHalfWidth bridgeDistanceFromCenter
-    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
-    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
+    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge nonAdjacentNeighbors
+    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge nonAdjacentNeighbors
 
-    let appendWallsType = appendWallsType calculatePoints grid
+    let appendWallsType = appendWallsType calculatePoints slice2D
     let wholeCellLines = wholeCellLines calculatePoints
     let wholeBridgeLines = wholeBridgeLines calculatePointsBridge
 
     let appendSimpleWalls sBuilder =
-        appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+        appendSimpleWalls coordinatesPartOfMaze appendWallsType sBuilder
     
     let appendWallsWithInset sBuilder =
-        appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+        appendWallsWithInset coordinatesPartOfMaze appendWallsType sBuilder
 
     let appendPathAndBridgesWithAnimation =
-        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
+        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacent2DConnections.ExistNeighbor wholeBridgeLines
 
-    let width = calculateWidth ((float)spGrid.NumberOfColumns) + marginWidth
-    let height = calculateHeight ((float)spGrid.NumberOfRows) + marginHeight
+    let width = calculateWidth ((float)slice2D.ToSpecializedStructure.NumberOfColumns) + marginWidth
+    let height = calculateHeight ((float)slice2D.ToSpecializedStructure.NumberOfRows) + marginHeight
 
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())
@@ -123,8 +127,8 @@ let render (grid : Grid<GridArray2D<TriPosition>, TriPosition>) path map entranc
     //|> appendWallsWithInset
 
     |> appendSimpleBridges
-    |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
-    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All map wholeBridgeLines
+    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines
+    |> appendMazeDistanceBridgeColoration nonAdjacentNeighbors map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
 

@@ -126,11 +126,11 @@ type PolarCell =
 
 module Grid =
 
-    let toString (maze : IGrid<Grid<GridArrayOfA, PolarPosition>>) =
+    let toString (maze : IAdjacentStructure<GridArrayOfA, PolarPosition>) =
         let sBuilder = StringBuilder()
 
-        let cells = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.Cells
-        let connectionTypeAtPosition = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.ConnectionTypeAtPosition
+        let cells = maze.ToSpecializedStructure.Cells
+        let connectionTypeAtPosition = maze.ToSpecializedStructure.ConnectionTypeAtPosition
 
         let appendHorizontalWall wallType (sBuilder : StringBuilder) =
             match wallType with

@@ -72,13 +72,16 @@ type NDimensionalStructure<'Grid, 'Position> =
         (this.Slice2D nCoordinate.ToDimension).IsCellConnected nCoordinate.ToCoordinate2D
 
     member this.AreConnected nCoordinate otherNCoordinate =
+        let existNonAdjacentNeighbor = this.NonAdjacent2DConnections.ExistNeighbor nCoordinate otherNCoordinate
+
         let nonAdjacent2DCondition =
-            if this.NonAdjacent2DConnections.ExistNeighbor nCoordinate otherNCoordinate then
+            if existNonAdjacentNeighbor then
                 this.NonAdjacent2DConnections.AreConnected nCoordinate otherNCoordinate
             else
                 false
         
         let adjacent2DCondition =
+            not existNonAdjacentNeighbor &&
             (nCoordinate.IsSame2DDimension otherNCoordinate) &&
             (this.Slice2D nCoordinate.ToDimension).AreConnected nCoordinate.ToCoordinate2D otherNCoordinate.ToCoordinate2D
 
@@ -91,7 +94,7 @@ type NDimensionalStructure<'Grid, 'Position> =
             let isConnectedNonAdjacent2d = this.NonAdjacent2DConnections.IsCellConnected neighbor
 
             if isConnected then isConnectedAdjacent2d || isConnectedNonAdjacent2d
-            else isConnectedAdjacent2d && isConnectedNonAdjacent2d)
+            else not (isConnectedAdjacent2d) && not (isConnectedNonAdjacent2d))
         |> Seq.distinct
 
     member this.ConnectedWithNeighbors connected nCoordinate =

@@ -15,13 +15,14 @@ let ``Rendering a 3 by 3 maze generated with the sidewinder algorithm (Top, Righ
     let grid =
         (Shape.Rectangle.create 3 3)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -38,13 +39,14 @@ let ``Rendering a 5 by 5 maze generated with the sidewinder algorithm (Top, Righ
     let grid =
         (Shape.Rectangle.create 5 5)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -63,13 +65,14 @@ let ``Rendering a 5 by 10 maze generated with the sidewinder algorithm (Top, Rig
     let grid =
         (Shape.Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

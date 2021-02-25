@@ -14,7 +14,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Recursive Back
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     // act
     let maze = grid |> RecursiveBacktracker.createMaze 1
@@ -28,10 +28,10 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the Recursive Back
         "| | |   |_  |   | | |\n" +
         "|_ _ _|_ _ _|_|_ _ _|\n"
 
-    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
+    snd maze.NDimensionalStructure.FirstSlice2D |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
 
 [<Fact>]
 let ``Given a polar disc grid with 5 rings, when generating a maze with the Recursive Backtracker algorithm (rng 1), then the output should be like the expected output`` () =
@@ -39,7 +39,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Recu
     let grid =
         (Disk.create 5 1.0 3)
         |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
     
     // act
     let maze = grid |> RecursiveBacktracker.createMaze 1
@@ -53,7 +53,7 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Recu
         "¦‾¦¨¦‾|¨¦¨¦‾¦‾¦‾¦¨|¨¦‾¦‾¦‾¦‾¦¨|¨¦‾¦¨|¨¦‾¦‾¦‾¦¨|¨¦\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
         
-    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
+    snd maze.NDimensionalStructure.FirstSlice2D |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells

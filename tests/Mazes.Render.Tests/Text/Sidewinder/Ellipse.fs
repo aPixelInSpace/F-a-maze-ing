@@ -15,13 +15,14 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -40,13 +41,14 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Left 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -65,14 +67,15 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
-        
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
+
     // assert
     let expectedRenderedMaze =
         "        ┏━┓        \n" +
@@ -81,7 +84,7 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
         "┗━┱───╴ ╶─╯ ┴ ┴ ┏━┛\n" +
         "  ┗━━━━━┓ ┏━━━━━┛  \n" +
         "        ┗━┛        "
-        
+
     renderedMaze |> should equal expectedRenderedMaze
 
 [<Fact>]
@@ -90,13 +93,14 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Left 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -115,13 +119,14 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -140,13 +145,14 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Top 1 1 1
     
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -165,13 +171,14 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -190,13 +197,14 @@ let ``Rendering a row radius 3, column radius 5, in inside mode ellipse maze gen
     let grid =
         (Shape.Ellipse.create 3 5 0.0 0.0 0 0 None Shape.Ellipse.Side.Inside)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Bottom 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -215,13 +223,14 @@ let ``Rendering a row radius 15, column radius 25, row translation factor 14, in
     let grid =
         (Shape.Ellipse.create 15 25 0.0 0.0 14 0 None Shape.Ellipse.Side.Outside)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -264,13 +273,14 @@ let ``Rendering a row radius 15, column radius 25, row translation factor 14, in
     let grid =
         (Shape.Ellipse.create 15 25 0.0 0.0 14 0 None Shape.Ellipse.Side.Outside)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom 1 1 1
     
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -313,13 +323,14 @@ let ``Rendering a row radius 25, column radius 15, column translation factor 14,
     let grid =
         (Shape.Ellipse.create 25 15 0.0 0.0 0 14 None Shape.Ellipse.Side.Outside)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
     
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -382,13 +393,14 @@ let ``Rendering a row radius 25, column radius 15, column translation factor 14,
     let grid =
         (Shape.Ellipse.create 25 15 0.0 0.0 0 14 None Shape.Ellipse.Side.Outside)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom 1 1 1
     
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDimensionalStructure.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

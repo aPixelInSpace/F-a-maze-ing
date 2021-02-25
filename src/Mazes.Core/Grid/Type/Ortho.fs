@@ -140,10 +140,10 @@ type OrthoCell =
 
 module Grid =
 
-    let toString (maze : IGrid<Grid<GridArray2D<OrthoPosition>, OrthoPosition>>) =
+    let toString (maze : IAdjacentStructure<GridArray2D<OrthoPosition>, OrthoPosition>) =
         let sBuilder = StringBuilder()
-        let cells = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.Cells
-        let connectionTypeAtPosition = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.ConnectionTypeAtPosition
+        let cells = maze.ToSpecializedStructure.Cells
+        let connectionTypeAtPosition = maze.ToSpecializedStructure.ConnectionTypeAtPosition
 
         let appendHorizontalWall wallType =
             match wallType with

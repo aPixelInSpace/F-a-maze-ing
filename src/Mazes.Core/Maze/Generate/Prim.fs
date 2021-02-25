@@ -32,7 +32,7 @@ module PrimSimple =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        let grid = grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
+        grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
         { NDimensionalStructure = grid }
 
@@ -98,6 +98,6 @@ module PrimWeighted =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        let grid = grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
+        grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
         { NDimensionalStructure = grid }

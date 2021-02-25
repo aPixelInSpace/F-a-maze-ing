@@ -13,10 +13,11 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the recursive divi
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Ortho.Grid.createEmptyBaseGrid
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
 
     // act
     let maze = grid |> RecursiveDivision.createMaze 1 0.2 2 2
-        
+
     // assert
     let expectedMaze =
         " _ _ _ _ _ _ _ _ _ _ \n" + 
@@ -25,8 +26,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the recursive divi
         "|_ _  |_ _|_|  _|   |\n" +
         "|  _ _| |_  |       |\n" +
         "|_ _ _|_ _ _ _|_|_ _|\n"
-        
-    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    snd maze.NDimensionalStructure.FirstSlice2D |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
+
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells

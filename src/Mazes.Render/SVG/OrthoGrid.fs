@@ -36,6 +36,7 @@ let private appendWallsType calculatePoints (grid : IAdjacentStructure<GridArray
 
     let coordinate2D = coordinate.ToCoordinate2D
     let cell = grid.Cell coordinate2D
+
     for position in OrthoPositionHandler.Instance.Values coordinate2D do
         let wallType = (cell.ConnectionTypeAtPosition position)
         let lines =

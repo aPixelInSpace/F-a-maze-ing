@@ -28,10 +28,10 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Aldous-Broder algo
         "| |      _ _ _ _| | |\n" +
         "|_ _|_|_ _ _ _|_ _ _|\n"
 
-    maze.Grid |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
+    snd maze.NDimensionalStructure.FirstSlice2D |> Mazes.Core.Grid.Type.Ortho.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
 
 [<Fact>]
 let ``Given a polar disc grid with 5 rings, when generating a maze with the Aldous-Broder algorithm (rng 1), then the output should be like the expected output`` () =
@@ -39,8 +39,8 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Aldo
     let grid =
         (Disk.create 5 1.0 3)
         |> Mazes.Core.Grid.Type.Polar.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
-    
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
+
     // act
     let maze = grid |> AldousBroder.createMaze 1
 
@@ -52,11 +52,11 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the Aldo
         "|‾¦¨¦‾¦‾¦¨¦‾|¨|‾¦‾¦‾¦¨|¨|¨¦‾¦‾¦‾¦‾¦‾¦‾|¨¦‾¦¨¦‾¦‾|\n" +
         "|‾¦‾¦‾¦¨|¨¦‾|¨¦‾|¨|‾¦¨|¨¦‾¦‾¦¨|‾¦¨|‾¦‾¦¨|‾¦¨|¨¦‾|\n" +
         " ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾ ‾\n"
-        
-    maze.Grid |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    snd maze.NDimensionalStructure.FirstSlice2D |> Mazes.Core.Grid.Type.Polar.Grid.toString |> should equal expectedMaze
+
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
 
 [<Fact>]
 let ``Given a hex disc grid 5 by 10, when generating a maze with the Aldous-Broder algorithm (rng 1), then the output should be like the expected output`` () =
@@ -64,7 +64,7 @@ let ``Given a hex disc grid 5 by 10, when generating a maze with the Aldous-Brod
     let grid =
         (Rectangle.create 5 10)
         |> Mazes.Core.Grid.Type.Hex.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Mazes.Core.Grid.NDimensionalStructure.create2D
     
     // act
     let maze = grid |> AldousBroder.createMaze 1
@@ -74,5 +74,5 @@ let ``Given a hex disc grid 5 by 10, when generating a maze with the Aldous-Brod
         
     //maze.Grid.ToString |> should equal expectedMaze
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.Grid.TotalOfMazeCells
+    let map = maze.createMap maze.NDimensionalStructure.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDimensionalStructure.TotalOfMazeCells
