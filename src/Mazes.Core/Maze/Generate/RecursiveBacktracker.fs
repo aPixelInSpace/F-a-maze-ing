@@ -5,12 +5,13 @@ module Mazes.Core.Maze.Generate.RecursiveBacktracker
 open System
 open System.Collections.Generic
 open Mazes.Core
+open Mazes.Core.Structure
 
-let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+let createMaze rngSeed (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
     let rng = Random(rngSeed)
 
-    let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
+    let randomStartCoordinate = ndStruct.RandomCoordinatePartOfMazeAndNotConnected rng
 
     let actives = Stack<_>()
 
@@ -28,6 +29,6 @@ let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_>
     let chooseNeighbor _ (unlinked : array<'T>) =
         unlinked.[rng.Next(unlinked.Length)]
 
-    grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
+    ndStruct |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
-    { NDimensionalStructure = grid }
+    { NDStruct = ndStruct }

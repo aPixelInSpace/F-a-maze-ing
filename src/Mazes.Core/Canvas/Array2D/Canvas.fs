@@ -38,7 +38,7 @@ type Canvas =
     member this.GetZoneByZone extractBy filter =
         this.Zones |> getItemByItem extractBy filter
 
-    member this.NeighborsPartOfMazeOf (listOfNeighborCoordinatePosition : (Coordinate * 'P) seq) =
+    member this.NeighborsPartOfMazeOf (listOfNeighborCoordinatePosition : (Coordinate2D * 'P) seq) =
         seq {
             for (coordinate, position) in listOfNeighborCoordinatePosition do
                 if (this.ExistAt coordinate) && (this.Zone coordinate).IsAPartOfMaze then

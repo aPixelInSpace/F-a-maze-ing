@@ -7,14 +7,15 @@ open System.Collections.Generic
 open System.Linq
 open Priority_Queue
 open Mazes.Core
+open Mazes.Core.Structure
 
 module PrimSimple =
 
-    let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+    let createMaze rngSeed (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
+        let randomStartCoordinate = ndStruct.RandomCoordinatePartOfMazeAndNotConnected rng
 
         let actives = HashSet<_>()
 
@@ -32,17 +33,17 @@ module PrimSimple =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
+        ndStruct |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
-        { NDimensionalStructure = grid }
+        { NDStruct = ndStruct }
 
 module PrimSimpleModified =
 
-    let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+    let createMaze rngSeed (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
+        let randomStartCoordinate = ndStruct.RandomCoordinatePartOfMazeAndNotConnected rng
 
         let inSet = HashSet<_>()
         let frontierSet = HashSet<_>()
@@ -57,7 +58,7 @@ module PrimSimpleModified =
             found.[rng.Next(found.Length)]
 
         inSet.Add(randomStartCoordinate) |> ignore
-        frontierSet.UnionWith((randomStartCoordinate |> grid.ConnectedNeighbors false))
+        frontierSet.UnionWith((randomStartCoordinate |> ndStruct.ConnectedNeighbors false))
 
         while frontierSet.Count > 0 do
             let next = frontierSet.ElementAt(rng.Next(frontierSet.Count))
@@ -65,22 +66,22 @@ module PrimSimpleModified =
             frontierSet.Remove(next) |> ignore
             inSet.Add(next) |> ignore
 
-            let unlinkedNeighbors = next |> grid.Neighbors
+            let unlinkedNeighbors = next |> ndStruct.Neighbors
             let inSetCoordinate = randomFromInset unlinkedNeighbors
 
-            grid.UpdateConnection Open inSetCoordinate next
+            ndStruct.UpdateConnection Open inSetCoordinate next
 
-            frontierSet.UnionWith((next |> grid.ConnectedNeighbors false))
+            frontierSet.UnionWith((next |> ndStruct.ConnectedNeighbors false))
 
-        { NDimensionalStructure = grid }
+        { NDStruct = ndStruct }
 
 module PrimWeighted =
 
-    let createMaze rngSeed maxWeight (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+    let createMaze rngSeed maxWeight (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
+        let randomStartCoordinate = ndStruct.RandomCoordinatePartOfMazeAndNotConnected rng
 
         let actives = SimplePriorityQueue<_, int>()
 
@@ -98,6 +99,6 @@ module PrimWeighted =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
+        ndStruct |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
-        { NDimensionalStructure = grid }
+        { NDStruct = ndStruct }

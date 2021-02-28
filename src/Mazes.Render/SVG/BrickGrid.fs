@@ -5,9 +5,9 @@ module Mazes.Render.SVG.BrickGrid
 open System.Text
 open Mazes.Core
 open Mazes.Core.Trigonometry
-open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid
-open Mazes.Core.Grid.Type.Brick
+open Mazes.Core.Structure
+open Mazes.Core.Structure.Grid2D
+open Mazes.Core.Structure.Grid2D.Type.Brick
 open Mazes.Render.SVG.Base
 
 let private cellWidth = 48

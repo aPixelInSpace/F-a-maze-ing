@@ -6,33 +6,34 @@ open System
 open Mazes.Core
 open Mazes.Core.Analysis
 open Mazes.Core.Analysis.Dijkstra.Tracker
+open Mazes.Core.Structure
 
 type Maze<'Grid, 'Position> =
     {    
-        NDimensionalStructure : Grid.NDimensionalStructure<'Grid, 'Position>
+        NDStruct : NDimensionalStructure<'Grid, 'Position>
     }
 
     member this.createMap rootCoordinate =
-        Dijkstra.Map.create (this.NDimensionalStructure.ConnectedWithNeighbors true) this.NDimensionalStructure.CostOfCoordinate PriorityQueueTracker.createEmpty rootCoordinate
+        Dijkstra.Map.create (this.NDStruct.ConnectedWithNeighbors true) this.NDStruct.CostOfCoordinate PriorityQueueTracker.createEmpty rootCoordinate
 
     member this.OpenMaze (entrance, exit) =
-        this.NDimensionalStructure.OpenCell entrance
-        this.NDimensionalStructure.OpenCell exit
+        this.NDStruct.OpenCell entrance
+        this.NDStruct.OpenCell exit
 
 module Maze =
 
     let toMaze nDStruct =
-        { NDimensionalStructure = nDStruct }
+        { NDStruct = nDStruct }
 
     let braid (rngSeed : int) (ratio : float) (deadEnds : NCoordinate seq) (maze : Maze<_,_>) =
         let rng = Random(rngSeed)
 
         let linkToNotAlreadyLinkedNeighbor deadEndCoordinate =
             let notLinkedNeighbors =
-                maze.NDimensionalStructure.ConnectedWithNeighbors false deadEndCoordinate
+                maze.NDStruct.ConnectedWithNeighbors false deadEndCoordinate
                 |> Seq.toArray
             if notLinkedNeighbors.Length > 0 then
-                maze.NDimensionalStructure.UpdateConnection Open deadEndCoordinate notLinkedNeighbors.[rng.Next(notLinkedNeighbors.Length)]
+                maze.NDStruct.UpdateConnection Open deadEndCoordinate notLinkedNeighbors.[rng.Next(notLinkedNeighbors.Length)]
 
         deadEnds
         |> Seq.iter(fun deadEnd ->

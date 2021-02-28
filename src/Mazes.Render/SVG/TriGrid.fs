@@ -6,9 +6,9 @@ open System
 open System.Text
 open Mazes.Core
 open Mazes.Core.Trigonometry
-open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid
-open Mazes.Core.Grid.Type.Tri
+open Mazes.Core.Structure
+open Mazes.Core.Structure.Grid2D
+open Mazes.Core.Structure.Grid2D.Type.Tri
 open Mazes.Render.SVG.Base
 
 let private calculatePoints (calculateWidth, calculateHeight, isUpright, triWidth, triHalfWidth, triHeight) (coordinate : NCoordinate) =

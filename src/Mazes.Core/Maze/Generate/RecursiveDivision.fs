@@ -5,13 +5,14 @@ module Mazes.Core.Maze.Generate.RecursiveDivision
 open System
 open System.Collections.Generic
 open Mazes.Core
+open Mazes.Core.Structure
 
 type private Slice = (int * int * int * int)
 
-// todo : refactor this, sadly it only works with rectangular orthogonal grid for now
-let createMaze rngSeed rooms roomsHeight roomsWidth (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+// todo : refactor this, sadly it only works with rectangular orthogonal ndStruct for now
+let createMaze rngSeed rooms roomsHeight roomsWidth (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
-    let slice2D = snd grid.FirstSlice2D
+    let slice2D = snd ndStruct.FirstSlice2D
 
     let rng = Random(rngSeed)
 
@@ -138,4 +139,4 @@ let createMaze rngSeed rooms roomsHeight roomsWidth (grid : Grid.NDimensionalStr
             if startRIndex < endRIndex then
                 sliceHorizontally (startRIndex, endRIndex, startCIndex, endCIndex)
 
-    { NDimensionalStructure = grid }
+    { NDStruct = ndStruct }

@@ -5,6 +5,7 @@ module Mazes.Core.Maze.Generate.Kruskal
 open System
 open System.Collections.Generic
 open Mazes.Core
+open Mazes.Core.Structure
 
 type Sets<'K> when 'K : equality =
     private
@@ -53,15 +54,15 @@ type Sets<'K> when 'K : equality =
         { Container = Dictionary<'K, HashSet<'K>>() }
 
 /// Randomized Kruskal's algorithm
-let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+let createMaze rngSeed (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
     let rng = Random(rngSeed)
 
     let possibleLinks =
-        grid.CoordinatesPartOfMaze
+        ndStruct.CoordinatesPartOfMaze
         |> Seq.collect(fun coordinate ->
             coordinate
-            |> grid.ConnectedWithNeighbors false
+            |> ndStruct.ConnectedWithNeighbors false
             |> Seq.map(fun neighbor -> (coordinate, neighbor)))
         |> Seq.distinctBy(Utils.getKey)
         |> Seq.toArray
@@ -69,7 +70,7 @@ let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_>
 
     let forests = Sets<_>.createEmpty
 
-    let totalOfMazeCells = grid.TotalOfMazeCells
+    let totalOfMazeCells = ndStruct.TotalOfMazeCells
 
     let i = ref 0
 
@@ -83,19 +84,19 @@ let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_>
 
         match setKey1, setKey2 with
         | None, None ->
-            grid.UpdateConnection Open coordinate1 coordinate2
+            ndStruct.UpdateConnection Open coordinate1 coordinate2
             forests.AddNewSet coordinate1 (Some coordinate2)
         | Some setKey, None ->
-            grid.UpdateConnection Open coordinate1 coordinate2
+            ndStruct.UpdateConnection Open coordinate1 coordinate2
             forests.AddToSet setKey coordinate2
         | None, Some setKey ->
-            grid.UpdateConnection Open coordinate1 coordinate2
+            ndStruct.UpdateConnection Open coordinate1 coordinate2
             forests.AddToSet setKey coordinate1
         | Some setKey1, Some setKey2 ->
             if setKey1 <> setKey2 then
-                grid.UpdateConnection Open coordinate1 coordinate2
+                ndStruct.UpdateConnection Open coordinate1 coordinate2
                 forests.MergeSets setKey1 setKey2
 
         incr i
 
-    { NDimensionalStructure = grid }
+    { NDStruct = ndStruct }

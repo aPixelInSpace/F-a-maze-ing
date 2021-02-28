@@ -4,7 +4,7 @@ namespace Mazes.Core
 
 /// 2D coordinate
 [<Struct>]
-type Coordinate =
+type Coordinate2D =
     {
         RIndex : int
         CIndex : int
@@ -16,34 +16,35 @@ type Coordinate =
 /// Indicate the dimension, starting from the third
 type Dimension = int array
 
-
 /// Coordinate for N dimensions
 [<Struct>]
 type NCoordinate =
     private
         {
-            DIndexes : int array
+            Coordinate2D : Coordinate2D
+            Dimension : Dimension
         }
 
     member this.ToCoordinate2D =
-        { RIndex = this.DIndexes.[0]; CIndex = this.DIndexes.[1] }
+        this.Coordinate2D
 
     member this.ToDimension : Dimension =
-        Array.sub this.DIndexes 2 (this.DIndexes.Length - 2)
+        this.Dimension
 
     member this.IsSame2DDimension (otherNCoordinate : NCoordinate) =
-        this.ToDimension = otherNCoordinate.ToDimension
+        this.Dimension = otherNCoordinate.Dimension
 
     override this.ToString() =
-        ("", this.DIndexes) ||> Array.fold(fun s n -> s + $"{n};")
+        this.Coordinate2D.ToString() + ";" +
+        (("", this.Dimension) ||> Array.fold(fun s n -> s + $"{n};"))
 
 module NCoordinate =
 
-    let create (dimension : Dimension) (coordinate : Coordinate) =
+    let create (dimension : Dimension) (coordinate : Coordinate2D) =
         {
-            DIndexes = Array.append [| coordinate.RIndex; coordinate.CIndex |] dimension
+            Coordinate2D = coordinate
+            Dimension = dimension
         }
 
-    let convertSeqToCoordinate2D (nCoordinates : NCoordinate seq) =
-        nCoordinates
-        |> Seq.map(fun c -> c.ToCoordinate2D)
+    let createFrom2D (coordinate : Coordinate2D) =
+        create [| 0 |] coordinate

@@ -6,6 +6,7 @@ open System
 open System.Collections.Generic
 open System.Linq
 open Mazes.Core
+open Mazes.Core.Structure
 
 let transformIntoMaze
     randomCoordinatePartOfMazeAndNotConnected
@@ -27,7 +28,7 @@ let transformIntoMaze
         let pathTracker = Dictionary<_, int>()
 
         let mutable nextCoordinate = unvisited.ElementAt(rng.Next(unvisited.Count))
-        path.Add(nextCoordinate) |> ignore
+        path.Add(nextCoordinate)
         pathTracker.Add(nextCoordinate, path.Count - 1)
 
         while unvisited.Contains(nextCoordinate) do
@@ -48,16 +49,16 @@ let transformIntoMaze
             connectCells path.[i] path.[i + 1]
             unvisited.Remove(path.[i]) |> ignore
 
-let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+let createMaze rngSeed (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
     let rng = Random(rngSeed)
 
     transformIntoMaze
-        grid.RandomCoordinatePartOfMazeAndNotConnected
-        grid.CoordinatesPartOfMaze
-        grid.Neighbors
-        (grid.UpdateConnection Open)
-        grid.TotalOfMazeCells
+        ndStruct.RandomCoordinatePartOfMazeAndNotConnected
+        ndStruct.CoordinatesPartOfMaze
+        ndStruct.Neighbors
+        (ndStruct.UpdateConnection Open)
+        ndStruct.TotalOfMazeCells
         rng
 
-    { NDimensionalStructure = grid }
+    { NDStruct = ndStruct }

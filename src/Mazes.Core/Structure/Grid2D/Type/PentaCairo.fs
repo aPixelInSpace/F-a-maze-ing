@@ -1,11 +1,11 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Type.PentaCairo
+namespace Mazes.Core.Structure.Grid2D.Type.PentaCairo
 
-open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Grid
+open Mazes.Core.Structure
+open Mazes.Core.Structure.Grid2D
 
 /// Typical left, top ... doesn't make really sense here (because the form has four rotated forms), so
 /// S is the small side of the congruent convex pentagon
@@ -171,7 +171,7 @@ type PentaCairoCell =
         | C -> 3
         | D -> 4
 
-    static member Create numberOfRows numberOfColumns internalWallType (coordinate : Coordinate) isCellPartOfMaze =
+    static member Create numberOfRows numberOfColumns internalWallType (coordinate : Coordinate2D) isCellPartOfMaze =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
 
         let getWallType isOnEdge position =

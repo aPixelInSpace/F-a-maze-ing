@@ -6,9 +6,9 @@ open System
 open System.Text
 open Mazes.Core
 open Mazes.Core.Trigonometry
-open Mazes.Core.Analysis.Dijkstra
-open Mazes.Core.Grid
-open Mazes.Core.Grid.Type.PentaCairo
+open Mazes.Core.Structure
+open Mazes.Core.Structure.Grid2D
+open Mazes.Core.Structure.Grid2D.Type.PentaCairo
 open Mazes.Render.SVG.Base
 
 let private thetaDegBase = 75.0
@@ -19,7 +19,7 @@ let private theta180 = convertToRadian 180.0
 let private theta270 = convertToRadian 270.0
 let private theta360 = convertToRadian 360.0
 
-let private calculatePointD (marginWidth, marginHeight, hypDoubleGreatSide, lenghtSmallSide) (coordinate : Coordinate) =
+let private calculatePointD (marginWidth, marginHeight, hypDoubleGreatSide, lenghtSmallSide) (coordinate : Coordinate2D) =
     (marginWidth + (float)(coordinate.CIndex / 2) * hypDoubleGreatSide, marginHeight + (float)(coordinate.RIndex / 2) * hypDoubleGreatSide + lenghtSmallSide)
 
 let private calculatePointsQuadrant pentGreatSide pointD thetaRotation =

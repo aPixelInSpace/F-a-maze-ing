@@ -1,11 +1,12 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid
+namespace Mazes.Core.Structure.Grid2D
 
 open System
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas.Array2D
+open Mazes.Core.Structure
 
 type GridArray2D<'Position when 'Position : equality> =
     {

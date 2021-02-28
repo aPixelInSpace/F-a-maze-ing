@@ -6,6 +6,7 @@ open System
 open System.Collections.Generic
 open System.Linq
 open Mazes.Core
+open Mazes.Core.Structure
 
 module GrowingTree =
 
@@ -43,11 +44,11 @@ module GrowingTree =
             next
             remove
             chooseNeighbor
-            (grid : Grid.NDimensionalStructure<_,_>) =
+            (ndStruct : NDimensionalStructure<_,_>) =
 
         baseAlgorithm
-            (grid.ConnectedNeighbors false)
-            (grid.UpdateConnection Open)
+            (ndStruct.ConnectedNeighbors false)
+            (ndStruct.UpdateConnection Open)
             startCoordinate
             count
             add
@@ -62,18 +63,18 @@ module GrowingTree =
             next
             remove
             chooseNeighbor
-            (grid : Grid.IAdjacentStructure<_,_>) =
+            (ndStruct : IAdjacentStructure<_,_>) =
 
         let unConnectedNeighbors coordinate =
-            grid.Neighbors coordinate
+            ndStruct.Neighbors coordinate
             |> Seq.filter(fun neighbor ->
-                not (grid.IsCellConnected neighbor))
+                not (ndStruct.IsCellConnected neighbor))
             |> Seq.distinct
             
             
         baseAlgorithm
             unConnectedNeighbors
-            (grid.UpdateConnection Open)
+            (ndStruct.UpdateConnection Open)
             startCoordinate
             count
             add
@@ -83,11 +84,11 @@ module GrowingTree =
 
 module GrowingTreeMixRandomAndLast =
 
-    let createMaze rngSeed longPassages (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+    let createMaze rngSeed longPassages (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
+        let randomStartCoordinate = ndStruct.RandomCoordinatePartOfMazeAndNotConnected rng
 
         // SortedList is not a great replacement for a Stack,
         // but at least we can remove an item at a given index
@@ -112,17 +113,17 @@ module GrowingTreeMixRandomAndLast =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
+        ndStruct |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
-        { NDimensionalStructure = grid }
+        { NDStruct = ndStruct }
 
 module GrowingTreeMixOldestAndLast =
 
-    let createMaze rngSeed longPassages (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+    let createMaze rngSeed longPassages (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
+        let randomStartCoordinate = ndStruct.RandomCoordinatePartOfMazeAndNotConnected rng
 
         let actives = SortedList<int, _>()
 
@@ -145,17 +146,17 @@ module GrowingTreeMixOldestAndLast =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
+        ndStruct |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
-        { NDimensionalStructure = grid }
+        { NDStruct = ndStruct }
 
 module GrowingTreeMixChosenRandomAndLast =
 
-    let createMaze rngSeed longPassages (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+    let createMaze rngSeed longPassages (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
         let rng = Random(rngSeed)
 
-        let randomStartCoordinate = grid.RandomCoordinatePartOfMazeAndNotConnected rng
+        let randomStartCoordinate = ndStruct.RandomCoordinatePartOfMazeAndNotConnected rng
 
         let actives = SortedList<int, _>()
         let mutable chosenCoordinate : _ option = None
@@ -187,15 +188,15 @@ module GrowingTreeMixChosenRandomAndLast =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        grid |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
+        ndStruct |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
 
-        { NDimensionalStructure = grid }
+        { NDStruct = ndStruct }
 
 module GrowingTreeDirection =
 
-    let createMaze rngSeed toRightWeight toBottomWeight toLeftWeight (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+    let createMaze rngSeed toRightWeight toBottomWeight toLeftWeight (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
-        let slice2D = snd grid.FirstSlice2D
+        let slice2D = snd ndStruct.FirstSlice2D
 
         let bottomWeight = toRightWeight + toBottomWeight
         let leftWeight = bottomWeight + toLeftWeight
@@ -234,7 +235,7 @@ module GrowingTreeDirection =
 
         slice2D |> GrowingTree.baseAlgorithmAdjacentStructure randomStartCoordinate count add next remove chooseNeighbor
 
-        { NDimensionalStructure = grid }
+        { NDStruct = ndStruct }
 
 module GrowingTreeSpiral =
 
@@ -248,9 +249,9 @@ module GrowingTreeSpiral =
         | Clockwise
         | CounterClockwise
 
-    let createMaze rngSeed spiralWeight spiralUniformity spiralMaxLength spiralRevolution (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+    let createMaze rngSeed spiralWeight spiralUniformity spiralMaxLength spiralRevolution (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
-        let slice2D = snd grid.FirstSlice2D
+        let slice2D = snd ndStruct.FirstSlice2D
 
         let rng = Random(rngSeed)
 
@@ -353,4 +354,4 @@ module GrowingTreeSpiral =
 
         slice2D |> GrowingTree.baseAlgorithmAdjacentStructure randomStartCoordinate count add next remove chooseNeighbor
 
-        { NDimensionalStructure = grid }
+        { NDStruct = ndStruct }

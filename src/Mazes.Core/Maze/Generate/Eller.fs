@@ -5,18 +5,19 @@ module Mazes.Core.Maze.Generate.Eller
 open System
 open System.Collections.Generic
 open Mazes.Core
+open Mazes.Core.Structure
 open Mazes.Core.Maze.Generate.Kruskal
 
 // todo : refactor this
 // It has the same fundamentals problems as Sidewinder
-let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+let createMaze rngSeed (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
-    let slice2D = snd grid.FirstSlice2D
+    let slice2D = snd ndStruct.FirstSlice2D
 
     let rng = Random(rngSeed)
 
     // this algorithm uses the same concept of "sets" of the Kruskal's algorithm
-    let sets = Sets<Coordinate>.createEmpty
+    let sets = Sets<Coordinate2D>.createEmpty
 
     let linkBottom current setKey addOtherBottoms =
         let linkBottom current =
@@ -41,7 +42,7 @@ let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_>
                     if rng.NextDouble() < 0.5 && other <> chosen then
                         linkBottom other
 
-    let linkRight current setKey (listOfRowSetKey : HashSet<Coordinate>) =
+    let linkRight current setKey (listOfRowSetKey : HashSet<Coordinate2D>) =
 
         let linkRight neighbor setKeyNeighbor =
             if slice2D.IsLimitAt current neighbor then
@@ -71,7 +72,7 @@ let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_>
     let lastIndex1 = slice2D.RIndexes |> Seq.last
     for index1 in slice2D.RIndexes do
 
-        let listOfRowSetKey = HashSet<Coordinate>()
+        let listOfRowSetKey = HashSet<Coordinate2D>()
         let (startIndex2, endIndex2) = slice2D.Dimension2Boundaries index1
 
         for index2 in startIndex2 .. endIndex2 - 1 do
@@ -98,4 +99,4 @@ let createMaze rngSeed (grid : Grid.NDimensionalStructure<_,_>) : Maze.Maze<_,_>
                         |> Seq.filter(fun c -> c.RIndex = index1)
                     linkBottom (set |> Seq.head) setKey true
 
-    { NDimensionalStructure = grid }
+    { NDStruct = ndStruct }

@@ -5,8 +5,9 @@ module Mazes.Output.Html
 open System.IO
 open System.Text
 open Mazes.Core.Array2D
-open Mazes.Core.Grid
-open Mazes.Core.Grid.Type.Ortho
+open Mazes.Core.Structure
+open Mazes.Core.Structure.Grid2D
+open Mazes.Core.Structure.Grid2D.Type.Ortho
 open Mazes.Core.Maze
 
 let private columnsAxis (columnsAxisHtml : string) numberOfRows numberOfColumns =

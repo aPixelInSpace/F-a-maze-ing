@@ -1,11 +1,11 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Type.OctaSquare
+namespace Mazes.Core.Structure.Grid2D.Type.OctaSquare
 
-open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Grid
+open Mazes.Core.Structure
+open Mazes.Core.Structure.Grid2D
 
 type OctaSquarePosition =
     | Left
@@ -140,7 +140,7 @@ type OctaSquareCell =
         | BottomLeft -> 6
         | BottomRight -> 7
 
-    static member Create numberOfRows numberOfColumns internalWallType (coordinate : Coordinate) isCellPartOfMaze =
+    static member Create numberOfRows numberOfColumns internalWallType (coordinate : Coordinate2D) isCellPartOfMaze =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
 
         let getWallType isOnEdge position =

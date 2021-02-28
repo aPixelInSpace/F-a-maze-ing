@@ -1,8 +1,7 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Grid.PolarArrayOfA
+module Mazes.Core.Structure.Grid2D.PolarArrayOfA
 
-open System
 open Mazes.Core.ArrayOfA
 
 let isFirstRing ringIndex =

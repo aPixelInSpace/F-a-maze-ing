@@ -1,6 +1,6 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid
+namespace Mazes.Core.Structure
 
 open System
 open System.Collections.Generic
@@ -9,8 +9,8 @@ open Mazes.Core
 type NDimensionalStructure<'Grid, 'Position> =
     {
         Structure : Dictionary<Dimension, IAdjacentStructure<'Grid, 'Position>>
-        NonAdjacent2DConnections : NonAdjacent2DConnections
-        Obstacles : N_Obstacles
+        NonAdjacent2DConnections : Connections
+        Obstacles : Obstacles
     }
 
     member this.Slice2D dimension =
@@ -67,10 +67,12 @@ type NDimensionalStructure<'Grid, 'Position> =
 
         neighbors2d |> Seq.append neighbors
 
+    /// Given a coordinate, returns true if the cell has at least one connection open, false otherwise
     member this.IsCellConnected nCoordinate =
         this.NonAdjacent2DConnections.IsCellConnected nCoordinate ||
         (this.Slice2D nCoordinate.ToDimension).IsCellConnected nCoordinate.ToCoordinate2D
 
+    /// Given two coordinates, returns true if they have their connection open, false otherwise
     member this.AreConnected nCoordinate otherNCoordinate =
         let existNonAdjacentNeighbor = this.NonAdjacent2DConnections.ExistNeighbor nCoordinate otherNCoordinate
 
@@ -87,6 +89,7 @@ type NDimensionalStructure<'Grid, 'Position> =
 
         nonAdjacent2DCondition || adjacent2DCondition
 
+    /// Returns the neighbors coordinates that are or not connected NOT NECESSARILY WITH the coordinate
     member this.ConnectedNeighbors isConnected (nCoordinate : NCoordinate) =
         this.Neighbors nCoordinate
         |> Seq.filter(fun neighbor ->
@@ -97,6 +100,7 @@ type NDimensionalStructure<'Grid, 'Position> =
             else not (isConnectedAdjacent2d) && not (isConnectedNonAdjacent2d))
         |> Seq.distinct
 
+    /// Returns the neighbors coordinates that are or not connected WITH the coordinate
     member this.ConnectedWithNeighbors connected nCoordinate =
         seq {
             for neighborCoordinate in (this.Neighbors nCoordinate) do
@@ -145,6 +149,7 @@ type NDimensionalStructure<'Grid, 'Position> =
     member this.CostOfCoordinate nCoordinate =
         1 + (this.Obstacles.Cost nCoordinate)
 
+    /// Returns the first (arbitrary) coordinate that is part of the maze
     member this.GetFirstCellPartOfMaze =
         let dimension =
             this.Structure.Keys
@@ -153,6 +158,7 @@ type NDimensionalStructure<'Grid, 'Position> =
 
         NCoordinate.create dimension (this.Slice2D dimension).GetFirstCellPartOfMaze
 
+    /// Returns the last (arbitrary) coordinate that is part of the maze
     member this.GetLastCellPartOfMaze =
         let dimension =
             this.Structure.Keys
@@ -200,7 +206,7 @@ module NDimensionalStructure =
             structure.Add(dimension, newAdjacentStructureInstance())
 
         // orthogonally connect every slice 2d to the next one
-        let nonAdjacent2DConnections = NonAdjacent2DConnections.CreateEmpty
+        let nonAdjacent2DConnections = Connections.CreateEmpty
         for d in 0 .. dimensions.Length - 1 do
             let startDimensions = dimensionsSeq |> Seq.filter(fun dimension -> dimension.[d] = 0)
             for startDimension in startDimensions do
@@ -221,7 +227,7 @@ module NDimensionalStructure =
         {
             Structure = structure
             NonAdjacent2DConnections = nonAdjacent2DConnections
-            Obstacles = N_Obstacles.CreateEmpty
+            Obstacles = Obstacles.CreateEmpty
         }
 
     let create2D adjStruct =

@@ -3,12 +3,12 @@
 module Mazes.Core.Tests.Grid.ArrayOfA.Polar.Grid
 
 open FsUnit
-open Mazes.Core.Grid
 open Xunit
 open Mazes.Core
 open Mazes.Core.Canvas.ArrayOfA
-open Mazes.Core.Grid.Grid
-open Mazes.Core.Grid.Type.Polar
+open Mazes.Core.Structure
+open Mazes.Core.Structure.Grid2D
+open Mazes.Core.Structure.Grid2D.Type.Polar
 
 [<Fact>]
 let ``Given a canvas, when creating a grid, then the grid should be empty`` () =
@@ -20,7 +20,7 @@ let ``Given a canvas, when creating a grid, then the grid should be empty`` () =
     let grid =
         emptyCanvas
         |> Grid.createBaseGrid
-        |> create
+        |> NDimensionalStructure.create2D
 
     // assert
     grid.TotalOfMazeCells |> should equal 0
@@ -36,12 +36,12 @@ let ``Given a canvas with one ring and a single zone part of the maze, when crea
     let grid =
         emptyCanvas
         |> Grid.createBaseGrid
-        |> create
+        |> NDimensionalStructure.create2D
     
     // assert
     grid.TotalOfMazeCells |> should equal 1
 
-    let spGrid = grid.ToSpecializedGrid.BaseGrid.ToSpecializedStructure
+    let spGrid = (snd grid.FirstSlice2D).ToSpecializedStructure
     spGrid.Cells.[0].Length |> should equal 1
 
     spGrid.Cells.[0].[0].Connections.Length |> should equal 3
@@ -61,10 +61,10 @@ let ``Given a canvas with one ring and two zone part of the maze, when creating 
     let grid =
         emptyCanvas
         |> Grid.createBaseGrid
-        |> create
+        |> NDimensionalStructure.create2D
     
     // assert
-    let spGrid = grid.ToSpecializedGrid.BaseGrid.ToSpecializedStructure
+    let spGrid = (snd grid.FirstSlice2D).ToSpecializedStructure
     spGrid.Cells.Length |> should equal 1
 
     spGrid.Cells.[0].Length |> should equal 2
@@ -91,10 +91,10 @@ let ``Given a canvas with three rings and three zone part of the maze for the fi
     let grid =
         emptyCanvas
         |> Grid.createBaseGrid
-        |> create
+        |> NDimensionalStructure.create2D
     
     // assert
-    let spGrid = grid.ToSpecializedGrid.BaseGrid.ToSpecializedStructure
+    let spGrid = (snd grid.FirstSlice2D).ToSpecializedStructure
     spGrid.Cells.Length |> should equal 3
 
     spGrid.Cells.[0].Length |> should equal 3
@@ -128,16 +128,16 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be link
     let grid =
         emptyCanvas
         |> Grid.createBaseGrid
-        |> create
+        |> NDimensionalStructure.create2D
 
     // act
-    let coordinate00 = { RIndex = 0; CIndex = 0 }
-    let coordinate10 = { RIndex = 1; CIndex = 0 }
+    let coordinate00 = NCoordinate.createFrom2D { RIndex = 0; CIndex = 0 }
+    let coordinate10 = NCoordinate.createFrom2D { RIndex = 1; CIndex = 0 }
 
     grid.IsCellConnected coordinate00 |> should equal false
     grid.AreConnected coordinate00 coordinate10 |> should equal false
 
-    grid.UpdateConnection Open { RIndex = 0; CIndex = 0 } { RIndex = 1; CIndex = 0 }
+    grid.UpdateConnection Open (NCoordinate.createFrom2D { RIndex = 0; CIndex = 0 }) (NCoordinate.createFrom2D { RIndex = 1; CIndex = 0 })
 
     // assert
     grid.AreConnected coordinate00 coordinate10 |> should equal true
