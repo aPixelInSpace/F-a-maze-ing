@@ -3,17 +3,13 @@
 module Mazes.WebUI.Client.Main
 
 open System
-open System.Runtime.Serialization.Json
 open Elmish
 open Bolero
 open Bolero.Html
 open Blazorise.Sidebar
-open Mazes.Core
-open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Canvas.Array2D.Shape
-open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Canvas.ArrayOfA.Shape
-open Mazes.Core.Grid
+open Mazes.Core.Structure
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 open Microsoft.JSInterop
@@ -77,7 +73,7 @@ let newRandomMaze () =
 
         algo.[rng.Next(algo.Length)] grid
 
-    let generateMaze (grid : IGrid<'G>) render =
+    let generateMaze (grid : NDimensionalStructure<_,_>) render =
         if rng.NextDouble() < 0.5 then
             grid.Weave rng (rng.NextDouble())
         
@@ -85,18 +81,18 @@ let newRandomMaze () =
         
         //let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
         //render (maze.Grid.ToSpecializedGrid) (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze) map
-        maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
-        render (maze.Grid.ToSpecializedGrid) None None (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)
+        maze.OpenMaze (maze.NDStruct.GetFirstCellPartOfMaze, maze.NDStruct.GetLastCellPartOfMaze)
+        render maze.NDStruct None None (Some maze.NDStruct.GetFirstCellPartOfMaze) (Some maze.NDStruct.GetLastCellPartOfMaze)
 
     let gridType canvas =
         match rng.Next(7) with
-        | 0 -> generateMaze (canvas |> Grid.Type.Ortho.Grid.createBaseGrid |> Grid.create) SVG.OrthoGrid.render
-        | 1 -> generateMaze (canvas |> Grid.Type.Hex.Grid.createBaseGrid |> Grid.create) SVG.HexGrid.render
-        | 2 -> generateMaze (canvas |> Grid.Type.Tri.Grid.createBaseGrid |> Grid.create) SVG.TriGrid.render
-        | 3 -> generateMaze (canvas |> Grid.Type.OctaSquare.Grid.createBaseGrid |> Grid.create) SVG.OctaSquareGrid.render
-        | 4 -> generateMaze (canvas |> Grid.Type.PentaCairo.Grid.createBaseGrid |> Grid.create) SVG.PentaCairoGrid.render
-        | 5 -> generateMaze (canvas |> Grid.Type.Brick.Grid.createBaseGrid |> Grid.create) SVG.BrickGrid.render
-        | 6 -> generateMaze (Disk.create (rng.Next(15, 25)) 1.0 (rng.Next(1, 7)) |> Grid.Type.Polar.Grid.createBaseGrid |> Grid.create) SVG.PolarGrid.render
+        | 0 -> generateMaze (canvas |> Grid2D.Type.Ortho.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.OrthoGrid.render
+        | 1 -> generateMaze (canvas |> Grid2D.Type.Hex.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.HexGrid.render
+        | 2 -> generateMaze (canvas |> Grid2D.Type.Tri.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.TriGrid.render
+        | 3 -> generateMaze (canvas |> Grid2D.Type.OctaSquare.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.OctaSquareGrid.render
+        | 4 -> generateMaze (canvas |> Grid2D.Type.PentaCairo.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.PentaCairoGrid.render
+        | 5 -> generateMaze (canvas |> Grid2D.Type.Brick.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.BrickGrid.render
+        | 6 -> generateMaze (Disk.create (rng.Next(15, 25)) 1.0 (rng.Next(1, 7)) |> Grid2D.Type.Polar.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.PolarGrid.render
         | _ -> failwith "rng problem"
 
     gridType canvas
@@ -153,7 +149,6 @@ let mySidebar model dispatch =
                   Main.Brand().Elt()
               ]
               comp<SidebarNavigation> [] [
-                  comp<SidebarLabel> [] []
                   comp<SidebarItem> [] [
                       comp<SidebarLink> [
                           "To" => router.Link HomePage

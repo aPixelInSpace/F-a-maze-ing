@@ -1,10 +1,12 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid
+namespace Mazes.Core.Structure.Grid2D
 
+open System
 open Mazes.Core
 open Mazes.Core.Array2D
 open Mazes.Core.Canvas.Array2D
+open Mazes.Core.Structure
 
 type GridArray2D<'Position when 'Position : equality> =
     {
@@ -41,6 +43,20 @@ type GridArray2D<'Position when 'Position : equality> =
 
         member this.AdjustedExistAt coordinate =
             existAt this.Cells coordinate
+
+        member this.CoordinatesPartOfMaze =
+            this.ToInterface.Cells
+            |> Seq.filter(fun (_, c) -> this.ToInterface.IsCellPartOfMaze c)
+            |> Seq.map(snd)
+
+        member this.RandomCoordinatePartOfMazeAndNotConnected (rng : Random) =
+            let unconnectedPartOfMazeCells =
+                this.ToInterface.CoordinatesPartOfMaze
+                |> Seq.filter(fun c ->
+                    not (this.ToInterface.IsCellConnected c || this.ToInterface.IsCellConnected c))
+                |> Seq.toArray
+
+            unconnectedPartOfMazeCells.[rng.Next(unconnectedPartOfMazeCells.Length)]
 
         member this.IsLimitAt coordinate otherCoordinate =
             this.IsLimitAt coordinate (this.CoordinateHandler.NeighborPositionAt coordinate otherCoordinate)
@@ -94,6 +110,10 @@ type GridArray2D<'Position when 'Position : equality> =
                         let neighborCell = this.ToInterface.Cell neighbor
                         this.Cells.[neighbor.RIndex, neighbor.CIndex] <- neighborCell.Create (getNewConnections neighborCell (this.PositionHandler.Opposite coordinate position))
                     | None -> ()
+
+        member this.IfNotAtLimitUpdateConnection connectionType coordinate otherCoordinate =
+            if not (this.ToInterface.IsLimitAt coordinate otherCoordinate) then
+                this.ToInterface.UpdateConnection connectionType coordinate otherCoordinate
 
         member this.WeaveCoordinates coordinates =
             this.CoordinateHandler.WeaveCoordinates coordinates

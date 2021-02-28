@@ -5,23 +5,26 @@ module Mazes.Core.Maze.Generate.Eller
 open System
 open System.Collections.Generic
 open Mazes.Core
+open Mazes.Core.Structure
 open Mazes.Core.Maze.Generate.Kruskal
 
 // todo : refactor this
 // It has the same fundamentals problems as Sidewinder
-let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
+let createMaze rngSeed (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+
+    let slice2D = snd ndStruct.FirstSlice2D
 
     let rng = Random(rngSeed)
 
     // this algorithm uses the same concept of "sets" of the Kruskal's algorithm
-    let sets = Sets<Coordinate>.createEmpty
+    let sets = Sets<Coordinate2D>.createEmpty
 
     let linkBottom current setKey addOtherBottoms =
         let linkBottom current =
-            let neighbor = grid.AdjacentNeighbor current Bottom
+            let neighbor = slice2D.Neighbor current Bottom
             match neighbor with
             | Some neighbor ->
-                grid.IfNotAtLimitUpdateConnection Open current neighbor
+                slice2D.IfNotAtLimitUpdateConnection Open current neighbor
                 sets.AddToSet setKey neighbor
             | None -> ()
 
@@ -39,13 +42,13 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
                     if rng.NextDouble() < 0.5 && other <> chosen then
                         linkBottom other
 
-    let linkRight current setKey (listOfRowSetKey : HashSet<Coordinate>) =
+    let linkRight current setKey (listOfRowSetKey : HashSet<Coordinate2D>) =
 
         let linkRight neighbor setKeyNeighbor =
-            if grid.IsLimitAt current neighbor then
+            if slice2D.IsLimitAt current neighbor then
                 linkBottom current setKey true
             else
-                grid.IfNotAtLimitUpdateConnection Open current neighbor
+                slice2D.IfNotAtLimitUpdateConnection Open current neighbor
                 match setKeyNeighbor with
                 | Some setKeyNeighbor ->
                     listOfRowSetKey.Remove(setKeyNeighbor) |> ignore
@@ -53,7 +56,7 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
                 | None ->                    
                     sets.AddToSet setKey neighbor
 
-        let neighbor = grid.AdjacentNeighbor current Right
+        let neighbor = slice2D.Neighbor current Right
         match neighbor with
         | Some neighbor ->
             let setKeyNeighbor = sets.GetSetKey neighbor
@@ -66,11 +69,11 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
                 
         | None -> linkBottom current setKey true
 
-    let lastIndex1 = grid.RIndexes |> Seq.last
-    for index1 in grid.RIndexes do
+    let lastIndex1 = slice2D.RIndexes |> Seq.last
+    for index1 in slice2D.RIndexes do
 
-        let listOfRowSetKey = HashSet<Coordinate>()
-        let (startIndex2, endIndex2) = grid.Dimension2Boundaries index1
+        let listOfRowSetKey = HashSet<Coordinate2D>()
+        let (startIndex2, endIndex2) = slice2D.Dimension2Boundaries index1
 
         for index2 in startIndex2 .. endIndex2 - 1 do
             let current = { RIndex = index1; CIndex = index2 }
@@ -96,4 +99,4 @@ let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
                         |> Seq.filter(fun c -> c.RIndex = index1)
                     linkBottom (set |> Seq.head) setKey true
 
-    { Grid = grid }
+    { NDStruct = ndStruct }

@@ -6,6 +6,7 @@ open System
 open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D
+open Mazes.Core.Structure
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -38,15 +39,15 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Grid2D.Type.Ortho.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDStruct.FirstSlice2D |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -74,15 +75,15 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Grid2D.Type.Ortho.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Left 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDStruct.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -110,15 +111,15 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Grid2D.Type.Ortho.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Right 1 1 1
     
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDStruct.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -146,15 +147,15 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Grid2D.Type.Ortho.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Bottom Sidewinder.Direction.Left 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDStruct.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -182,15 +183,15 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Grid2D.Type.Ortho.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Top 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDStruct.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -218,15 +219,15 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Grid2D.Type.Ortho.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Right Sidewinder.Direction.Bottom 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDStruct.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -254,15 +255,15 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Grid2D.Type.Ortho.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Top 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDStruct.FirstSlice2D |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -290,15 +291,15 @@ let ``Rendering a customized composite canvas generated with the sidewinder algo
     // arrange
     let grid =
         canvas
-        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Grid2D.Type.Ortho.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
     let maze =
         grid
         |> Sidewinder.createMaze Sidewinder.Direction.Left Sidewinder.Direction.Bottom 1 1 1
 
     // act
-    let renderedMaze =  maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze =  snd maze.NDStruct.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =

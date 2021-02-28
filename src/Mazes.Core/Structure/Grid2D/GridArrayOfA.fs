@@ -1,10 +1,11 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid
+namespace Mazes.Core.Structure.Grid2D
 
+open System
 open Mazes.Core
 open Mazes.Core.Canvas
-open Mazes.Core.Grid
+open Mazes.Core.Structure
 
 type PolarPosition =
     | Inward
@@ -67,6 +68,20 @@ type GridArrayOfA =
             let ringLength = this.Cells.[coordinate.RIndex].Length
             let ratio = maxCellsInLastRing / ringLength
             coordinate.CIndex % ratio = 0
+
+        member this.CoordinatesPartOfMaze =
+            this.ToInterface.Cells
+            |> Seq.filter(fun (_, c) -> this.ToInterface.IsCellPartOfMaze c)
+            |> Seq.map(snd)
+
+        member this.RandomCoordinatePartOfMazeAndNotConnected (rng : Random) =
+            let unconnectedPartOfMazeCells =
+                this.ToInterface.CoordinatesPartOfMaze
+                |> Seq.filter(fun c ->
+                    not (this.ToInterface.IsCellConnected c || this.ToInterface.IsCellConnected c))
+                |> Seq.toArray
+
+            unconnectedPartOfMazeCells.[rng.Next(unconnectedPartOfMazeCells.Length)]
 
         member this.IsLimitAt coordinate otherCoordinate =
             let zone = this.Canvas.Zone coordinate
@@ -176,6 +191,10 @@ type GridArrayOfA =
             | Outward ->
                 let otherCell = (this.ToInterface.Cell otherCoordinate)
                 this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell (this.PositionHandler.Opposite otherCoordinate neighborPosition))
+
+        member this.IfNotAtLimitUpdateConnection connectionType coordinate otherCoordinate =
+            if not (this.ToInterface.IsLimitAt coordinate otherCoordinate) then
+                this.ToInterface.UpdateConnection connectionType coordinate otherCoordinate
 
         member this.WeaveCoordinates coordinates =
             coordinates

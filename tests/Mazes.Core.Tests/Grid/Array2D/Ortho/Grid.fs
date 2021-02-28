@@ -6,12 +6,11 @@ open FsUnit
 open Xunit
 open Mazes.Core
 open Mazes.Core.Canvas.Array2D
-open Mazes.Core.Grid
-open Mazes.Core.Grid.Grid
-open Mazes.Core.Grid.Type.Ortho
+open Mazes.Core.Structure
+open Mazes.Core.Structure.Grid2D.Type.Ortho
 
 [<Fact>]
-let ``Given a canvas, when creating a grid, then the grid should also be empty`` () =
+let ``Given a empty canvas, when creating a 2d structure, then the 2d structure should also be empty`` () =
 
     // arrange
     let emptyStringCanvas =
@@ -23,13 +22,13 @@ let ``Given a canvas, when creating a grid, then the grid should also be empty``
     // act
     let grid = emptyCanvas.Value
                |> Grid.createBaseGrid
-               |> create
+               |> NDimensionalStructure.create2D
 
     // assert
     grid.TotalOfMazeCells |> should equal 0
 
 [<Fact>]  
-let ``Given a canvas with a single zone part of the maze, when creating a grid, then the grid should contain a single cell with only borders`` () =
+let ``Given a canvas with a single zone part of the maze, when creating a 2d structure, then the 2d structure should contain a single cell with only borders`` () =
 
     // arrange
     let singleZoneStringCanvas =
@@ -42,12 +41,12 @@ let ``Given a canvas with a single zone part of the maze, when creating a grid, 
     // act
     let grid = singleZoneCanvas.Value
                |> Grid.createBaseGrid
-               |> create
+               |> NDimensionalStructure.create2D
     
     // assert
     grid.TotalOfMazeCells |> should equal 1
     
-    let spGrid = grid.ToSpecializedGrid.BaseGrid.ToSpecializedStructure
+    let spGrid = (snd grid.FirstSlice2D).ToSpecializedStructure
     spGrid.Cells.[0, 0].ConnectionTypeAtPosition Top |> should equal ClosePersistent
     spGrid.Cells.[0, 0].ConnectionTypeAtPosition Right |> should equal ClosePersistent
     spGrid.Cells.[0, 0].ConnectionTypeAtPosition Bottom |> should equal ClosePersistent
@@ -67,12 +66,12 @@ let ``Given a canvas with two zones part of the maze side by side horizontally, 
     // act
     let grid = twoZonesCanvas.Value
                |> Grid.createBaseGrid
-               |> create
+               |> NDimensionalStructure.create2D
     
     // assert
     grid.TotalOfMazeCells |> should equal 2
 
-    let spGrid = grid.ToSpecializedGrid.BaseGrid.ToSpecializedStructure
+    let spGrid = (snd grid.FirstSlice2D).ToSpecializedStructure
     spGrid.Cells.[0, *].Length |> should equal 2
     
     spGrid.Cells.[0, 0].ConnectionTypeAtPosition Top |> should equal ClosePersistent
@@ -101,12 +100,12 @@ let ``Given a canvas with two zones part of the maze side by side vertically, wh
     let grid =
         twoZonesCanvas.Value
         |> Grid.createBaseGrid
-        |> create
+        |> NDimensionalStructure.create2D
 
     // assert
     grid.TotalOfMazeCells |> should equal 2
 
-    let spGrid = grid.ToSpecializedGrid.BaseGrid.ToSpecializedStructure
+    let spGrid = (snd grid.FirstSlice2D).ToSpecializedStructure
     spGrid.Cells.[*, 0].Length |> should equal 2
     
     spGrid.Cells.[0, 0].ConnectionTypeAtPosition Top |> should equal ClosePersistent
@@ -136,12 +135,12 @@ let ``Given a 3x3 canvas, when creating a grid, then it should have 3x3 cells wi
     let grid =
         threeByThreeCanvas.Value
         |> Grid.createBaseGrid
-        |> create
+        |> NDimensionalStructure.create2D
 
     // assert
     grid.TotalOfMazeCells |> should equal 9
 
-    let spGrid = grid.ToSpecializedGrid.BaseGrid.ToSpecializedStructure
+    let spGrid = (snd grid.FirstSlice2D).ToSpecializedStructure
     spGrid.Cells.[0, *].Length |> should equal 3
     spGrid.Cells.[1, *].Length |> should equal 3
     spGrid.Cells.[2, *].Length |> should equal 3
@@ -218,10 +217,11 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     let grid =
         threeByThreeCanvas.Value
         |> Grid.createBaseGrid
-        |> create
+        |> NDimensionalStructure.create2D
 
-    let spGrid = grid.ToSpecializedGrid.BaseGrid.ToSpecializedStructure
+    let spGrid = (snd grid.FirstSlice2D).ToSpecializedStructure
     let coordinate11 = { RIndex = 1; CIndex = 1 }
+    let nCoordinate11 = NCoordinate.createFrom2D coordinate11
 
     // act + assert
     
@@ -230,7 +230,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     spGrid.Cells.[0, 1].ConnectionTypeAtPosition Bottom |> should equal Close
     
     match (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Top) with
-    | Some n -> grid.UpdateConnection Open coordinate11 n
+    | Some n -> grid.UpdateConnection Open nCoordinate11 (NCoordinate.createFrom2D n)
     | None -> failwith "Fail"
     
     // assert top
@@ -244,7 +244,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     spGrid.Cells.[1, 2].ConnectionTypeAtPosition Left |> should equal Close
     
     match (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Right) with
-    | Some n -> grid.UpdateConnection Open coordinate11 n
+    | Some n -> grid.UpdateConnection Open nCoordinate11 (NCoordinate.createFrom2D n)
     | None -> failwith "Fail"
     
     // assert right
@@ -258,7 +258,7 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     spGrid.Cells.[2, 1].ConnectionTypeAtPosition Top |> should equal Close
     
     match (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Bottom) with
-    | Some n -> grid.UpdateConnection Open coordinate11 n
+    | Some n -> grid.UpdateConnection Open nCoordinate11 (NCoordinate.createFrom2D n)
     | None -> failwith "Fail"
     
     // assert bottom
@@ -272,9 +272,9 @@ let ``Given a grid, when linking a cell, then the neighbors walls should be empt
     spGrid.Cells.[1, 0].ConnectionTypeAtPosition Right |> should equal Close
     
     match (OrthoCoordinateHandler.Instance.NeighborCoordinateAt coordinate11 Left) with
-    | Some n -> grid.UpdateConnection Open coordinate11 n
+    | Some n -> grid.UpdateConnection Open nCoordinate11 (NCoordinate.createFrom2D n)
     | None -> failwith "Fail"
     
-    // assert left
+    // assert left 
     spGrid.Cells.[1, 1].ConnectionTypeAtPosition Left |> should equal Open
     spGrid.Cells.[1, 0].ConnectionTypeAtPosition Right |> should equal Open

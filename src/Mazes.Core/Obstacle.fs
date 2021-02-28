@@ -1,6 +1,6 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid
+namespace Mazes.Core
 
 open System.Collections.Generic
 open Mazes.Core
@@ -11,7 +11,7 @@ type Cost = int
 type Obstacles =
     private
         {
-            Container : Dictionary<Coordinate, Cost>
+            Container : Dictionary<NCoordinate, Cost>
         }
 
     member this.AddUpdateCost cost coordinate =
@@ -27,4 +27,4 @@ type Obstacles =
             0
 
     static member CreateEmpty =
-        { Container = Dictionary<Coordinate, Cost>() }
+        { Container = Dictionary<NCoordinate, Cost>() }

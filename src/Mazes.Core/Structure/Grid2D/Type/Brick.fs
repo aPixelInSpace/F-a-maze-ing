@@ -1,10 +1,11 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Type.Brick
+namespace Mazes.Core.Structure.Grid2D.Type.Brick
 
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Grid
+open Mazes.Core.Structure
+open Mazes.Core.Structure.Grid2D
 
 type BrickPosition =
     | Left
@@ -114,7 +115,7 @@ type BrickCell =
         | BottomLeft -> 4
         | BottomRight -> 5
 
-    static member Create numberOfRows numberOfColumns internalWallType (coordinate : Coordinate) isCellPartOfMaze =
+    static member Create numberOfRows numberOfColumns internalWallType (coordinate : Coordinate2D) isCellPartOfMaze =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
 
         let getWallType isOnEdge position =

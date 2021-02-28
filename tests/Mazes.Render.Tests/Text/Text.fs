@@ -7,6 +7,7 @@ open FsUnit
 open Mazes.Core
 open Xunit
 open Mazes.Core.Canvas.Array2D
+open Mazes.Core.Structure
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -15,10 +16,10 @@ let ``Given a grid, when rendering the grid in text, then the result should like
     // arrange
     let grid =
         (Shape.Rectangle.create 15 25)
-        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Grid2D.Type.Ortho.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
-    let closePersistent = grid.UpdateConnection ConnectionType.ClosePersistent
+    let closePersistent coordinate2d otherCoordinate2d = grid.UpdateConnection ConnectionType.ClosePersistent (NCoordinate.createFrom2D coordinate2d) (NCoordinate.createFrom2D otherCoordinate2d)
 
     closePersistent { RIndex = 2; CIndex = 2 } { RIndex = 2; CIndex = 3 }
     closePersistent { RIndex = 2; CIndex = 2 } { RIndex = 1; CIndex = 2 }
@@ -119,7 +120,7 @@ let ``Given a grid, when rendering the grid in text, then the result should like
     let maze = grid |> HuntAndKill.createMaze 1
 
     // act
-    let renderedMaze = maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze = snd maze.NDStruct.FirstSlice2D |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =

@@ -1,13 +1,14 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Type.Polar
+namespace Mazes.Core.Structure.Grid2D.Type.Polar
 
 open System.Text
 open Mazes.Core
-open Mazes.Core.Grid
 open Mazes.Core.ArrayOfA
 open Mazes.Core.Canvas.ArrayOfA
-open Mazes.Core.Grid.PolarArrayOfA
+open Mazes.Core.Structure
+open Mazes.Core.Structure.Grid2D
+open Mazes.Core.Structure.Grid2D.PolarArrayOfA
 
 type PolarPositionHandler private () =
 
@@ -101,7 +102,7 @@ type PolarCell =
     member this.ToInterface =
         this :> ICell<PolarPosition>
 
-    static member Create (canvas : Canvas) internalWallType (coordinate : Coordinate) isCellPartOfMaze =
+    static member Create (canvas : Canvas) internalWallType (coordinate : Coordinate2D) isCellPartOfMaze =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
         let neighborsCoordinateAt = PolarCoordinateHandler.Instance.NeighborsCoordinateAt canvas.Zones coordinate
 
@@ -126,11 +127,11 @@ type PolarCell =
 
 module Grid =
 
-    let toString (maze : IGrid<Grid<GridArrayOfA, PolarPosition>>) =
+    let toString (maze : IAdjacentStructure<GridArrayOfA, PolarPosition>) =
         let sBuilder = StringBuilder()
 
-        let cells = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.Cells
-        let connectionTypeAtPosition = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.ConnectionTypeAtPosition
+        let cells = maze.ToSpecializedStructure.Cells
+        let connectionTypeAtPosition = maze.ToSpecializedStructure.ConnectionTypeAtPosition
 
         let appendHorizontalWall wallType (sBuilder : StringBuilder) =
             match wallType with

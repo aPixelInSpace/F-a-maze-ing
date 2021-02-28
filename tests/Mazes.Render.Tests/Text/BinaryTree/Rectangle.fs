@@ -6,6 +6,7 @@ open System
 open FsUnit
 open Xunit
 open Mazes.Core.Canvas.Array2D
+open Mazes.Core.Structure
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
@@ -14,15 +15,15 @@ let ``Rendering a 3 by 3 maze generated with the binary tree algorithm (Top, Rig
     // arrange
     let grid =
         (Shape.Rectangle.create 3 3)
-        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Grid2D.Type.Ortho.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
     let maze =
         grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze = snd maze.NDStruct.FirstSlice2D |> Text.renderGrid
 
     // assert
     let expectedRenderedMaze =
@@ -38,15 +39,15 @@ let ``Rendering a 5 by 5 maze generated with the binary tree algorithm (Top, Rig
     // arrange
     let grid =
         (Shape.Rectangle.create 5 5)
-        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Grid2D.Type.Ortho.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
     let maze =
         grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToSpecializedGrid |> Text.renderGrid
+    let renderedMaze = snd maze.NDStruct.FirstSlice2D |> Text.renderGrid
         
     // assert
     let expectedRenderedMaze =
@@ -64,16 +65,16 @@ let ``Rendering a 5 by 10 maze generated with the binary tree algorithm (Top, Ri
     // arrange
     let grid =
         (Shape.Rectangle.create 5 10)
-        |> Mazes.Core.Grid.Type.Ortho.Grid.createBaseGrid
-        |> Mazes.Core.Grid.Grid.create
+        |> Grid2D.Type.Ortho.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
     let maze =
         grid
         |> BinaryTree.createMaze BinaryTree.Direction.Top BinaryTree.Direction.Right 1 1 1
 
     // act
-    let renderedMaze = maze.Grid.ToSpecializedGrid |> Text.renderGrid
-        
+    let renderedMaze = snd maze.NDStruct.FirstSlice2D |> Text.renderGrid
+
     // assert
     let expectedRenderedMaze =
         "┏━━━━━━━━━━━━━━━━━━━┓\n" +

@@ -5,18 +5,19 @@ module Mazes.Render.SVG.PolarGrid
 open System
 open System.Text
 open Mazes.Core
-open Mazes.Core.Grid
+open Mazes.Core.Structure
+open Mazes.Core.Structure.Grid2D
 open Mazes.Core.Trigonometry
-open Mazes.Core.Analysis.Dijkstra
 open Mazes.Render.SVG.Base
 
-let private calculatePoints (grid : Grid<GridArrayOfA, Grid.PolarPosition>) (centerX, centerY, ringHeight) coordinate =
-    let ringIndex = coordinate.RIndex
-    let cellIndex = coordinate.CIndex
+let private calculatePoints (grid : IAdjacentStructure<GridArrayOfA, PolarPosition>) (centerX, centerY, ringHeight) (coordinate : NCoordinate) =
+    let coordinate2D = coordinate.ToCoordinate2D
+    let ringIndex = coordinate2D.RIndex
+    let cellIndex = coordinate2D.CIndex
 
     // these depends on the ring index but are recalculated for every cell
     // maybe find a way to pass them once for a given ring
-    let theta = (2.0 * Math.PI) / (float)(grid.BaseGrid.ToSpecializedStructure.Cells.[ringIndex].Length)
+    let theta = (2.0 * Math.PI) / (float)(grid.ToSpecializedStructure.Cells.[ringIndex].Length)
     let innerRadius = (float)(ringIndex * ringHeight)
     let outerRadius = (float)((ringIndex + 1) * ringHeight)
 
@@ -40,24 +41,25 @@ let center calculatePoints coordinate =
 
     middlePoint topLeft bottomRight // this is a good enough approximation
 
-let private appendWallsType (grid : Grid<GridArrayOfA, Grid.PolarPosition>) (centerX, centerY, ringHeight) appendWall coordinate (sBuilder : StringBuilder) =
+let private appendWallsType (grid : IAdjacentStructure<GridArrayOfA, PolarPosition>) (centerX, centerY, ringHeight) appendWall coordinate (sBuilder : StringBuilder) =
     let ((innerRadius, outerRadius), (bottomLeftX, bottomLeftY), (topLeftX, topLeftY), (bottomRightX, bottomRightY), (topRightX, topRightY)) =
         calculatePoints grid (centerX, centerY, ringHeight) coordinate
 
-    let connections = (grid.BaseGrid.Cell coordinate).Connections
-    let wallInward = connections |> Array.tryFind(fun w -> w.ConnectionPosition = Grid.Inward)
+    let coordinate2D = coordinate.ToCoordinate2D
+    let connections = (grid.Cell coordinate2D).Connections
+    let wallInward = connections |> Array.tryFind(fun w -> w.ConnectionPosition = Inward)
     match wallInward with
     | Some wallInward ->
         appendWall sBuilder $"M {round bottomLeftX} {round bottomLeftY} A {round innerRadius} {round innerRadius}, 0, 0, 1, {round bottomRightX} {round bottomRightY}" wallInward.ConnectionType coordinate |> ignore
     | None -> ()
 
-    let wallLeft = connections |> Array.tryFind(fun w -> w.ConnectionPosition = Grid.Ccw)
+    let wallLeft = connections |> Array.tryFind(fun w -> w.ConnectionPosition = Ccw)
     match wallLeft with
     | Some wallLeft ->
         appendWall sBuilder $"M {round bottomLeftX} {round bottomLeftY} L {round topLeftX} {round topLeftY}" wallLeft.ConnectionType coordinate |> ignore
     | None -> ()
 
-    let wallOutward = connections |> Array.tryFind(fun w -> w.ConnectionPosition = Grid.Outward)
+    let wallOutward = connections |> Array.tryFind(fun w -> w.ConnectionPosition = Outward)
     match wallOutward with
     | Some wallOutward ->
         appendWall sBuilder $"M {round topLeftX} {round topLeftY} A {round outerRadius} {round outerRadius}, 0, 0, 1, {round topRightX} {round topRightY}" wallOutward.ConnectionType coordinate |> ignore
@@ -73,7 +75,7 @@ let private wholeCellLines grid (centerX, centerY, ringHeight) coordinate =
     $"L {round bottomRightX} {round bottomRightY} " +
     $"A {round innerRadius} {round innerRadius}, 0, 0, 0, {round bottomLeftX} {round bottomLeftY}"
 
-let render (grid : Grid<GridArrayOfA, Grid.PolarPosition>) path map entrance exit =
+let render (grid : NDimensionalStructure<GridArrayOfA, PolarPosition>) path map entrance exit =
     
     let sBuilder = StringBuilder()
 
@@ -84,31 +86,36 @@ let render (grid : Grid<GridArrayOfA, Grid.PolarPosition>) path map entrance exi
     let bridgeHalfWidth = 5.0
     let bridgeDistanceFromCenter = 7.0
 
-    let totalOfCells = grid.BaseGrid.TotalOfCells
+    let (dimension, slice2D) = grid.FirstSlice2D
+    let totalOfCells = slice2D.TotalOfCells
+
     let centerX = (float)((totalOfCells * ringHeight) + marginWidth)
     let centerY = (float)((totalOfCells * ringHeight) + marginHeight)
 
     let width = (totalOfCells * ringHeight * 2) + (marginWidth * 2)
     let height = (totalOfCells * ringHeight * 2) + (marginHeight * 2)
 
-    let calculatePoints = calculatePoints grid (centerX, centerY, ringHeight)
+    let coordinatesPartOfMaze = grid.CoordinatesPartOfMaze
+    let nonAdjacentNeighbors = (grid.NonAdjacent2DConnections.All (Some dimension))
+
+    let calculatePoints = calculatePoints slice2D (centerX, centerY, ringHeight)
 
     let calculatePointsBridge = calculatePointsBridge (center calculatePoints) bridgeHalfWidth bridgeDistanceFromCenter
-    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
-    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge grid.NonAdjacentNeighbors.All
+    let appendSimpleBridges = appendSimpleBridges calculatePointsBridge nonAdjacentNeighbors
+    let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge nonAdjacentNeighbors
 
-    let appendWallsType = (appendWallsType grid (centerX, centerY, ringHeight))
-    let wholeCellLines = wholeCellLines grid (centerX, centerY, ringHeight)
+    let appendWallsType = (appendWallsType slice2D (centerX, centerY, ringHeight))
+    let wholeCellLines = wholeCellLines slice2D (centerX, centerY, ringHeight)
     let wholeBridgeLines = wholeBridgeLines calculatePointsBridge
 
     let appendSimpleWalls sBuilder =
-        appendSimpleWalls grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+        appendSimpleWalls coordinatesPartOfMaze appendWallsType sBuilder
     
     let appendWallsWithInset sBuilder =
-        appendWallsWithInset grid.ToInterface.CoordinatesPartOfMaze appendWallsType sBuilder
+        appendWallsWithInset coordinatesPartOfMaze appendWallsType sBuilder
 
     let appendPathAndBridgesWithAnimation =
-        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacentNeighbors.ExistNeighbor wholeBridgeLines
+        appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacent2DConnections.ExistNeighbor wholeBridgeLines
 
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
@@ -128,8 +135,8 @@ let render (grid : Grid<GridArrayOfA, Grid.PolarPosition>) path map entrance exi
     //|> appendWallsWithInset
 
     |> appendSimpleBridges
-    |> appendMazeBridgeColoration grid.NonAdjacentNeighbors.All wholeBridgeLines
-    |> appendMazeDistanceBridgeColoration grid.NonAdjacentNeighbors.All map wholeBridgeLines
+    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines
+    |> appendMazeDistanceBridgeColoration nonAdjacentNeighbors map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
 

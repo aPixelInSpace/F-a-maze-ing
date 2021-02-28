@@ -7,13 +7,12 @@ open System.Diagnostics
 open System.IO
 open System.Text
 open CommandLine
-open Mazes.Core
+open Mazes.Core.Structure
 open Mazes.Core.Canvas.Array2D
 open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
 open Mazes.Render
-open Mazes.Render.SVG
 
 type AlgoEnum =
     | BinaryTree = 0
@@ -108,8 +107,8 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     let grid =
         Shape.Disk.create 9 1.0 2
-        |> Grid.Type.Polar.Grid.createBaseGrid
-        |> Grid.Grid.create
+        |> Grid2D.Type.Polar.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
 
     stopWatch.Stop()
     printfn $"Created grid ({stopWatch.ElapsedMilliseconds} ms)"
@@ -215,14 +214,14 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
 
     stopWatch.Restart()
 
-    let map = maze.createMap maze.Grid.GetFirstCellPartOfMaze
+    let map = maze.createMap maze.NDStruct.GetFirstCellPartOfMaze
 
     stopWatch.Stop()
     printfn $"Created map ({stopWatch.ElapsedMilliseconds} ms)"
 
     //
 
-    maze.OpenMaze (maze.Grid.GetFirstCellPartOfMaze, maze.Grid.GetLastCellPartOfMaze)
+    maze.OpenMaze (maze.NDStruct.GetFirstCellPartOfMaze, maze.NDStruct.GetLastCellPartOfMaze)
 
     stopWatch.Restart()
 
@@ -248,7 +247,7 @@ let handleVerbGenerate (options : Parsed<GenerateOptions>) =
     //let renderedGridSvg = SVG.renderGrid maze.Grid (map.Graph.PathFromRootTo { RIndex = 0; CIndex = 3 }) map
     //let renderedGridSvg = SVG.OrthoGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map    
         
-    let renderedGridSvg = SVG.PolarGrid.render (maze.Grid.ToSpecializedGrid) (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map)  (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)
+    let renderedGridSvg = SVG.PolarGrid.render (maze.NDStruct) (Some (map.ShortestPathGraph.PathFromRootTo maze.NDStruct.GetLastCellPartOfMaze)) (Some map)  (Some maze.NDStruct.GetFirstCellPartOfMaze) (Some maze.NDStruct.GetLastCellPartOfMaze)
     //let renderedGridSvg = SVG.PolarGrid.render maze.Grid.ToSpecializedGrid (map.LongestPaths |> Seq.head) map
     
     //let renderedGridSvg = SVG.HexGrid.render (maze.Grid.ToSpecializedGrid) (Some (map.ShortestPathGraph.PathFromRootTo maze.Grid.GetLastCellPartOfMaze)) (Some map)  (Some maze.Grid.GetFirstCellPartOfMaze) (Some maze.Grid.GetLastCellPartOfMaze)

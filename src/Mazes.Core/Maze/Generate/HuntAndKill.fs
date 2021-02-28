@@ -6,6 +6,7 @@ open System
 open System.Collections.Generic
 open System.Linq
 open Mazes.Core
+open Mazes.Core.Structure
 
 let transformIntoMaze
     randomCoordinatePartOfMazeAndNotConnected
@@ -15,7 +16,7 @@ let transformIntoMaze
 
     let randomStartCoordinate = randomCoordinatePartOfMazeAndNotConnected rng
 
-    let frontier = HashSet<Coordinate>()
+    let frontier = HashSet<_>()
     frontier.Add(randomStartCoordinate) |> ignore
 
     while frontier.Count > 0 do
@@ -46,14 +47,14 @@ let transformIntoMaze
 
             headCoordinate <- nextCoordinate
 
-let createMaze rngSeed (grid : Grid.IGrid<_>) : Maze.Maze<_> =
+let createMaze rngSeed (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
 
     let rng = Random(rngSeed)
 
     transformIntoMaze
-        grid.RandomCoordinatePartOfMazeAndNotConnected
-        grid.ConnectedNeighbors
-        (grid.UpdateConnection ConnectionType.Open)
+        ndStruct.RandomCoordinatePartOfMazeAndNotConnected
+        ndStruct.ConnectedNeighbors
+        (ndStruct.UpdateConnection ConnectionType.Open)
         rng
 
-    { Grid = grid }
+    { NDStruct = ndStruct }

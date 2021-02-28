@@ -1,11 +1,12 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core.Grid.Type.Ortho
+namespace Mazes.Core.Structure.Grid2D.Type.Ortho
 
 open System.Text
 open Mazes.Core
 open Mazes.Core.Array2D
-open Mazes.Core.Grid
+open Mazes.Core.Structure
+open Mazes.Core.Structure.Grid2D
 
 type OrthoPosition =
     | Left
@@ -112,7 +113,7 @@ type OrthoCell =
         | Right -> 2
         | Bottom -> 3
 
-    static member Create numberOfRows numberOfColumns internalConnectionType (coordinate : Coordinate) isCellPartOfMaze =
+    static member Create numberOfRows numberOfColumns internalConnectionType (coordinate : Coordinate2D) isCellPartOfMaze =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
 
         let getConnectionType isOnEdge position =
@@ -140,10 +141,10 @@ type OrthoCell =
 
 module Grid =
 
-    let toString (maze : IGrid<Grid<GridArray2D<OrthoPosition>, OrthoPosition>>) =
+    let toString (maze : IAdjacentStructure<GridArray2D<OrthoPosition>, OrthoPosition>) =
         let sBuilder = StringBuilder()
-        let cells = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.Cells
-        let connectionTypeAtPosition = maze.ToSpecializedGrid.BaseGrid.ToSpecializedStructure.ConnectionTypeAtPosition
+        let cells = maze.ToSpecializedStructure.Cells
+        let connectionTypeAtPosition = maze.ToSpecializedStructure.ConnectionTypeAtPosition
 
         let appendHorizontalWall wallType =
             match wallType with
