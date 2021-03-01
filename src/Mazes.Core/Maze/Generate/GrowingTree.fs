@@ -37,33 +37,13 @@ module GrowingTree =
             else
                 remove active
 
-    let baseAlgorithmNDimensionalStructure
-            startCoordinate
-            count
-            add
-            next
-            remove
-            chooseNeighbor
-            (ndStruct : NDimensionalStructure<_,_>) =
+    let baseAlgorithmNDimensionalStructure (ndStruct : NDimensionalStructure<_,_>) =
 
         baseAlgorithm
             (ndStruct.ConnectedNeighbors false)
             (ndStruct.UpdateConnection Open)
-            startCoordinate
-            count
-            add
-            next
-            remove
-            chooseNeighbor
 
-    let baseAlgorithmAdjacentStructure
-            startCoordinate
-            count
-            add
-            next
-            remove
-            chooseNeighbor
-            (ndStruct : IAdjacentStructure<_,_>) =
+    let baseAlgorithmAdjacentStructure (ndStruct : IAdjacentStructure<_,_>) =
 
         let unConnectedNeighbors coordinate =
             ndStruct.Neighbors coordinate
@@ -75,12 +55,6 @@ module GrowingTree =
         baseAlgorithm
             unConnectedNeighbors
             (ndStruct.UpdateConnection Open)
-            startCoordinate
-            count
-            add
-            next
-            remove
-            chooseNeighbor
 
 module GrowingTreeMixRandomAndLast =
 
@@ -113,7 +87,7 @@ module GrowingTreeMixRandomAndLast =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        ndStruct |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
+        GrowingTree.baseAlgorithmNDimensionalStructure ndStruct randomStartCoordinate count add next remove chooseNeighbor
 
         { NDStruct = ndStruct }
 
@@ -146,7 +120,7 @@ module GrowingTreeMixOldestAndLast =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        ndStruct |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
+        GrowingTree.baseAlgorithmNDimensionalStructure ndStruct randomStartCoordinate count add next remove chooseNeighbor
 
         { NDStruct = ndStruct }
 
@@ -188,7 +162,7 @@ module GrowingTreeMixChosenRandomAndLast =
         let chooseNeighbor _ (unlinked : array<'T>) =
             unlinked.[rng.Next(unlinked.Length)]
 
-        ndStruct |> GrowingTree.baseAlgorithmNDimensionalStructure randomStartCoordinate count add next remove chooseNeighbor
+        GrowingTree.baseAlgorithmNDimensionalStructure ndStruct randomStartCoordinate count add next remove chooseNeighbor
 
         { NDStruct = ndStruct }
 
@@ -233,7 +207,7 @@ module GrowingTreeDirection =
                 unlinked
                 |> Array.minBy(fun c -> c.RIndex)
 
-        slice2D |> GrowingTree.baseAlgorithmAdjacentStructure randomStartCoordinate count add next remove chooseNeighbor
+        GrowingTree.baseAlgorithmAdjacentStructure slice2D randomStartCoordinate count add next remove chooseNeighbor
 
         { NDStruct = ndStruct }
 
@@ -352,6 +326,6 @@ module GrowingTreeSpiral =
             else
                 unlinked.[rng.Next(unlinked.Length)]
 
-        slice2D |> GrowingTree.baseAlgorithmAdjacentStructure randomStartCoordinate count add next remove chooseNeighbor
+        GrowingTree.baseAlgorithmAdjacentStructure slice2D randomStartCoordinate count add next remove chooseNeighbor
 
         { NDStruct = ndStruct }

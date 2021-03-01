@@ -12,8 +12,7 @@ open Mazes.Core.Maze
 open Mazes.Core.Maze.Generate
 
 // fixture
-let maze =    
-    let stringCanvas =
+let stringCanvas =
         Convert.startLineTag + "\n" +
         "*.********\n" +
         "*.**.***..\n" +
@@ -27,12 +26,10 @@ let maze =
         "*.*****.*.\n" +    
         Convert.endLineTag
 
-    let grid =
-        (Convert.fromString stringCanvas).Value    
-        |> Grid2D.Type.Ortho.Grid.createBaseGrid
-        |> NDimensionalStructure.create2D
-
-    grid
+let maze2D =
+    (Convert.fromString stringCanvas).Value    
+    |> Grid2D.Type.Ortho.Grid.createBaseGrid
+    |> NDimensionalStructure.create2D
     |> Sidewinder.createMaze Sidewinder.Direction.Top Sidewinder.Direction.Right 1 1 1
 
     (*
@@ -50,6 +47,20 @@ let maze =
         ┗━┛ ┗━━━━━━━━━┛ ┗━┛  
     *)
 
+let newAdjStructInstance () =
+    (Convert.fromString stringCanvas).Value    
+    |> Grid2D.Type.Ortho.Grid.createBaseGrid
+    
+let maze3D =
+    newAdjStructInstance
+    |> NDimensionalStructure.create3D 3
+    |> HuntAndKill.createMaze 1
+
+let maze7D =
+    newAdjStructInstance
+    |> NDimensionalStructure.create [| 1; 1; 1; 1; 1 |]
+    |> HuntAndKill.createMaze 1
+
 let canvas5x5 =
     let stringCanvas =
         Convert.startLineTag + "\n" +
@@ -63,16 +74,40 @@ let canvas5x5 =
     (Convert.fromString stringCanvas).Value
 
 [<Fact>]
-let ``Given a root inside the maze, when creating a map, then it should give all the count of the connected nodes`` () =
+let ``Given a root inside the maze 2D, when creating a map, then it should give all the count of the connected nodes`` () =
 
     // arrange
-    let rootCoordinate = maze.NDStruct.GetFirstCellPartOfMaze
+    let rootCoordinate2D = maze2D.NDStruct.GetFirstCellPartOfMaze
 
     // act
-    let map = maze.createMap rootCoordinate
+    let map2D = maze2D.createMap rootCoordinate2D
 
     // assert
-    map.ConnectedNodes |> should equal 79
+    map2D.ConnectedNodes |> should equal 79
+
+[<Fact>]
+let ``Given a root inside the maze 3D, when creating a map, then it should give all the count of the connected nodes`` () =
+
+    // arrange
+    let rootCoordinate3D = maze3D.NDStruct.GetFirstCellPartOfMaze
+
+    // act
+    let map3D = maze3D.createMap rootCoordinate3D
+
+    // assert
+    map3D.ConnectedNodes |> should equal 237
+
+[<Fact>]
+let ``Given a root inside the maze 7D, when creating a map, then it should give all the count of the connected nodes`` () =
+
+    // arrange
+    let rootCoordinate7D = maze7D.NDStruct.GetFirstCellPartOfMaze
+
+    // act
+    let map7D = maze7D.createMap rootCoordinate7D
+
+    // assert
+    map7D.ConnectedNodes |> should equal 2528
 
 [<Fact>]
 let ``Given a root outside the maze, when creating a map, then the root is the only node of the map`` () =
@@ -81,7 +116,7 @@ let ``Given a root outside the maze, when creating a map, then the root is the o
     let outsideOfTheMazeNode = NCoordinate.createFrom2D { RIndex = 0; CIndex = 1 }
 
     // act
-    let map = maze.createMap outsideOfTheMazeNode
+    let map = maze2D.createMap outsideOfTheMazeNode
 
     // assert
     let hasNode = map.ShortestPathGraph.ContainsNode
@@ -145,11 +180,11 @@ let ``Given a maze with no internal walls, when creating a map and getting all t
 let ``Given a maze, when creating a map and getting all the distances from the root, then it should match the expected distances`` () =
 
     // arrange
-    let rootCoordinate = maze.NDStruct.GetFirstCellPartOfMaze
+    let rootCoordinate = maze2D.NDStruct.GetFirstCellPartOfMaze
 
     // act
-    let map = maze.createMap rootCoordinate
-    let mapNotUsingAPriorityQueue = Mazes.Core.Analysis.Dijkstra.Map.create (maze.NDStruct.ConnectedWithNeighbors true) maze.NDStruct.CostOfCoordinate Tracker.SimpleTracker.createEmpty rootCoordinate
+    let map = maze2D.createMap rootCoordinate
+    let mapNotUsingAPriorityQueue = Mazes.Core.Analysis.Dijkstra.Map.create (maze2D.NDStruct.ConnectedWithNeighbors true) maze2D.NDStruct.CostOfCoordinate Tracker.SimpleTracker.createEmpty rootCoordinate
 
     // assert
     let outsideOfTheMazeNode = NCoordinate.createFrom2D { RIndex = 0; CIndex = 1 }
@@ -185,10 +220,10 @@ let ``Given a maze, when creating a map and getting all the distances from the r
 let ``Given a root inside the maze, when creating a map, then it should give all the dead ends (leaves) of the maze`` () =
 
     // arrange
-    let rootCoordinate = maze.NDStruct.GetFirstCellPartOfMaze
+    let rootCoordinate = maze2D.NDStruct.GetFirstCellPartOfMaze
 
     // act
-    let map = maze.createMap rootCoordinate
+    let map = maze2D.createMap rootCoordinate
 
     // assert
     let expectedDeadEnds =
@@ -206,8 +241,8 @@ let ``Given a root inside the maze, when creating a map, then it should give all
 let ``Given a map and a goal coordinate, when searching the shortest path between the root and the goal, then it should return the list of coordinates that forms that path`` () =
 
     // arrange
-    let rootCoordinate = maze.NDStruct.GetFirstCellPartOfMaze
-    let map = maze.createMap rootCoordinate
+    let rootCoordinate = maze2D.NDStruct.GetFirstCellPartOfMaze
+    let map = maze2D.createMap rootCoordinate
 
     // act
     let path = map.ShortestPathGraph.PathFromRootTo (NCoordinate.createFrom2D { RIndex = 9; CIndex = 8 })
@@ -222,7 +257,6 @@ let ``Given a map and a goal coordinate, when searching the shortest path betwee
             |> Array.map(NCoordinate.createFrom2D)
 
     path |> Seq.toArray |> should equal expectedPath
-
 
 [<Fact>]
 let ``Given a grid with a hole, when getting the farthest coordinates, then it should return the information of the farthest coordinates from the root`` () =
@@ -258,10 +292,10 @@ let ``Given a grid with a hole, when getting the farthest coordinates, then it s
 let ``Given a map, when getting the farthest coordinates, then it should return the infos of the farthest coordinates from the root`` () =
 
     // arrange
-    let rootCoordinate = maze.NDStruct.GetFirstCellPartOfMaze
+    let rootCoordinate = maze2D.NDStruct.GetFirstCellPartOfMaze
 
     // act
-    let map = maze.createMap rootCoordinate
+    let map = maze2D.createMap rootCoordinate
 
     // assert
     map.FarthestFromRoot.Distance |> should equal 19    

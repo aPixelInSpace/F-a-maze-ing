@@ -32,7 +32,7 @@ module Maze =
             let notLinkedNeighbors =
                 maze.NDStruct.ConnectedWithNeighbors false deadEndCoordinate
                 |> Seq.toArray
-            if notLinkedNeighbors.Length > 0 then
+            if not (notLinkedNeighbors |> Array.isEmpty) then
                 maze.NDStruct.UpdateConnection Open deadEndCoordinate notLinkedNeighbors.[rng.Next(notLinkedNeighbors.Length)]
 
         deadEnds

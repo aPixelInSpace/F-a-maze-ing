@@ -6,7 +6,7 @@
 
     <ItemGroup>
         <Compile Include="Utils.fs" />
-        <Compile Include="Coordinate2D.fs" />
+        <Compile Include="Coordinate.fs" />
         <Compile Include="Trigonometry.fs" />
         <Compile Include="Connection.fs" />
         <Compile Include="Obstacle.fs" />

@@ -232,3 +232,6 @@ module NDimensionalStructure =
 
     let create2D adjStruct =
         create [| 0 |] (fun () -> adjStruct)
+
+    let create3D numberOfLevels adjStruct =
+        create [| numberOfLevels - 1 |] adjStruct
