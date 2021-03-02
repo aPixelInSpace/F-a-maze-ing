@@ -43,43 +43,57 @@ type PolarCoordinateHandler private () =
 
     static let instance = PolarCoordinateHandler()
 
-    member this.NeighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
-        seq {
-            match position with
-            | Inward ->
-                if not (isFirstRing coordinate.RIndex) then
-                    let inwardRingNumberOfCells = getNumberOfCellsAt arrayOfA (coordinate.RIndex - 1)
-                    let currentRingNumberOfCells = getNumberOfCellsAt arrayOfA coordinate.RIndex
-                    let ratio = currentRingNumberOfCells / inwardRingNumberOfCells
-                    yield { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex / ratio }
-            | Outward ->
-                if not (isLastRing coordinate.RIndex (numberOfRings arrayOfA)) then
-                    let currentRingNumberOfCells = getNumberOfCellsAt arrayOfA coordinate.RIndex
-                    let outwardRingNumberOfCells = getNumberOfCellsAt arrayOfA (coordinate.RIndex + 1)
-                    let ratio = outwardRingNumberOfCells / currentRingNumberOfCells
-                    for ratioIndex in 0 .. ratio - 1 do
-                        yield { RIndex = coordinate.RIndex + 1; CIndex = (coordinate.CIndex * ratio) + ratioIndex }
-            | Ccw ->
-                if isFirstCellOfRing coordinate.CIndex then
-                    yield { RIndex = coordinate.RIndex; CIndex = maxCellsIndex arrayOfA coordinate.RIndex }
-                else
-                    yield { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
-            | Cw ->
-                if isLastCellOfRing arrayOfA coordinate.RIndex coordinate.CIndex then
-                    yield { RIndex = coordinate.RIndex; CIndex = minCellIndex }
-                else
-                    yield { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
-        }
+    interface ICoordinateHandlerArrayOfA<PolarPosition> with
 
-    member this.NeighborPositionAt (arrayOfA : 'A[][]) coordinate otherCoordinate =
-        let neighborCoordinateAt = this.NeighborsCoordinateAt arrayOfA coordinate
+        member this.NeighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
+            seq {
+                match position with
+                | Inward ->
+                    if not (isFirstRing coordinate.RIndex) then
+                        let inwardRingNumberOfCells = getNumberOfCellsAt arrayOfA (coordinate.RIndex - 1)
+                        let currentRingNumberOfCells = getNumberOfCellsAt arrayOfA coordinate.RIndex
+                        let ratio = currentRingNumberOfCells / inwardRingNumberOfCells
+                        yield { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex / ratio }
+                | Outward ->
+                    if not (isLastRing coordinate.RIndex (numberOfRings arrayOfA)) then
+                        let currentRingNumberOfCells = getNumberOfCellsAt arrayOfA coordinate.RIndex
+                        let outwardRingNumberOfCells = getNumberOfCellsAt arrayOfA (coordinate.RIndex + 1)
+                        let ratio = outwardRingNumberOfCells / currentRingNumberOfCells
+                        for ratioIndex in 0 .. ratio - 1 do
+                            yield { RIndex = coordinate.RIndex + 1; CIndex = (coordinate.CIndex * ratio) + ratioIndex }
+                | Ccw ->
+                    if isFirstCellOfRing coordinate.CIndex then
+                        yield { RIndex = coordinate.RIndex; CIndex = maxCellsIndex arrayOfA coordinate.RIndex }
+                    else
+                        yield { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
+                | Cw ->
+                    if isLastCellOfRing arrayOfA coordinate.RIndex coordinate.CIndex then
+                        yield { RIndex = coordinate.RIndex; CIndex = minCellIndex }
+                    else
+                        yield { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
+            }
 
-        match otherCoordinate with
-        | c when c = (neighborCoordinateAt Ccw |> Seq.head) -> Ccw
-        | c when c = (neighborCoordinateAt Cw |> Seq.head) -> Cw
-        | c when (neighborCoordinateAt Outward |> Seq.tryFind(fun n -> c = n)).IsSome -> Outward
-        | c when (neighborCoordinateAt Inward |> Seq.tryFind(fun n -> c = n)).IsSome -> Inward
-        | _ -> failwith "Unable to match the polar coordinates with a position"
+        member this.NeighborPositionAt (arrayOfA : 'A[][]) coordinate otherCoordinate =
+            let neighborCoordinateAt = this.ToInterface.NeighborsCoordinateAt arrayOfA coordinate
+
+            match otherCoordinate with
+            | c when c = (neighborCoordinateAt Ccw |> Seq.head) -> Ccw
+            | c when c = (neighborCoordinateAt Cw |> Seq.head) -> Cw
+            | c when (neighborCoordinateAt Outward |> Seq.tryFind(fun n -> c = n)).IsSome -> Outward
+            | c when (neighborCoordinateAt Inward |> Seq.tryFind(fun n -> c = n)).IsSome -> Inward
+            | _ -> failwith "Unable to match the polar coordinates with a position"
+
+        member this.WeaveCoordinates existAt dimension2Boundaries coordinates =
+            coordinates
+            |> Seq.filter(fun c ->
+                let toCoordinate = { RIndex = c.RIndex + 2; CIndex = c.CIndex }
+                existAt toCoordinate &&
+                dimension2Boundaries c.RIndex = (dimension2Boundaries toCoordinate.RIndex) && 
+                c.RIndex % 2 = 0)
+            |> Seq.map(fun c -> (c, { RIndex = c.RIndex + 2; CIndex = c.CIndex }))
+
+    member this.ToInterface =
+        this :> ICoordinateHandlerArrayOfA<PolarPosition>
 
     static member Instance =
         instance
@@ -104,7 +118,7 @@ type PolarCell =
 
     static member Create (canvas : Canvas) internalWallType (coordinate : Coordinate2D) isCellPartOfMaze =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
-        let neighborsCoordinateAt = PolarCoordinateHandler.Instance.NeighborsCoordinateAt canvas.Zones coordinate
+        let neighborsCoordinateAt = PolarCoordinateHandler.Instance.ToInterface.NeighborsCoordinateAt canvas.Zones coordinate
 
         let walls = ResizeArray<Connection<PolarPosition>>()
 
@@ -211,6 +225,7 @@ module Grid =
             Canvas = canvas
             Cells = cells
             PositionHandler = PolarPositionHandler.Instance
+            CoordinateHandler = PolarCoordinateHandler.Instance
         }
 
     let createBaseGrid canvas =

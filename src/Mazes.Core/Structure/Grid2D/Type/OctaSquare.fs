@@ -63,7 +63,7 @@ type OctaSquareCoordinateHandler private () =
 
     static let instance = OctaSquareCoordinateHandler()
 
-    interface ICoordinateHandler<OctaSquarePosition> with
+    interface ICoordinateHandlerArray2D<OctaSquarePosition> with
 
         member this.NeighborCoordinateAt coordinate position =
             let isOctagon = OctaSquarePositionHandler.IsOctagon coordinate
@@ -106,7 +106,7 @@ type OctaSquareCoordinateHandler private () =
             |> Seq.append horizontal
 
     member this.ToInterface =
-        this :> ICoordinateHandler<OctaSquarePosition>
+        this :> ICoordinateHandlerArray2D<OctaSquarePosition>
 
     static member Instance =
         instance.ToInterface

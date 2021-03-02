@@ -53,7 +53,7 @@ type BrickCoordinateHandler private () =
 
     static let instance = BrickCoordinateHandler()
 
-    interface ICoordinateHandler<BrickPosition> with
+    interface ICoordinateHandlerArray2D<BrickPosition> with
 
         member this.NeighborCoordinateAt coordinate position =
 
@@ -83,7 +83,7 @@ type BrickCoordinateHandler private () =
             |> Seq.map(fun c -> (c, { RIndex = c.RIndex; CIndex = c.CIndex + 2 }))
 
     member this.ToInterface =
-        this :> ICoordinateHandler<BrickPosition>
+        this :> ICoordinateHandlerArray2D<BrickPosition>
 
     static member Instance =
         instance.ToInterface

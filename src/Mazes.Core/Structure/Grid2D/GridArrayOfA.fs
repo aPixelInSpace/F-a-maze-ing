@@ -20,6 +20,7 @@ type GridArrayOfA =
         Canvas : ArrayOfA.Canvas
         Cells : ICell<PolarPosition>[][]
         PositionHandler : IPositionHandler<PolarPosition>
+        CoordinateHandler : ICoordinateHandlerArrayOfA<PolarPosition>
     }
 
     interface IAdjacentStructure<GridArrayOfA, PolarPosition> with
@@ -87,7 +88,7 @@ type GridArrayOfA =
             let zone = this.Canvas.Zone coordinate
 
             let neighborCondition =
-                let neighborPosition = this.NeighborPositionAt this.Cells coordinate otherCoordinate
+                let neighborPosition = this.CoordinateHandler.NeighborPositionAt this.Cells coordinate otherCoordinate
                 let neighborCell = this.ToInterface.Cell otherCoordinate
 
                 if neighborPosition <> Inward then
@@ -122,7 +123,7 @@ type GridArrayOfA =
                 |> Array.length > 0
 
             let outwardCondition =
-                let outwardNeighbors = this.NeighborsCoordinateAt this.Cells coordinate Outward
+                let outwardNeighbors = this.CoordinateHandler.NeighborsCoordinateAt this.Cells coordinate Outward
                 if not (outwardNeighbors |> Seq.isEmpty) then
                     outwardNeighbors
                     |> Seq.filter(fun n ->
@@ -136,7 +137,7 @@ type GridArrayOfA =
             localCondition || outwardCondition
 
         member this.AreConnected coordinate otherCoordinate =
-            let neighborPosition = this.NeighborPositionAt this.Cells coordinate otherCoordinate
+            let neighborPosition = this.CoordinateHandler.NeighborPositionAt this.Cells coordinate otherCoordinate
             let connectionCondition =
                 if neighborPosition <> Outward then
                     ((this.ToInterface.Cell coordinate).ConnectionTypeAtPosition neighborPosition) = Open        
@@ -151,7 +152,7 @@ type GridArrayOfA =
             |> Seq.map(fst)
 
         member this.Neighbor coordinate position =
-            let neighbors = this.NeighborsCoordinateAt this.Cells coordinate (this.PositionHandler.Map coordinate position)
+            let neighbors = this.CoordinateHandler.NeighborsCoordinateAt this.Cells coordinate (this.PositionHandler.Map coordinate position)
             if neighbors |> Seq.isEmpty then
                 None
             else
@@ -169,7 +170,7 @@ type GridArrayOfA =
                     else
                         connection)
 
-            let neighborPosition = this.NeighborPositionAt this.Cells coordinate otherCoordinate
+            let neighborPosition = this.CoordinateHandler.NeighborPositionAt this.Cells coordinate otherCoordinate
             match neighborPosition with
             | Ccw | Cw ->
                 let oppositePosition = this.PositionHandler.Opposite coordinate neighborPosition
@@ -180,7 +181,7 @@ type GridArrayOfA =
                 let otherCell = (this.ToInterface.Cell otherCoordinate)
                 this.Cells.[otherCoordinate.RIndex].[otherCoordinate.CIndex] <- otherCell.Create (getNewConnections otherCell oppositePosition)
 
-                if (this.NeighborsCoordinateAt this.Cells coordinate oppositePosition) |> Seq.head = otherCoordinate then
+                if (this.CoordinateHandler.NeighborsCoordinateAt this.Cells coordinate oppositePosition) |> Seq.head = otherCoordinate then
                     let cell = (this.ToInterface.Cell coordinate)
                     this.Cells.[coordinate.RIndex].[coordinate.CIndex] <- cell.Create (getNewConnections cell oppositePosition)
                     let otherCell = (this.ToInterface.Cell otherCoordinate)
@@ -197,13 +198,7 @@ type GridArrayOfA =
                 this.ToInterface.UpdateConnection connectionType coordinate otherCoordinate
 
         member this.WeaveCoordinates coordinates =
-            coordinates
-            |> Seq.filter(fun c ->
-                let toCoordinate = { RIndex = c.RIndex + 2; CIndex = c.CIndex }
-                this.ToInterface.ExistAt toCoordinate &&
-                this.ToInterface.Dimension2Boundaries c.RIndex = (this.ToInterface.Dimension2Boundaries toCoordinate.RIndex) && 
-                c.RIndex % 2 = 0)
-            |> Seq.map(fun c -> (c, { RIndex = c.RIndex + 2; CIndex = c.CIndex }))
+            this.CoordinateHandler.WeaveCoordinates this.ToInterface.ExistAt this.ToInterface.Dimension2Boundaries coordinates
 
         member this.OpenCell coordinate =
             let candidate =
@@ -240,43 +235,6 @@ type GridArrayOfA =
     member this.ConnectionTypeAtPosition (cell : ICell<PolarPosition>) position =
         cell.ConnectionTypeAtPosition position
 
-    member private this.NeighborsCoordinateAt (arrayOfA : 'A[][]) coordinate position =
-        seq {
-            match position with
-            | Inward ->
-                if not (PolarArrayOfA.isFirstRing coordinate.RIndex) then
-                    let inwardRingNumberOfCells = PolarArrayOfA.getNumberOfCellsAt arrayOfA (coordinate.RIndex - 1)
-                    let currentRingNumberOfCells = PolarArrayOfA.getNumberOfCellsAt arrayOfA coordinate.RIndex
-                    let ratio = currentRingNumberOfCells / inwardRingNumberOfCells
-                    yield { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex / ratio }
-            | Outward ->
-                if not (PolarArrayOfA.isLastRing coordinate.RIndex (PolarArrayOfA.numberOfRings arrayOfA)) then
-                    let currentRingNumberOfCells = PolarArrayOfA.getNumberOfCellsAt arrayOfA coordinate.RIndex
-                    let outwardRingNumberOfCells = PolarArrayOfA.getNumberOfCellsAt arrayOfA (coordinate.RIndex + 1)
-                    let ratio = outwardRingNumberOfCells / currentRingNumberOfCells
-                    for ratioIndex in 0 .. ratio - 1 do
-                        yield { RIndex = coordinate.RIndex + 1; CIndex = (coordinate.CIndex * ratio) + ratioIndex }
-            | Ccw ->
-                if PolarArrayOfA.isFirstCellOfRing coordinate.CIndex then
-                    yield { RIndex = coordinate.RIndex; CIndex = PolarArrayOfA.maxCellsIndex arrayOfA coordinate.RIndex }
-                else
-                    yield { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
-            | Cw ->
-                if PolarArrayOfA.isLastCellOfRing arrayOfA coordinate.RIndex coordinate.CIndex then
-                    yield { RIndex = coordinate.RIndex; CIndex = PolarArrayOfA.minCellIndex }
-                else
-                    yield { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }
-        }
-
-    member private this.NeighborPositionAt (arrayOfA : ICell<PolarPosition>[][]) coordinate otherCoordinate =
-        let neighborCoordinateAt = this.NeighborsCoordinateAt arrayOfA coordinate
-        match otherCoordinate with
-        | c when c = (neighborCoordinateAt Ccw |> Seq.head) -> Ccw
-        | c when c = (neighborCoordinateAt Cw |> Seq.head) -> Cw
-        | c when (neighborCoordinateAt Outward |> Seq.tryFind(fun n -> c = n)).IsSome -> Outward
-        | c when (neighborCoordinateAt Inward |> Seq.tryFind(fun n -> c = n)).IsSome -> Inward
-        | _ -> failwith "Unable to match the polar coordinates with a position"
-
     member private this.NeighborBaseCoordinateAt coordinate position =
         match position with
         | Outward ->  { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }
@@ -285,7 +243,7 @@ type GridArrayOfA =
         | Ccw -> { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }
 
     member private this.ListOfAdjacentNeighborCoordinate coordinate =
-        let neighborsCoordinateAt = this.NeighborsCoordinateAt this.Cells coordinate
+        let neighborsCoordinateAt = this.CoordinateHandler.NeighborsCoordinateAt this.Cells coordinate
         seq {
             for position in this.PositionHandler.Values coordinate do
                 for coordinate in neighborsCoordinateAt position do

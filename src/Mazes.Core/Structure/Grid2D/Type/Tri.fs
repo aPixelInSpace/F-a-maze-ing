@@ -59,7 +59,7 @@ type TriCoordinateHandler private () =
 
     static let instance = TriCoordinateHandler()
 
-    interface ICoordinateHandler<TriPosition> with
+    interface ICoordinateHandlerArray2D<TriPosition> with
 
         member this.NeighborCoordinateAt coordinate position =
             let isUpright = TriPositionHandler.IsUpright coordinate
@@ -86,7 +86,7 @@ type TriCoordinateHandler private () =
             |> Seq.map(fun c -> (c, { RIndex = c.RIndex; CIndex = c.CIndex + 2 }))
 
     member this.ToInterface =
-        this :> ICoordinateHandler<TriPosition>
+        this :> ICoordinateHandlerArray2D<TriPosition>
 
     static member Instance =
         instance.ToInterface

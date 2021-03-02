@@ -91,7 +91,7 @@ type PentaCairoCoordinateHandler private () =
 
     static let instance = PentaCairoCoordinateHandler()
 
-    interface ICoordinateHandler<PentaCairoPosition> with
+    interface ICoordinateHandlerArray2D<PentaCairoPosition> with
 
         member this.NeighborCoordinateAt coordinate position =
             match PentaCairoPositionHandler.Quadrant coordinate with
@@ -140,7 +140,7 @@ type PentaCairoCoordinateHandler private () =
             |> Seq.map(fun c -> (c, { RIndex = c.RIndex + 1; CIndex = c.CIndex + 1 }))
 
     member this.ToInterface =
-        this :> ICoordinateHandler<PentaCairoPosition>
+        this :> ICoordinateHandlerArray2D<PentaCairoPosition>
 
     static member Instance =
         instance.ToInterface

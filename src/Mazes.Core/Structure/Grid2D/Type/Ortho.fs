@@ -47,7 +47,7 @@ type OrthoCoordinateHandler private () =
 
     static let instance = OrthoCoordinateHandler()
 
-    interface ICoordinateHandler<OrthoPosition> with
+    interface ICoordinateHandlerArray2D<OrthoPosition> with
 
         member this.NeighborCoordinateAt coordinate position =
             match position with
@@ -83,7 +83,7 @@ type OrthoCoordinateHandler private () =
             |> Seq.append horizontal
 
     member this.ToInterface =
-        this :> ICoordinateHandler<OrthoPosition>
+        this :> ICoordinateHandlerArray2D<OrthoPosition>
 
     static member Instance =
         instance.ToInterface

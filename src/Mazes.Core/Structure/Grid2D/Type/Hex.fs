@@ -54,7 +54,7 @@ type HexCoordinateHandler private () =
 
     static let instance = HexCoordinateHandler()
 
-    interface ICoordinateHandler<HexPosition> with
+    interface ICoordinateHandlerArray2D<HexPosition> with
 
         member this.NeighborCoordinateAt coordinate position =
 
@@ -98,7 +98,7 @@ type HexCoordinateHandler private () =
             |> Seq.append diagonal
 
     member this.ToInterface =
-        this :> ICoordinateHandler<HexPosition>
+        this :> ICoordinateHandlerArray2D<HexPosition>
 
     static member Instance =
         instance.ToInterface

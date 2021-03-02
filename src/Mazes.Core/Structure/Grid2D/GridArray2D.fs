@@ -13,7 +13,7 @@ type GridArray2D<'Position when 'Position : equality> =
         Canvas : Canvas
         Cells : ICell<'Position>[,]
         PositionHandler : IPositionHandler<'Position>
-        CoordinateHandler : ICoordinateHandler<'Position>
+        CoordinateHandler : ICoordinateHandlerArray2D<'Position>
     }
     interface IAdjacentStructure<GridArray2D<'Position>, 'Position> with
 
