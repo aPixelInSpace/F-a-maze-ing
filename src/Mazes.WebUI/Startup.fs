@@ -22,10 +22,6 @@ module Program =
             |> ignore
 
         let host = builder.Build()
-        host.Services
-            .UseBootstrapProviders()
-            .UseFontAwesomeIcons()
-            |> ignore
 
         host.RunAsync() |> ignore
         0
