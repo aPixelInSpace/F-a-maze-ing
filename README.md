@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/gh/aPixelInSpace/F-a-maze-ing/branch/main/graph/badge.svg?token=K6FQOQZ8BS)](https://codecov.io/gh/aPixelInSpace/F-a-maze-ing)
 
 # F-a-maze-ing
-An easy-to-use, highly composable and configurable maze generator and solver. Several types of grid tiles with multiple possible shapes.
+An easy-to-use, composable and configurable maze generator and solver. Several types of grid tiles with multiple possible shapes.
 
 You may visit https://mazes.apixelinspace.com to randomly generate a few examples (website in preview version, work in progress)
 

@@ -1,0 +1,15 @@
+﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+
+module Mazes.CLI.Canvas.Array2D.Rectangle
+
+open CommandLine
+open Mazes.Core.Canvas.Array2D.Shape
+
+[<Verb("s-rect", isDefault = false, HelpText = "Rectangle shape")>]
+type ShapeRectangle = {
+    [<Option('r', "rows", Required = true, HelpText = "The number of rows.")>] rows : int
+    [<Option('c', "columns", Required = true, HelpText = "The number of columns." )>] columns : int
+}
+
+let handleVerbShapeRectangle (options : Parsed<ShapeRectangle>) =
+    Rectangle.create options.Value.rows options.Value.columns

@@ -55,8 +55,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="OptimizedPriorityQueue" Version="5.0.0" />
-      <PackageReference Include="QuikGraph" Version="2.2.0" />
+      <PackageReference Include="OptimizedPriorityQueue" Version="5.1.0" />
+      <PackageReference Include="QuikGraph" Version="2.3.0" />
     </ItemGroup>
 
 </Project>
