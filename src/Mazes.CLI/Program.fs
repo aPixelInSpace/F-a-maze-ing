@@ -11,14 +11,8 @@ open Mazes.CLI.Maze
 open Mazes.CLI.Render
 open Mazes.CLI.Output
 
-let nextVerb argv =
-    let indexPipe =
-        argv
-        |> Seq.tryFindIndex(fun s -> s = "|")
-
-    match indexPipe with
-    | Some indexPipe -> argv |> Seq.skip(indexPipe + 1)
-    | None -> Seq.empty
+[<Literal>]
+let pipe = "|"
 
 let verbs f argv =
     let i = ref 0
@@ -26,89 +20,50 @@ let verbs f argv =
     |> Seq.groupBy (fun x ->
       if f x then incr i
       !i)
-    |> Seq.map snd
+    |> Seq.map(fun s -> (snd s) |> Seq.filter(fun s -> s <> pipe))
     |> Seq.toArray
 
-// todo : make generic these command line functions
+let handleVerb<'Verb, 'Result> handler verb (argv : string seq) : 'Result option =
+    if verb <> (argv |> Seq.head) then None
+    else    
+        let parserResult = Parser.Default.ParseArguments<'Verb>(argv)
+        match parserResult with
+            | :? Parsed<'Verb> as parsed ->
+                Some (parsed |> handler)
+            | :? NotParsed<'Verb> as notParsed ->
+                printfn "%s" (String.Join(",", (notParsed.Errors |> Seq.map(fun e -> e.ToString()))))
+                None
+            | _ ->
+                printfn "Something went wrong !"
+                failwith "Something went wrong !"
+
 let initCanvas argv =
-    let shapeRectangleResult = Parser.Default.ParseArguments<Array2D.Rectangle.ShapeRectangle>(argv)
-    let canvasArray2D =
-        match shapeRectangleResult with
-        | :? Parsed<Array2D.Rectangle.ShapeRectangle> as parsed ->
-            Some (parsed |> Array2D.Rectangle.handleVerbShapeRectangle)
-        | :? NotParsed<Array2D.Rectangle.ShapeRectangle> as notParsed ->
-            printfn "%s" (String.Join(",", (notParsed.Errors |> Seq.map(fun e -> e.ToString()))))
-            None
-        | _ ->
-            printfn "Something went wrong !"
-            failwith "Something went wrong !"
+    handleVerb<Array2D.Rectangle.ShapeRectangle, Mazes.Core.Canvas.Array2D.Canvas> Array2D.Rectangle.handleVerb Array2D.Rectangle.verb argv
 
-    canvasArray2D
-
-let canvasArray2DToNdStruct argv canvas =
-    let gridOrthoResult = Parser.Default.ParseArguments<Grid2D.Ortho.GridOrtho>(argv)
-    let gridOrtho =
-        match gridOrthoResult with
-        | :? Parsed<Grid2D.Ortho.GridOrtho> as parsed ->
-            Some (
-                parsed
-                |> Grid2D.Ortho.handleVerbGridOrtho canvas
-                |> NDimensionalStructure.create2D)
-        | :? NotParsed<Grid2D.Ortho.GridOrtho> as notParsed ->
-            printfn "%s" (String.Join(",", (notParsed.Errors |> Seq.map(fun e -> e.ToString()))))
-            None
-        | _ ->
-            printfn "Something went wrong !"
-            failwith "Something went wrong !"
-
-    gridOrtho
+let canvasArray2DToNdStruct argv canvas =        
+    handleVerb<Grid2D.Ortho.GridOrtho, Mazes.Core.Structure.NDimensionalStructure<_,_>> (fun parsed -> parsed |> Grid2D.Ortho.handleVerb canvas |> NDimensionalStructure.create2D) Grid2D.Ortho.verb argv
 
 let ndStructToMaze argv ndStruct =
-    let parserResult = Parser.Default.ParseArguments<HuntAndKill.AlgoHk>(argv)
-    let maze =
-        match parserResult with
-        | :? Parsed<HuntAndKill.AlgoHk> as parsed -> Some (parsed |> HuntAndKill.handleVerbAlgoHk ndStruct)
-        | :? NotParsed<HuntAndKill.AlgoHk> as notParsed ->
-            printfn "%s" (String.Join(",", (notParsed.Errors |> Seq.map(fun e -> e.ToString()))))
-            None
-        | _ ->
-            printfn "Something went wrong !"
-            failwith "Something went wrong !"
-
-    maze
+    [|
+       handleVerb<HuntAndKill.Options, Mazes.Core.Maze.Maze<_,_>> (HuntAndKill.handleVerb ndStruct) HuntAndKill.verb argv
+       handleVerb<RecursiveBacktracker.Options, Mazes.Core.Maze.Maze<_,_>> (RecursiveBacktracker.handleVerb ndStruct) RecursiveBacktracker.verb argv
+       handleVerb<Kruskal.Options, Mazes.Core.Maze.Maze<_,_>> (Kruskal.handleVerb ndStruct) Kruskal.verb argv
+       handleVerb<PrimSimple.Options, Mazes.Core.Maze.Maze<_,_>> (PrimSimple.handleVerb ndStruct) PrimSimple.verb argv
+       handleVerb<PrimSimpleModified.Options, Mazes.Core.Maze.Maze<_,_>> (PrimSimpleModified.handleVerb ndStruct) PrimSimpleModified.verb argv
+       handleVerb<PrimWeighted.Options, Mazes.Core.Maze.Maze<_,_>> (PrimWeighted.handleVerb ndStruct) PrimWeighted.verb argv
+    |]
+    |> Array.tryFind(Option.isSome) |> Option.flatten
 
 let mazeToRender argv maze =
-    let parserResult = Parser.Default.ParseArguments<SVG.Ortho.RenderSVGOrtho>(argv)
-    let render =
-        match parserResult with
-        | :? Parsed<SVG.Ortho.RenderSVGOrtho> as parsed -> Some (parsed |> SVG.Ortho.handleVerbRenderSVGOrtho maze)
-        | :? NotParsed<SVG.Ortho.RenderSVGOrtho> as notParsed ->
-            printfn "%s" (String.Join(",", (notParsed.Errors |> Seq.map(fun e -> e.ToString()))))
-            None
-        | _ ->
-            printfn "Something went wrong !"
-            failwith "Something went wrong !"
-
-    render
+    handleVerb<SVG.Ortho.RenderSVGOrtho, string> (SVG.Ortho.handleVerb maze) SVG.Ortho.verb argv
 
 let renderToOutput argv render =
-    let parserResult = Parser.Default.ParseArguments<File.OutputFile>(argv)
-    let render =
-        match parserResult with
-        | :? Parsed<File.OutputFile> as parsed -> Some (parsed |> File.handleVerbOutputFile render)
-        | :? NotParsed<File.OutputFile> as notParsed ->
-            printfn "%s" (String.Join(",", (notParsed.Errors |> Seq.map(fun e -> e.ToString()))))
-            None
-        | _ ->
-            printfn "Something went wrong !"
-            failwith "Something went wrong !"
-
-    render
+    handleVerb<File.OutputFile, unit> (File.handleVerb render) File.verb argv
 
 [<EntryPoint>]
 let main argv =
     
-    let verbs = argv |> verbs ((=)"|")
+    let verbs = argv |> verbs ((=)pipe)
     
     let canvasArray2D = initCanvas verbs.[0]
     
