@@ -9,8 +9,10 @@
 
     <ItemGroup>
         <Compile Include="Canvas\Array2D\Rectangle.fs" />
-        <Folder Include="Canvas\ArrayOfA" />
+        <Compile Include="Canvas\ArrayOfA\Disk.fs" />
         <Compile Include="Structure\Grid2D\Ortho.fs" />
+        <Compile Include="Structure\Grid2D\Polar.fs" />
+        <Compile Include="Structure\Grid2D\Hex.fs" />
         <Compile Include="Maze\HuntAndKill.fs" />
         <Compile Include="Maze\RecursiveBacktracker.fs" />
         <Compile Include="Maze\Kruskal.fs" />
@@ -18,8 +20,9 @@
         <Compile Include="Maze\PrimSimpleModified.fs" />
         <Compile Include="Maze\PrimWeighted.fs" />
         <Compile Include="Render\SVG\Ortho.fs" />
+        <Compile Include="Render\SVG\Polar.fs" />
+        <Compile Include="Render\SVG\Hex.fs" />
         <Compile Include="Output\File.fs" />
-        <Compile Include="CLGenerate.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 

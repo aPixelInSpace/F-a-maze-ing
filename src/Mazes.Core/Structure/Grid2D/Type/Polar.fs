@@ -231,5 +231,5 @@ module Grid =
     let createBaseGrid canvas =
         createInternal Close canvas :> IAdjacentStructure<GridArrayOfA, PolarPosition>
 
-    let createEmpty canvas =
+    let createEmptyBaseGrid canvas =
         createInternal Open canvas :> IAdjacentStructure<GridArrayOfA, PolarPosition>
