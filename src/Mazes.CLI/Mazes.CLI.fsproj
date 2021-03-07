@@ -9,10 +9,15 @@
 
     <ItemGroup>
         <Compile Include="Canvas\Array2D\Rectangle.fs" />
+        <Compile Include="Canvas\Array2D\TriangleIsosceles.fs" />
         <Compile Include="Canvas\ArrayOfA\Disk.fs" />
         <Compile Include="Structure\Grid2D\Ortho.fs" />
         <Compile Include="Structure\Grid2D\Polar.fs" />
         <Compile Include="Structure\Grid2D\Hex.fs" />
+        <Compile Include="Structure\Grid2D\Tri.fs" />
+        <Compile Include="Structure\Grid2D\OctaSquare.fs" />
+        <Compile Include="Structure\Grid2D\PentaCairo.fs" />
+        <Compile Include="Structure\Grid2D\Brick.fs" />
         <Compile Include="Maze\HuntAndKill.fs" />
         <Compile Include="Maze\RecursiveBacktracker.fs" />
         <Compile Include="Maze\Kruskal.fs" />
@@ -22,6 +27,10 @@
         <Compile Include="Render\SVG\Ortho.fs" />
         <Compile Include="Render\SVG\Polar.fs" />
         <Compile Include="Render\SVG\Hex.fs" />
+        <Compile Include="Render\SVG\Tri.fs" />
+        <Compile Include="Render\SVG\OctaSquare.fs" />
+        <Compile Include="Render\SVG\PentaCairo.fs" />
+        <Compile Include="Render\SVG\Brick.fs" />
         <Compile Include="Output\File.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
