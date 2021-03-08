@@ -127,12 +127,14 @@ type OrthoDCell =
                     ConnectionType.getConnectionTypeForInternal internalConnectionType isCurrentCellPartOfMaze isNeighborPartOfMaze
                 | None -> failwith $"Could not find a connection type for the neighbor {coordinate} at {position}"
 
+        let isEven = coordinate.CIndex % 2 = 0
+
         let connectionType pos =
             match pos with
-            | TopLeft -> getConnectionType (isFirstRow coordinate.RIndex || isFirstColumn coordinate.CIndex) TopLeft
-            | TopRight -> getConnectionType (isFirstRow coordinate.RIndex || isLastColumn coordinate.CIndex numberOfColumns) TopRight
-            | BottomLeft -> getConnectionType (isLastRow coordinate.RIndex numberOfRows || isFirstColumn coordinate.CIndex) BottomLeft
-            | BottomRight -> getConnectionType (isLastRow coordinate.RIndex numberOfRows || isFirstColumn coordinate.CIndex) BottomRight
+            | TopLeft -> getConnectionType ((isFirstRow coordinate.RIndex && isEven) || isFirstColumn coordinate.CIndex) TopLeft
+            | TopRight -> getConnectionType ((isFirstRow coordinate.RIndex && isEven) || isLastColumn coordinate.CIndex numberOfColumns) TopRight
+            | BottomLeft -> getConnectionType ((isLastRow coordinate.RIndex numberOfRows && not isEven) || isFirstColumn coordinate.CIndex) BottomLeft
+            | BottomRight -> getConnectionType ((isLastRow coordinate.RIndex numberOfRows && not isEven) || isLastColumn coordinate.CIndex numberOfColumns) BottomRight
 
         {
             Connections =

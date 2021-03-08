@@ -165,3 +165,22 @@ let ``Given a brick grid 5 by 10, when generating a maze with the Hunt and Kill 
 
     let map = maze.createMap maze.NDStruct.GetFirstCellPartOfMaze
     map.ConnectedNodes |> should equal maze.NDStruct.TotalOfMazeCells
+
+[<Fact>]
+let ``Given a ortho diagonal grid 5 by 10, when generating a maze with the Hunt and Kill algorithm (rng 1), then the output should be like the expected output`` () =
+    // arrange
+    let grid =
+        (Rectangle.create 5 10)
+        |> Grid2D.Type.OrthoD.Grid.createBaseGrid
+        |> NDimensionalStructure.create2D
+
+    // act
+    let maze = grid |> HuntAndKill.createMaze 1
+
+    // assert
+    //let expectedMaze = ""
+
+    //maze.Grid.ToString |> should equal expectedMaze
+
+    let map = maze.createMap maze.NDStruct.GetFirstCellPartOfMaze
+    map.ConnectedNodes |> should equal maze.NDStruct.TotalOfMazeCells
