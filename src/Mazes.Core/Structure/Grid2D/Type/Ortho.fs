@@ -149,12 +149,12 @@ module Grid =
         let appendHorizontalWall wallType =
             match wallType with
                 | Close | ClosePersistent -> sBuilder.Append("_") |> ignore
-                | ConnectionType.Open -> sBuilder.Append(" ") |> ignore
+                | Open -> sBuilder.Append(" ") |> ignore
 
         let appendVerticalWall wallType =
             match wallType with
                 | Close | ClosePersistent -> sBuilder.Append("|") |> ignore
-                | ConnectionType.Open -> sBuilder.Append(" ") |> ignore
+                | Open -> sBuilder.Append(" ") |> ignore
 
         // first row
         let lastColumnIndex = cells |> maxColumnIndex

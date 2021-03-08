@@ -5,6 +5,7 @@ module Mazes.CLI.Render.SVG.Ortho
 open CommandLine
 open Mazes.Core.Maze
 open Mazes.Render.SVG
+open Mazes.Render.SVG.OrthoGrid
 
 [<Literal>]
 let verb = "rs-ortho"
@@ -22,4 +23,4 @@ let handleVerb (maze : Maze<_,_>) (options : Parsed<RenderSVGOrtho>) =
         | true -> Some map
         | false -> None
     
-    OrthoGrid.render maze.NDStruct None colorMap None None
+    OrthoGrid.render Parameters.CreateDefaultCircle maze.NDStruct None colorMap None None

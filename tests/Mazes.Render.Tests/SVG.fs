@@ -12,6 +12,9 @@ open Mazes.Core.Structure
 open Mazes.Core.Maze.Generate
 open Mazes.Render
 
+let removeLineReturn (s : string) =
+    s.Replace("\n","").Replace("\r", "")
+
 [<Fact>]
 let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, then it should match the expected result`` () =
     // arrange
@@ -33,14 +36,16 @@ let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, t
     // act
     let renderedMaze =
         SVG.OrthoGrid.render
+            SVG.OrthoGrid.Parameters.CreateDefaultSquare
             maze.NDStruct
             (Some (map.ShortestPathGraph.PathFromRootTo maze.NDStruct.GetLastCellPartOfMaze))
             (Some map)
             (Some maze.NDStruct.GetFirstCellPartOfMaze)
             (Some maze.NDStruct.GetLastCellPartOfMaze)
-        
+        |> removeLineReturn
+
     // assert
-    let expectedRenderedMaze = IO.File.ReadAllText("Resources/ortho.svg", Encoding.UTF8)
+    let expectedRenderedMaze = IO.File.ReadAllText("Resources/ortho.svg", Encoding.UTF8) |> removeLineReturn
         
     renderedMaze |> should equal expectedRenderedMaze
 
@@ -70,9 +75,10 @@ let ``Given a maze with a polar grid, a path and a map, when creating an SVG, th
             (Some map)
             (Some maze.NDStruct.GetFirstCellPartOfMaze)
             (Some maze.NDStruct.GetLastCellPartOfMaze)
-        
+        |> removeLineReturn
+
     // assert
-    let expectedRenderedMaze = IO.File.ReadAllText("Resources/theta.svg", Encoding.UTF8)
+    let expectedRenderedMaze = IO.File.ReadAllText("Resources/theta.svg", Encoding.UTF8) |> removeLineReturn
 
     renderedMaze |> should equal expectedRenderedMaze
 
@@ -102,9 +108,10 @@ let ``Given a maze with a hex grid, a path and a map, when creating an SVG, then
             (Some map)
             (Some maze.NDStruct.GetFirstCellPartOfMaze)
             (Some maze.NDStruct.GetLastCellPartOfMaze)
-        
+        |> removeLineReturn
+
     // assert
-    let expectedRenderedMaze = IO.File.ReadAllText("Resources/sigma.svg", Encoding.UTF8)
+    let expectedRenderedMaze = IO.File.ReadAllText("Resources/sigma.svg", Encoding.UTF8) |> removeLineReturn
         
     renderedMaze |> should equal expectedRenderedMaze
 
@@ -134,9 +141,10 @@ let ``Given a maze with a tri grid, a path and a map, when creating an SVG, then
             (Some map)
             (Some maze.NDStruct.GetFirstCellPartOfMaze)
             (Some maze.NDStruct.GetLastCellPartOfMaze)
-        
+        |> removeLineReturn
+
     // assert
-    let expectedRenderedMaze = IO.File.ReadAllText("Resources/delta.svg", Encoding.UTF8)
+    let expectedRenderedMaze = IO.File.ReadAllText("Resources/delta.svg", Encoding.UTF8) |> removeLineReturn
         
     renderedMaze |> should equal expectedRenderedMaze
 
@@ -167,9 +175,10 @@ let ``Given a maze with a octa-square grid, a path and a map, when creating an S
             (Some map)
             (Some maze.NDStruct.GetFirstCellPartOfMaze)
             (Some maze.NDStruct.GetLastCellPartOfMaze)
-        
+        |> removeLineReturn
+
     // assert
-    let expectedRenderedMaze = IO.File.ReadAllText("Resources/upsilon.svg", Encoding.UTF8)
+    let expectedRenderedMaze = IO.File.ReadAllText("Resources/upsilon.svg", Encoding.UTF8) |> removeLineReturn
         
     renderedMaze |> should equal expectedRenderedMaze
 
@@ -199,9 +208,10 @@ let ``Given a maze with a Cairo pentagonal grid, a path and a map, when creating
             (Some map)
             (Some maze.NDStruct.GetFirstCellPartOfMaze)
             (Some maze.NDStruct.GetLastCellPartOfMaze)
-        
+        |> removeLineReturn
+
     // assert
-    let expectedRenderedMaze = IO.File.ReadAllText("Resources/pentacairo.svg", Encoding.UTF8)
+    let expectedRenderedMaze = IO.File.ReadAllText("Resources/pentacairo.svg", Encoding.UTF8) |> removeLineReturn
 
     renderedMaze |> should equal expectedRenderedMaze
 
@@ -231,8 +241,9 @@ let ``Given a maze with a brick grid, a path and a map, when creating an SVG, th
             (Some map)
             (Some maze.NDStruct.GetFirstCellPartOfMaze)
             (Some maze.NDStruct.GetLastCellPartOfMaze)
-        
+        |> removeLineReturn
+
     // assert
-    let expectedRenderedMaze = IO.File.ReadAllText("Resources/brick.svg", Encoding.UTF8)
+    let expectedRenderedMaze = IO.File.ReadAllText("Resources/brick.svg", Encoding.UTF8) |> removeLineReturn
         
     renderedMaze |> should equal expectedRenderedMaze

@@ -80,6 +80,7 @@ let svgStyle =
                         stroke-linejoin: round;
                     }
                     ." + normalWallInsetForeClass + " {
+                        fill: transparent;
                         stroke: white;
                         stroke-width: 8;
                         stroke-linecap: round;
