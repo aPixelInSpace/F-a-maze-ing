@@ -10,17 +10,6 @@ open Mazes.Core.Structure.Grid2D
 open Mazes.Core.Structure.Grid2D.Type.Ortho
 open Mazes.Render.SVG.Base
 
-//let private cellWidth = 30
-//let private cellHeight = 30
-//let private bridgeHalfWidth = 5.0
-//let private bridgeDistanceFromCenter = 12.0
-//let private marginWidth = 20
-//let private marginHeight = 20
-//
-//let private perfectRadius = pythagorasHypotenuse ((float)cellWidth) ((float)cellHeight) / 2.0
-//let private radiusX = round perfectRadius
-//let private radiusY = round perfectRadius
-
 type Line =
     | Straight
     | Circle
