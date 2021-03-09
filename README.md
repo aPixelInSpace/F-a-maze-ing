@@ -9,9 +9,23 @@ You may visit https://mazes.apixelinspace.com to randomly generate a few example
 
 ## Examples
 
+### Orthogonal maze
+
+With squares
+
+<img src="docs/resources/Examples/Ortho/SVG/RectangularSquareMaze.svg" width="400">
+
+With circles
+
+<img src="docs/resources/Examples/Ortho/SVG/RectangularCircleMaze.svg" width="400">
+
+With a 'hand-drawn feel'
+
+<img src="docs/resources/Examples/Ortho/SVG/RectangularHandDrawnMaze.svg" width="400">
+
 ### Penta maze
 
-Here with the "Cairo" pentagonal tiling
+With the "Cairo" pentagonal tiling
 
 <img src="docs/resources/Examples/Penta/SVG/PentaMaze.svg" width="400">
 
@@ -35,9 +49,7 @@ Here with the "Cairo" pentagonal tiling
 
 <img src="docs/resources/Examples/Brick/SVG/BrickMaze.svg" width="400">
 
-### Orthogonal maze
-
-<img src="docs/resources/Examples/Ortho/SVG/RectangularMaze.svg" width="400">
+### Customizable shapes
 
 <img src="docs/resources/Examples/Ortho/SVG/TriangularMaze.svg" width="400">
 
@@ -63,46 +75,7 @@ The text render is simpler and only displays orthogonal mazes (using the Unicode
 </div>
 
 ## Usage
-###### (more to come) 
-```
-mazes
-
-  -n, --name         A name for the maze. If empty, a default one is provided.
-
-  -r, --rows         (Default: 50) The number of rows of the maze.
-
-  -c, --columns      (Default: 80) The number of columns of the maze.
-
-  -a, --algo         The algorithm to use to generate the maze. If empty, a random one is chosen.
-                     Options are :
-                     - BinaryTree
-                     - Sidewinder
-                     - AldousBroder
-                     - Wilson
-                     - HuntAndKill
-                     - RecursiveBackTracker
-                     - Kruskal
-                     - PrimSimple
-                     - PrimSimpleModified
-                     - PrimWeighted
-                     - GrowingTreeMixRandomAndLast
-                     - GrowingTreeMixChosenRandomAndLast
-                     - GrowingTreeMixOldestAndLast
-                     - GrowingTreeDirection
-                     - GrowingTreeSpiral
-                     - Eller
-                     - RecursiveDivision
-
-  -s, --seed         The seed number to use for the random number generator. If empty, a random seed is picked.
-
-  -d, --directory    The directory where to output the maze. If empty, the directory of the program is used.
-
-  -q, --quiet        (Default: false) Automatically exit the program when finished
-
-  --help             Display this help screen.
-
-  --version          Display version information.
-```
+Documentation for the CLI is coming soon.
 
 ## Book
 

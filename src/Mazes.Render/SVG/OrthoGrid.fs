@@ -30,7 +30,7 @@ type Parameters =
     {
         Width : int
         Height : int
-        BridgeHalfWidth : float
+        BridgeWidth : float
         BridgeDistanceFromCenter : float
         MarginWidth : int
         MarginHeight : int
@@ -48,7 +48,7 @@ type Parameters =
         {
             Width = 30
             Height = 30
-            BridgeHalfWidth = 5.0
+            BridgeWidth = 10.0
             BridgeDistanceFromCenter = 12.0
             MarginWidth = 20
             MarginHeight = 20
@@ -59,7 +59,7 @@ type Parameters =
         {
             Width = 30
             Height = 30
-            BridgeHalfWidth = 5.0
+            BridgeWidth = 10.0
             BridgeDistanceFromCenter = 12.0
             MarginWidth = 20
             MarginHeight = 20
@@ -147,7 +147,7 @@ let render (parameters : Parameters) (grid : NDimensionalStructure<GridArray2D<O
 
     let calculatePoints = calculatePoints parameters (calculateHeight, calculateWidth)
 
-    let calculatePointsBridge = calculatePointsBridge (center parameters calculatePoints) parameters.BridgeHalfWidth parameters.BridgeDistanceFromCenter
+    let calculatePointsBridge = calculatePointsBridge (center parameters calculatePoints) (parameters.BridgeWidth / 2.0) parameters.BridgeDistanceFromCenter
     let appendSimpleBridges = appendSimpleBridges calculatePointsBridge nonAdjacentNeighbors
     let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge nonAdjacentNeighbors
     
