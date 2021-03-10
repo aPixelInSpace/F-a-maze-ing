@@ -10,6 +10,10 @@
     <ItemGroup>
         <Compile Include="Canvas\Array2D\Rectangle.fs" />
         <Compile Include="Canvas\Array2D\TriangleIsosceles.fs" />
+        <Compile Include="Canvas\Array2D\Ellipse.fs" />
+        <Compile Include="Canvas\Array2D\Hexagon.fs" />
+        <Compile Include="Canvas\Array2D\Pentagon.fs" />
+        <Compile Include="Canvas\Array2D\PentagonStar.fs" />
         <Compile Include="Canvas\ArrayOfA\Disk.fs" />
         <Compile Include="Structure\Grid2D\Ortho.fs" />
         <Compile Include="Structure\Grid2D\Polar.fs" />

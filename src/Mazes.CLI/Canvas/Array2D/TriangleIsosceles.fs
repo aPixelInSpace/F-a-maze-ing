@@ -21,7 +21,7 @@ let mapToBaseAt baseAtEnum =
     | _ -> failwith "Unknown base at"
 
 [<Literal>]
-let verb = "s-tri"
+let verb = "s-triangle"
 
 [<Verb(verb, isDefault = false, HelpText = "Triangle isosceles shape")>]
 type ShapeRectangle = {

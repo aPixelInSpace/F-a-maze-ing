@@ -149,6 +149,26 @@ let appendHeader width height (sBuilder : StringBuilder) =
 let appendStyle (sBuilder : StringBuilder) =
     sBuilder.Append(svgStyle)
 
+let straightLine (x1, y1) (x2, y2) =
+    lazy $"M {round x1} {round y1} L {round x2} {round y2}"
+
+let arcLine orientation (rx, ry) (x1, y1) (x2, y2) =
+    lazy $"M {round x1} {round y1} A {round rx} {round ry}, 0, 0, {orientation}, {round x2} {round y2}"
+
+let getLine isLinePresent addLine checkIfAlreadyPresent (line : ('a * 'a) -> ('a * 'a) -> Lazy<string>) (x1, y1) (x2, y2) =
+    let key = Utils.getKey ((x1, y1), (x2, y2))
+    let line = line (x1, y1) (x2, y2)
+
+    match checkIfAlreadyPresent with
+    | true ->
+        if not (isLinePresent key) then
+            addLine key
+            Some line.Value
+        else
+            None
+    | false ->
+        Some line.Value
+
 let appendBackground (color : string) (sBuilder : StringBuilder) =
     sBuilder.Append($"<rect width=\"100%%\" height=\"100%%\" fill=\"{color}\"/>")
 

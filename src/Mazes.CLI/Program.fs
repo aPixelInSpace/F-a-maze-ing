@@ -61,6 +61,18 @@ let initCanvas argv =
         handleVerb<Array2D.TriangleIsosceles.ShapeRectangle, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.TriangleIsosceles.handleVerb) Array2D.TriangleIsosceles.verb argv
         |> Option.map CanvasChoice.Array2DCanvas
 
+        handleVerb<Array2D.Ellipse.ShapeEllipse, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Ellipse.handleVerb) Array2D.Ellipse.verb argv
+        |> Option.map CanvasChoice.Array2DCanvas
+
+        handleVerb<Array2D.Hexagon.ShapeHexagon, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Hexagon.handleVerb) Array2D.Hexagon.verb argv
+        |> Option.map CanvasChoice.Array2DCanvas
+
+        handleVerb<Array2D.Pentagon.ShapePentagon, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Pentagon.handleVerb) Array2D.Pentagon.verb argv
+        |> Option.map CanvasChoice.Array2DCanvas
+
+        handleVerb<Array2D.PentagonStar.ShapePentagonStar, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.PentagonStar.handleVerb) Array2D.PentagonStar.verb argv
+        |> Option.map CanvasChoice.Array2DCanvas
+
         handleVerb<ArrayOfA.Disk.ShapeDisk, Mazes.Core.Canvas.ArrayOfA.Canvas> (Some ArrayOfA.Disk.handleVerb) ArrayOfA.Disk.verb argv
         |> Option.map CanvasChoice.ArrayOfACanvas
     |] |> pick
@@ -145,6 +157,10 @@ let renderToOutput argv render =
 let checkAllHandlers argv =    
     handleVerb<Array2D.Rectangle.ShapeRectangle, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Rectangle.verb argv |> ignore
     handleVerb<Array2D.TriangleIsosceles.ShapeRectangle, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.TriangleIsosceles.verb argv |> ignore
+    handleVerb<Array2D.Ellipse.ShapeEllipse, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Ellipse.verb argv |> ignore
+    handleVerb<Array2D.Hexagon.ShapeHexagon, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Hexagon.verb argv |> ignore
+    handleVerb<Array2D.Pentagon.ShapePentagon, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Pentagon.verb argv |> ignore
+    handleVerb<Array2D.PentagonStar.ShapePentagonStar, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.PentagonStar.verb argv |> ignore
     handleVerb<ArrayOfA.Disk.ShapeDisk, Mazes.Core.Canvas.ArrayOfA.Canvas> None ArrayOfA.Disk.verb argv |> ignore
 
     handleVerb<Grid2D.Ortho.GridOrtho, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.Ortho.verb argv |> ignore    

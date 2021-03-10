@@ -6,7 +6,7 @@ open CommandLine
 open Mazes.Core.Canvas.Array2D.Shape
 
 [<Literal>]
-let verb = "s-rect"
+let verb = "s-rectangle"
 
 [<Verb(verb, isDefault = false, HelpText = "Rectangle shape")>]
 type ShapeRectangle = {
