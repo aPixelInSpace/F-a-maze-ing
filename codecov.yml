@@ -23,4 +23,4 @@ coverage:
         patch:
             default:
                 # basic
-                target: 70%
+                target: 50%
