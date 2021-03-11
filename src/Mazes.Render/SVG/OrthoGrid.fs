@@ -178,12 +178,22 @@ let render (parameters : Parameters) (grid : NDimensionalStructure<GridArray2D<O
     let appendPathAndBridgesWithAnimation =
         appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacent2DConnections.ExistNeighbor wholeBridgeLines
 
+    //let rng = Random(1)
+    let columnDistance = Color.columnDistance (slice2D.ToSpecializedStructure.NumberOfColumns - 1)
+    let colorPicker coordinate =
+        //Color.random rng (240, 165, 53) (185, 227, 100)
+        Color.linearGradient (230, 165, 135) (185, 227, 100) (columnDistance coordinate)        
+        |> Color.toHtmlHexColor
+
+    let blankColor _ = Some "white"
+    let noColor _ = None
+
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
     |> appendStyle
     |> appendBackground "transparent"
     
-    //|> appendMazeColoration grid.ToInterface.CoordinatesPartOfMaze wholeCellLines
+    //|> appendMazeColoration coordinatesPartOfMaze wholeCellLines colorPicker
     |> appendMazeDistanceColoration map wholeCellLines
 
     //|> appendPath path wholeCellLines
@@ -197,7 +207,7 @@ let render (parameters : Parameters) (grid : NDimensionalStructure<GridArray2D<O
     //|> appendWallsWithInset
 
     |> appendSimpleBridges
-    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines
+    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines noColor 
     |> appendMazeDistanceBridgeColoration
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges

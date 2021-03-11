@@ -5,7 +5,10 @@
 # F-a-maze-ing
 An easy-to-use, composable and configurable maze generator and solver. Several types of grid tiles with multiple possible shapes.
 
+## Usage
 You may visit https://mazes.apixelinspace.com to randomly generate a few examples (website in preview version, work in progress)
+
+Documentation for the CLI is coming soon.
 
 ## Examples
 
@@ -22,6 +25,10 @@ With circles
 With a 'hand-drawn feel'
 
 <img src="docs/resources/Examples/Ortho/SVG/RectangularHandDrawnMaze.svg" width="400">
+
+With a shape from an image
+
+<img src="docs/resources/Examples/Ortho/SVG/ButterflyMaze.svg" width="400">
 
 ### Penta maze
 
@@ -73,9 +80,6 @@ The text render is simpler and only displays orthogonal mazes (using the Unicode
           ┗━━━┷━┓ ┏━┷━━━┛      
                 ┗━┛            </pre>
 </div>
-
-## Usage
-Documentation for the CLI is coming soon.
 
 ## Book
 

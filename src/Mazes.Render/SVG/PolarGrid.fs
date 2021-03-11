@@ -117,6 +117,8 @@ let render (grid : NDimensionalStructure<GridArrayOfA, PolarPosition>) path map 
     let appendPathAndBridgesWithAnimation =
         appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacent2DConnections.ExistNeighbor wholeBridgeLines
 
+    let colorPicker coordinate = None
+
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
     |> appendStyle
@@ -135,7 +137,7 @@ let render (grid : NDimensionalStructure<GridArrayOfA, PolarPosition>) path map 
     //|> appendWallsWithInset
 
     |> appendSimpleBridges
-    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines
+    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines colorPicker
     |> appendMazeDistanceBridgeColoration nonAdjacentNeighbors map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges

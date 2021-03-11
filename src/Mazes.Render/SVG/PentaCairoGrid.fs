@@ -175,6 +175,8 @@ let render (grid : NDimensionalStructure<GridArray2D<PentaCairoPosition>, PentaC
     let appendPathAndBridgesWithAnimation =
         appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacent2DConnections.ExistNeighbor wholeBridgeLines
 
+    let colorPicker coordinate = None
+
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())
     |> appendStyle
@@ -190,7 +192,7 @@ let render (grid : NDimensionalStructure<GridArray2D<PentaCairoPosition>, PentaC
     //|> appendWallsWithInset
 
     |> appendSimpleBridges
-    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines
+    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines colorPicker
     |> appendMazeDistanceBridgeColoration nonAdjacentNeighbors map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges

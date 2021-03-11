@@ -133,7 +133,6 @@ let svgStyle =
                     ." + colorClass + " {
                         stroke: transparent;
                         stroke-width: 0;
-                        fill: white;
                     }
                 </style>
             </defs>"
@@ -225,8 +224,13 @@ let appendBorderWallForeInset (sBuilder : StringBuilder) lines (wallType : Conne
     | ClosePersistent -> appendPathElement sBuilder None borderWallInsetForeClass lines coordinate
     | _ -> sBuilder
 
-let appendPathElementColor (sBuilder : StringBuilder) styleClass opacity (lines : string) (coordinate : NCoordinate option) =
+let appendPathElementColor (sBuilder : StringBuilder) styleClass color opacity (lines : string) (coordinate : NCoordinate option) =
     sBuilder.Append($"<path d=\"{lines}\" class=\"{styleClass}\" fill-opacity=\"{opacity}\"") |> ignore
+    
+    match color with
+    | Some color -> sBuilder.Append($" fill=\"{color}\"") |> ignore
+    | None -> ()
+
     if debugShowCoordinate then
         match coordinate with
         | Some coordinate -> sBuilder.Append($"><title>RIndex {coordinate.ToCoordinate2D.RIndex}; CIndex {coordinate.ToCoordinate2D.CIndex}</title></path>") |> ignore
@@ -257,7 +261,7 @@ let appendCellColorWithDynamicOpacity lines distanceFromRoot maxDistance coordin
     let opacity = round (1.0 - (float (maxDistance - distanceFromRoot) / float maxDistance))
     let sOpacity = opacity.ToString().Replace(",", ".")
 
-    appendPathElementColor sBuilder colorDistanceClass sOpacity lines coordinate
+    appendPathElementColor sBuilder colorDistanceClass None sOpacity lines coordinate
 
 let appendMazeDistanceColoration map wholeCellLines (sBuilder : StringBuilder) =
     match map with
@@ -292,18 +296,18 @@ let appendMazeDistanceBridgeColoration sequence map wholeBridgeLines (sBuilder :
 
     sBuilder
 
-let appendMazeColoration sequence wholeCellLines (sBuilder : StringBuilder) =
+let appendMazeColoration sequence wholeCellLines getColor (sBuilder : StringBuilder) =
     sequence
-    |> Seq.iter(fun coordinate -> appendPathElementColor sBuilder colorClass "1" (wholeCellLines coordinate) (Some coordinate) |> ignore)
+    |> Seq.iter(fun coordinate -> appendPathElementColor sBuilder colorClass (getColor coordinate) "1" (wholeCellLines coordinate) (Some coordinate) |> ignore)
 
     sBuilder
 
-let appendMazeBridgeColoration sequence wholeBridgeLines (sBuilder : StringBuilder) =
+let appendMazeBridgeColoration sequence wholeBridgeLines getColor (sBuilder : StringBuilder) =
     sequence
     |> Seq.iter(fun (fromCoordinate, toCoordinate, wallType) ->
         match wallType, showClosedBridge with
         | Open, _ | Close, true ->
-            appendPathElementColor sBuilder colorClass "1" (wholeBridgeLines fromCoordinate toCoordinate) None |> ignore
+            appendPathElementColor sBuilder colorClass (getColor fromCoordinate) "1" (wholeBridgeLines fromCoordinate toCoordinate) None |> ignore
         | _ -> ())
 
     sBuilder

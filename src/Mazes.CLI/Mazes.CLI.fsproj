@@ -14,6 +14,7 @@
         <Compile Include="Canvas\Array2D\Hexagon.fs" />
         <Compile Include="Canvas\Array2D\Pentagon.fs" />
         <Compile Include="Canvas\Array2D\PentagonStar.fs" />
+        <Compile Include="Canvas\Array2D\Image.fs" />
         <Compile Include="Canvas\ArrayOfA\Disk.fs" />
         <Compile Include="Structure\Grid2D\Ortho.fs" />
         <Compile Include="Structure\Grid2D\Polar.fs" />

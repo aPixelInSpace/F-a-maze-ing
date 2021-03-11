@@ -77,7 +77,6 @@
                     .cc {
                         stroke: transparent;
                         stroke-width: 0;
-                        fill: white;
                     }
                 </style>
             </defs><rect width="100%" height="100%" fill="transparent"/><path d="M 290 290 L 320 290 A 30 30, 0, 0, 1, 260 290 L 290 290 A 0 0, 0, 0, 0, 290 290" class="cdc" fill-opacity="0"/>
