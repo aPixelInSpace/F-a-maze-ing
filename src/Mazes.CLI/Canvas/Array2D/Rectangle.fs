@@ -9,10 +9,10 @@ open Mazes.Core.Canvas.Array2D.Shape
 let verb = "s-rectangle"
 
 [<Verb(verb, isDefault = false, HelpText = "Rectangle shape")>]
-type ShapeRectangle = {
+type Options = {
     [<Option('r', "rows", Required = true, HelpText = "The number of rows.")>] rows : int
     [<Option('c', "columns", Required = true, HelpText = "The number of columns." )>] columns : int
 }
 
-let handleVerb (options : Parsed<ShapeRectangle>) =
+let handleVerb (options : Parsed<Options>) =
     Rectangle.create options.Value.rows options.Value.columns

@@ -9,11 +9,11 @@ open Mazes.Core.Structure.Grid2D.Type
 let verb = "g-ortho"
 
 [<Verb(verb, isDefault = false, HelpText = "Orthogonal grid")>]
-type GridOrtho = {
+type Options = {
     [<Option('e', "empty", Required = false, Default = false, HelpText = "If true, the grid will have no internal connections")>] empty : bool
 }
 
-let handleVerb canvas (options : Parsed<GridOrtho>) =
+let handleVerb canvas (options : Parsed<Options>) =
     canvas
     |> match options.Value.empty with
        | true -> Ortho.Grid.createEmptyBaseGrid

@@ -10,11 +10,11 @@ open Mazes.Render.SVG
 let verb = "rs-hex"
 
 [<Verb(verb, isDefault = false, HelpText = "Hexagonal SVG render")>]
-type RenderSVGHex = {
+type Options = {
     [<Option('d', "distColor", Required = false, Default = false, HelpText = "Distance coloration")>] distColor : bool
 }
 
-let handleVerb (maze : Maze<_,_>) (options : Parsed<RenderSVGHex>) =
+let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
     let map = maze.createMap maze.NDStruct.GetFirstCellPartOfMaze
     
     let colorMap =

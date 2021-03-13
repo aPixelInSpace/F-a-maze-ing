@@ -10,11 +10,11 @@ open Mazes.Render.SVG
 let verb = "rs-octas"
 
 [<Verb(verb, isDefault = false, HelpText = "Octagonal and square SVG render")>]
-type RenderSVGOctaSquare = {
+type Options = {
     [<Option('d', "distColor", Required = false, Default = false, HelpText = "Distance coloration")>] distColor : bool
 }
 
-let handleVerb (maze : Maze<_,_>) (options : Parsed<RenderSVGOctaSquare>) =
+let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
     let map = maze.createMap maze.NDStruct.GetFirstCellPartOfMaze
     
     let colorMap =

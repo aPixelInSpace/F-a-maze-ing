@@ -20,18 +20,18 @@ let mapToSide sideEnum =
 let verb = "s-ellipse"
 
 [<Verb(verb, isDefault = false, HelpText = "Ellipse shape")>]
-type ShapeEllipse = {
+type Options = {
     [<Option('r', "rowRadiusLength", Required = true, HelpText = "The length for the horizontal radius.")>] rowRadiusLength : int
     [<Option('c', "columnRadiusLength", Required = true, HelpText = "The length for the vertical radius.")>] columnRadiusLength : int
-    [<Option('l', "rowEnlargingFactor", Required = false, Default = 0.0, HelpText = "Zoom factor on the horizontal axis.")>] rowEnlargingFactor : float
-    [<Option('f', "columnEnlargingFactor", Required = false, Default = 0.0, HelpText = "Zoom factor on the vertical axis.")>] columnEnlargingFactor : float
-    [<Option('h', "rowTranslationFactor", Required = false, Default = 0, HelpText = "Translation factor on the horizontal axis.")>] rowTranslationFactor : int
-    [<Option('v', "columnTranslationFactor", Required = false, Default = 0, HelpText = "Translation factor on the vertical axis.")>] columnTranslationFactor : int
-    [<Option('e', "ellipseFactor", Required = false, Default = 0.0, HelpText = "Ellipse factor.")>] ellipseFactor : float    
-    [<Option('s', "side", Required = false, Default = SideEnum.Inside, HelpText = "Indicate if the grid is inside the ellipse 0; or outside 1." )>] sideEnum : SideEnum
+    [<Option(Default = 0.0, HelpText = "Zoom factor on the horizontal axis.")>] rowEnlargingFactor : float
+    [<Option(Default = 0.0, HelpText = "Zoom factor on the vertical axis.")>] columnEnlargingFactor : float
+    [<Option(Default = 0, HelpText = "Translation factor on the horizontal axis.")>] rowTranslationFactor : int
+    [<Option(Default = 0, HelpText = "Translation factor on the vertical axis.")>] columnTranslationFactor : int
+    [<Option(Default = 0.0, HelpText = "Inside ellipse factor.")>] ellipseFactor : float    
+    [<Option(Default = SideEnum.Inside, HelpText = "Indicate where the ellipse is Inside or Outside." )>] side : SideEnum
 }
 
-let handleVerb (options : Parsed<ShapeEllipse>) =
+let handleVerb (options : Parsed<Options>) =
     Ellipse.create
         options.Value.rowRadiusLength
         options.Value.columnRadiusLength
@@ -40,4 +40,4 @@ let handleVerb (options : Parsed<ShapeEllipse>) =
         options.Value.rowTranslationFactor
         options.Value.columnTranslationFactor
         (Some options.Value.ellipseFactor)
-        (mapToSide options.Value.sideEnum)
+        (mapToSide options.Value.side)

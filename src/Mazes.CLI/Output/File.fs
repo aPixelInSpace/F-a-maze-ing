@@ -8,9 +8,9 @@ open CommandLine
 let verb = "o-file"
 
 [<Verb(verb, isDefault = false, HelpText = "Output to the file system")>]
-type OutputFile = {
+type Options = {
     [<Option('p', "path", Required = true, HelpText = "The full path of the file")>] path : string
 }
 
-let handleVerb data (options : Parsed<OutputFile>) =
+let handleVerb data (options : Parsed<Options>) =
     System.IO.File.WriteAllText(options.Value.path, data)

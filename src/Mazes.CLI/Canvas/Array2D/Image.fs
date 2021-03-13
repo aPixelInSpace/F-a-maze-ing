@@ -9,10 +9,10 @@ open Mazes.Utility.Canvas
 let verb = "s-image"
 
 [<Verb(verb, isDefault = false, HelpText = "Shape from an image")>]
-type ShapeImage = {
+type Options = {
     [<Option('p', "path", Required = true, HelpText = "The full path of the image file")>] path : string
     [<Option('t', "tolerance", Required = false, Default = 0.0, HelpText = "The tolerance on the pixel color.")>] tolerance : float
 }
 
-let handleVerb (options : Parsed<ShapeImage>) =
+let handleVerb (options : Parsed<Options>) =
     Convert.fromImage ((float32)options.Value.tolerance) options.Value.path

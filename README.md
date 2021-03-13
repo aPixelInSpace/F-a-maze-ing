@@ -8,7 +8,7 @@ An easy-to-use, composable and configurable maze generator and solver. Several t
 ## Usage
 You may visit https://mazes.apixelinspace.com to randomly generate a few examples (website in preview version, work in progress)
 
-Documentation for the CLI is coming soon.
+The CLI and the documentation are coming soon.
 
 ## Examples
 

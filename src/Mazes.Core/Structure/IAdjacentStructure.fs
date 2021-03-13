@@ -5,6 +5,7 @@ namespace Mazes.Core.Structure
 open System
 open Mazes.Core
 
+// todo : this interface does way too much, it must be broken down
 type IAdjacentStructure<'Structure, 'Position> =
     abstract member TotalOfCells : int
     abstract member TotalOfMazeCells : int

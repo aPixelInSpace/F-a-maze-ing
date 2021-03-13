@@ -10,10 +10,10 @@ open Mazes.Core.Canvas.Array2D.Shape.Ellipse
 let verb = "s-hexagon"
 
 [<Verb(verb, isDefault = false, HelpText = "Hexagon shape")>]
-type ShapeHexagon = {
+type Options = {
     [<Option('s', "edgeSize", Required = true, HelpText = "The length of one side of the hexagon.")>] edgeSize : float
 }
 
-let handleVerb (options : Parsed<ShapeHexagon>) =
+let handleVerb (options : Parsed<Options>) =
     Hexagon.create
         options.Value.edgeSize

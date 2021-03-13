@@ -24,12 +24,12 @@ let mapToBaseAt baseAtEnum =
 let verb = "s-triangle"
 
 [<Verb(verb, isDefault = false, HelpText = "Triangle isosceles shape")>]
-type ShapeRectangle = {
+type Options = {
     [<Option('b', "base", Required = true, HelpText = "The length of the base.")>] baseLength : int
-    [<Option('p', "position", Required = false, Default = BaseAtEnum.Bottom, HelpText = "The position of the base." )>] baseAtEnum : BaseAtEnum
-    [<Option('d', "baseDecr", Required = false, Default = 1, HelpText = "The decrement value for the base.")>] baseDecrement : int
-    [<Option('i', "heightIncr", Required = false, Default = 1, HelpText = "The increment value for the height.")>] heightIncrement : int
+    [<Option(Default = BaseAtEnum.Bottom, HelpText = "The position of the base Bottom, Top, Left or Right." )>] baseAt : BaseAtEnum
+    [<Option(Default = 1, HelpText = "The decrement value for the base.")>] baseDecrement : int
+    [<Option(Default = 1, HelpText = "The increment value for the height.")>] heightIncrement : int
 }
 
-let handleVerb (options : Parsed<ShapeRectangle>) =
-    TriangleIsosceles.create options.Value.baseLength (mapToBaseAt options.Value.baseAtEnum) options.Value.baseDecrement options.Value.heightIncrement
+let handleVerb (options : Parsed<Options>) =
+    TriangleIsosceles.create options.Value.baseLength (mapToBaseAt options.Value.baseAt) options.Value.baseDecrement options.Value.heightIncrement

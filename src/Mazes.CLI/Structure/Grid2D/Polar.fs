@@ -9,11 +9,11 @@ open Mazes.Core.Structure.Grid2D.Type
 let verb = "g-polar"
 
 [<Verb(verb, isDefault = false, HelpText = "Polar grid")>]
-type GridPolar = {
+type Options = {
     [<Option('e', "empty", Required = false, Default = false, HelpText = "If true, the grid will have no internal connections")>] empty : bool
 }
 
-let handleVerb canvas (options : Parsed<GridPolar>) =
+let handleVerb canvas (options : Parsed<Options>) =
     canvas
     |> match options.Value.empty with
        | true -> Polar.Grid.createEmptyBaseGrid

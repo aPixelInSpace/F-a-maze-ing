@@ -10,11 +10,11 @@ open Mazes.Render.SVG
 let verb = "rs-pentac"
 
 [<Verb(verb, isDefault = false, HelpText = "Pentagonal 'Cairo' SVG render")>]
-type RenderSVGPentaCairo = {
+type Options = {
     [<Option('d', "distColor", Required = false, Default = false, HelpText = "Distance coloration")>] distColor : bool
 }
 
-let handleVerb (maze : Maze<_,_>) (options : Parsed<RenderSVGPentaCairo>) =
+let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
     let map = maze.createMap maze.NDStruct.GetFirstCellPartOfMaze
     
     let colorMap =

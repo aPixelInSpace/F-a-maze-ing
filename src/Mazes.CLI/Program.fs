@@ -55,28 +55,28 @@ type CanvasChoice =
 
 let initCanvas argv =
     [|        
-        handleVerb<Array2D.Rectangle.ShapeRectangle, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Rectangle.handleVerb) Array2D.Rectangle.verb argv
+        handleVerb<Array2D.Rectangle.Options, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Rectangle.handleVerb) Array2D.Rectangle.verb argv
         |> Option.map CanvasChoice.Array2DCanvas
 
-        handleVerb<Array2D.TriangleIsosceles.ShapeRectangle, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.TriangleIsosceles.handleVerb) Array2D.TriangleIsosceles.verb argv
+        handleVerb<Array2D.TriangleIsosceles.Options, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.TriangleIsosceles.handleVerb) Array2D.TriangleIsosceles.verb argv
         |> Option.map CanvasChoice.Array2DCanvas
 
-        handleVerb<Array2D.Ellipse.ShapeEllipse, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Ellipse.handleVerb) Array2D.Ellipse.verb argv
+        handleVerb<Array2D.Ellipse.Options, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Ellipse.handleVerb) Array2D.Ellipse.verb argv
         |> Option.map CanvasChoice.Array2DCanvas
 
-        handleVerb<Array2D.Hexagon.ShapeHexagon, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Hexagon.handleVerb) Array2D.Hexagon.verb argv
+        handleVerb<Array2D.Hexagon.Options, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Hexagon.handleVerb) Array2D.Hexagon.verb argv
         |> Option.map CanvasChoice.Array2DCanvas
 
-        handleVerb<Array2D.Pentagon.ShapePentagon, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Pentagon.handleVerb) Array2D.Pentagon.verb argv
+        handleVerb<Array2D.Pentagon.Options, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Pentagon.handleVerb) Array2D.Pentagon.verb argv
         |> Option.map CanvasChoice.Array2DCanvas
 
-        handleVerb<Array2D.PentagonStar.ShapePentagonStar, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.PentagonStar.handleVerb) Array2D.PentagonStar.verb argv
+        handleVerb<Array2D.PentagonStar.Options, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.PentagonStar.handleVerb) Array2D.PentagonStar.verb argv
         |> Option.map CanvasChoice.Array2DCanvas
 
-        handleVerb<Array2D.Image.ShapeImage, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Image.handleVerb) Array2D.Image.verb argv
+        handleVerb<Array2D.Image.Options, Mazes.Core.Canvas.Array2D.Canvas> (Some Array2D.Image.handleVerb) Array2D.Image.verb argv
         |> Option.map CanvasChoice.Array2DCanvas
 
-        handleVerb<ArrayOfA.Disk.ShapeDisk, Mazes.Core.Canvas.ArrayOfA.Canvas> (Some ArrayOfA.Disk.handleVerb) ArrayOfA.Disk.verb argv
+        handleVerb<ArrayOfA.Disk.Options, Mazes.Core.Canvas.ArrayOfA.Canvas> (Some ArrayOfA.Disk.handleVerb) ArrayOfA.Disk.verb argv
         |> Option.map CanvasChoice.ArrayOfACanvas
     |] |> pick
 
@@ -93,26 +93,26 @@ let canvasArray2DToNdStruct argv (canvas : CanvasChoice) =
     match canvas with
     | Array2DCanvas canvas ->
         [|
-            handleVerb<Grid2D.Ortho.GridOrtho, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Ortho.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Ortho.verb argv
+            handleVerb<Grid2D.Ortho.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Ortho.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Ortho.verb argv
             |> Option.map Array2DOrtho
             
-            handleVerb<Grid2D.Hex.GridHex, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Hex.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Hex.verb argv
+            handleVerb<Grid2D.Hex.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Hex.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Hex.verb argv
             |> Option.map Array2DHex
 
-            handleVerb<Grid2D.Tri.GridTri, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Tri.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Tri.verb argv
+            handleVerb<Grid2D.Tri.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Tri.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Tri.verb argv
             |> Option.map Array2DTri
 
-            handleVerb<Grid2D.OctaSquare.GridOctaSquare, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.OctaSquare.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.OctaSquare.verb argv
+            handleVerb<Grid2D.OctaSquare.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.OctaSquare.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.OctaSquare.verb argv
             |> Option.map Array2DOctaSquare
 
-            handleVerb<Grid2D.PentaCairo.GridPentaCairo, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.PentaCairo.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.PentaCairo.verb argv
+            handleVerb<Grid2D.PentaCairo.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.PentaCairo.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.PentaCairo.verb argv
             |> Option.map Array2DPentaCairo
 
-            handleVerb<Grid2D.Brick.GridBrick, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Brick.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Brick.verb argv
+            handleVerb<Grid2D.Brick.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Brick.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Brick.verb argv
             |> Option.map Array2DBrick
         |] |> pick
     | ArrayOfACanvas canvas ->
-        handleVerb<Grid2D.Polar.GridPolar, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Polar.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Polar.verb argv
+        handleVerb<Grid2D.Polar.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Polar.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Polar.verb argv
         |> Option.map ArrayOfAPolar
 
 type MazeChoice =
@@ -127,12 +127,18 @@ type MazeChoice =
 let ndStructToMaze argv (ndStruct : NdStructChoice) =
     let algorithms ndStruct =
         [|
+           handleVerb<NoMaze.Options, Mazes.Core.Maze.Maze<_,_>> (Some (NoMaze.handleVerb ndStruct)) NoMaze.verb argv
+           handleVerb<AldousBroder.Options, Mazes.Core.Maze.Maze<_,_>> (Some (AldousBroder.handleVerb ndStruct)) AldousBroder.verb argv
+           handleVerb<Wilson.Options, Mazes.Core.Maze.Maze<_,_>> (Some (Wilson.handleVerb ndStruct)) Wilson.verb argv
            handleVerb<HuntAndKill.Options, Mazes.Core.Maze.Maze<_,_>> (Some (HuntAndKill.handleVerb ndStruct)) HuntAndKill.verb argv
            handleVerb<RecursiveBacktracker.Options, Mazes.Core.Maze.Maze<_,_>> (Some (RecursiveBacktracker.handleVerb ndStruct)) RecursiveBacktracker.verb argv
            handleVerb<Kruskal.Options, Mazes.Core.Maze.Maze<_,_>> (Some (Kruskal.handleVerb ndStruct)) Kruskal.verb argv
            handleVerb<PrimSimple.Options, Mazes.Core.Maze.Maze<_,_>> (Some (PrimSimple.handleVerb ndStruct)) PrimSimple.verb argv
            handleVerb<PrimSimpleModified.Options, Mazes.Core.Maze.Maze<_,_>> (Some (PrimSimpleModified.handleVerb ndStruct)) PrimSimpleModified.verb argv
            handleVerb<PrimWeighted.Options, Mazes.Core.Maze.Maze<_,_>> (Some (PrimWeighted.handleVerb ndStruct)) PrimWeighted.verb argv
+           handleVerb<Eller.Options, Mazes.Core.Maze.Maze<_,_>> (Some (Eller.handleVerb ndStruct)) Eller.verb argv
+           handleVerb<RecursiveDivision.Options, Mazes.Core.Maze.Maze<_,_>> (Some (RecursiveDivision.handleVerb ndStruct)) RecursiveDivision.verb argv
+           handleVerb<GrowingTreeMixRandomAndLast.Options, Mazes.Core.Maze.Maze<_,_>> (Some (GrowingTreeMixRandomAndLast.handleVerb ndStruct)) GrowingTreeMixRandomAndLast.verb argv
         |] |> pick
 
     match ndStruct with
@@ -146,51 +152,57 @@ let ndStructToMaze argv (ndStruct : NdStructChoice) =
 
 let mazeToRender argv (maze : MazeChoice) =
     match maze with
-    | Array2DOrtho maze -> handleVerb<SVG.Ortho.RenderSVGOrtho, string> (Some (SVG.Ortho.handleVerb maze)) SVG.Ortho.verb argv
-    | Array2DHex maze -> handleVerb<SVG.Hex.RenderSVGHex, string> (Some (SVG.Hex.handleVerb maze)) SVG.Hex.verb argv
-    | Array2DTri maze -> handleVerb<SVG.Tri.RenderSVGTri, string> (Some (SVG.Tri.handleVerb maze)) SVG.Tri.verb argv
-    | Array2DOctaSquare maze -> handleVerb<SVG.OctaSquare.RenderSVGOctaSquare, string> (Some (SVG.OctaSquare.handleVerb maze)) SVG.OctaSquare.verb argv
-    | Array2DPentaCairo maze -> handleVerb<SVG.PentaCairo.RenderSVGPentaCairo, string> (Some (SVG.PentaCairo.handleVerb maze)) SVG.PentaCairo.verb argv
-    | Array2DBrick maze -> handleVerb<SVG.Brick.RenderSVGBrick, string> (Some (SVG.Brick.handleVerb maze)) SVG.Brick.verb argv
-    | ArrayOfAPolar maze -> handleVerb<SVG.Polar.RenderSVGPolar, string> (Some (SVG.Polar.handleVerb maze)) SVG.Polar.verb argv
+    | Array2DOrtho maze -> handleVerb<SVG.Ortho.Options, string> (Some (SVG.Ortho.handleVerb maze)) SVG.Ortho.verb argv
+    | Array2DHex maze -> handleVerb<SVG.Hex.Options, string> (Some (SVG.Hex.handleVerb maze)) SVG.Hex.verb argv
+    | Array2DTri maze -> handleVerb<SVG.Tri.Options, string> (Some (SVG.Tri.handleVerb maze)) SVG.Tri.verb argv
+    | Array2DOctaSquare maze -> handleVerb<SVG.OctaSquare.Options, string> (Some (SVG.OctaSquare.handleVerb maze)) SVG.OctaSquare.verb argv
+    | Array2DPentaCairo maze -> handleVerb<SVG.PentaCairo.Options, string> (Some (SVG.PentaCairo.handleVerb maze)) SVG.PentaCairo.verb argv
+    | Array2DBrick maze -> handleVerb<SVG.Brick.Options, string> (Some (SVG.Brick.handleVerb maze)) SVG.Brick.verb argv
+    | ArrayOfAPolar maze -> handleVerb<SVG.Polar.Options, string> (Some (SVG.Polar.handleVerb maze)) SVG.Polar.verb argv
 
 let renderToOutput argv render =
-    handleVerb<File.OutputFile, unit> (Some (File.handleVerb render)) File.verb argv
+    handleVerb<File.Options, unit> (Some (File.handleVerb render)) File.verb argv
 
 let checkAllHandlers argv =    
-    handleVerb<Array2D.Rectangle.ShapeRectangle, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Rectangle.verb argv |> ignore
-    handleVerb<Array2D.TriangleIsosceles.ShapeRectangle, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.TriangleIsosceles.verb argv |> ignore
-    handleVerb<Array2D.Ellipse.ShapeEllipse, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Ellipse.verb argv |> ignore
-    handleVerb<Array2D.Hexagon.ShapeHexagon, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Hexagon.verb argv |> ignore
-    handleVerb<Array2D.Pentagon.ShapePentagon, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Pentagon.verb argv |> ignore
-    handleVerb<Array2D.PentagonStar.ShapePentagonStar, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.PentagonStar.verb argv |> ignore
-    handleVerb<Array2D.Image.ShapeImage, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Image.verb argv |> ignore
-    handleVerb<ArrayOfA.Disk.ShapeDisk, Mazes.Core.Canvas.ArrayOfA.Canvas> None ArrayOfA.Disk.verb argv |> ignore
+    handleVerb<Array2D.Rectangle.Options, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Rectangle.verb argv |> ignore
+    handleVerb<Array2D.TriangleIsosceles.Options, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.TriangleIsosceles.verb argv |> ignore
+    handleVerb<Array2D.Ellipse.Options, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Ellipse.verb argv |> ignore
+    handleVerb<Array2D.Hexagon.Options, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Hexagon.verb argv |> ignore
+    handleVerb<Array2D.Pentagon.Options, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Pentagon.verb argv |> ignore
+    handleVerb<Array2D.PentagonStar.Options, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.PentagonStar.verb argv |> ignore
+    handleVerb<Array2D.Image.Options, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Image.verb argv |> ignore
+    handleVerb<ArrayOfA.Disk.Options, Mazes.Core.Canvas.ArrayOfA.Canvas> None ArrayOfA.Disk.verb argv |> ignore
 
-    handleVerb<Grid2D.Ortho.GridOrtho, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.Ortho.verb argv |> ignore    
-    handleVerb<Grid2D.Hex.GridHex, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.Hex.verb argv |> ignore
-    handleVerb<Grid2D.Tri.GridTri, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.Tri.verb argv |> ignore
-    handleVerb<Grid2D.OctaSquare.GridOctaSquare, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.OctaSquare.verb argv |> ignore
-    handleVerb<Grid2D.PentaCairo.GridPentaCairo, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.PentaCairo.verb argv |> ignore
-    handleVerb<Grid2D.Brick.GridBrick, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.Brick.verb argv |> ignore
-    handleVerb<Grid2D.Polar.GridPolar, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.Polar.verb argv |> ignore
+    handleVerb<Grid2D.Ortho.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.Ortho.verb argv |> ignore    
+    handleVerb<Grid2D.Hex.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.Hex.verb argv |> ignore
+    handleVerb<Grid2D.Tri.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.Tri.verb argv |> ignore
+    handleVerb<Grid2D.OctaSquare.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.OctaSquare.verb argv |> ignore
+    handleVerb<Grid2D.PentaCairo.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.PentaCairo.verb argv |> ignore
+    handleVerb<Grid2D.Brick.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.Brick.verb argv |> ignore
+    handleVerb<Grid2D.Polar.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.Polar.verb argv |> ignore
 
+    handleVerb<NoMaze.Options, Mazes.Core.Maze.Maze<_,_>> None NoMaze.verb argv |> ignore
+    handleVerb<AldousBroder.Options, Mazes.Core.Maze.Maze<_,_>> None AldousBroder.verb argv |> ignore
+    handleVerb<Wilson.Options, Mazes.Core.Maze.Maze<_,_>> None Wilson.verb argv |> ignore
     handleVerb<HuntAndKill.Options, Mazes.Core.Maze.Maze<_,_>> None HuntAndKill.verb argv |> ignore
     handleVerb<RecursiveBacktracker.Options, Mazes.Core.Maze.Maze<_,_>> None RecursiveBacktracker.verb argv |> ignore
     handleVerb<Kruskal.Options, Mazes.Core.Maze.Maze<_,_>> None Kruskal.verb argv |> ignore
     handleVerb<PrimSimple.Options, Mazes.Core.Maze.Maze<_,_>> None PrimSimple.verb argv |> ignore
     handleVerb<PrimSimpleModified.Options, Mazes.Core.Maze.Maze<_,_>> None PrimSimpleModified.verb argv |> ignore
     handleVerb<PrimWeighted.Options, Mazes.Core.Maze.Maze<_,_>> None PrimWeighted.verb argv |> ignore
+    handleVerb<Eller.Options, Mazes.Core.Maze.Maze<_,_>> None Eller.verb argv |> ignore
+    handleVerb<RecursiveDivision.Options, Mazes.Core.Maze.Maze<_,_>> None RecursiveDivision.verb argv |> ignore
+    handleVerb<GrowingTreeMixRandomAndLast.Options, Mazes.Core.Maze.Maze<_,_>> None GrowingTreeMixRandomAndLast.verb argv |> ignore
 
-    handleVerb<SVG.Ortho.RenderSVGOrtho, string> None SVG.Ortho.verb argv |> ignore
-    handleVerb<SVG.Hex.RenderSVGHex, string> None SVG.Hex.verb argv |> ignore
-    handleVerb<SVG.Tri.RenderSVGTri, string> None SVG.Tri.verb argv |> ignore
-    handleVerb<SVG.OctaSquare.RenderSVGOctaSquare, string> None SVG.OctaSquare.verb argv |> ignore
-    handleVerb<SVG.PentaCairo.RenderSVGPentaCairo, string> None SVG.PentaCairo.verb argv |> ignore
-    handleVerb<SVG.Brick.RenderSVGBrick, string> None SVG.Brick.verb argv |> ignore
-    handleVerb<SVG.Polar.RenderSVGPolar, string> None SVG.Polar.verb argv |> ignore
+    handleVerb<SVG.Ortho.Options, string> None SVG.Ortho.verb argv |> ignore
+    handleVerb<SVG.Hex.Options, string> None SVG.Hex.verb argv |> ignore
+    handleVerb<SVG.Tri.Options, string> None SVG.Tri.verb argv |> ignore
+    handleVerb<SVG.OctaSquare.Options, string> None SVG.OctaSquare.verb argv |> ignore
+    handleVerb<SVG.PentaCairo.Options, string> None SVG.PentaCairo.verb argv |> ignore
+    handleVerb<SVG.Brick.Options, string> None SVG.Brick.verb argv |> ignore
+    handleVerb<SVG.Polar.Options, string> None SVG.Polar.verb argv |> ignore
 
-    handleVerb<File.OutputFile, unit> None File.verb argv |> ignore
+    handleVerb<File.Options, unit> None File.verb argv |> ignore
 
 [<EntryPoint>]
 let main argv =
@@ -200,17 +212,13 @@ let main argv =
     match verbs.Length with
     | 1 -> checkAllHandlers verbs.[0]
     | 5 ->
-        let canvasArray2D = initCanvas verbs.[0]
+        initCanvas verbs.[0]
+        |> Option.bind(canvasArray2DToNdStruct verbs.[1])
+        |> Option.bind(ndStructToMaze verbs.[2])
+        |> Option.bind(mazeToRender verbs.[3])
+        |> Option.bind(renderToOutput verbs.[4])
+        |> ignore
 
-        let ndStruct = canvasArray2D |> Option.bind(canvasArray2DToNdStruct verbs.[1])
-
-        let maze = ndStruct |> Option.bind(ndStructToMaze verbs.[2])
-
-        let render = maze |> Option.bind(mazeToRender verbs.[3])
-
-        let output = render |> Option.bind(renderToOutput verbs.[4])
-
-        ()
     | _ -> failwith "Number of verbs not supported"
     
     0 // return an integer exit code

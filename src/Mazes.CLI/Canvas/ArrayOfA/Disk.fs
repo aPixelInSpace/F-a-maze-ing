@@ -9,11 +9,11 @@ open Mazes.Core.Canvas.ArrayOfA.Shape
 let verb = "s-disk"
 
 [<Verb(verb, isDefault = false, HelpText = "Disk shape")>]
-type ShapeDisk = {
+type Options = {
     [<Option('r', "rings", Required = true, HelpText = "The number of rings.")>] rings : int
     [<Option('w', "ratio", Required = true, HelpText = "Width height ratio." )>] ratio : float
     [<Option('c', "center", Required = true, HelpText = "Number of cells for the central ring." )>] center : int
 }
 
-let handleVerb (options : Parsed<ShapeDisk>) =
+let handleVerb (options : Parsed<Options>) =
     Disk.create options.Value.rings options.Value.ratio options.Value.center

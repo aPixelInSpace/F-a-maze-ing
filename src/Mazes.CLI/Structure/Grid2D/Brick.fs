@@ -9,11 +9,11 @@ open Mazes.Core.Structure.Grid2D.Type
 let verb = "g-brick"
 
 [<Verb(verb, isDefault = false, HelpText = "Brick grid")>]
-type GridBrick = {
+type Options = {
     [<Option('e', "empty", Required = false, Default = false, HelpText = "If true, the grid will have no internal connections")>] empty : bool
 }
 
-let handleVerb canvas (options : Parsed<GridBrick>) =
+let handleVerb canvas (options : Parsed<Options>) =
     canvas
     |> match options.Value.empty with
        | true -> Brick.Grid.createEmptyBaseGrid
