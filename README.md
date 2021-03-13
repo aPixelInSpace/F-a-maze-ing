@@ -28,7 +28,7 @@ With a 'hand-drawn feel'
 
 With a shape from an image
 
-<img src="docs/resources/Examples/Ortho/SVG/ButterflyMaze.svg" width="400">
+<img src="docs/resources/Examples/Ortho/SVG/TreeMaze.svg" width="400">
 
 ### Penta maze
 

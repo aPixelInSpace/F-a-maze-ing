@@ -31,3 +31,6 @@ let linearGradient (color1 : RGB) (color2 : RGB) (percent : float) =
 
 let columnDistance maxColumnIndex (coordinate : NCoordinate) =
     (float)coordinate.ToCoordinate2D.CIndex / (float)maxColumnIndex
+
+let rowDistance maxRowIndex (coordinate : NCoordinate) =
+    (float)(coordinate.ToCoordinate2D.RIndex) / (float)maxRowIndex

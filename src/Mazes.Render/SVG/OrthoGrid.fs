@@ -180,9 +180,10 @@ let render (parameters : Parameters) (grid : NDimensionalStructure<GridArray2D<O
 
     //let rng = Random(1)
     let columnDistance = Color.columnDistance (slice2D.ToSpecializedStructure.NumberOfColumns - 1)
+    let rowDistance = Color.rowDistance (slice2D.ToSpecializedStructure.NumberOfRows - 1)
     let colorPicker coordinate =
         //Color.random rng (240, 165, 53) (185, 227, 100)
-        Color.linearGradient (230, 165, 135) (185, 227, 100) (columnDistance coordinate)        
+        Color.linearGradient (185, 227, 100) (181, 127, 60) (rowDistance coordinate)        
         |> Color.toHtmlHexColor
 
     let blankColor _ = Some "white"
