@@ -139,6 +139,8 @@ let ndStructToMaze argv (ndStruct : NdStructChoice) =
            handleVerb<Eller.Options, Mazes.Core.Maze.Maze<_,_>> (Some (Eller.handleVerb ndStruct)) Eller.verb argv
            handleVerb<RecursiveDivision.Options, Mazes.Core.Maze.Maze<_,_>> (Some (RecursiveDivision.handleVerb ndStruct)) RecursiveDivision.verb argv
            handleVerb<GrowingTreeMixRandomAndLast.Options, Mazes.Core.Maze.Maze<_,_>> (Some (GrowingTreeMixRandomAndLast.handleVerb ndStruct)) GrowingTreeMixRandomAndLast.verb argv
+           handleVerb<GrowingTreeMixChosenRandomAndLast.Options, Mazes.Core.Maze.Maze<_,_>> (Some (GrowingTreeMixChosenRandomAndLast.handleVerb ndStruct)) GrowingTreeMixChosenRandomAndLast.verb argv
+           handleVerb<GrowingTreeMixOldestAndLast.Options, Mazes.Core.Maze.Maze<_,_>> (Some (GrowingTreeMixOldestAndLast.handleVerb ndStruct)) GrowingTreeMixOldestAndLast.verb argv
         |] |> pick
 
     match ndStruct with
@@ -193,6 +195,8 @@ let checkAllHandlers argv =
     handleVerb<Eller.Options, Mazes.Core.Maze.Maze<_,_>> None Eller.verb argv |> ignore
     handleVerb<RecursiveDivision.Options, Mazes.Core.Maze.Maze<_,_>> None RecursiveDivision.verb argv |> ignore
     handleVerb<GrowingTreeMixRandomAndLast.Options, Mazes.Core.Maze.Maze<_,_>> None GrowingTreeMixRandomAndLast.verb argv |> ignore
+    handleVerb<GrowingTreeMixChosenRandomAndLast.Options, Mazes.Core.Maze.Maze<_,_>> None GrowingTreeMixChosenRandomAndLast.verb argv |> ignore
+    handleVerb<GrowingTreeMixOldestAndLast.Options, Mazes.Core.Maze.Maze<_,_>> None GrowingTreeMixOldestAndLast.verb argv |> ignore
 
     handleVerb<SVG.Ortho.Options, string> None SVG.Ortho.verb argv |> ignore
     handleVerb<SVG.Hex.Options, string> None SVG.Hex.verb argv |> ignore

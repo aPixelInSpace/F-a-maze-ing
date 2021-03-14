@@ -35,6 +35,8 @@
         <Compile Include="Maze\Eller.fs" />
         <Compile Include="Maze\RecursiveDivision.fs" />
         <Compile Include="Maze\GrowingTreeMixRandomAndLast.fs" />
+        <Compile Include="Maze\GrowingTreeMixChosenRandomAndLast.fs" />
+        <Compile Include="Maze\GrowingTreeMixOldestAndLast.fs" />
         <Compile Include="Render\SVG\Ortho.fs" />
         <Compile Include="Render\SVG\Polar.fs" />
         <Compile Include="Render\SVG\Hex.fs" />
