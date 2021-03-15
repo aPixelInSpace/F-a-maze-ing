@@ -128,6 +128,8 @@ let ndStructToMaze argv (ndStruct : NdStructChoice) =
     let algorithms ndStruct =
         [|
            handleVerb<NoMaze.Options, Mazes.Core.Maze.Maze<_,_>> (Some (NoMaze.handleVerb ndStruct)) NoMaze.verb argv
+           handleVerb<BinaryTree.Options, Mazes.Core.Maze.Maze<_,_>> (Some (BinaryTree.handleVerb ndStruct)) BinaryTree.verb argv
+           handleVerb<Sidewinder.Options, Mazes.Core.Maze.Maze<_,_>> (Some (Sidewinder.handleVerb ndStruct)) Sidewinder.verb argv
            handleVerb<AldousBroder.Options, Mazes.Core.Maze.Maze<_,_>> (Some (AldousBroder.handleVerb ndStruct)) AldousBroder.verb argv
            handleVerb<Wilson.Options, Mazes.Core.Maze.Maze<_,_>> (Some (Wilson.handleVerb ndStruct)) Wilson.verb argv
            handleVerb<HuntAndKill.Options, Mazes.Core.Maze.Maze<_,_>> (Some (HuntAndKill.handleVerb ndStruct)) HuntAndKill.verb argv
@@ -141,6 +143,8 @@ let ndStructToMaze argv (ndStruct : NdStructChoice) =
            handleVerb<GrowingTreeMixRandomAndLast.Options, Mazes.Core.Maze.Maze<_,_>> (Some (GrowingTreeMixRandomAndLast.handleVerb ndStruct)) GrowingTreeMixRandomAndLast.verb argv
            handleVerb<GrowingTreeMixChosenRandomAndLast.Options, Mazes.Core.Maze.Maze<_,_>> (Some (GrowingTreeMixChosenRandomAndLast.handleVerb ndStruct)) GrowingTreeMixChosenRandomAndLast.verb argv
            handleVerb<GrowingTreeMixOldestAndLast.Options, Mazes.Core.Maze.Maze<_,_>> (Some (GrowingTreeMixOldestAndLast.handleVerb ndStruct)) GrowingTreeMixOldestAndLast.verb argv
+           handleVerb<GrowingTreeDirection.Options, Mazes.Core.Maze.Maze<_,_>> (Some (GrowingTreeDirection.handleVerb ndStruct)) GrowingTreeDirection.verb argv
+           handleVerb<GrowingTreeSpiral.Options, Mazes.Core.Maze.Maze<_,_>> (Some (GrowingTreeSpiral.handleVerb ndStruct)) GrowingTreeSpiral.verb argv
         |] |> pick
 
     match ndStruct with
@@ -154,7 +158,11 @@ let ndStructToMaze argv (ndStruct : NdStructChoice) =
 
 let mazeToRender argv (maze : MazeChoice) =
     match maze with
-    | Array2DOrtho maze -> handleVerb<SVG.Ortho.Options, string> (Some (SVG.Ortho.handleVerb maze)) SVG.Ortho.verb argv
+    | Array2DOrtho maze ->
+        [|
+           handleVerb<SVG.Ortho.Options, string> (Some (SVG.Ortho.handleVerb maze)) SVG.Ortho.verb argv
+           handleVerb<Text.Ortho.Options, string> (Some (Text.Ortho.handleVerb maze)) Text.Ortho.verb argv
+        |] |> pick
     | Array2DHex maze -> handleVerb<SVG.Hex.Options, string> (Some (SVG.Hex.handleVerb maze)) SVG.Hex.verb argv
     | Array2DTri maze -> handleVerb<SVG.Tri.Options, string> (Some (SVG.Tri.handleVerb maze)) SVG.Tri.verb argv
     | Array2DOctaSquare maze -> handleVerb<SVG.OctaSquare.Options, string> (Some (SVG.OctaSquare.handleVerb maze)) SVG.OctaSquare.verb argv
@@ -184,6 +192,8 @@ let checkAllHandlers argv =
     handleVerb<Grid2D.Polar.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> None Grid2D.Polar.verb argv |> ignore
 
     handleVerb<NoMaze.Options, Mazes.Core.Maze.Maze<_,_>> None NoMaze.verb argv |> ignore
+    handleVerb<BinaryTree.Options, Mazes.Core.Maze.Maze<_,_>> None BinaryTree.verb argv |> ignore
+    handleVerb<Sidewinder.Options, Mazes.Core.Maze.Maze<_,_>> None Sidewinder.verb argv |> ignore
     handleVerb<AldousBroder.Options, Mazes.Core.Maze.Maze<_,_>> None AldousBroder.verb argv |> ignore
     handleVerb<Wilson.Options, Mazes.Core.Maze.Maze<_,_>> None Wilson.verb argv |> ignore
     handleVerb<HuntAndKill.Options, Mazes.Core.Maze.Maze<_,_>> None HuntAndKill.verb argv |> ignore
@@ -197,6 +207,8 @@ let checkAllHandlers argv =
     handleVerb<GrowingTreeMixRandomAndLast.Options, Mazes.Core.Maze.Maze<_,_>> None GrowingTreeMixRandomAndLast.verb argv |> ignore
     handleVerb<GrowingTreeMixChosenRandomAndLast.Options, Mazes.Core.Maze.Maze<_,_>> None GrowingTreeMixChosenRandomAndLast.verb argv |> ignore
     handleVerb<GrowingTreeMixOldestAndLast.Options, Mazes.Core.Maze.Maze<_,_>> None GrowingTreeMixOldestAndLast.verb argv |> ignore
+    handleVerb<GrowingTreeDirection.Options, Mazes.Core.Maze.Maze<_,_>> None GrowingTreeDirection.verb argv |> ignore
+    handleVerb<GrowingTreeSpiral.Options, Mazes.Core.Maze.Maze<_,_>> None GrowingTreeSpiral.verb argv |> ignore
 
     handleVerb<SVG.Ortho.Options, string> None SVG.Ortho.verb argv |> ignore
     handleVerb<SVG.Hex.Options, string> None SVG.Hex.verb argv |> ignore
@@ -205,6 +217,7 @@ let checkAllHandlers argv =
     handleVerb<SVG.PentaCairo.Options, string> None SVG.PentaCairo.verb argv |> ignore
     handleVerb<SVG.Brick.Options, string> None SVG.Brick.verb argv |> ignore
     handleVerb<SVG.Polar.Options, string> None SVG.Polar.verb argv |> ignore
+    handleVerb<Text.Ortho.Options, string> None Text.Ortho.verb argv |> ignore
 
     handleVerb<File.Options, unit> None File.verb argv |> ignore
 
@@ -214,7 +227,8 @@ let main argv =
     let verbs = argv |> verbs ((=)pipe)
 
     match verbs.Length with
-    | 1 -> checkAllHandlers verbs.[0]
+    | 1 ->
+        checkAllHandlers verbs.[0]
     | 5 ->
         initCanvas verbs.[0]
         |> Option.bind(canvasArray2DToNdStruct verbs.[1])

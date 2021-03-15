@@ -24,6 +24,8 @@
         <Compile Include="Structure\Grid2D\PentaCairo.fs" />
         <Compile Include="Structure\Grid2D\Brick.fs" />
         <Compile Include="Maze\NoMaze.fs" />
+        <Compile Include="Maze\BinaryTree.fs" />
+        <Compile Include="Maze\Sidewinder.fs" />
         <Compile Include="Maze\AldousBroder.fs" />
         <Compile Include="Maze\Wilson.fs" />
         <Compile Include="Maze\HuntAndKill.fs" />
@@ -37,6 +39,8 @@
         <Compile Include="Maze\GrowingTreeMixRandomAndLast.fs" />
         <Compile Include="Maze\GrowingTreeMixChosenRandomAndLast.fs" />
         <Compile Include="Maze\GrowingTreeMixOldestAndLast.fs" />
+        <Compile Include="Maze\GrowingTreeDirection.fs" />
+        <Compile Include="Maze\GrowingTreeSpiral.fs" />
         <Compile Include="Render\SVG\Ortho.fs" />
         <Compile Include="Render\SVG\Polar.fs" />
         <Compile Include="Render\SVG\Hex.fs" />
@@ -44,6 +48,7 @@
         <Compile Include="Render\SVG\OctaSquare.fs" />
         <Compile Include="Render\SVG\PentaCairo.fs" />
         <Compile Include="Render\SVG\Brick.fs" />
+        <Compile Include="Render\Text\Ortho.fs" />
         <Compile Include="Output\File.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
