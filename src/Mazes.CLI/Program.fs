@@ -20,7 +20,7 @@ open Mazes.Core.Structure.Grid2D.Type.PentaCairo
 open Mazes.Core.Structure.Grid2D.Type.Tri
 
 [<Literal>]
-let pipe = "|"
+let pipe = ":"
 
 let verbs f argv =
     let i = ref 0

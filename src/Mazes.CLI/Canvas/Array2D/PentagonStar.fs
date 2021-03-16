@@ -4,7 +4,6 @@ module Mazes.CLI.Canvas.Array2D.PentagonStar
 
 open CommandLine
 open Mazes.Core.Canvas.Array2D.Shape
-open Mazes.Core.Canvas.Array2D.Shape.Ellipse
 
 [<Literal>]
 let verb = "s-pentagonStar"

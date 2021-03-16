@@ -3,7 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp5.0</TargetFramework>
-        <AssemblyName>Mazes.CLI</AssemblyName>
+        <AssemblyName>Mazes</AssemblyName>
         <RootNamespace>Mazes.CLI</RootNamespace>
     </PropertyGroup>
 
