@@ -11,6 +11,7 @@ type Lines =
     | Straight = 0
     | Circle = 1
     | Curved = 2
+    | Random = 3
 
 [<Literal>]
 let verb = "rs-ortho"
@@ -21,6 +22,8 @@ type Options = {
     [<Option('s', "solution", Required = false, Default = false, HelpText = "Show solution ?")>] solution : bool
     [<Option('e', "entranceExit", Required = false, Default = true, HelpText = "Add an entrance and an exit ?")>] entranceExit : bool
     [<Option('l', "lines", Required = false, Default = Lines.Straight, HelpText = "Type of lines Straight, Circle or Curved). In circle mode only the Width value is considered; in curved mode you can change the curve option to obtain various effects")>] lines : Lines
+    [<Option(HelpText = "RNG seed, if none is provided a random one is chosen")>] seed : int option
+    [<Option(Default = 5.0, HelpText = "Curve multiplication factor")>] curveMultFact : float
     [<Option(Default = 30, HelpText = "Width of a single cell")>] width : int
     [<Option(Default = 30, HelpText = "Height of a single cell")>] height : int
     [<Option(Default = 10.0, HelpText = "Width of the bridge")>] bridgeWidth : float
@@ -66,6 +69,10 @@ let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
                 | Lines.Straight -> Straight
                 | Lines.Circle -> Circle
                 | Lines.Curved -> (options.Value.curve, options.Value.curve) |> Curve
+                | Lines.Random ->
+                    match options.Value.seed with
+                    | Some seed -> (System.Random(seed), options.Value.curveMultFact) |> Random
+                    | None -> (System.Random(), options.Value.curveMultFact) |> Random
                 | _ -> failwith "Unsupported Lines value"
         }
     

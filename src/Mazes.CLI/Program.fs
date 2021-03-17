@@ -171,7 +171,10 @@ let mazeToRender argv (maze : MazeChoice) =
     | ArrayOfAPolar maze -> handleVerb<SVG.Polar.Options, string> (Some (SVG.Polar.handleVerb maze)) SVG.Polar.verb argv
 
 let renderToOutput argv render =
-    handleVerb<File.Options, unit> (Some (File.handleVerb render)) File.verb argv
+    [|
+        handleVerb<File.Options, unit> (Some (File.handleVerb render)) File.verb argv
+        handleVerb<Console.Options, unit> (Some (Console.handleVerb render)) Console.verb argv
+    |] |> pick    
 
 let checkAllHandlers argv =    
     handleVerb<Array2D.Rectangle.Options, Mazes.Core.Canvas.Array2D.Canvas> None Array2D.Rectangle.verb argv |> ignore
@@ -220,6 +223,7 @@ let checkAllHandlers argv =
     handleVerb<Text.Ortho.Options, string> None Text.Ortho.verb argv |> ignore
 
     handleVerb<File.Options, unit> None File.verb argv |> ignore
+    handleVerb<Console.Options, unit> None Console.verb argv |> ignore
 
 [<EntryPoint>]
 let main argv =
@@ -230,12 +234,16 @@ let main argv =
     | 1 ->
         checkAllHandlers verbs.[0]
     | 5 ->
-        initCanvas verbs.[0]
-        |> Option.bind(canvasArray2DToNdStruct verbs.[1])
-        |> Option.bind(ndStructToMaze verbs.[2])
-        |> Option.bind(mazeToRender verbs.[3])
-        |> Option.bind(renderToOutput verbs.[4])
-        |> ignore
+        let result =
+            initCanvas verbs.[0]
+            |> Option.bind(canvasArray2DToNdStruct verbs.[1])
+            |> Option.bind(ndStructToMaze verbs.[2])
+            |> Option.bind(mazeToRender verbs.[3])
+            |> Option.bind(renderToOutput verbs.[4])
+
+        match result with
+        | Some _ -> printfn "\nMaze generated !"
+        | None -> printfn "Something went wrong, some chosen actions are not compatible."
 
     | _ -> failwith "Number of verbs not supported"
     

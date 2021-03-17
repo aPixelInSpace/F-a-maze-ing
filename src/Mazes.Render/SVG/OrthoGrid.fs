@@ -16,6 +16,7 @@ type Line =
     | Straight
     | Circle
     | Curve of (int * int)
+    | Random of (System.Random * float)
 
 type Parameters =
     {
@@ -27,13 +28,23 @@ type Parameters =
         MarginHeight : int
         Line : Line
     }
-    member this.Radius =
+    
+    member this.PerfectRadius =
+        let perfectRadius = (pythagorasHypotenuse ((float)this.Width) ((float)this.Height) / 2.0)
+        (perfectRadius, perfectRadius)
+    
+    member this.Radius() =
         match this.Line with
         | Straight -> (0.0, 0.0)
-        | Circle ->
-            let perfectRadius = (pythagorasHypotenuse ((float)this.Width) ((float)this.Height) / 2.0)
-            (perfectRadius, perfectRadius)
+        | Circle -> this.PerfectRadius
         | Curve (rx, ry) -> ((float)rx, (float)ry)
+        | Random (rng, mult) ->
+            let min = fst this.PerfectRadius
+            let max = min * mult
+            let nextFloat =
+                rng.NextDouble() * (max - min) + min            
+            
+            (nextFloat, nextFloat)
 
     static member CreateDefaultSquare =
         {
@@ -79,7 +90,7 @@ let private appendWallsType (parameters : Parameters) calculatePoints getLine (g
 
     let orientation = if (coordinate2D.RIndex + coordinate2D.CIndex) % 2 = 0 then "0" else "1"
 
-    let (rx, ry) = parameters.Radius
+    let (rx, ry) = parameters.Radius()
 
 //    let (rx, ry) =
 //        let (rx, ry) = parameters.Radius
@@ -101,7 +112,7 @@ let private appendWallsType (parameters : Parameters) calculatePoints getLine (g
                 | Top -> getLine straightLine (leftTopX, leftTopY) (rightTopX, rightTopY)
                 | Right -> getLine straightLine (rightBottomX, rightBottomY) (rightTopX, rightTopY)
                 | Bottom -> getLine straightLine (leftBottomX, leftBottomY) (rightBottomX, rightBottomY)
-            | Circle | Curve _ ->
+            | Circle | Curve _ | Random _ ->
                 let arcLine = arcLine orientation (rx, ry)
                 match position with
                 | Left -> getLine arcLine (leftTopX, leftTopY) (leftBottomX, leftBottomY)
@@ -120,7 +131,7 @@ let private wholeCellLines (parameters : Parameters) calculatePoints (coordinate
 
     let coordinate2D = coordinate.ToCoordinate2D
     let orientation = if (coordinate2D.RIndex + coordinate2D.CIndex) % 2 = 0 then "0" else "1"
-    let (rx, ry) = parameters.Radius
+    let (rx, ry) = parameters.Radius()
 
     match parameters.Line with
     | Straight ->
@@ -128,7 +139,7 @@ let private wholeCellLines (parameters : Parameters) calculatePoints (coordinate
         $"L {round rightBottomX} {round rightBottomY} " +
         $"L {round rightTopX} {round rightTopY} " +
         $"L {round leftTopX} {round leftTopY} "
-    | Circle | Curve _ ->
+    | Circle | Curve _ | Random _ ->
         $"M {round leftTopX} {round leftTopY} A {round rx} {round ry}, 0, 0, {orientation}, {round leftBottomX} {round leftBottomY} " +
         $"A {round rx} {round ry}, 0, 0, {orientation}, {round rightBottomX} {round rightBottomY} " +
         $"A {round rx} {round ry}, 0, 0, {orientation}, {round rightTopX} {round rightTopY} " +

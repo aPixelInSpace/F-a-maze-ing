@@ -50,6 +50,7 @@
         <Compile Include="Render\SVG\Brick.fs" />
         <Compile Include="Render\Text\Ortho.fs" />
         <Compile Include="Output\File.fs" />
+        <Compile Include="Output\Console.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
