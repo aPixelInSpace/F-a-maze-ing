@@ -116,6 +116,7 @@ let render (grid : NDimensionalStructure<GridArray2D<HexPosition>, HexPosition>)
     let appendPathAndBridgesWithAnimation =
         appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacent2DConnections.ExistNeighbor wholeBridgeLines
 
+    let blankColor _ = Some "white"
     let colorPicker coordinate = None
 
     sBuilder
@@ -132,7 +133,7 @@ let render (grid : NDimensionalStructure<GridArray2D<HexPosition>, HexPosition>)
     //|> appendWallsWithInset
 
     |> appendSimpleBridges
-    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines colorPicker
+    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines blankColor
     |> appendMazeDistanceBridgeColoration nonAdjacentNeighbors map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges

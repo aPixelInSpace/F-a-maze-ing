@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" standalone="no"?>
+<?xml version="1.0" standalone="no"?>
 <!-- Copyright 2020-2021 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->
 <svg width="439.71" height="337.28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs>
                 <style>
@@ -268,9 +268,9 @@
 <path d="M 237.07 89.43 L 237.07 167.85" class="nwbc"/>
 <path d="M 327.49 191.85 L 327.49 270.28" class="nwbc"/>
 <path d="M 339.49 191.85 L 339.49 270.28" class="nwbc"/>
-<path d="M 122.64 89.43 L 134.64 89.43 L 134.64 167.85 L 122.64 167.85 " class="cc" fill-opacity="1"/>
-<path d="M 225.07 89.43 L 237.07 89.43 L 237.07 167.85 L 225.07 167.85 " class="cc" fill-opacity="1"/>
-<path d="M 327.49 191.85 L 339.49 191.85 L 339.49 270.28 L 327.49 270.28 " class="cc" fill-opacity="1"/>
+<path d="M 122.64 89.43 L 134.64 89.43 L 134.64 167.85 L 122.64 167.85 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 225.07 89.43 L 237.07 89.43 L 237.07 167.85 L 225.07 167.85 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 327.49 191.85 L 339.49 191.85 L 339.49 270.28 L 327.49 270.28 " class="cc" fill-opacity="1" fill="white"/>
 <path d="M 122.64 89.43 L 134.64 89.43 L 134.64 167.85 L 122.64 167.85 " class="cdc" fill-opacity="0"/>
 <path d="M 225.07 89.43 L 237.07 89.43 L 237.07 167.85 L 225.07 167.85 " class="cdc" fill-opacity="0.79"/>
 <path d="M 327.49 191.85 L 339.49 191.85 L 339.49 270.28 L 327.49 270.28 " class="cdc" fill-opacity="0.58"/>

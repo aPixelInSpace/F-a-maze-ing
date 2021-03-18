@@ -93,26 +93,26 @@ let canvasArray2DToNdStruct argv (canvas : CanvasChoice) =
     match canvas with
     | Array2DCanvas canvas ->
         [|
-            handleVerb<Grid2D.Ortho.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Ortho.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Ortho.verb argv
+            handleVerb<Grid2D.Ortho.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Ortho.handleVerb canvas)) Grid2D.Ortho.verb argv
             |> Option.map Array2DOrtho
             
-            handleVerb<Grid2D.Hex.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Hex.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Hex.verb argv
+            handleVerb<Grid2D.Hex.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Hex.handleVerb canvas)) Grid2D.Hex.verb argv
             |> Option.map Array2DHex
 
-            handleVerb<Grid2D.Tri.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Tri.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Tri.verb argv
+            handleVerb<Grid2D.Tri.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Tri.handleVerb canvas)) Grid2D.Tri.verb argv
             |> Option.map Array2DTri
 
-            handleVerb<Grid2D.OctaSquare.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.OctaSquare.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.OctaSquare.verb argv
+            handleVerb<Grid2D.OctaSquare.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.OctaSquare.handleVerb canvas)) Grid2D.OctaSquare.verb argv
             |> Option.map Array2DOctaSquare
 
-            handleVerb<Grid2D.PentaCairo.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.PentaCairo.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.PentaCairo.verb argv
+            handleVerb<Grid2D.PentaCairo.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.PentaCairo.handleVerb canvas)) Grid2D.PentaCairo.verb argv
             |> Option.map Array2DPentaCairo
 
-            handleVerb<Grid2D.Brick.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Brick.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Brick.verb argv
+            handleVerb<Grid2D.Brick.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Brick.handleVerb canvas)) Grid2D.Brick.verb argv
             |> Option.map Array2DBrick
         |] |> pick
     | ArrayOfACanvas canvas ->
-        handleVerb<Grid2D.Polar.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Polar.handleVerb canvas |> NDimensionalStructure.create2D)) Grid2D.Polar.verb argv
+        handleVerb<Grid2D.Polar.Options, Mazes.Core.Structure.NDimensionalStructure<_,_>> (Some (fun parsed -> parsed |> Grid2D.Polar.handleVerb canvas)) Grid2D.Polar.verb argv
         |> Option.map ArrayOfAPolar
 
 type MazeChoice =

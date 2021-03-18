@@ -126,22 +126,23 @@ type NDimensionalStructure<'Grid, 'Position> =
          this.NonAdjacent2DConnections.UpdateConnection connectionType nCoordinate otherNCoordinate
 
     member this.Weave (rng : Random) weight =
-        for slice2D in this.Structure do
-            let dimension = slice2D.Key
-            let adjStruct = slice2D.Value
+        if weight > 0.0 then
+            for slice2D in this.Structure do
+                let dimension = slice2D.Key
+                let adjStruct = slice2D.Value
 
-            let weaveCoordinates = adjStruct.WeaveCoordinates adjStruct.CoordinatesPartOfMaze
-            for (fromCoordinate, toCoordinate) in weaveCoordinates do
-                if (toCoordinate.RIndex >= fst (adjStruct.Dimension1Boundaries toCoordinate.CIndex)) &&
-                   (toCoordinate.RIndex < snd (adjStruct.Dimension1Boundaries toCoordinate.CIndex)) &&
-                   (toCoordinate.CIndex >= fst (adjStruct.Dimension2Boundaries toCoordinate.RIndex)) &&
-                   (toCoordinate.CIndex < snd (adjStruct.Dimension2Boundaries toCoordinate.RIndex)) &&
-                   adjStruct.IsCellPartOfMaze toCoordinate &&
-                   rng.NextDouble() < weight
-                   then
+                let weaveCoordinates = adjStruct.WeaveCoordinates adjStruct.CoordinatesPartOfMaze
+                for (fromCoordinate, toCoordinate) in weaveCoordinates do
+                    if (toCoordinate.RIndex >= fst (adjStruct.Dimension1Boundaries toCoordinate.CIndex)) &&
+                       (toCoordinate.RIndex < snd (adjStruct.Dimension1Boundaries toCoordinate.CIndex)) &&
+                       (toCoordinate.CIndex >= fst (adjStruct.Dimension2Boundaries toCoordinate.RIndex)) &&
+                       (toCoordinate.CIndex < snd (adjStruct.Dimension2Boundaries toCoordinate.RIndex)) &&
+                       adjStruct.IsCellPartOfMaze toCoordinate &&
+                       rng.NextDouble() < weight
+                       then
 
-                    this.NonAdjacent2DConnections.UpdateConnection
-                        Close (NCoordinate.create dimension fromCoordinate) (NCoordinate.create dimension toCoordinate)
+                        this.NonAdjacent2DConnections.UpdateConnection
+                            Close (NCoordinate.create dimension fromCoordinate) (NCoordinate.create dimension toCoordinate)
 
     member this.OpenCell (nCoordinate : NCoordinate) =
         (this.Slice2D nCoordinate.ToDimension).OpenCell nCoordinate.ToCoordinate2D

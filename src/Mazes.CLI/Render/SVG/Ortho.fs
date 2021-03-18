@@ -21,7 +21,7 @@ type Options = {
     [<Option('d', "distColor", Required = false, Default = false, HelpText = "Apply distance coloration ?")>] distColor : bool
     [<Option('s', "solution", Required = false, Default = false, HelpText = "Show solution ?")>] solution : bool
     [<Option('e', "entranceExit", Required = false, Default = true, HelpText = "Add an entrance and an exit ?")>] entranceExit : bool
-    [<Option('l', "lines", Required = false, Default = Lines.Straight, HelpText = "Type of lines Straight, Circle or Curved). In circle mode only the Width value is considered; in curved mode you can change the curve option to obtain various effects")>] lines : Lines
+    [<Option('l', "lines", Required = false, Default = Lines.Straight, HelpText = "Type of lines Straight, Circle, Curved or Random). In circle mode only the Width value is considered; in curved mode you can change the curve option to obtain various effects")>] lines : Lines
     [<Option(HelpText = "RNG seed, if none is provided a random one is chosen")>] seed : int option
     [<Option(Default = 5.0, HelpText = "Curve multiplication factor")>] curveMultFact : float
     [<Option(Default = 30, HelpText = "Width of a single cell")>] width : int

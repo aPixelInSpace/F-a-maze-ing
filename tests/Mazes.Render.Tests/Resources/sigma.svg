@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" standalone="no"?>
+<?xml version="1.0" standalone="no"?>
 <!-- Copyright 2020-2021 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->
 <svg width="550" height="637.56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs>
                 <style>
@@ -540,15 +540,15 @@
 <path d="M 250.32 492.46 L 305.68 524.42" class="nwbc"/>
 <path d="M 224 507.65 L 224 571.58" class="nwbc"/>
 <path d="M 236 507.65 L 236 571.58" class="nwbc"/>
-<path d="M 334.32 87.16 L 340.32 76.77 L 395.68 108.73 L 389.68 119.12 " class="cc" fill-opacity="1"/>
-<path d="M 314 91.96 L 326 91.96 L 326 155.88 L 314 155.88 " class="cc" fill-opacity="1"/>
-<path d="M 334.32 191.08 L 340.32 180.69 L 395.68 212.65 L 389.68 223.04 " class="cc" fill-opacity="1"/>
-<path d="M 314 299.81 L 326 299.81 L 326 363.73 L 314 363.73 " class="cc" fill-opacity="1"/>
-<path d="M 416 259.81 L 404 259.81 L 404 195.88 L 416 195.88 " class="cc" fill-opacity="1"/>
-<path d="M 404 299.81 L 416 299.81 L 416 363.73 L 404 363.73 " class="cc" fill-opacity="1"/>
-<path d="M 134 403.73 L 146 403.73 L 146 467.65 L 134 467.65 " class="cc" fill-opacity="1"/>
-<path d="M 244.32 502.85 L 250.32 492.46 L 305.68 524.42 L 299.68 534.81 " class="cc" fill-opacity="1"/>
-<path d="M 224 507.65 L 236 507.65 L 236 571.58 L 224 571.58 " class="cc" fill-opacity="1"/>
+<path d="M 334.32 87.16 L 340.32 76.77 L 395.68 108.73 L 389.68 119.12 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 314 91.96 L 326 91.96 L 326 155.88 L 314 155.88 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 334.32 191.08 L 340.32 180.69 L 395.68 212.65 L 389.68 223.04 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 314 299.81 L 326 299.81 L 326 363.73 L 314 363.73 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 416 259.81 L 404 259.81 L 404 195.88 L 416 195.88 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 404 299.81 L 416 299.81 L 416 363.73 L 404 363.73 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 134 403.73 L 146 403.73 L 146 467.65 L 134 467.65 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 244.32 502.85 L 250.32 492.46 L 305.68 524.42 L 299.68 534.81 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 224 507.65 L 236 507.65 L 236 571.58 L 224 571.58 " class="cc" fill-opacity="1" fill="white"/>
 <path d="M 334.32 87.16 L 340.32 76.77 L 395.68 108.73 L 389.68 119.12 " class="cdc" fill-opacity="0.15"/>
 <path d="M 314 91.96 L 326 91.96 L 326 155.88 L 314 155.88 " class="cdc" fill-opacity="0.15"/>
 <path d="M 334.32 191.08 L 340.32 180.69 L 395.68 212.65 L 389.68 223.04 " class="cdc" fill-opacity="0.19"/>

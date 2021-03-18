@@ -6,9 +6,10 @@
 An easy-to-use, composable and configurable maze generator and solver. Several types of grid tiles with multiple possible shapes.
 
 ## Usage
-You may visit https://mazes.apixelinspace.com to randomly generate a few examples (website in preview version, work in progress)
 
-The CLI and the documentation are coming soon : https://github.com/aPixelInSpace/F-a-maze-ing/wiki.
+To use the CLI, check the [documentation](https://github.com/aPixelInSpace/F-a-maze-ing/wiki).
+
+You may visit https://mazes.apixelinspace.com to randomly generate a few examples (website in preview version, work in progress)
 
 ## Examples
 

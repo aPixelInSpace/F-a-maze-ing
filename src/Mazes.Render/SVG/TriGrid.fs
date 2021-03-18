@@ -113,6 +113,7 @@ let render (grid : NDimensionalStructure<GridArray2D<TriPosition>, TriPosition>)
     let width = calculateWidth ((float)slice2D.ToSpecializedStructure.NumberOfColumns) + marginWidth
     let height = calculateHeight ((float)slice2D.ToSpecializedStructure.NumberOfRows) + marginHeight
 
+    let blankColor _ = Some "white"
     let colorPicker coordinate = None
 
     sBuilder
@@ -129,7 +130,7 @@ let render (grid : NDimensionalStructure<GridArray2D<TriPosition>, TriPosition>)
     //|> appendWallsWithInset
 
     |> appendSimpleBridges
-    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines colorPicker
+    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines blankColor
     |> appendMazeDistanceBridgeColoration nonAdjacentNeighbors map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges

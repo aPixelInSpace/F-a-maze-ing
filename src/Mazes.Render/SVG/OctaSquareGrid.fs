@@ -192,6 +192,7 @@ let render (grid : NDimensionalStructure<GridArray2D<OctaSquarePosition>, OctaSq
     let width = calculateLength ((float)slice2D.ToSpecializedStructure.NumberOfColumns) + marginWidth + 20.0 // because of the size of the border
     let height = calculateLength ((float)slice2D.ToSpecializedStructure.NumberOfRows) + marginHeight + 20.0 // because of the size of the border
 
+    let blankColor _ = Some "white"
     let colorPicker coordinate = None
 
     sBuilder
@@ -207,7 +208,7 @@ let render (grid : NDimensionalStructure<GridArray2D<OctaSquarePosition>, OctaSq
     //|> appendWallsWithInset
 
     |> appendSimpleBridges
-    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines colorPicker
+    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines blankColor
     |> appendMazeDistanceBridgeColoration nonAdjacentNeighbors map wholeBridgeLines
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges

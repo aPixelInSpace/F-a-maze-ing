@@ -11,8 +11,8 @@ let verb = "s-disk"
 [<Verb(verb, isDefault = false, HelpText = "Disk shape")>]
 type Options = {
     [<Option('r', "rings", Required = true, HelpText = "The number of rings.")>] rings : int
-    [<Option('w', "ratio", Required = true, HelpText = "Width/height ratio." )>] ratio : float
-    [<Option('c', "center", Required = true, HelpText = "Number of cells for the central ring." )>] center : int
+    [<Option('w', "ratio", Required = false, Default = 1.0, HelpText = "Width/height ratio." )>] ratio : float
+    [<Option('c', "center", Required = false, Default = 3, HelpText = "Number of cells for the central ring." )>] center : int
 }
 
 let handleVerb (options : Parsed<Options>) =

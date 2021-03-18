@@ -219,7 +219,7 @@ let render (parameters : Parameters) (grid : NDimensionalStructure<GridArray2D<O
     //|> appendWallsWithInset
 
     |> appendSimpleBridges
-    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines noColor 
+    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines blankColor 
     |> appendMazeDistanceBridgeColoration
     |> appendPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges

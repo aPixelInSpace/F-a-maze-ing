@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" standalone="no"?>
+<?xml version="1.0" standalone="no"?>
 <!-- Copyright 2020-2021 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->
 <svg width="363.94" height="327.2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs>
                 <style>
@@ -227,11 +227,11 @@
 <path d="M 87.01 193.85 L 123.13 217.37" class="nwbc"/>
 <path d="M 120.36 233.97 L 143.89 270.1" class="nwbc"/>
 <path d="M 132.1 226.34 L 155.62 262.46" class="nwbc"/>
-<path d="M 152.85 132.1 L 160.49 120.36 L 196.62 143.89 L 188.98 155.62 " class="cc" fill-opacity="1"/>
-<path d="M 193.85 160.49 L 205.58 152.85 L 229.1 188.98 L 217.37 196.62 " class="cc" fill-opacity="1"/>
-<path d="M 152.85 205.58 L 160.49 193.85 L 196.62 217.37 L 188.98 229.1 " class="cc" fill-opacity="1"/>
-<path d="M 79.37 205.58 L 87.01 193.85 L 123.13 217.37 L 115.49 229.1 " class="cc" fill-opacity="1"/>
-<path d="M 120.36 233.97 L 132.1 226.34 L 155.62 262.46 L 143.89 270.1 " class="cc" fill-opacity="1"/>
+<path d="M 152.85 132.1 L 160.49 120.36 L 196.62 143.89 L 188.98 155.62 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 193.85 160.49 L 205.58 152.85 L 229.1 188.98 L 217.37 196.62 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 152.85 205.58 L 160.49 193.85 L 196.62 217.37 L 188.98 229.1 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 79.37 205.58 L 87.01 193.85 L 123.13 217.37 L 115.49 229.1 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 120.36 233.97 L 132.1 226.34 L 155.62 262.46 L 143.89 270.1 " class="cc" fill-opacity="1" fill="white"/>
 <path d="M 152.85 132.1 L 160.49 120.36 L 196.62 143.89 L 188.98 155.62 " class="cdc" fill-opacity="0.14"/>
 <path d="M 193.85 160.49 L 205.58 152.85 L 229.1 188.98 L 217.37 196.62 " class="cdc" fill-opacity="0.21"/>
 <path d="M 152.85 205.58 L 160.49 193.85 L 196.62 217.37 L 188.98 229.1 " class="cdc" fill-opacity="0.64"/>

@@ -19,7 +19,7 @@ type Options = {
     [<Option(Default = 1.0, HelpText = "Probability between 0.0 and 1.0 to choose the neighbor that will make a spiral")>] spiralWeight : float
     [<Option(Default = 1.0, HelpText = "Probability between 0.0 and 1.0 to make perfect spiral (as best as possible)")>] spiralUniformity : float
     [<Option(Default = 4, HelpText = "Max length for the spiral")>] spiralMaxLength : int
-    [<Option(Default = 0.0, HelpText = "Probability between 0.0 (counter-clockwise) and 1.0 (clockwise) to choose revolution of the spiral")>] spiralRevolution : float
+    [<Option(Default = 0.0, HelpText = "Probability between 0.0 (counter-clockwise) and 1.0 (clockwise) to choose the revolution of the spiral")>] spiralRevolution : float
 }
 
 let handleVerb ndStruct (options : Parsed<Options>) =
