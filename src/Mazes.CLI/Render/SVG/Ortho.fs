@@ -5,6 +5,7 @@ module Mazes.CLI.Render.SVG.Ortho
 open CommandLine
 open Mazes.Core.Maze
 open Mazes.Render.SVG
+open Mazes.Render.SVG.GlobalOptions
 open Mazes.Render.SVG.OrthoGrid
 
 type Lines =
@@ -12,6 +13,16 @@ type Lines =
     | Circle = 1
     | Curved = 2
     | Random = 3
+
+type WallRenderTypeEnum =
+    | Line = 0
+    | Inset = 1
+    
+let mapWallRenderType wallRenderTypeEnum =
+    match wallRenderTypeEnum with
+    | WallRenderTypeEnum.Line -> Line
+    | WallRenderTypeEnum.Inset -> Inset
+    | _ -> failwith "wallRenderTypeEnum not supported"
 
 [<Literal>]
 let verb = "rs-ortho"
@@ -22,6 +33,7 @@ type Options = {
     [<Option('s', "solution", Required = false, Default = false, HelpText = "Show solution ?")>] solution : bool
     [<Option('e', "entranceExit", Required = false, Default = true, HelpText = "Add an entrance and an exit ?")>] entranceExit : bool
     [<Option('l', "lines", Required = false, Default = Lines.Straight, HelpText = "Type of lines Straight, Circle, Curved or Random). In circle mode only the Width value is considered; in curved mode you can change the curve option to obtain various effects")>] lines : Lines
+    [<Option(Default = WallRenderTypeEnum.Line, HelpText = "Type of rendering for the walls (Line or Inset)")>] wallRenderType : WallRenderTypeEnum
     [<Option(HelpText = "RNG seed, if none is provided a random one is chosen")>] seed : int option
     [<Option(Default = 5.0, HelpText = "Curve multiplication factor")>] curveMultFact : float
     [<Option(Default = 30, HelpText = "Width of a single cell")>] width : int
@@ -53,6 +65,11 @@ let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
             (Some entrance, Some exit)
         | false -> (None, None)
 
+    let globalOptionsParam =
+        {
+            WallRenderType = mapWallRenderType options.Value.wallRenderType
+        }
+
     let param =
         {
             Width = options.Value.width
@@ -76,4 +93,4 @@ let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
                 | _ -> failwith "Unsupported Lines value"
         }
     
-    OrthoGrid.render param maze.NDStruct path colorMap entrance exit
+    OrthoGrid.render globalOptionsParam param maze.NDStruct path colorMap entrance exit

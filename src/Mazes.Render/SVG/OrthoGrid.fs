@@ -145,7 +145,7 @@ let private wholeCellLines (parameters : Parameters) calculatePoints (coordinate
         $"A {round rx} {round ry}, 0, 0, {orientation}, {round rightTopX} {round rightTopY} " +
         $"A {round rx} {round ry}, 0, 0, {orientation}, {round leftTopX} {round leftTopY} "
 
-let render (parameters : Parameters) (grid : NDimensionalStructure<GridArray2D<OrthoPosition>, OrthoPosition>) path map entrance exit =
+let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters : Parameters) (grid : NDimensionalStructure<GridArray2D<OrthoPosition>, OrthoPosition>) path map entrance exit =
     let sBuilder = StringBuilder()
     let lineTracker = LineTracker<LinePointsFloat>.createEmpty
 
@@ -200,6 +200,24 @@ let render (parameters : Parameters) (grid : NDimensionalStructure<GridArray2D<O
     let blankColor _ = Some "white"
     let noColor _ = None
 
+    let renderWalls sBuilder =
+        match globalOptionsParameters.WallRenderType with
+        | SVG.GlobalOptions.Line ->
+            sBuilder
+            |> appendSimpleWalls
+        | SVG.GlobalOptions.Inset ->
+            sBuilder
+            |> appendPathAndBridgesWithAnimation
+            |> appendWallsWithInset
+    
+    let renderPathAndBridgesWithAnimation sBuilder =
+        match globalOptionsParameters.WallRenderType with
+        | SVG.GlobalOptions.Line ->
+            sBuilder
+            |> appendPathAndBridgesWithAnimation
+        | SVG.GlobalOptions.Inset ->
+            sBuilder
+    
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
     |> appendStyle
@@ -212,16 +230,13 @@ let render (parameters : Parameters) (grid : NDimensionalStructure<GridArray2D<O
     //|> appendPathWithAnimation path wholeCellLines
     //|> appendLeaves map.Leaves wholeCellLines
     //|> appendPathAndBridgesWithAnimation
-
-    |> appendSimpleWalls
-
-    //|> appendPathAndBridgesWithAnimation
-    //|> appendWallsWithInset
-
+    
+    |> renderWalls
+    
     |> appendSimpleBridges
     |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines blankColor 
     |> appendMazeDistanceBridgeColoration
-    |> appendPathAndBridgesWithAnimation
+    |> renderPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges
 
     |> textCell (center parameters calculatePoints) entrance "start"

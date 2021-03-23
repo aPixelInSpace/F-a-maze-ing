@@ -11,6 +11,7 @@ open Mazes.Core.Canvas.ArrayOfA
 open Mazes.Core.Structure
 open Mazes.Core.Maze.Generate
 open Mazes.Render
+open Mazes.Render.SVG.GlobalOptions
 
 let removeLineReturn (s : string) =
     s.Replace("\n","").Replace("\r", "")
@@ -33,9 +34,15 @@ let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, t
     
     maze.OpenMaze (maze.NDStruct.GetFirstCellPartOfMaze, maze.NDStruct.GetLastCellPartOfMaze)
 
+    let globalOptionsParam =
+        {
+            WallRenderType = Line
+        }
+
     // act
     let renderedMaze =
         SVG.OrthoGrid.render
+            globalOptionsParam
             SVG.OrthoGrid.Parameters.CreateDefaultSquare
             maze.NDStruct
             (Some (map.ShortestPathGraph.PathFromRootTo maze.NDStruct.GetLastCellPartOfMaze))
