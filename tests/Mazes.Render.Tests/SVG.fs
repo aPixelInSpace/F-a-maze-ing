@@ -37,6 +37,7 @@ let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, t
     let globalOptionsParam =
         {
             WallRenderType = Line
+            BackgroundColoration = Distance
         }
 
     // act

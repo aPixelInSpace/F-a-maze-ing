@@ -91,6 +91,7 @@ let newRandomMaze () =
             let globalOptionsParam =
                 {
                     WallRenderType = Line
+                    BackgroundColoration = Plain
                 }
             generateMaze (canvas |> Grid2D.Type.Ortho.Grid.createBaseGrid |> NDimensionalStructure.create2D) (SVG.OrthoGrid.render globalOptionsParam SVG.OrthoGrid.Parameters.CreateDefaultSquare)
         | 1 -> generateMaze (canvas |> Grid2D.Type.Hex.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.HexGrid.render

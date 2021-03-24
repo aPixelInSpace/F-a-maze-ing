@@ -17,23 +17,37 @@ type Lines =
 type WallRenderTypeEnum =
     | Line = 0
     | Inset = 1
-    
+
 let mapWallRenderType wallRenderTypeEnum =
     match wallRenderTypeEnum with
     | WallRenderTypeEnum.Line -> Line
     | WallRenderTypeEnum.Inset -> Inset
     | _ -> failwith "wallRenderTypeEnum not supported"
 
+type BackgroundColorationEnum =
+    | NoColoration = 0
+    | Plain = 1
+    | Distance = 2
+    | GradientV = 3
+
+let mapBackgroundColoration backColorEnum =
+    match backColorEnum with
+    | BackgroundColorationEnum.NoColoration -> NoColoration
+    | BackgroundColorationEnum.Plain -> Plain
+    | BackgroundColorationEnum.Distance -> Distance
+    | BackgroundColorationEnum.GradientV -> GradientV
+    | _ -> failwith "backColorEnum not supported"
+
 [<Literal>]
 let verb = "rs-ortho"
 
 [<Verb(verb, isDefault = false, HelpText = "Orthogonal SVG render")>]
 type Options = {
-    [<Option('d', "distColor", Required = false, Default = false, HelpText = "Apply distance coloration ?")>] distColor : bool
     [<Option('s', "solution", Required = false, Default = false, HelpText = "Show solution ?")>] solution : bool
     [<Option('e', "entranceExit", Required = false, Default = true, HelpText = "Add an entrance and an exit ?")>] entranceExit : bool
-    [<Option('l', "lines", Required = false, Default = Lines.Straight, HelpText = "Type of lines Straight, Circle, Curved or Random). In circle mode only the Width value is considered; in curved mode you can change the curve option to obtain various effects")>] lines : Lines
-    [<Option(Default = WallRenderTypeEnum.Line, HelpText = "Type of rendering for the walls (Line or Inset)")>] wallRenderType : WallRenderTypeEnum
+    [<Option('l', "lines", Required = false, Default = Lines.Straight, HelpText = "Type of lines (*Straight, Circle, Curved or Random). In circle mode only the Width value is considered; in curved mode you can change the curve option to obtain various effects")>] lines : Lines
+    [<Option('b', "backgroundColor", Required = false, Default = BackgroundColorationEnum.Plain, HelpText = "Background coloration (*Plain, Distance, GradientV)")>] backgroundColor : BackgroundColorationEnum
+    [<Option(Default = WallRenderTypeEnum.Line, HelpText = "Type of rendering for the walls (*Line or Inset)")>] wallRenderType : WallRenderTypeEnum
     [<Option(HelpText = "RNG seed, if none is provided a random one is chosen")>] seed : int option
     [<Option(Default = 5.0, HelpText = "Curve multiplication factor")>] curveMultFact : float
     [<Option(Default = 30, HelpText = "Width of a single cell")>] width : int
@@ -48,9 +62,9 @@ let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
     let map = lazy (maze.createMap maze.NDStruct.GetFirstCellPartOfMaze)
     
     let colorMap =
-        match options.Value.distColor with
-        | true -> Some map.Value
-        | false -> None
+        match options.Value.backgroundColor with
+        | BackgroundColorationEnum.Distance -> Some map.Value
+        | _ -> None
     
     let path =
         match options.Value.solution with
@@ -68,6 +82,7 @@ let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
     let globalOptionsParam =
         {
             WallRenderType = mapWallRenderType options.Value.wallRenderType
+            BackgroundColoration = mapBackgroundColoration options.Value.backgroundColor
         }
 
     let param =

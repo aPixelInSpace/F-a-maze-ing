@@ -6,7 +6,14 @@ type WallRenderType =
     | Line
     | Inset
 
+type BackgroundColoration =
+    | NoColoration
+    | Plain
+    | Distance
+    | GradientV
+
 type Parameters =
     {
         WallRenderType : WallRenderType
+        BackgroundColoration : BackgroundColoration
     }

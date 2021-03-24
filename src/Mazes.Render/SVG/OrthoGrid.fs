@@ -92,16 +92,6 @@ let private appendWallsType (parameters : Parameters) calculatePoints getLine (g
 
     let (rx, ry) = parameters.Radius()
 
-//    let (rx, ry) =
-//        let (rx, ry) = parameters.Radius
-//        let rnd = rng.NextDouble()
-//        if rnd < 0.5 then
-//            (rx, ry)
-//        elif rnd < 0.8 then
-//            (rx - 20.0, ry - 20.0)
-//        else
-//            (0.0, 0.0)
-    
     for position in OrthoPositionHandler.Instance.Values coordinate2D do
         let wallType = (cell.ConnectionTypeAtPosition position)
         let line =
@@ -217,14 +207,27 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
             |> appendPathAndBridgesWithAnimation
         | SVG.GlobalOptions.Inset ->
             sBuilder
-    
+
+    let renderBackgroundColoration sBuilder =
+        match globalOptionsParameters.BackgroundColoration with
+        | SVG.GlobalOptions.NoColoration ->
+            sBuilder
+        | SVG.GlobalOptions.Plain ->
+            sBuilder
+            |> appendMazeColoration coordinatesPartOfMaze wholeCellLines blankColor
+        | SVG.GlobalOptions.Distance ->
+            sBuilder
+            |> appendMazeDistanceColoration map wholeCellLines
+        | SVG.GlobalOptions.GradientV ->
+            sBuilder
+            |> appendMazeColoration coordinatesPartOfMaze wholeCellLines colorPicker
+
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
     |> appendStyle
     |> appendBackground "transparent"
     
-    //|> appendMazeColoration coordinatesPartOfMaze wholeCellLines colorPicker
-    |> appendMazeDistanceColoration map wholeCellLines
+    |> renderBackgroundColoration
 
     //|> appendPath path wholeCellLines
     //|> appendPathWithAnimation path wholeCellLines
