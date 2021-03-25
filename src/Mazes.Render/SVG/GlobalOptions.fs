@@ -16,4 +16,12 @@ type Parameters =
     {
         WallRenderType : WallRenderType
         BackgroundColoration : BackgroundColoration
+        Color1 : string
     }
+    
+    static member Default =
+        {
+            WallRenderType = Line
+            BackgroundColoration = NoColoration
+            Color1 = "#FFFFFF"
+        }

@@ -301,13 +301,13 @@
 <path d="M 107 270 L 143 270" class="nwbc"/>
 <path d="M 227 280 L 263 280" class="nwbc"/>
 <path d="M 227 270 L 263 270" class="nwbc"/>
-<path d="M 107 100 L 107 90 L 143 90 L 143 100 " class="cc" fill-opacity="1" fill="white"/>
-<path d="M 287 100 L 287 90 L 323 90 L 323 100 " class="cc" fill-opacity="1" fill="white"/>
-<path d="M 330 107 L 340 107 L 340 143 L 330 143 " class="cc" fill-opacity="1" fill="white"/>
-<path d="M 270 167 L 280 167 L 280 203 L 270 203 " class="cc" fill-opacity="1" fill="white"/>
-<path d="M 150 227 L 160 227 L 160 263 L 150 263 " class="cc" fill-opacity="1" fill="white"/>
-<path d="M 107 280 L 107 270 L 143 270 L 143 280 " class="cc" fill-opacity="1" fill="white"/>
-<path d="M 227 280 L 227 270 L 263 270 L 263 280 " class="cc" fill-opacity="1" fill="white"/>
+<path d="M 107 100 L 107 90 L 143 90 L 143 100 " class="cc" fill-opacity="1" fill="#FFFFFF"/>
+<path d="M 287 100 L 287 90 L 323 90 L 323 100 " class="cc" fill-opacity="1" fill="#FFFFFF"/>
+<path d="M 330 107 L 340 107 L 340 143 L 330 143 " class="cc" fill-opacity="1" fill="#FFFFFF"/>
+<path d="M 270 167 L 280 167 L 280 203 L 270 203 " class="cc" fill-opacity="1" fill="#FFFFFF"/>
+<path d="M 150 227 L 160 227 L 160 263 L 150 263 " class="cc" fill-opacity="1" fill="#FFFFFF"/>
+<path d="M 107 280 L 107 270 L 143 270 L 143 280 " class="cc" fill-opacity="1" fill="#FFFFFF"/>
+<path d="M 227 280 L 227 270 L 263 270 L 263 280 " class="cc" fill-opacity="1" fill="#FFFFFF"/>
 <path d="M 107 100 L 107 90 L 143 90 L 143 100 " class="cdc" fill-opacity="0.13"/>
 <path d="M 287 100 L 287 90 L 323 90 L 323 100 " class="cdc" fill-opacity="0.1"/>
 <path d="M 330 107 L 340 107 L 340 143 L 330 143 " class="cdc" fill-opacity="0.13"/>

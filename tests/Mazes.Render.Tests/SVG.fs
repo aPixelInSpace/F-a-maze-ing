@@ -34,11 +34,7 @@ let ``Given a maze with an ortho grid, a path and a map, when creating an SVG, t
     
     maze.OpenMaze (maze.NDStruct.GetFirstCellPartOfMaze, maze.NDStruct.GetLastCellPartOfMaze)
 
-    let globalOptionsParam =
-        {
-            WallRenderType = Line
-            BackgroundColoration = Distance
-        }
+    let globalOptionsParam = { Parameters.Default with BackgroundColoration = Distance }
 
     // act
     let renderedMaze =

@@ -56,6 +56,7 @@ type Options = {
     [<Option(Default = 12.0, HelpText = "Distance of the bridge from the center of a cell")>] bridgeDistanceFromCenter : float
     [<Option(Default = 20, HelpText = "Margin for the entire maze")>] margin : int
     [<Option(Default = 0, HelpText = "Change the curve value when drawing a line; only applicable in fixed mode on the lines option")>] curve : int
+    [<Option(Default = "#FFFFFF", HelpText = "Color choice 1")>] color1 : string
 }
 
 let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
@@ -83,6 +84,7 @@ let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
         {
             WallRenderType = mapWallRenderType options.Value.wallRenderType
             BackgroundColoration = mapBackgroundColoration options.Value.backgroundColor
+            Color1 = options.Value.color1
         }
 
     let param =

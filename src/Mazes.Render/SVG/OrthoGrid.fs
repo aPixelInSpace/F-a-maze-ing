@@ -179,16 +179,15 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
     let appendPathAndBridgesWithAnimation =
         appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacent2DConnections.ExistNeighbor wholeBridgeLines
 
-    //let rng = Random(1)
+
+    let color1 _ = Some globalOptionsParameters.Color1
+    
     let columnDistance = Color.columnDistance (slice2D.ToSpecializedStructure.NumberOfColumns - 1)
     let rowDistance = Color.rowDistance (slice2D.ToSpecializedStructure.NumberOfRows - 1)
     let colorPicker coordinate =
         //Color.random rng (240, 165, 53) (185, 227, 100)
-        Color.linearGradient (185, 227, 100) (181, 127, 60) (rowDistance coordinate)        
+        Color.linearGradient (Color.toRGB globalOptionsParameters.Color1) (181, 127, 60) (rowDistance coordinate)        
         |> Color.toHtmlHexColor
-
-    let blankColor _ = Some "white"
-    let noColor _ = None
 
     let renderWalls sBuilder =
         match globalOptionsParameters.WallRenderType with
@@ -214,7 +213,7 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
             sBuilder
         | SVG.GlobalOptions.Plain ->
             sBuilder
-            |> appendMazeColoration coordinatesPartOfMaze wholeCellLines blankColor
+            |> appendMazeColoration coordinatesPartOfMaze wholeCellLines color1
         | SVG.GlobalOptions.Distance ->
             sBuilder
             |> appendMazeDistanceColoration map wholeCellLines
@@ -237,7 +236,7 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
     |> renderWalls
     
     |> appendSimpleBridges
-    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines blankColor 
+    |> appendMazeBridgeColoration nonAdjacentNeighbors wholeBridgeLines color1 
     |> appendMazeDistanceBridgeColoration
     |> renderPathAndBridgesWithAnimation
     |> appendSimpleWallsBridges

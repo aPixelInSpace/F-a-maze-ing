@@ -87,13 +87,7 @@ let newRandomMaze () =
 
     let gridType canvas =
         match rng.Next(7) with
-        | 0 ->
-            let globalOptionsParam =
-                {
-                    WallRenderType = Line
-                    BackgroundColoration = Plain
-                }
-            generateMaze (canvas |> Grid2D.Type.Ortho.Grid.createBaseGrid |> NDimensionalStructure.create2D) (SVG.OrthoGrid.render globalOptionsParam SVG.OrthoGrid.Parameters.CreateDefaultSquare)
+        | 0 -> generateMaze (canvas |> Grid2D.Type.Ortho.Grid.createBaseGrid |> NDimensionalStructure.create2D) (SVG.OrthoGrid.render Parameters.Default SVG.OrthoGrid.Parameters.CreateDefaultSquare)
         | 1 -> generateMaze (canvas |> Grid2D.Type.Hex.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.HexGrid.render
         | 2 -> generateMaze (canvas |> Grid2D.Type.Tri.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.TriGrid.render
         | 3 -> generateMaze (canvas |> Grid2D.Type.OctaSquare.Grid.createBaseGrid |> NDimensionalStructure.create2D) SVG.OctaSquareGrid.render

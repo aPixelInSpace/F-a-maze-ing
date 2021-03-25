@@ -14,6 +14,11 @@ let toHtmlHexColor (rgb : RGB) =
     let bs = b.ToString("X")
     Some $"#{rs}{gs}{bs}"
 
+let toRGB (htmlHex : string) =
+    let hex (i, l) = Convert.ToInt32(htmlHex.Substring(i, l), 16)
+    
+    hex(1, 2), hex(3, 2), hex(5, 2)
+
 let random (rng : Random) (color1 : RGB) (color2 : RGB) _ =
     let (r1, g1, b1, r2, g2, b2) =
         let (r1, g1, b1) = color1
