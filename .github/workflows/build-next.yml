@@ -1,10 +1,10 @@
-name: build-Next
+name: build-next
 
 on:
   push:
-    branches: [ Next ]
+    branches: [ next ]
   pull_request:
-    branches: [ Next ]
+    branches: [ next ]
 
 jobs:
   build:
