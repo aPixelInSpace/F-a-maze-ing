@@ -9,12 +9,12 @@
     <Compile Include="Startup.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Blazorise.Bootstrap" Version="0.9.3" />
-    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.9.3" />
-    <PackageReference Include="Blazorise.Sidebar" Version="0.9.3" />
+    <PackageReference Include="Blazorise.Bootstrap" Version="0.9.3.3" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.9.3.3" />
+    <PackageReference Include="Blazorise.Sidebar" Version="0.9.3.3" />
     <PackageReference Include="Bolero" Version="0.16.27" />
     <PackageReference Include="Bolero.Build" Version="0.16.27" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.4" />
   </ItemGroup>
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
