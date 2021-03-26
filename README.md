@@ -7,9 +7,13 @@ An easy-to-use, composable and configurable maze generator and solver. Several t
 
 ## Usage
 
-To use the CLI, check the [documentation](https://github.com/aPixelInSpace/F-a-maze-ing/wiki).
+[Command Line Interface](https://github.com/aPixelInSpace/F-a-maze-ing/wiki#usage)
 
-You may visit https://mazes.apixelinspace.com to randomly generate a few examples (website in preview version, work in progress)
+Alternatively, you may visit https://mazes.apixelinspace.com to randomly generate a few examples (website in preview version, work in progress)
+
+## Build
+
+[Build the project from the source code](https://github.com/aPixelInSpace/F-a-maze-ing/wiki#build)
 
 ## Examples
 
