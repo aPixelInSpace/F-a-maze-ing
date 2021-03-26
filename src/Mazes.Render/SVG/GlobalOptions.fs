@@ -17,6 +17,7 @@ type Parameters =
         WallRenderType : WallRenderType
         BackgroundColoration : BackgroundColoration
         Color1 : string
+        Color2 : string
     }
     
     static member Default =
@@ -24,4 +25,5 @@ type Parameters =
             WallRenderType = Line
             BackgroundColoration = NoColoration
             Color1 = "#FFFFFF"
+            Color2 = "#12A4B5"
         }

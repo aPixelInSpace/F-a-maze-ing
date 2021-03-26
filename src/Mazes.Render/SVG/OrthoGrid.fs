@@ -186,7 +186,7 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
     let rowDistance = Color.rowDistance (slice2D.ToSpecializedStructure.NumberOfRows - 1)
     let colorPicker coordinate =
         //Color.random rng (240, 165, 53) (185, 227, 100)
-        Color.linearGradient (Color.toRGB globalOptionsParameters.Color1) (181, 127, 60) (rowDistance coordinate)        
+        Color.linearGradient (Color.toRGB globalOptionsParameters.Color1) (Color.toRGB globalOptionsParameters.Color2) (rowDistance coordinate)        
         |> Color.toHtmlHexColor
 
     let renderWalls sBuilder =

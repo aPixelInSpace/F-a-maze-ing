@@ -57,6 +57,7 @@ type Options = {
     [<Option(Default = 20, HelpText = "Margin for the entire maze")>] margin : int
     [<Option(Default = 0, HelpText = "Change the curve value when drawing a line; only applicable in fixed mode on the lines option")>] curve : int
     [<Option(Default = "#FFFFFF", HelpText = "Color choice 1")>] color1 : string
+    [<Option(Default = "#12A4B5", HelpText = "Color choice 2")>] color2 : string
 }
 
 let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
@@ -85,6 +86,7 @@ let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
             WallRenderType = mapWallRenderType options.Value.wallRenderType
             BackgroundColoration = mapBackgroundColoration options.Value.backgroundColor
             Color1 = options.Value.color1
+            Color2 = options.Value.color2
         }
 
     let param =
