@@ -13,6 +13,12 @@ body {
   flex-direction: row;
 }
 
+.main-content {
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
 .no-decoration:link {
   text-decoration: none;
 }
@@ -24,6 +30,12 @@ body {
 }
 .no-decoration:active {
   text-decoration: none;
+}
+
+.svg-container {
+  width: 85vw;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 #main {
