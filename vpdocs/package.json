@@ -1,0 +1,19 @@
+{
+  "name": "f-a-maze-ing-docs",
+  "version": "0.0.1",
+  "description": "Documentation for the f-a-maze-ing maze generator",
+  "main": "index.js",
+  "authors": {
+    "name": "Patrizio Amella",
+    "email": "apixelinspace@gmail.com"
+  },
+  "repository": "https://github.com/aPixelInSpace/F-a-maze-ing/f-a-maze-ing-docs",
+  "scripts": {
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^1.8.2"
+  }
+}
