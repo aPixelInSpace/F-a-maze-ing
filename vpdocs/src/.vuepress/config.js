@@ -38,12 +38,12 @@ module.exports = {
         link: '/guide/',
       },
       {
-        text: 'Config',
-        link: '/config/'
+        text: 'Build',
+        link: '/build/'
       },
       {
-        text: 'VuePress',
-        link: 'https://v1.vuepress.vuejs.org'
+        text: 'Credits',
+        link: '/credits/'
       }
     ],
     sidebar: {
@@ -52,11 +52,15 @@ module.exports = {
           title: 'Guide',
           collapsable: false,
           children: [
-            'Usage',
-            'Build',
+            '',
+            ['/guide/canvas/', 'Canvas'],
+            ['/guide/grid/', 'Grid'],
+            ['/guide/maze-algo/', 'Maze algorithm'],
+            ['/guide/render/', 'Render'],
+            ['/guide/output/', 'Output'],
           ]
         }
-      ],
+      ]
     }
   },
 
