@@ -5,6 +5,7 @@ module Mazes.Render.SVG.OrthoGrid
 open System
 open System.Text
 open Mazes.Core
+open Mazes.Core.Utils
 open Mazes.Core.Trigonometry
 open Mazes.Core.Structure
 open Mazes.Core.Structure.Grid2D
@@ -69,28 +70,35 @@ type Parameters =
         }
 
 let private calculatePoints (parameters : Parameters) (calculateHeight, calculateWidth) (coordinate : NCoordinate) =
-    let (baseX, baseY) = (calculateWidth coordinate.ToCoordinate2D.CIndex, calculateHeight coordinate.ToCoordinate2D.RIndex)
+    let coordinate2D = coordinate.ToCoordinate2D
+    let (baseX, baseY) = (calculateWidth coordinate2D.CIndex, calculateHeight coordinate2D.RIndex)
     let (leftTopX, leftTopY) = ((float)baseX, (float)baseY)
     let (rightTopX, rightTopY) = ((float)(baseX + parameters.Width), (float)baseY)
     let (leftBottomX, leftBottomY) = ((float)baseX , (float)(baseY + parameters.Height))
     let (rightBottomX, rightBottomY) = ((float)(baseX + parameters.Width), (float)(baseY + parameters.Height))
+    
+    let orientation = if (coordinate2D.RIndex + coordinate2D.CIndex) % 2 = 0 then "0" else "1"
 
-    ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY))
+    ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY), orientation)
 
 let private center (parameters : Parameters) calculatePoints coordinate =
-    let ((leftTopX, leftTopY),_,_,_) = calculatePoints coordinate
+    let ((leftTopX, leftTopY),_,_,_,_) = calculatePoints coordinate
     (leftTopX, leftTopY) |> translatePoint ((float)(parameters.Width / 2), (float)(parameters.Height / 2))
 
-let private appendWallsType (parameters : Parameters) calculatePoints getLine (grid : IAdjacentStructure<GridArray2D<OrthoPosition>, OrthoPosition>) appendWall (coordinate : NCoordinate) (sBuilder : StringBuilder) =
-    let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
+let private appendWallsType (parameters : Parameters) calculatePoints getRadius getLine (grid : IAdjacentStructure<GridArray2D<OrthoPosition>, OrthoPosition>) appendWall (coordinate : NCoordinate) (sBuilder : StringBuilder) =
+    let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY), orientation) =
         calculatePoints coordinate
 
     let coordinate2D = coordinate.ToCoordinate2D
     let cell = grid.Cell coordinate2D
-
-    let orientation = if (coordinate2D.RIndex + coordinate2D.CIndex) % 2 = 0 then "0" else "1"
-
-    let (rx, ry) = parameters.Radius()
+    
+    let inverseOrientationL =
+        let coordinate2D = coordinate.ToCoordinate2D
+        match coordinate2D.RIndex, coordinate2D.CIndex with
+        | _, 0 -> orientation
+        | _ -> if orientation = "0" then "1" else "0"
+        
+    let inverseOrientation = if orientation = "0" then "1" else "0"
 
     for position in OrthoPositionHandler.Instance.Values coordinate2D do
         let wallType = (cell.ConnectionTypeAtPosition position)
@@ -103,25 +111,29 @@ let private appendWallsType (parameters : Parameters) calculatePoints getLine (g
                 | Right -> getLine straightLine (rightBottomX, rightBottomY) (rightTopX, rightTopY)
                 | Bottom -> getLine straightLine (leftBottomX, leftBottomY) (rightBottomX, rightBottomY)
             | Circle | Curve _ | Random _ ->
-                let arcLine = arcLine orientation (rx, ry)
+                let arcLine = arcLine
                 match position with
-                | Left -> getLine arcLine (leftTopX, leftTopY) (leftBottomX, leftBottomY)
-                | Top -> getLine arcLine (rightTopX, rightTopY) (leftTopX, leftTopY)
-                | Right -> getLine arcLine (rightBottomX, rightBottomY) (rightTopX, rightTopY)
-                | Bottom -> getLine arcLine (leftBottomX, leftBottomY) (rightBottomX, rightBottomY)
+                | Left ->
+                    let arcLine = arcLine inverseOrientationL (getRadius (leftTopX, leftTopY) (leftBottomX, leftBottomY))
+                    getLine arcLine (leftTopX, leftTopY) (leftBottomX, leftBottomY)
+                | Top ->
+                    let arcLine = arcLine inverseOrientation (getRadius (leftTopX, leftTopY) (rightTopX, rightTopY))
+                    getLine arcLine (leftTopX, leftTopY) (rightTopX, rightTopY)
+                | Right ->
+                    let arcLine = arcLine orientation (getRadius (rightTopX, rightTopY) (rightBottomX, rightBottomY))
+                    getLine arcLine (rightTopX, rightTopY) (rightBottomX, rightBottomY)
+                | Bottom ->
+                    let arcLine = arcLine orientation (getRadius (leftBottomX, leftBottomY) (rightBottomX, rightBottomY))
+                    getLine arcLine (leftBottomX, leftBottomY) (rightBottomX, rightBottomY)
 
         match line with
         | Some line ->
             appendWall sBuilder line wallType coordinate |> ignore
         | None -> ()
 
-let private wholeCellLines (parameters : Parameters) calculatePoints (coordinate : NCoordinate) =
-    let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)) =
+let private wholeCellLines (parameters : Parameters) calculatePoints getRadius (coordinate : NCoordinate) =
+    let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY), orientation) =
         calculatePoints coordinate
-
-    let coordinate2D = coordinate.ToCoordinate2D
-    let orientation = if (coordinate2D.RIndex + coordinate2D.CIndex) % 2 = 0 then "0" else "1"
-    let (rx, ry) = parameters.Radius()
 
     match parameters.Line with
     | Straight ->
@@ -130,10 +142,23 @@ let private wholeCellLines (parameters : Parameters) calculatePoints (coordinate
         $"L {round rightTopX} {round rightTopY} " +
         $"L {round leftTopX} {round leftTopY} "
     | Circle | Curve _ | Random _ ->
-        $"M {round leftTopX} {round leftTopY} A {round rx} {round ry}, 0, 0, {orientation}, {round leftBottomX} {round leftBottomY} " +
-        $"A {round rx} {round ry}, 0, 0, {orientation}, {round rightBottomX} {round rightBottomY} " +
-        $"A {round rx} {round ry}, 0, 0, {orientation}, {round rightTopX} {round rightTopY} " +
-        $"A {round rx} {round ry}, 0, 0, {orientation}, {round leftTopX} {round leftTopY} "
+        let (ltLbRx, ltLbRy) = getRadius (leftTopX, leftTopY) (leftBottomX, leftBottomY)
+        let (lbRbRx, lbRbRy) = getRadius (leftBottomX, leftBottomY) (rightBottomX, rightBottomY)
+        let (rtRbRx, rtRbRy) = getRadius (rightTopX, rightTopY) (rightBottomX, rightBottomY)
+        let (ltRtRx, ltRtRy) = getRadius (leftTopX, leftTopY) (rightTopX, rightTopY)
+
+        let inverseOrientationL =
+            let coordinate2D = coordinate.ToCoordinate2D
+            match coordinate2D.RIndex, coordinate2D.CIndex with
+            | _, 0 -> orientation
+            | _ -> if orientation = "0" then "1" else "0"
+            
+        let inverseOrientation = if orientation = "0" then "1" else "0"
+
+        $"M {round leftTopX} {round leftTopY} A {round ltLbRx} {round ltLbRy}, 0, 0, {inverseOrientationL}, {round leftBottomX} {round leftBottomY} " +
+        $"A {round lbRbRx} {round lbRbRy}, 0, 0, {orientation}, {round rightBottomX} {round rightBottomY} " +
+        $"A {round rtRbRx} {round rtRbRy}, 0, 0, {inverseOrientation}, {round rightTopX} {round rightTopY} " +
+        $"A {round ltRtRx} {round ltRtRy}, 0, 0, {orientation}, {round leftTopX} {round leftTopY} "
 
 let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters : Parameters) (grid : NDimensionalStructure<GridArray2D<OrthoPosition>, OrthoPosition>) path map entrance exit =
     let sBuilder = StringBuilder()
@@ -153,7 +178,8 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
     let coordinatesPartOfMaze = grid.CoordinatesPartOfMaze
     let nonAdjacentNeighbors = (grid.NonAdjacent2DConnections.All (Some dimension))
 
-    let calculatePoints = calculatePoints parameters (calculateHeight, calculateWidth)
+    let calculatePoints = memoize (calculatePoints parameters (calculateHeight, calculateWidth))
+    let getRadius = memoize2 (fun _ _ -> parameters.Radius())
     
     let getLine = getLine lineTracker.ContainsLine lineTracker.Add
 
@@ -161,10 +187,10 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
     let appendSimpleBridges = appendSimpleBridges calculatePointsBridge nonAdjacentNeighbors
     let appendSimpleWallsBridges = appendSimpleWallsBridges calculatePointsBridge nonAdjacentNeighbors
     
-    let appendWallsTypeNoDoubleLine = appendWallsType parameters calculatePoints (getLine true) slice2D
-    let appendWallsType = appendWallsType parameters calculatePoints (getLine false) slice2D    
+    let appendWallsTypeNoDoubleLine = appendWallsType parameters calculatePoints getRadius (getLine true) slice2D
+    let appendWallsType = appendWallsType parameters calculatePoints getRadius (getLine false) slice2D    
 
-    let wholeCellLines = wholeCellLines parameters calculatePoints
+    let wholeCellLines = wholeCellLines parameters calculatePoints getRadius
     let wholeBridgeLines = wholeBridgeLines calculatePointsBridge
     
     let appendSimpleWalls sBuilder =
@@ -178,7 +204,6 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
 
     let appendPathAndBridgesWithAnimation =
         appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacent2DConnections.ExistNeighbor wholeBridgeLines
-
 
     let color1 _ = Some globalOptionsParameters.Color1
     

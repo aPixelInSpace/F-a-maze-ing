@@ -3,6 +3,7 @@
 module Mazes.Core.Utils
 
     open System
+    open System.Collections.Generic
 
     /// Returns a Key that is the same if the items are the same without considering the order
     let getKey (item1, item2) =
@@ -18,3 +19,21 @@ module Mazes.Core.Utils
             array.[i] <- temp
 
         array
+
+    let memoize fn =
+      let cache = Dictionary<_,_>()
+      (fun a ->
+        match cache.TryGetValue (a) with
+        | true, v -> v
+        | false, _ -> let v = fn a
+                      cache.Add(a,v)
+                      v)
+
+    let memoize2 fn =
+      let cache = Dictionary<_,_>()
+      (fun a b ->
+        match cache.TryGetValue ((a, b)) with
+        | true, v -> v
+        | false, _ -> let v = fn a b
+                      cache.Add((a, b),v)
+                      v)
