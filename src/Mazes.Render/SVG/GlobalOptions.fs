@@ -11,6 +11,7 @@ type BackgroundColoration =
     | Plain
     | Distance
     | GradientV
+    | GradientH
 
 type Parameters =
     {

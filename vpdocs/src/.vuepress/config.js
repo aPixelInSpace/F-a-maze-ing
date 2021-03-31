@@ -44,7 +44,11 @@ module.exports = {
       {
         text: 'Credits',
         link: '/credits/'
-      }
+      },
+      {
+        text: 'Github',
+        link: 'https://github.com/aPixelInSpace/F-a-maze-ing'
+      },
     ],
     sidebar: {
       '/guide/': [

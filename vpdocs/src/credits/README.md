@@ -8,6 +8,8 @@ Special thanks to these projects/ressources and the people that created/mantain 
 
 [The Bolero web framework with the Elmish architecture](https://fsbolero.io/)
 
+[FSharpPlus (an extension library for F#)](https://github.com/fsprojects/FSharpPlus)
+
 [The command line parser for .Net](https://github.com/commandlineparser/commandline)
 
 [The high speed priority queue for C#](https://github.com/BlueRaja/High-Speed-Priority-Queue-for-C-Sharp)

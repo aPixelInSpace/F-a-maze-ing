@@ -19,21 +19,3 @@ module Mazes.Core.Utils
             array.[i] <- temp
 
         array
-
-    let memoize fn =
-      let cache = Dictionary<_,_>()
-      (fun a ->
-        match cache.TryGetValue (a) with
-        | true, v -> v
-        | false, _ -> let v = fn a
-                      cache.Add(a,v)
-                      v)
-
-    let memoize2 fn =
-      let cache = Dictionary<_,_>()
-      (fun a b ->
-        match cache.TryGetValue ((a, b)) with
-        | true, v -> v
-        | false, _ -> let v = fn a b
-                      cache.Add((a, b),v)
-                      v)

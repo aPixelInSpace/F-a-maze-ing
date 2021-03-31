@@ -4,6 +4,7 @@ module Mazes.Render.SVG.OrthoGrid
 
 open System
 open System.Text
+open FSharpPlus.Memoization
 open Mazes.Core
 open Mazes.Core.Utils
 open Mazes.Core.Trigonometry
@@ -178,8 +179,10 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
     let coordinatesPartOfMaze = grid.CoordinatesPartOfMaze
     let nonAdjacentNeighbors = (grid.NonAdjacent2DConnections.All (Some dimension))
 
-    let calculatePoints = memoize (calculatePoints parameters (calculateHeight, calculateWidth))
-    let getRadius = memoize2 (fun _ _ -> parameters.Radius())
+    let calculatePoints = memoizeN (calculatePoints parameters (calculateHeight, calculateWidth))
+    let getRadius =
+        let getRadius = (fun _ _ -> parameters.Radius())
+        memoizeN getRadius
     
     let getLine = getLine lineTracker.ContainsLine lineTracker.Add
 
@@ -206,12 +209,10 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
         appendPathAndBridgesWithAnimation path wholeCellLines grid.NonAdjacent2DConnections.ExistNeighbor wholeBridgeLines
 
     let color1 _ = Some globalOptionsParameters.Color1
-    
-    let columnDistance = Color.columnDistance (slice2D.ToSpecializedStructure.NumberOfColumns - 1)
-    let rowDistance = Color.rowDistance (slice2D.ToSpecializedStructure.NumberOfRows - 1)
-    let colorPicker coordinate =
+
+    let colorPicker distancePicker coordinate =
         //Color.random rng (240, 165, 53) (185, 227, 100)
-        Color.linearGradient (Color.toRGB globalOptionsParameters.Color1) (Color.toRGB globalOptionsParameters.Color2) (rowDistance coordinate)        
+        Color.linearGradient (Color.toRGB globalOptionsParameters.Color1) (Color.toRGB globalOptionsParameters.Color2) (distancePicker coordinate)        
         |> Color.toHtmlHexColor
 
     let renderWalls sBuilder =
@@ -243,8 +244,13 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
             sBuilder
             |> appendMazeDistanceColoration map wholeCellLines
         | SVG.GlobalOptions.GradientV ->
+            let rowDistance = Color.rowDistance (slice2D.ToSpecializedStructure.NumberOfRows - 1)
             sBuilder
-            |> appendMazeColoration coordinatesPartOfMaze wholeCellLines colorPicker
+            |> appendMazeColoration coordinatesPartOfMaze wholeCellLines (colorPicker rowDistance)
+        | SVG.GlobalOptions.GradientH ->
+            let columnDistance = Color.columnDistance (slice2D.ToSpecializedStructure.NumberOfColumns - 1)
+            sBuilder
+            |> appendMazeColoration coordinatesPartOfMaze wholeCellLines (colorPicker columnDistance)
 
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
