@@ -3,9 +3,10 @@
 // Learn more about F# at http://fsharp.org
 
 open System
+open System.Diagnostics
 open CommandLine
-open Mazes.CLI.Render.SVG
 open Mazes.Core.Structure
+open Mazes.CLI.Console
 open Mazes.CLI.Canvas
 open Mazes.CLI.Structure
 open Mazes.CLI.Maze
@@ -41,10 +42,10 @@ let handleVerb<'Verb, 'Result> handler verb (argv : string seq) : 'Result option
                 | Some handler -> Some (parsed |> handler)
                 | None -> None
             | :? NotParsed<'Verb> as notParsed ->
-                printfn "%s" (String.Join(",", (notParsed.Errors |> Seq.map(fun e -> e.ToString()))))
+                //printError (String.Join(",", (notParsed.Errors |> Seq.map(fun e -> e.ToString()))))
                 None
             | _ ->
-                printfn "Something went wrong !"
+                printError "Something went wrong !"
                 failwith "Something went wrong !"
 
 let pick array = array |> Array.tryFind(Option.isSome) |> Option.flatten
@@ -225,6 +226,25 @@ let checkAllHandlers argv =
     handleVerb<File.Options, unit> None File.verb argv |> ignore
     handleVerb<Console.Options, unit> None Console.verb argv |> ignore
 
+let logOption step chosenOption =
+    match chosenOption with
+    | Some _ -> printProgress $"{step}"
+    | None -> printError $"{step} could not be performed"
+    
+    chosenOption
+
+let logAction step action =
+    let sw = Stopwatch()
+    sw.Start()
+    let result = action()
+    sw.Stop()
+    
+    match result with
+    | Some _ -> printProgress $"{step} ({sw.ElapsedMilliseconds} ms)"
+    | None -> printError $"{step} could not be performed"
+    
+    result
+
 [<EntryPoint>]
 let main argv =
 
@@ -235,16 +255,29 @@ let main argv =
         checkAllHandlers verbs.[0]
     | 5 ->
         let result =
-            initCanvas verbs.[0]
-            |> Option.bind(canvasArray2DToNdStruct verbs.[1])
-            |> Option.bind(ndStructToMaze verbs.[2])
-            |> Option.bind(mazeToRender verbs.[3])
-            |> Option.bind(renderToOutput verbs.[4])
+            logAction "Constructing the canvas"
+                (fun () -> initCanvas verbs.[0])
+            
+            |> Option.bind(fun p ->
+                logAction "Assembling the grid"
+                    (fun () -> p |> canvasArray2DToNdStruct verbs.[1]))
+            
+            |> Option.bind(fun p ->
+                logAction "Transforming into a maze"
+                    (fun () -> p |> ndStructToMaze verbs.[2]))
+            
+            |> Option.bind(fun p ->
+                logAction "Rendering a cool creation"
+                    (fun () -> p |> mazeToRender verbs.[3]))
+            
+            |> Option.bind(fun p ->
+                logAction "Performing the output"
+                    (fun () -> p |> renderToOutput verbs.[4]))
 
         match result with
-        | Some _ -> printfn "\nMaze generated !"
-        | None -> printfn "Something went wrong, some chosen actions are not compatible."
+        | Some _ -> printSuccess "Maze generated !"
+        | None -> printError "Something went wrong, some chosen actions are not compatible."
 
-    | _ -> failwith "Number of verbs not supported"
+    | _ -> printError "Number of verbs not supported"
     
     0 // return an integer exit code

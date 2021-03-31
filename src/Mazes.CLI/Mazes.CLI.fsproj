@@ -51,6 +51,7 @@
         <Compile Include="Render\Text\Ortho.fs" />
         <Compile Include="Output\File.fs" />
         <Compile Include="Output\Console.fs" />
+        <Compile Include="Console.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
@@ -62,6 +63,7 @@
 
     <ItemGroup>
       <PackageReference Include="CommandLineParser.FSharp" Version="2.8.0" />
+      <PackageReference Include="Spectre.Console" Version="0.38.0" />
     </ItemGroup>
 
 </Project>

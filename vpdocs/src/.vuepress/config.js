@@ -4,7 +4,7 @@ module.exports = {
   /**
    * Ref：https://v1.vuepress.vuejs.org/config/#title
    */
-  title: 'f-a-maze-ing documentation',
+  title: 'F-a-maze-ing documentation',
   /**
    * Ref：https://v1.vuepress.vuejs.org/config/#description
    */
