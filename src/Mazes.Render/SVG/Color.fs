@@ -4,14 +4,15 @@ module Mazes.Render.SVG.Color
 
 open System
 open Mazes.Core
+open Mazes.Core.Trigonometry
 
 type RGB = (int * int * int)
 
 let toHtmlHexColor (rgb : RGB) =
     let (r, g, b) = rgb
-    let rs = r.ToString("X")
-    let gs = g.ToString("X")
-    let bs = b.ToString("X")
+    let rs = r.ToString("X").PadLeft(2, '0')
+    let gs = g.ToString("X").PadLeft(2, '0')
+    let bs = b.ToString("X").PadLeft(2, '0')
     Some $"#{rs}{gs}{bs}"
 
 let toRGB (htmlHex : string) =
@@ -39,3 +40,6 @@ let columnDistance maxColumnIndex (coordinate : NCoordinate) =
 
 let rowDistance maxRowIndex (coordinate : NCoordinate) =
     (float)(coordinate.ToCoordinate2D.RIndex) / (float)maxRowIndex
+
+let centerDistance (centerX, centerY) maxDistance (coordinate : NCoordinate) =
+    Math.Min((calculateDistance ((float)coordinate.ToCoordinate2D.RIndex, (float)coordinate.ToCoordinate2D.CIndex) (centerX, centerY)) / maxDistance, 1.0)

@@ -271,7 +271,7 @@ let main argv =
                     (fun () -> p |> mazeToRender verbs.[3]))
             
             |> Option.bind(fun p ->
-                logAction "Performing the output"
+                logAction "Saving the output"
                     (fun () -> p |> renderToOutput verbs.[4]))
 
         match result with

@@ -30,6 +30,7 @@ type BackgroundColorationEnum =
     | Distance = 2
     | GradientV = 3
     | GradientH = 4
+    | GradientC = 5
 
 let mapBackgroundColoration backColorEnum =
     match backColorEnum with
@@ -38,6 +39,7 @@ let mapBackgroundColoration backColorEnum =
     | BackgroundColorationEnum.Distance -> Distance
     | BackgroundColorationEnum.GradientV -> GradientV
     | BackgroundColorationEnum.GradientH -> GradientH
+    | BackgroundColorationEnum.GradientC -> GradientC
     | _ -> failwith "backColorEnum not supported"
 
 [<Literal>]

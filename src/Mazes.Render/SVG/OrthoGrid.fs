@@ -251,6 +251,12 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
             let columnDistance = Color.columnDistance (slice2D.ToSpecializedStructure.NumberOfColumns - 1)
             sBuilder
             |> appendMazeColoration coordinatesPartOfMaze wholeCellLines (colorPicker columnDistance)
+        | SVG.GlobalOptions.GradientC ->
+            let center = ((float)((slice2D.ToSpecializedStructure.NumberOfRows - 1) / 2), (float)((slice2D.ToSpecializedStructure.NumberOfColumns - 1) / 2))
+            let maxDistance = (calculateDistance (0.0, 0.0) center) + 1.5
+            let centerDistance = Color.centerDistance center maxDistance
+            sBuilder
+            |> appendMazeColoration coordinatesPartOfMaze wholeCellLines (colorPicker centerDistance)
 
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
