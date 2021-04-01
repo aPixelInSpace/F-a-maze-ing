@@ -6,8 +6,6 @@
 
 An easy-to-use, composable and configurable maze generator and solver. Several types of grid tiles with multiple possible shapes.
 
----
-
 ## :zap: Usage
 
 [Use the Command Line Interface](https://github.com/aPixelInSpace/F-a-maze-ing/wiki#usage)
@@ -18,13 +16,9 @@ Alternatively, you may visit https://mazes.apixelinspace.com to randomly generat
   <img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" alt="Deploys by Netlify" width="90" />
 </a>
 
----
-
 ## :wrench: Build
 
 [Build the project from the source code](https://github.com/aPixelInSpace/F-a-maze-ing/wiki#build)
-
----
 
 ## :tada: Examples
 
@@ -96,8 +90,6 @@ The text render is simpler and only displays orthogonal mazes (using the Unicode
           ┗━━━┷━┓ ┏━┷━━━┛      
                 ┗━┛            </pre>
 </div>
-
----
 
 ## :book: Book
 
