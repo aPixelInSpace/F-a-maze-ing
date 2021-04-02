@@ -50,7 +50,7 @@ type Options = {
     [<Option('s', "solution", Required = false, Default = false, HelpText = "Show solution ?")>] solution : bool
     [<Option('e', "entranceExit", Required = false, Default = true, HelpText = "Add an entrance and an exit ?")>] entranceExit : bool
     [<Option('l', "lines", Required = false, Default = Lines.Straight, HelpText = "Type of lines (*Straight, Circle, Curved or Random). In circle mode only the Width value is considered; in curved mode you can change the curve option to obtain various effects")>] lines : Lines
-    [<Option('b', "backgroundColor", Required = false, Default = BackgroundColorationEnum.Plain, HelpText = "Background coloration (*Plain, Distance, GradientV)")>] backgroundColor : BackgroundColorationEnum
+    [<Option('b', "backgroundColor", Required = false, Default = BackgroundColorationEnum.Plain, HelpText = "Background coloration (NoColoration, *Plain, Distance, GradientV, GradientH, GradientC)")>] backgroundColor : BackgroundColorationEnum
     [<Option(Default = WallRenderTypeEnum.Line, HelpText = "Type of rendering for the walls (*Line or Inset)")>] wallRenderType : WallRenderTypeEnum
     [<Option(HelpText = "RNG seed, if none is provided a random one is chosen")>] seed : int option
     [<Option(Default = 5.0, HelpText = "Curve multiplication factor")>] curveMultFact : float

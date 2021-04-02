@@ -9,9 +9,9 @@ open Mazes.Core.Maze.Generate.BinaryTree
 
 type DirectionEnum =
     | Top = 0
-    | Right = 1
+    | Left = 1
     | Bottom = 2
-    | Left = 3
+    | Right = 3
 
 let mapToDirection baseAtEnum =
     match baseAtEnum with
@@ -27,8 +27,8 @@ let verb = "a-bt"
 [<Verb(verb, isDefault = false, HelpText = "Binary tree algorithm")>]
 type Options = {
     [<Option('s', "seed", Required = false, HelpText = "RNG seed, if none is provided a random one is chosen")>] seed : int option
-    [<Option(Default = DirectionEnum.Top, HelpText = "First direction (Top)")>] direction1 : DirectionEnum
-    [<Option(Default = DirectionEnum.Right, HelpText = "Second direction (Right)")>] direction2 : DirectionEnum
+    [<Option(Default = DirectionEnum.Top, HelpText = "First direction (*Top, Left, Bottom or Right)")>] direction1 : DirectionEnum
+    [<Option(Default = DirectionEnum.Right, HelpText = "Second direction (Top, Left, Bottom or *Right)")>] direction2 : DirectionEnum
     [<Option(Default = 1, HelpText = "Weight for the direction 1")>] direction1Weight : int
     [<Option(Default = 1, HelpText = "Weight for the direction 2")>] direction2Weight : int
 }

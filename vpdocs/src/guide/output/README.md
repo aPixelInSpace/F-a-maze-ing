@@ -8,7 +8,7 @@ An output writes the result of a render.
 
 ## File
 
-o-file
+`o-file`
 
 ```
   -p, --path    Required. The full path of the file
@@ -16,7 +16,7 @@ o-file
 
 ## Console
 
-o-console
+`o-console`
 
 ```
   --nooption

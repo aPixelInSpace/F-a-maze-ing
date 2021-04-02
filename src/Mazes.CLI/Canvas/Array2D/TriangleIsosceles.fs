@@ -26,7 +26,7 @@ let verb = "s-triangle"
 [<Verb(verb, isDefault = false, HelpText = "Triangle isosceles shape")>]
 type Options = {
     [<Option('b', "base", Required = true, HelpText = "The length of the base.")>] baseLength : int
-    [<Option(Default = BaseAtEnum.Bottom, HelpText = "The position of the base Bottom, Top, Left or Right." )>] baseAt : BaseAtEnum
+    [<Option(Default = BaseAtEnum.Bottom, HelpText = "The position of the base (*Bottom, Top, Left or Right)." )>] baseAt : BaseAtEnum
     [<Option(Default = 1, HelpText = "The decrement value for the base.")>] baseDecrement : int
     [<Option(Default = 1, HelpText = "The increment value for the height.")>] heightIncrement : int
 }

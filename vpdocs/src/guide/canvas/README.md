@@ -17,7 +17,7 @@ Array2d canvas can be used on all but the polar maze, only ArrayOfA canvas can b
 
 ## Rectangle
 
-s-rectangle
+`s-rectangle`
 
 ```
   -r, --rows       Required. The number of rows.
@@ -29,12 +29,12 @@ s-rectangle
 
 ## Triangle
 
-s-triangle
+`s-triangle`
 
 ```
   -b, --base           Required. The length of the base.
 
-  --baseat             (Default: 0) The position of the base Bottom, Top, Left or Right.
+  --baseat             (Default: Bottom) The position of the base (*Bottom, Top, Left or Right).
 
   --basedecrement      (Default: 1) The decrement value for the base.
 
@@ -45,31 +45,31 @@ s-triangle
 
 ## Ellipse
 
-s-ellipse
+`s-ellipse`
 
 ```
   -r, --rowRadiusLength        Required. The length for the horizontal radius.
 
   -c, --columnRadiusLength     Required. The length for the vertical radius.
 
-  --rowenlargingfactor         (Default: 0) Zoom factor on the horizontal axis.
+  --rowenlargingfactor         (Default: 0.0) Zoom factor on the horizontal axis.
 
-  --columnenlargingfactor      (Default: 0) Zoom factor on the vertical axis.
+  --columnenlargingfactor      (Default: 0.0) Zoom factor on the vertical axis.
 
   --rowtranslationfactor       (Default: 0) Translation factor on the horizontal axis.
 
   --columntranslationfactor    (Default: 0) Translation factor on the vertical axis.
 
-  --ellipsefactor              (Default: 0) Inside ellipse factor.
+  --ellipsefactor              (Default: 0.0) Inside ellipse factor.
 
-  --side                       (Default: 0) Indicate whether the ellipse is Inside or Outside.
+  --side                       (Default: Inside) Indicate whether the ellipse is *Inside or Outside.
 ```
 
 (Array2d type)
 
 ## Hexagon
 
-s-hexagon
+`s-hexagon`
 
 ```
   -s, --edgeSize    Required. The length of one side of the hexagon.
@@ -79,7 +79,7 @@ s-hexagon
 
 ## Pentagon
 
-s-pentagon
+`s-pentagon`
 
 ```
   -s, --edgeSize    Required. The length of one side of the pentagon.
@@ -89,7 +89,7 @@ s-pentagon
 
 ## Pentagon Star
 
-s-pentagonStar
+`s-pentagonStar`
 
 ```
   -g, --greatEdgeSize    Required. The length of the great side of the pentagon star.
@@ -101,7 +101,7 @@ s-pentagonStar
 
 ## Image
 
-s-image
+`s-image`
 
 Get a canvas/shape from an image. It works on the levels of black (with a parametrable tolerance) on each pixel.
 
@@ -116,7 +116,7 @@ Get a canvas/shape from an image. It works on the levels of black (with a parame
 
 ## Disk
 
-s-disk
+`s-disk`
 
 ```
   -r, --rings     Required. The number of rings.

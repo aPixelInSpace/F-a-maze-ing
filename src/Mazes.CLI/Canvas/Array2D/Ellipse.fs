@@ -28,7 +28,7 @@ type Options = {
     [<Option(Default = 0, HelpText = "Translation factor on the horizontal axis.")>] rowTranslationFactor : int
     [<Option(Default = 0, HelpText = "Translation factor on the vertical axis.")>] columnTranslationFactor : int
     [<Option(Default = 0.0, HelpText = "Inside ellipse factor.")>] ellipseFactor : float    
-    [<Option(Default = SideEnum.Inside, HelpText = "Indicate wheter the ellipse is Inside or Outside." )>] side : SideEnum
+    [<Option(Default = SideEnum.Inside, HelpText = "Indicate whether the ellipse is *Inside or Outside." )>] side : SideEnum
 }
 
 let handleVerb (options : Parsed<Options>) =

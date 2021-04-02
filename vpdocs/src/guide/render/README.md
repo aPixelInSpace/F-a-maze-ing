@@ -14,37 +14,52 @@ The main way is by generating an SVG, alternativaly, there is a unicode render f
 
 ## SVG Orthogonal
 
-rs-ortho
+`rs-ortho`
 
 ```
-  -d, --distColor               (Default: false) Apply distance coloration ?
-
   -s, --solution                (Default: false) Show solution ?
 
   -e, --entranceExit            (Default: true) Add an entrance and an exit ?
 
-  -l, --lines                   (Default: 0) Type of lines Straight, Circle, Curved or Random). In circle mode only the Width value is considered; in curved mode you can change the curve option to obtain various effects
+  -l, --lines                   (Default: Straight) Type of lines (*Straight, Circle, Curved or
+                                 Random). In circle mode only the Width value is considered; 
+                                 in curved mode you can change the curve option to obtain 
+                                 various effects
+
+  -b, --backgroundColor         (Default: Plain) Background coloration (NoColoration, *Plain, 
+                                 Distance, GradientV, GradientH, GradientC)
+
+  --wallrendertype              (Default: Line) Type of rendering for 
+                                 the walls (*Line or Inset)
 
   --seed                        RNG seed, if none is provided a random one is chosen
 
-  --curvemultfact               (Default: 5) Curve multiplication factor
+  --curvemultfact               (Default: 5.0) Curve multiplication factor
 
   --width                       (Default: 30) Width of a single cell
 
   --height                      (Default: 30) Height of a single cell
 
-  --bridgewidth                 (Default: 10) Width of the bridge
+  --bridgewidth                 (Default: 10.0) Width of the bridge
 
-  --bridgedistancefromcenter    (Default: 12) Distance of the bridge from the center of a cell
+  --bridgedistancefromcenter    (Default: 12.0) Distance of the bridge from the 
+                                 center of a cell
 
   --margin                      (Default: 20) Margin for the entire maze
 
-  --curve                       (Default: 0) Change the curve value when drawing a line; only applicable in fixed mode on the lines option
+  --curve                       (Default: 0) Change the curve value when drawing a line; 
+                                 only applicable in Curved mode on the lines option
+
+  --color1                      (Default: "#FFFFFF") Color choice 1
+
+  --color2                      (Default: "#12A4B5") Color choice 2
+
+  --solutioncolor               (Default: "purple") Color for the solution path
 ```
 
 ## SVG Polar
 
-rs-polar
+`rs-polar`
 
 ```
   -d, --distColor       (Default: false) Distance coloration
@@ -56,7 +71,7 @@ rs-polar
 
 ## SVG Hexagonal
 
-rs-hex
+`rs-hex`
 
 ```
   -d, --distColor       (Default: false) Distance coloration
@@ -68,7 +83,7 @@ rs-hex
 
 ## SVG Triangle
 
-rs-tri
+`rs-tri`
 
 ```
   -d, --distColor       (Default: false) Distance coloration
@@ -80,7 +95,7 @@ rs-tri
 
 ## SVG Octagonal and Square
 
-rs-octas
+`rs-octas`
 
 ```
   -d, --distColor       (Default: false) Distance coloration
@@ -92,7 +107,7 @@ rs-octas
 
 ## SVG Pentagonal Cairo
 
-rs-pentac
+`rs-pentac`
 
 ```
   -d, --distColor       (Default: false) Distance coloration
@@ -104,7 +119,7 @@ rs-pentac
 
 ## SVG Brick
 
-rs-brick
+`rs-brick`
 
 ```
   -d, --distColor       (Default: false) Distance coloration
@@ -116,7 +131,7 @@ rs-brick
 
 ## Text Orthogonal
 
-rt-ortho
+`rt-ortho`
 
 ```
   -e, --entranceExit    (Default: true) Add an entrance and an exit ?
