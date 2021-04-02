@@ -260,7 +260,7 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
 
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
-    |> appendStyle
+    |> appendStyle globalOptionsParameters.SolutionColor
     |> appendBackground "transparent"
     
     |> renderBackgroundColoration

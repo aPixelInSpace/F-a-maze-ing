@@ -62,6 +62,7 @@ type Options = {
     [<Option(Default = 0, HelpText = "Change the curve value when drawing a line; only applicable in Curved mode on the lines option")>] curve : int
     [<Option(Default = "#FFFFFF", HelpText = "Color choice 1")>] color1 : string
     [<Option(Default = "#12A4B5", HelpText = "Color choice 2")>] color2 : string
+    [<Option(Default = "purple", HelpText = "Color for the solution path")>] solutionColor : string
 }
 
 let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
@@ -91,6 +92,7 @@ let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
             BackgroundColoration = mapBackgroundColoration options.Value.backgroundColor
             Color1 = options.Value.color1
             Color2 = options.Value.color2
+            SolutionColor = options.Value.solutionColor
         }
 
     let param =

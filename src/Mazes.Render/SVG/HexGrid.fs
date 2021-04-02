@@ -121,7 +121,7 @@ let render (grid : NDimensionalStructure<GridArray2D<HexPosition>, HexPosition>)
 
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())
-    |> appendStyle
+    |> appendStyle "purple"
     |> appendBackground "transparent"
 
     |> appendMazeDistanceColoration map wholeCellLines

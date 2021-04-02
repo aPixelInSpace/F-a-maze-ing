@@ -20,6 +20,7 @@ type Parameters =
         BackgroundColoration : BackgroundColoration
         Color1 : string
         Color2 : string
+        SolutionColor : string
     }
     
     static member Default =
@@ -28,4 +29,5 @@ type Parameters =
             BackgroundColoration = NoColoration
             Color1 = "#FFFFFF"
             Color2 = "#12A4B5"
+            SolutionColor = "purple"
         }

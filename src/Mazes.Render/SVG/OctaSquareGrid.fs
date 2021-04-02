@@ -197,7 +197,7 @@ let render (grid : NDimensionalStructure<GridArray2D<OctaSquarePosition>, OctaSq
 
     sBuilder
     |> appendHeader ((round width).ToString()) ((round height).ToString())
-    |> appendStyle
+    |> appendStyle "purple"
     |> appendBackground "transparent"
 
     |> appendMazeDistanceColoration map wholeCellLines

@@ -54,7 +54,6 @@ let colorDistanceClass = "cdc"
 [<Literal>]
 let pathOpacity = "0.4"
 
-[<Literal>]
 let svgStyle =
         "<defs>
                 <style>
@@ -110,13 +109,13 @@ let svgStyle =
                     ." + pathClass + " {
                         stroke: transparent;
                         stroke-width: 0;
-                        fill: purple;
+                        fill: [PathFillColor];
                         fill-opacity: " + pathOpacity + ";
                     }
                     ." + pathAnimatedClass + " {
                         stroke: transparent;
                         stroke-width: 0;
-                        fill: purple;
+                        fill: [PathFillColor];
                         fill-opacity: 0.0;
                     }
                     ." + leaveClass + " {
@@ -145,8 +144,9 @@ let appendHeader width height (sBuilder : StringBuilder) =
             .Append("<!-- Copyright 2020-2021 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->\n")
             .Append("<svg width=\"" + width + "\" height=\"" + height + "\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">")
 
-let appendStyle (sBuilder : StringBuilder) =
-    sBuilder.Append(svgStyle)
+let appendStyle pathFillColor (sBuilder : StringBuilder) =
+    sBuilder.Append(
+        svgStyle.Replace("[PathFillColor]", pathFillColor))
 
 let straightLine (x1, y1) (x2, y2) =
     lazy $"M {round x1} {round y1} L {round x2} {round y2}"

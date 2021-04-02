@@ -115,7 +115,7 @@ let render (grid : NDimensionalStructure<GridArray2D<BrickPosition>, BrickPositi
 
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
-    |> appendStyle
+    |> appendStyle "purple"
     |> appendBackground "transparent"
     
     //|> appendMazeColoration grid.ToInterface.CoordinatesPartOfMaze wholeCellLines
