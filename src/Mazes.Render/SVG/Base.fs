@@ -132,6 +132,7 @@ let svgStyle =
                     ." + colorClass + " {
                         stroke: transparent;
                         stroke-width: 0;
+                        shape-rendering: crispEdges;
                     }
                 </style>
             </defs>"
