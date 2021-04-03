@@ -54,7 +54,9 @@ The main way is by generating an SVG, alternativaly, there is a unicode render f
 
   --color2                      (Default: "#12A4B5") Color choice 2
 
-  --solutioncolor               (Default: "purple") Color for the solution path
+  --solutioncolor               (Default: "purple") Color of the solution path
+
+  --walllinecolor               (Default: "#333333") Color of the walls when choosing the Line wallrendertype option
 ```
 
 ## SVG Polar

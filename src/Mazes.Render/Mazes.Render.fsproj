@@ -8,8 +8,8 @@
       <Compile Include="LineTracker.fs" />
       <Compile Include="Text.fs" />
       <Compile Include="SVG\Color.fs" />
-      <Compile Include="SVG\Base.fs" />
       <Compile Include="SVG\GlobalOptions.fs" />
+      <Compile Include="SVG\Base.fs" />
       <Compile Include="SVG\OrthoGrid.fs" />
       <Compile Include="SVG\PolarGrid.fs" />
       <Compile Include="SVG\HexGrid.fs" />

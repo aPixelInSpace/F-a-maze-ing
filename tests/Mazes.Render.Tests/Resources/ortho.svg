@@ -3,28 +3,28 @@
 <svg width="430" height="370" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs>
                 <style>
                     .nwc {
-                        stroke: #333;
-                        fill: transparent;
+                        stroke: #333333;
+                        fill: none;
                         stroke-width: 1;
                         stroke-linecap: round;
                         stroke-linejoin: round;
                     }
                     .bwc {
                         stroke: #333;
-                        fill: transparent;
+                        fill: none;
                         stroke-width: 2;
                         stroke-linecap: round;
                         stroke-linejoin: round;
                     }
                     .nwibc {
-                        fill: transparent;
+                        fill: none;
                         stroke: #333;
                         stroke-width: 10;
                         stroke-linecap: round;
                         stroke-linejoin: round;
                     }
                     .nwifc {
-                        fill: transparent;
+                        fill: none;
                         stroke: white;
                         stroke-width: 8;
                         stroke-linecap: round;
@@ -32,51 +32,46 @@
                     }
                     .bwibc {
                         stroke: #333;
-                        fill: transparent;
+                        fill: none;
                         stroke-width: 10;
                         stroke-linecap: round;
                         stroke-linejoin: round;
                     }
                     .bwifc {
                         stroke: white;
-                        fill: transparent;
+                        fill: none;
                         stroke-width: 4;
                         stroke-linecap: round;
                         stroke-linejoin: round;
                     }
                     .nwbc {
                         stroke: #333;
-                        fill: transparent;
+                        fill: none;
                         stroke-width: 2;
                         //stroke-linecap: round;
                         //stroke-linejoin: round;
                     }
                     .pc {
-                        stroke: transparent;
-                        stroke-width: 0;
+                        stroke: none;
                         fill: purple;
                         fill-opacity: 0.4;
                     }
                     .pac {
-                        stroke: transparent;
-                        stroke-width: 0;
+                        stroke: none;
                         fill: purple;
                         fill-opacity: 0.0;
                     }
                     .lc {
-                        stroke: transparent;
-                        stroke-width: 0;
+                        stroke: none;
                         fill: #70361f;
                         fill-opacity: 0.2;
                     }
                     .cdc {
-                        stroke: transparent;
-                        stroke-width: 0;
+                        stroke: none;
                         fill: #4287f5;
                     }
                     .cc {
-                        stroke: transparent;
-                        stroke-width: 0;
+                        stroke: none;
                         shape-rendering: crispEdges;
                     }
                 </style>

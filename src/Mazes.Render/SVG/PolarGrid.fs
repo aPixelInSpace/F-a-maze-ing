@@ -122,7 +122,7 @@ let render (grid : NDimensionalStructure<GridArrayOfA, PolarPosition>) path map 
 
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
-    |> appendStyle "purple"
+    |> appendStyle GlobalOptions.Parameters.Default
     |> appendBackground "transparent"
 
     //|> appendMazeColoration (coordinatesPartOfMaze |> Seq.map(snd)) wholeCellLines

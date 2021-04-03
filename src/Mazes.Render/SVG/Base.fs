@@ -58,28 +58,28 @@ let svgStyle =
         "<defs>
                 <style>
                     ." + normalWallClass + " {
-                        stroke: #333;
-                        fill: transparent;
+                        stroke: [NormalWallColor];
+                        fill: none;
                         stroke-width: 1;
                         stroke-linecap: round;
                         stroke-linejoin: round;
                     }
                     ." + borderWallClass + " {
                         stroke: #333;
-                        fill: transparent;
+                        fill: none;
                         stroke-width: 2;
                         stroke-linecap: round;
                         stroke-linejoin: round;
                     }
                     ." + normalWallInsetBackClass + " {
-                        fill: transparent;
+                        fill: none;
                         stroke: #333;
                         stroke-width: 10;
                         stroke-linecap: round;
                         stroke-linejoin: round;
                     }
                     ." + normalWallInsetForeClass + " {
-                        fill: transparent;
+                        fill: none;
                         stroke: white;
                         stroke-width: 8;
                         stroke-linecap: round;
@@ -87,51 +87,46 @@ let svgStyle =
                     }
                     ." + borderWallInsetBackClass + " {
                         stroke: #333;
-                        fill: transparent;
+                        fill: none;
                         stroke-width: 10;
                         stroke-linecap: round;
                         stroke-linejoin: round;
                     }
                     ." + borderWallInsetForeClass + " {
                         stroke: white;
-                        fill: transparent;
+                        fill: none;
                         stroke-width: 4;
                         stroke-linecap: round;
                         stroke-linejoin: round;
                     }
                     ." + normalWallBridgeClass + " {
                         stroke: #333;
-                        fill: transparent;
+                        fill: none;
                         stroke-width: 2;
                         //stroke-linecap: round;
                         //stroke-linejoin: round;
                     }
                     ." + pathClass + " {
-                        stroke: transparent;
-                        stroke-width: 0;
-                        fill: [PathFillColor];
+                        stroke: none;
+                        fill: [SolutionColor];
                         fill-opacity: " + pathOpacity + ";
                     }
                     ." + pathAnimatedClass + " {
-                        stroke: transparent;
-                        stroke-width: 0;
-                        fill: [PathFillColor];
+                        stroke: none;
+                        fill: [SolutionColor];
                         fill-opacity: 0.0;
                     }
                     ." + leaveClass + " {
-                        stroke: transparent;
-                        stroke-width: 0;
+                        stroke: none;
                         fill: #70361f;
                         fill-opacity: 0.2;
                     }
                     ." + colorDistanceClass + " {
-                        stroke: transparent;
-                        stroke-width: 0;
+                        stroke: none;
                         fill: #4287f5;
                     }
                     ." + colorClass + " {
-                        stroke: transparent;
-                        stroke-width: 0;
+                        stroke: none;
                         shape-rendering: crispEdges;
                     }
                 </style>
@@ -145,9 +140,11 @@ let appendHeader width height (sBuilder : StringBuilder) =
             .Append("<!-- Copyright 2020-2021 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->\n")
             .Append("<svg width=\"" + width + "\" height=\"" + height + "\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">")
 
-let appendStyle pathFillColor (sBuilder : StringBuilder) =
+let appendStyle (globalOptions : GlobalOptions.Parameters) (sBuilder : StringBuilder) =
     sBuilder.Append(
-        svgStyle.Replace("[PathFillColor]", pathFillColor))
+        svgStyle
+            .Replace("[SolutionColor]", globalOptions.SolutionColor)
+            .Replace("[NormalWallColor]", globalOptions.NormalWallColor))
 
 let straightLine (x1, y1) (x2, y2) =
     lazy $"M {round x1} {round y1} L {round x2} {round y2}"

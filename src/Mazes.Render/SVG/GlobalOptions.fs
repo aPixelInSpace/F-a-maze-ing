@@ -21,6 +21,7 @@ type Parameters =
         Color1 : string
         Color2 : string
         SolutionColor : string
+        NormalWallColor : string
     }
     
     static member Default =
@@ -30,4 +31,5 @@ type Parameters =
             Color1 = "#FFFFFF"
             Color2 = "#12A4B5"
             SolutionColor = "purple"
+            NormalWallColor = "#333333"
         }
