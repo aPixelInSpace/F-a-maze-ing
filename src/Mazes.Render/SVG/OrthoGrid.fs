@@ -211,7 +211,6 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
     let color1 _ = Some globalOptionsParameters.Color1
 
     let colorPicker distancePicker coordinate =
-        //Color.random rng (240, 165, 53) (185, 227, 100)
         Color.linearGradient (Color.toRGB globalOptionsParameters.Color1) (Color.toRGB globalOptionsParameters.Color2) (distancePicker coordinate)        
         |> Color.toHtmlHexColor
 
@@ -257,6 +256,11 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
             let centerDistance = Color.centerDistance center maxDistance
             sBuilder
             |> appendMazeColoration coordinatesPartOfMaze wholeCellLines (colorPicker centerDistance)
+        | SVG.GlobalOptions.RandomColor (rng, color1, color2) ->
+            let randomColor coordinate = Color.toHtmlHexColor (Color.random rng color1 color2 coordinate)
+            sBuilder
+            |> appendMazeColoration coordinatesPartOfMaze wholeCellLines randomColor
+            
 
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())

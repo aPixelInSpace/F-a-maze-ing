@@ -2,6 +2,8 @@
 
 namespace Mazes.Render.SVG.GlobalOptions
 
+open Mazes.Render.SVG
+
 type WallRenderType =
     | Line
     | Inset
@@ -13,6 +15,7 @@ type BackgroundColoration =
     | GradientV
     | GradientH
     | GradientC
+    | RandomColor of (System.Random * Color.RGB * Color.RGB)
 
 type Parameters =
     {

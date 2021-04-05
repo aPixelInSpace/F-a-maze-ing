@@ -2,6 +2,7 @@
 
 module Mazes.CLI.Render.SVG.Ortho
 
+open System
 open CommandLine
 open Mazes.Core.Maze
 open Mazes.Render.SVG
@@ -31,16 +32,7 @@ type BackgroundColorationEnum =
     | GradientV = 3
     | GradientH = 4
     | GradientC = 5
-
-let mapBackgroundColoration backColorEnum =
-    match backColorEnum with
-    | BackgroundColorationEnum.NoColoration -> NoColoration
-    | BackgroundColorationEnum.Plain -> Plain
-    | BackgroundColorationEnum.Distance -> Distance
-    | BackgroundColorationEnum.GradientV -> GradientV
-    | BackgroundColorationEnum.GradientH -> GradientH
-    | BackgroundColorationEnum.GradientC -> GradientC
-    | _ -> failwith "backColorEnum not supported"
+    | Random = 6
 
 [<Literal>]
 let verb = "rs-ortho"
@@ -66,6 +58,22 @@ type Options = {
     [<Option(Default = "#333333", HelpText = "Color of the walls when choosing the Line wallrendertype option")>] wallLineColor : string
 }
 
+let getRng (options : Options) =
+    match options.seed with
+    | Some seed -> System.Random(seed)
+    | None -> System.Random()
+
+let mapBackgroundColoration (options : Options) =
+    match options.backgroundColor with
+    | BackgroundColorationEnum.NoColoration -> NoColoration
+    | BackgroundColorationEnum.Plain -> Plain
+    | BackgroundColorationEnum.Distance -> Distance
+    | BackgroundColorationEnum.GradientV -> GradientV
+    | BackgroundColorationEnum.GradientH -> GradientH
+    | BackgroundColorationEnum.GradientC -> GradientC
+    | BackgroundColorationEnum.Random -> (getRng options, Color.toRGB options.color1, Color.toRGB options.color2) |> RandomColor
+    | _ -> failwith "backColorEnum not supported"
+
 let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
     let map = lazy (maze.createMap maze.NDStruct.GetFirstCellPartOfMaze)
     
@@ -90,7 +98,7 @@ let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
     let globalOptionsParam =
         {
             WallRenderType = mapWallRenderType options.Value.wallRenderType
-            BackgroundColoration = mapBackgroundColoration options.Value.backgroundColor
+            BackgroundColoration = mapBackgroundColoration options.Value
             Color1 = options.Value.color1
             Color2 = options.Value.color2
             SolutionColor = options.Value.solutionColor
@@ -114,9 +122,7 @@ let handleVerb (maze : Maze<_,_>) (options : Parsed<Options>) =
                 | Lines.Circle -> Circle
                 | Lines.Curved -> (options.Value.curve, options.Value.curve) |> Curve
                 | Lines.Random ->
-                    match options.Value.seed with
-                    | Some seed -> (System.Random(seed), options.Value.curveMultFact) |> Random
-                    | None -> (System.Random(), options.Value.curveMultFact) |> Random
+                    (getRng options.Value, options.Value.curveMultFact) |> Random
                 | _ -> failwith "Unsupported Lines value"
         }
     
