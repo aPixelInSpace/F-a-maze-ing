@@ -22,74 +22,23 @@ Alternatively, you may visit https://mazes.apixelinspace.com to randomly generat
 
 ## :tada: Examples
 
-### Orthogonal maze
+<img src="docs/resources/Examples/Desert.svg" width="400">
 
-With squares
+<img src="docs/resources/Examples/Donut.svg" width="400">
 
-<img src="docs/resources/Examples/Ortho/SVG/RectangularSquareMaze.svg" width="400">
+<img src="docs/resources/Examples/Tree.svg" width="400">
 
-With circles
+<img src="docs/resources/Examples/Disk.svg" width="400">
 
-<img src="docs/resources/Examples/Ortho/SVG/RectangularCircleMaze.svg" width="400">
+<img src="docs/resources/Examples/Triangle.svg" width="400">
 
-With a 'hand-drawn feel'
+<img src="docs/resources/Examples/Pentagon.svg" width="400">
 
-<img src="docs/resources/Examples/Ortho/SVG/RectangularHandDrawnMaze.svg" width="400">
+<img src="docs/resources/Examples/Hexagon.svg" width="400">
 
-With a shape from an image
+<img src="docs/resources/Examples/Upsilon.svg" width="400">
 
-<img src="docs/resources/Examples/Ortho/SVG/TreeMaze.svg" width="400">
-
-### Penta maze
-
-With the "Cairo" pentagonal tiling
-
-<img src="docs/resources/Examples/Penta/SVG/PentaMaze.svg" width="400">
-
-### Theta maze
-
-<img src="docs/resources/Examples/Theta/SVG/CircleMaze.svg" width="400">
-
-### Sigma maze
-
-<img src="docs/resources/Examples/Sigma/SVG/HexagonMaze.svg" width="400">
-
-### Delta maze
-
-<img src="docs/resources/Examples/Delta/SVG/TriangularMaze.svg" width="400">
-
-### Upsilon maze
-
-<img src="docs/resources/Examples/Upsilon/SVG/UpsilonMaze.svg" width="400">
-
-### Brick maze
-
-<img src="docs/resources/Examples/Brick/SVG/BrickMaze.svg" width="400">
-
-### Customizable shapes
-
-<img src="docs/resources/Examples/Ortho/SVG/TriangularMaze.svg" width="400">
-
-<img src="docs/resources/Examples/Ortho/SVG/EllipseMaze.svg" width="400">
-
-<img src="docs/resources/Examples/Ortho/SVG/DoughnutMaze.svg" width="400">
-
-<img src="docs/resources/Examples/Ortho/SVG/CompositeMaze.svg" width="400">
-
-### ASCII
-The text render is simpler and only displays orthogonal mazes (using the Unicode characters [link](https://en.wikipedia.org/wiki/Box-drawing_character)) :
-<div style="font-family: 'DejaVu Sans Mono', monospace">
-    <pre class="maze-line">                ┏━┓            
-          ┏━┯━━━┛ ┗━━━━━┓      
-      ┏━━━┩ ┴ ╭─┬───────╄━━━┓  
-      ┃ ┬ ┴ ╶─╯ │ ╶───╮ ╰─╴ ┃  
-    ┏━┛ ╰─┬───┲━┷━━━┓ ├───╮ ┗━┓
-    ┗━┓ ╶─╯ ┬ ┗━━━━━┩ │ ┬ ├─┲━┛
-      ┃ ╶─╮ ╰─┬─╴ ╭─╯ │ │ ┴ ┃  
-      ┗━━━╅─╴ │ ╶─╯ ┬ ┴ ┢━━━┛  
-          ┗━━━┷━┓ ┏━┷━━━┛      
-                ┗━┛            </pre>
-</div>
+<img src="docs/resources/Examples/Wall.svg" width="400">
 
 ## :book: Book
 

@@ -27,7 +27,7 @@ The main way is by generating an SVG, alternativaly, there is a unicode render f
                                  various effects
 
   -b, --backgroundColor         (Default: Plain) Background coloration (NoColoration, *Plain, 
-                                 Distance, GradientV, GradientH, GradientC)
+                                 Distance, GradientV, GradientH, GradientC, Random)
 
   --wallrendertype              (Default: Line) Type of rendering for 
                                  the walls (*Line or Inset)
@@ -56,7 +56,8 @@ The main way is by generating an SVG, alternativaly, there is a unicode render f
 
   --solutioncolor               (Default: "purple") Color of the solution path
 
-  --walllinecolor               (Default: "#333333") Color of the walls when choosing the Line wallrendertype option
+  --walllinecolor               (Default: "#333333") Color of the walls when choosing
+                                 the Line wallrendertype option
 ```
 
 ## SVG Polar

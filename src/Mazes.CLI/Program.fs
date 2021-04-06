@@ -37,16 +37,16 @@ let handleVerb<'Verb, 'Result> handler verb (argv : string seq) : 'Result option
     else    
         let parserResult = Parser.Default.ParseArguments<'Verb>(argv)
         match parserResult with
-            | :? Parsed<'Verb> as parsed ->
-                match handler with
-                | Some handler -> Some (parsed |> handler)
-                | None -> None
-            | :? NotParsed<'Verb> as notParsed ->
-                //printError (String.Join(",", (notParsed.Errors |> Seq.map(fun e -> e.ToString()))))
-                None
-            | _ ->
-                printError "Something went wrong !"
-                failwith "Something went wrong !"
+        | :? Parsed<'Verb> as parsed ->
+            match handler with
+            | Some handler -> Some (parsed |> handler)
+            | None -> None
+        | :? NotParsed<'Verb> as notParsed ->
+            //printError (String.Join(",", (notParsed.Errors |> Seq.map(fun e -> e.ToString()))))
+            None
+        | _ ->
+            printError "Something went wrong !"
+            failwith "Something went wrong !"
 
 let pick array = array |> Array.tryFind(Option.isSome) |> Option.flatten
 
@@ -234,20 +234,24 @@ let logOption step chosenOption =
     chosenOption
 
 let logAction step action =
+    printProgress $"-> {step}... "
+    
     let sw = Stopwatch()
     sw.Start()
     let result = action()
     sw.Stop()
     
     match result with
-    | Some _ -> printProgress $"{step} ({sw.ElapsedMilliseconds} ms)"
-    | None -> printError $"{step} could not be performed"
+    | Some _ -> printProgressN $"({sw.ElapsedMilliseconds} ms)"
+    | None -> printErrorN $"could not be performed"
     
     result
 
 [<EntryPoint>]
 let main argv =
 
+    //Console.OpenStandardInput()
+    
     let verbs = argv |> verbs ((=)pipe)
 
     match verbs.Length with
