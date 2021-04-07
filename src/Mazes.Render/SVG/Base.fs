@@ -179,7 +179,7 @@ let appendPathElement (sBuilder : StringBuilder) id styleClass lines (coordinate
     sBuilder.Append($"d=\"{lines}\" class=\"{styleClass}\"") |> ignore
 
     if debugShowCoordinate then
-        sBuilder.Append($"><title>RIndex {coordinate.ToCoordinate2D.RIndex}; CIndex {coordinate.ToCoordinate2D.CIndex}</title></path>") |> ignore
+        sBuilder.Append($"><title>RIndex {coordinate.Coordinate2D.RIndex}; CIndex {coordinate.Coordinate2D.CIndex}</title></path>") |> ignore
     else
         sBuilder.Append($"/>") |> ignore
 
@@ -231,7 +231,7 @@ let appendPathElementColor (sBuilder : StringBuilder) styleClass color opacity (
 
     if debugShowCoordinate then
         match coordinate with
-        | Some coordinate -> sBuilder.Append($"><title>RIndex {coordinate.ToCoordinate2D.RIndex}; CIndex {coordinate.ToCoordinate2D.CIndex}</title></path>") |> ignore
+        | Some coordinate -> sBuilder.Append($"><title>RIndex {coordinate.Coordinate2D.RIndex}; CIndex {coordinate.Coordinate2D.CIndex}</title></path>") |> ignore
         | None -> sBuilder.Append($"/>") |> ignore
      else
         sBuilder.Append($"/>") |> ignore

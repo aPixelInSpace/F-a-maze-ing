@@ -12,12 +12,12 @@ open Mazes.Core.Structure.Grid2D.Type.Tri
 open Mazes.Render.SVG.Base
 
 let private calculatePoints (calculateWidth, calculateHeight, isUpright, triWidth, triHalfWidth, triHeight) (coordinate : NCoordinate) =
-    let baseLengthAtRight = calculateWidth ((float)(coordinate.ToCoordinate2D.CIndex + 1))
-    let baseLengthAtBottom = calculateHeight ((float)(coordinate.ToCoordinate2D.RIndex + 1))
+    let baseLengthAtRight = calculateWidth ((float)(coordinate.Coordinate2D.CIndex + 1))
+    let baseLengthAtBottom = calculateHeight ((float)(coordinate.Coordinate2D.RIndex + 1))
     let baseLengthAtLeft = baseLengthAtRight - triWidth
     let baseLengthAtTop = baseLengthAtBottom - triHeight
 
-    let isUpright = isUpright coordinate.ToCoordinate2D
+    let isUpright = isUpright coordinate.Coordinate2D
 
     let leftX = baseLengthAtLeft
     let middleX = baseLengthAtLeft + triHalfWidth
@@ -33,7 +33,7 @@ let private calculatePoints (calculateWidth, calculateHeight, isUpright, triWidt
 let center calculatePoints isUpright halfTriHeight (coordinate : NCoordinate) =
     let (_, middle, _) = calculatePoints coordinate
 
-    if isUpright coordinate.ToCoordinate2D then
+    if isUpright coordinate.Coordinate2D then
         translatePoint (0.0, halfTriHeight) middle
     else
         translatePoint (0.0, -halfTriHeight) middle
@@ -41,10 +41,10 @@ let center calculatePoints isUpright halfTriHeight (coordinate : NCoordinate) =
 let private appendWallsType calculatePoints (grid : IAdjacentStructure<GridArray2D<TriPosition>, TriPosition>) appendWall (coordinate : NCoordinate) (sBuilder : StringBuilder) =
     let ((leftX, leftY), (middleX, middleY), (rightX, rightY)) = calculatePoints coordinate
 
-    let coordinate2D = coordinate.ToCoordinate2D
+    let coordinate2D = coordinate.Coordinate2D
     let cell = grid.Cell coordinate2D
 
-    for position in TriPositionHandler.Instance.Values coordinate.ToCoordinate2D do
+    for position in TriPositionHandler.Instance.Values coordinate.Coordinate2D do
         let lines =
             match position with
             | Left -> $"M {round leftX} {round leftY} L {round middleX} {round middleY}"

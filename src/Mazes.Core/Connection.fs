@@ -79,7 +79,7 @@ type Connections =
                 for toItem in this.Container.Item(fromItem.Key) do
                     match dimension with
                     | Some dimension ->
-                        if fromItem.Key.ToDimension = dimension && toItem.Key.ToDimension = dimension then 
+                        if fromItem.Key.Dimension = dimension && toItem.Key.Dimension = dimension then 
                             yield (fromItem.Key, toItem.Key, toItem.Value)
                     | None ->
                         yield (fromItem.Key, toItem.Key, toItem.Value)

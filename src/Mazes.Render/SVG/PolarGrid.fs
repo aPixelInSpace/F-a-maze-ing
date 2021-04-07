@@ -11,7 +11,7 @@ open Mazes.Core.Trigonometry
 open Mazes.Render.SVG.Base
 
 let private calculatePoints (grid : IAdjacentStructure<GridArrayOfA, PolarPosition>) (centerX, centerY, ringHeight) (coordinate : NCoordinate) =
-    let coordinate2D = coordinate.ToCoordinate2D
+    let coordinate2D = coordinate.Coordinate2D
     let ringIndex = coordinate2D.RIndex
     let cellIndex = coordinate2D.CIndex
 
@@ -45,7 +45,7 @@ let private appendWallsType (grid : IAdjacentStructure<GridArrayOfA, PolarPositi
     let ((innerRadius, outerRadius), (bottomLeftX, bottomLeftY), (topLeftX, topLeftY), (bottomRightX, bottomRightY), (topRightX, topRightY)) =
         calculatePoints grid (centerX, centerY, ringHeight) coordinate
 
-    let coordinate2D = coordinate.ToCoordinate2D
+    let coordinate2D = coordinate.Coordinate2D
     let connections = (grid.Cell coordinate2D).Connections
     let wallInward = connections |> Array.tryFind(fun w -> w.ConnectionPosition = Inward)
     match wallInward with

@@ -18,7 +18,7 @@ let private marginWidth = 20
 let private marginHeight = 20
 
 let private calculatePoints (calculateHeight, calculateWidth) (coordinate : NCoordinate) =
-    let coordinate2D = coordinate.ToCoordinate2D
+    let coordinate2D = coordinate.Coordinate2D
 
     let widthToAdd =
         if not (BrickPositionHandler.IsEven coordinate2D) then
@@ -45,7 +45,7 @@ let private appendWallsType calculatePoints (grid : IAdjacentStructure<GridArray
     let ((leftTopX, leftTopY), (middleTopX, middleTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (middleBottomX, middleBottomY), (rightBottomX, rightBottomY)) =
         calculatePoints coordinate
 
-    let coordinate2D = coordinate.ToCoordinate2D
+    let coordinate2D = coordinate.Coordinate2D
     let cell = grid.Cell coordinate2D
 
     for position in BrickPositionHandler.Instance.Values coordinate2D do

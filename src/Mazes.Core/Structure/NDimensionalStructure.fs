@@ -29,9 +29,9 @@ type NDimensionalStructure<'Grid, 'Position> =
         |> Seq.sumBy(fun kv -> kv.Value.TotalOfMazeCells)
 
     member this.ExistAt (nCoordinate : NCoordinate) =
-        let dimension = nCoordinate.ToDimension
+        let dimension = nCoordinate.Dimension
         if this.Structure.ContainsKey(dimension) then
-            (this.Slice2D dimension).ExistAt nCoordinate.ToCoordinate2D
+            (this.Slice2D dimension).ExistAt nCoordinate.Coordinate2D
         else
             false
 
@@ -47,18 +47,18 @@ type NDimensionalStructure<'Grid, 'Position> =
         let unconnectedPartOfMazeCells =
             this.CoordinatesPartOfMaze
             |> Seq.filter(fun c ->
-                    let slice2d = this.Slice2D c.ToDimension
-                    not (slice2d.IsCellConnected c.ToCoordinate2D || this.NonAdjacent2DConnections.IsCellConnected c))
+                    let slice2d = this.Slice2D c.Dimension
+                    not (slice2d.IsCellConnected c.Coordinate2D || this.NonAdjacent2DConnections.IsCellConnected c))
             |> Seq.toArray
 
         unconnectedPartOfMazeCells.[rng.Next(unconnectedPartOfMazeCells.Length)]
 
     member this.Neighbors (nCoordinate : NCoordinate) =
-        let dimension = nCoordinate.ToDimension
+        let dimension = nCoordinate.Dimension
         let slice2d = this.Slice2D dimension
 
         let neighbors2d =
-            slice2d.Neighbors nCoordinate.ToCoordinate2D
+            slice2d.Neighbors nCoordinate.Coordinate2D
             |> Seq.map(NCoordinate.create dimension)
 
         let neighbors =
@@ -70,7 +70,7 @@ type NDimensionalStructure<'Grid, 'Position> =
     /// Given a coordinate, returns true if the cell has at least one connection open, false otherwise
     member this.IsCellConnected nCoordinate =
         this.NonAdjacent2DConnections.IsCellConnected nCoordinate ||
-        (this.Slice2D nCoordinate.ToDimension).IsCellConnected nCoordinate.ToCoordinate2D
+        (this.Slice2D nCoordinate.Dimension).IsCellConnected nCoordinate.Coordinate2D
 
     /// Given two coordinates, returns true if they have their connection open, false otherwise
     member this.AreConnected nCoordinate otherNCoordinate =
@@ -85,7 +85,7 @@ type NDimensionalStructure<'Grid, 'Position> =
         let adjacent2DCondition =
             not existNonAdjacentNeighbor &&
             (nCoordinate.IsSame2DDimension otherNCoordinate) &&
-            (this.Slice2D nCoordinate.ToDimension).AreConnected nCoordinate.ToCoordinate2D otherNCoordinate.ToCoordinate2D
+            (this.Slice2D nCoordinate.Dimension).AreConnected nCoordinate.Coordinate2D otherNCoordinate.Coordinate2D
 
         nonAdjacent2DCondition || adjacent2DCondition
 
@@ -93,7 +93,7 @@ type NDimensionalStructure<'Grid, 'Position> =
     member this.ConnectedNeighbors isConnected (nCoordinate : NCoordinate) =
         this.Neighbors nCoordinate
         |> Seq.filter(fun neighbor ->
-            let isConnectedAdjacent2d = (this.Slice2D neighbor.ToDimension).IsCellConnected neighbor.ToCoordinate2D
+            let isConnectedAdjacent2d = (this.Slice2D neighbor.Dimension).IsCellConnected neighbor.Coordinate2D
             let isConnectedNonAdjacent2d = this.NonAdjacent2DConnections.IsCellConnected neighbor
 
             if isConnected then isConnectedAdjacent2d || isConnectedNonAdjacent2d
@@ -113,12 +113,12 @@ type NDimensionalStructure<'Grid, 'Position> =
         if this.NonAdjacent2DConnections.ExistNeighbor nCoordinate otherNCoordinate then
             this.NonAdjacent2DConnections.UpdateConnection connectionType nCoordinate otherNCoordinate
         elif nCoordinate.IsSame2DDimension otherNCoordinate then
-            (this.Slice2D nCoordinate.ToDimension).UpdateConnection connectionType nCoordinate.ToCoordinate2D otherNCoordinate.ToCoordinate2D
+            (this.Slice2D nCoordinate.Dimension).UpdateConnection connectionType nCoordinate.Coordinate2D otherNCoordinate.Coordinate2D
 
     member this.IfNotAtLimitUpdateConnection connectionType nCoordinate otherNCoordinate =
         if (this.NonAdjacent2DConnections.ExistNeighbor nCoordinate otherNCoordinate) ||
            ((nCoordinate.IsSame2DDimension otherNCoordinate) &&
-            not ((this.Slice2D nCoordinate.ToDimension).IsLimitAt nCoordinate.ToCoordinate2D otherNCoordinate.ToCoordinate2D)) then
+            not ((this.Slice2D nCoordinate.Dimension).IsLimitAt nCoordinate.Coordinate2D otherNCoordinate.Coordinate2D)) then
 
             this.UpdateConnection connectionType nCoordinate otherNCoordinate
 
@@ -145,7 +145,7 @@ type NDimensionalStructure<'Grid, 'Position> =
                             Close (NCoordinate.create dimension fromCoordinate) (NCoordinate.create dimension toCoordinate)
 
     member this.OpenCell (nCoordinate : NCoordinate) =
-        (this.Slice2D nCoordinate.ToDimension).OpenCell nCoordinate.ToCoordinate2D
+        (this.Slice2D nCoordinate.Dimension).OpenCell nCoordinate.Coordinate2D
 
     member this.CostOfCoordinate nCoordinate =
         1 + (this.Obstacles.Cost nCoordinate)

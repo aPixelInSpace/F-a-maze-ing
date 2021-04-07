@@ -37,7 +37,7 @@ let private calculatePointsQuadrant pentGreatSide pointD thetaRotation =
     ((sx,sy), (ax,ay), (bx,by), (cx,cy), pointD)
 
 let private calculatePointsQuadrantOne calculatePointD calculatePointsQuadrant (coordinate : NCoordinate) =
-    let quadrantOnePointD = calculatePointD coordinate.ToCoordinate2D
+    let quadrantOnePointD = calculatePointD coordinate.Coordinate2D
     
     calculatePointsQuadrant
         quadrantOnePointD
@@ -46,7 +46,7 @@ let private calculatePointsQuadrantOne calculatePointD calculatePointsQuadrant (
 let private thetaQuadrantTwoTranslation = convertToRadian (thetaDegBase + 45.0)
 let private thetaQuadrantTwoRotation = thetaRadBase + theta270
 let private calculatePointsQuadrantTwo calculatePointD calculatePointsQuadrant hypGreatSide (coordinate : NCoordinate) =
-    let quadrantOnePointD = calculatePointD {coordinate.ToCoordinate2D with CIndex = coordinate.ToCoordinate2D.CIndex + 1}
+    let quadrantOnePointD = calculatePointD {coordinate.Coordinate2D with CIndex = coordinate.Coordinate2D.CIndex + 1}
     let quadrantTwoPointD = calculatePoint quadrantOnePointD thetaQuadrantTwoTranslation hypGreatSide
 
     calculatePointsQuadrant
@@ -56,7 +56,7 @@ let private calculatePointsQuadrantTwo calculatePointD calculatePointsQuadrant h
 let private thetaQuadrantThreeTranslation = convertToRadian (thetaDegBase - 45.0)
 let private thetaQuadrantThreeRotation = thetaRadBase + theta90
 let private calculatePointsQuadrantThree calculatePointD calculatePointsQuadrant hypGreatSide (coordinate : NCoordinate) =
-    let quadrantOnePointD = calculatePointD coordinate.ToCoordinate2D
+    let quadrantOnePointD = calculatePointD coordinate.Coordinate2D
     let quadrantThreePointD = calculatePoint quadrantOnePointD thetaQuadrantThreeTranslation hypGreatSide
 
     calculatePointsQuadrant
@@ -65,7 +65,7 @@ let private calculatePointsQuadrantThree calculatePointD calculatePointsQuadrant
 
 let private thetaQuadrantFourRotation = thetaRadBase + theta180
 let private calculatePointsQuadrantFour calculatePointD calculatePointsQuadrant pentGreatSide (coordinate : NCoordinate) =
-    let quadrantOnePointD = calculatePointD { RIndex = coordinate.ToCoordinate2D.RIndex - 1; CIndex = coordinate.ToCoordinate2D.CIndex + 1}
+    let quadrantOnePointD = calculatePointD { RIndex = coordinate.Coordinate2D.RIndex - 1; CIndex = coordinate.Coordinate2D.CIndex + 1}
     let quadrantFourPointD = calculatePoint quadrantOnePointD thetaRadBase (2.0 * pentGreatSide)
 
     calculatePointsQuadrant
@@ -73,7 +73,7 @@ let private calculatePointsQuadrantFour calculatePointD calculatePointsQuadrant 
         thetaQuadrantFourRotation
 
 let private calculatePoints calculatePointD calculatePointsQuadrant (pentGreatSide, hypGreatSide) (coordinate : NCoordinate) =
-    match PentaCairoPositionHandler.Quadrant coordinate.ToCoordinate2D with
+    match PentaCairoPositionHandler.Quadrant coordinate.Coordinate2D with
     | One -> calculatePointsQuadrantOne calculatePointD calculatePointsQuadrant coordinate
     | Two -> calculatePointsQuadrantTwo calculatePointD calculatePointsQuadrant hypGreatSide coordinate
     | Three -> calculatePointsQuadrantThree calculatePointD calculatePointsQuadrant hypGreatSide coordinate
@@ -88,7 +88,7 @@ let center calculatePoints coordinate =
     middlePoint middleLittleSide b // this is a good enough approximation
 
 let private appendWallsType calculatePoints (grid : IAdjacentStructure<GridArray2D<PentaCairoPosition>, PentaCairoPosition>) appendWall (coordinate : NCoordinate) (sBuilder : StringBuilder) =
-    let coordinate2D = coordinate.ToCoordinate2D
+    let coordinate2D = coordinate.Coordinate2D
     let cell = grid.Cell coordinate2D
 
     let ((sx,sy), (ax,ay), (bx,by), (cx,cy), (dx,dy)) =

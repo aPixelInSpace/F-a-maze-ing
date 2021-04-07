@@ -303,7 +303,7 @@ let ``Given a map, when getting the farthest coordinates, then it should return 
     let expectedFarthestCoordinates = [| { RIndex = 6; CIndex = 9 }; { RIndex = 9; CIndex = 2 }; { RIndex = 9; CIndex = 6 }; { RIndex = 9; CIndex = 8 } |]
 
     map.FarthestFromRoot.Coordinates
-    |> Array.map(fun c -> c.ToCoordinate2D)
+    |> Array.map(fun c -> c.Coordinate2D)
     |> Array.sortBy(fun c -> c.RIndex, c.CIndex)
     |> should equal expectedFarthestCoordinates
 

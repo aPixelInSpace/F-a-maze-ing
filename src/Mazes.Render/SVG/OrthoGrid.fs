@@ -71,7 +71,7 @@ type Parameters =
         }
 
 let private calculatePoints (parameters : Parameters) (calculateHeight, calculateWidth) (coordinate : NCoordinate) =
-    let coordinate2D = coordinate.ToCoordinate2D
+    let coordinate2D = coordinate.Coordinate2D
     let (baseX, baseY) = (calculateWidth coordinate2D.CIndex, calculateHeight coordinate2D.RIndex)
     let (leftTopX, leftTopY) = ((float)baseX, (float)baseY)
     let (rightTopX, rightTopY) = ((float)(baseX + parameters.Width), (float)baseY)
@@ -90,11 +90,11 @@ let private appendWallsType (parameters : Parameters) calculatePoints getRadius 
     let ((leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY), orientation) =
         calculatePoints coordinate
 
-    let coordinate2D = coordinate.ToCoordinate2D
+    let coordinate2D = coordinate.Coordinate2D
     let cell = grid.Cell coordinate2D
     
     let inverseOrientationL =
-        let coordinate2D = coordinate.ToCoordinate2D
+        let coordinate2D = coordinate.Coordinate2D
         match coordinate2D.RIndex, coordinate2D.CIndex with
         | _, 0 -> orientation
         | _ -> if orientation = "0" then "1" else "0"
@@ -149,7 +149,7 @@ let private wholeCellLines (parameters : Parameters) calculatePoints getRadius (
         let (ltRtRx, ltRtRy) = getRadius (leftTopX, leftTopY) (rightTopX, rightTopY)
 
         let inverseOrientationL =
-            let coordinate2D = coordinate.ToCoordinate2D
+            let coordinate2D = coordinate.Coordinate2D
             match coordinate2D.RIndex, coordinate2D.CIndex with
             | _, 0 -> orientation
             | _ -> if orientation = "0" then "1" else "0"

@@ -1,8 +1,7 @@
 ﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-namespace Mazes.Core
+namespace Mazes.Core.Refac
 
-/// 2D coordinate
 [<Struct>]
 type Coordinate2D =
     {
@@ -13,10 +12,14 @@ type Coordinate2D =
     override this.ToString() =
         $"{this.RIndex};{this.CIndex}"
 
-/// Indicate the dimension, starting from the third
-type Dimension = int array
+/// Dimension, starting from the third
+type Dimension = Dimension of int array
 
-/// Coordinate for N dimensions
+module Dimension =
+    
+    let value (Dimension d) = d
+
+/// N dimensions coordinate
 [<Struct>]
 type NCoordinate =
     {
@@ -24,12 +27,9 @@ type NCoordinate =
         Dimension : Dimension
     }
 
-    member this.IsSame2DDimension (otherNCoordinate : NCoordinate) =
-        this.Dimension = otherNCoordinate.Dimension
-
     override this.ToString() =
         this.Coordinate2D.ToString() + ";" +
-        (("", this.Dimension) ||> Array.fold(fun s n -> s + $"{n};"))
+        (("", (this.Dimension |> Dimension.value)) ||> Array.fold(fun s n -> s + $"{n};"))
 
 module NCoordinate =
 
@@ -39,5 +39,8 @@ module NCoordinate =
             Dimension = dimension
         }
 
+    let isSame2DDimension nCoordinate otherNCoordinate =
+        nCoordinate.Dimension = otherNCoordinate.Dimension
+
     let createFrom2D (coordinate : Coordinate2D) =
-        create [| 0 |] coordinate
+        create ([| 0 |] |> Dimension) coordinate

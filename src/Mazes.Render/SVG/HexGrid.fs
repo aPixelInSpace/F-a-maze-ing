@@ -12,11 +12,11 @@ open Mazes.Core.Structure.Grid2D.Type.Hex
 open Mazes.Render.SVG.Base
 
 let private calculatePoints (hexEdgeSize, hexHalfEdgeSize, hexWidth, hexHalfHeight, hexHeight, marginWidth, marginHeight) (coordinate : NCoordinate) =
-    let lengthAtLeft = (float)coordinate.ToCoordinate2D.CIndex * (3.0 * hexHalfEdgeSize) + marginWidth
+    let lengthAtLeft = (float)coordinate.Coordinate2D.CIndex * (3.0 * hexHalfEdgeSize) + marginWidth
     let lengthAtTop =
-        match (HexPositionHandler.IsEven coordinate.ToCoordinate2D) with
-        | true -> (float)coordinate.ToCoordinate2D.RIndex * hexHeight + hexHalfHeight + marginHeight
-        | false -> (float)coordinate.ToCoordinate2D.RIndex * hexHeight + marginHeight
+        match (HexPositionHandler.IsEven coordinate.Coordinate2D) with
+        | true -> (float)coordinate.Coordinate2D.RIndex * hexHeight + hexHalfHeight + marginHeight
+        | false -> (float)coordinate.Coordinate2D.RIndex * hexHeight + marginHeight
 
     let leftX = lengthAtLeft
     let leftY = lengthAtTop + hexHalfHeight
@@ -47,7 +47,7 @@ let private appendWallsType calculatePoints (grid : IAdjacentStructure<GridArray
     let ((leftX, leftY), (topLeftX, topLeftY), (topRightX, topRightY), (rightX, rightY), (bottomLeftX, bottomLeftY), (bottomRightX, bottomRightY)) =
         calculatePoints coordinate
 
-    let coordinate2D = coordinate.ToCoordinate2D
+    let coordinate2D = coordinate.Coordinate2D
     let cell = grid.Cell coordinate2D
 
     for position in HexPositionHandler.Instance.Values coordinate2D do
