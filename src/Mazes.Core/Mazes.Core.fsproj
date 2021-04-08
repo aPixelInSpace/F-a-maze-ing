@@ -56,13 +56,24 @@
         <Compile Include="Refac\Utils.fs" />
         <Compile Include="Refac\Coordinate.fs" />
         <Compile Include="Refac\Trigonometry.fs" />
+        <Compile Include="Refac\Disposition.fs" />
         <Compile Include="Refac\Connection.fs" />
         <Compile Include="Refac\Obstacle.fs" />
         <Compile Include="Refac\Array2D.fs" />
         <Compile Include="Refac\ArrayOfA.fs" />
         <Folder Include="Refac\Analysis" />
         <Compile Include="Refac\Canvas\Zone.fs" />
-        <Compile Include="Refac\Canvas\Canvas.fs" />
+        <Compile Include="Refac\Canvas\CanvasArray2D.fs" />
+        <Compile Include="Refac\Canvas\CanvasArrayOfA.fs" />
+        <Compile Include="Refac\Canvas\Shape\Rectangle.fs" />
+        <Compile Include="Refac\Canvas\Shape\TriangleIsosceles.fs" />
+        <Compile Include="Refac\Canvas\Shape\Ellipse.fs" />
+        <Compile Include="Refac\Canvas\Shape\Hexagon.fs" />
+        <Compile Include="Refac\Canvas\Shape\Pentagon.fs" />
+        <Compile Include="Refac\Canvas\Shape\Disk.fs" />
+        <Compile Include="Refac\Structure\Connection.fs" />
+        <Compile Include="Refac\Structure\GridArray2D.fs" />
+        <Compile Include="Refac\Structure\NDimensionalStructure.fs" />
     </ItemGroup>
 
     <ItemGroup>

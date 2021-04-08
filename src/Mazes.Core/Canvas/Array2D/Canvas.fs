@@ -84,7 +84,7 @@ module Convert =
 
         let appendRow (sBuilder : StringBuilder) rowZones =
             rowZones
-            |> Array.iter(fun zone -> appendZone sBuilder zone)
+            |> Array.iter(appendZone sBuilder)
 
             sBuilder.Append('\n') |> ignore
 
@@ -92,7 +92,7 @@ module Convert =
         sBuilder.Append(startLineTag + "\n") |> ignore
         canvas.Zones
             |> extractByRows
-            |> Seq.iter(fun rowZones -> appendRow sBuilder rowZones)
+            |> Seq.iter(appendRow sBuilder)
 
         sBuilder.Append(endLineTag) |> ignore
 
@@ -107,7 +107,11 @@ module Convert =
                 | false -> lines.[1].Length
                 | true -> 0
 
-            let zones = Array2D.init numberOfRows numberOfColumns (fun rowIndex columnIndex -> Zone.create ((charToZone lines.[rowIndex + 1].[columnIndex]) = PartOfMaze))
+            let zones =
+                Array2D.init
+                    numberOfRows
+                    numberOfColumns
+                    (fun rowIndex columnIndex -> Zone.create ((charToZone lines.[rowIndex + 1].[columnIndex]) = PartOfMaze))
 
             Some { Zones = zones; }            
         else

@@ -24,69 +24,6 @@ module ConnectionState =
     let isConnected connectionType =
         connectionType = Open
 
-type OrthogonalPosition =
-    | Left
-    | Top
-    | Right
-    | Bottom
-
-type PolarPosition =
-    | Inward
-    | Outward
-    /// Clockwise
-    | Cw
-    /// Counter-clockwise
-    | Ccw
-
-type HexagonalPosition =
-    | TopLeft
-    | Top
-    | TopRight
-    | BottomLeft
-    | Bottom
-    | BottomRight
-
-type TriangularPosition =
-    | Left
-    | Top
-    | Right
-    | Bottom
-
-type OctagonalSquarePosition =
-    | Left
-    | TopLeft
-    | Top
-    | TopRight
-    | Right
-    | BottomLeft
-    | Bottom
-    | BottomRight
-
-/// Typical left, top ... doesn't make really sense here (because the form has four rotated forms), so
-/// S is the small side of the congruent convex pentagon
-/// then clockwise : A, B, C and D
-type PentagonalCairoPosition =
-    /// Small side
-    | S
-    | A
-    | B
-    | C
-    | D
-
-type Position =
-    | Orthogonal of OrthogonalPosition
-    | Polar of PolarPosition
-    | Hexagonal of HexagonalPosition
-    | Triangular of TriangularPosition
-    | OctagonalSquare of OctagonalSquarePosition
-    | PentagonalCairo of PentagonalCairoPosition
-
-[<Struct>]
-type PositionConnection = {
-    State : ConnectionState
-    Position : Position
-}
-
 // todo : change the use of Dictionary to the F# immutable data structure equivalent 
 /// Can contain any connection between any two NCoordinate but will typically be used for non 2D adjacent connection
 type CoordinateConnections = private CoordinateConnections of Dictionary<NCoordinate, Dictionary<NCoordinate, ConnectionState>>

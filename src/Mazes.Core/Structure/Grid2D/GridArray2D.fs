@@ -53,7 +53,7 @@ type GridArray2D<'Position when 'Position : equality> =
             let unconnectedPartOfMazeCells =
                 this.ToInterface.CoordinatesPartOfMaze
                 |> Seq.filter(fun c ->
-                    not (this.ToInterface.IsCellConnected c || this.ToInterface.IsCellConnected c))
+                    not (this.ToInterface.IsCellConnected c))
                 |> Seq.toArray
 
             unconnectedPartOfMazeCells.[rng.Next(unconnectedPartOfMazeCells.Length)]
