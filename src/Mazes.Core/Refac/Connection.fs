@@ -24,6 +24,12 @@ module ConnectionState =
     let isConnected connectionType =
         connectionType = Open
 
+[<Struct>]
+type Connection<'Position> = {
+    State : ConnectionState
+    Position : 'Position 
+}
+
 // todo : change the use of Dictionary to the F# immutable data structure equivalent 
 /// Can contain any connection between any two NCoordinate but will typically be used for non 2D adjacent connection
 type CoordinateConnections = private CoordinateConnections of Dictionary<NCoordinate, Dictionary<NCoordinate, ConnectionState>>

@@ -67,3 +67,48 @@ module GridArray2D =
             |> Seq.toArray
 
         unconnectedPartOfMazeCells.[rng.Next(unconnectedPartOfMazeCells.Length)]
+
+    let isLimitAt g coordinate position =
+        let zone = Canvas.CanvasArray2D.zone g.Canvas coordinate
+        let cell = cell g coordinate
+
+        let neighborCondition =
+            fun () ->
+                let neighborCoordinate = CellArray2D.neighborCoordinateAt coordinate position
+
+                match neighborCoordinate with
+                | Some neighborCoordinate ->
+                    not ((Canvas.CanvasArray2D.existAt g.Canvas neighborCoordinate) &&
+                        (Canvas.CanvasArray2D.zone g.Canvas neighborCoordinate).IsAPartOfMaze)
+                | None -> true
+
+        not zone.IsAPartOfMaze ||
+        (CellArray2D.connectionStateAtPosition cell position) = ClosePersistent ||
+        neighborCondition()
+
+    let areConnected g coordinate otherCoordinate =
+        let cell = (cell g coordinate)
+        let neighborPos = CellArray2D.neighborPositionAt cell coordinate otherCoordinate
+
+        not (isLimitAt g coordinate neighborPos) &&        
+        (CellArray2D.connectionStateAtPosition cell neighborPos) = Open
+
+    let neighbors g coordinate =
+        let cell = cell g coordinate
+
+        Canvas.CanvasArray2D.neighborsPartOfMazeOf g.Canvas (CellArray2D.listOfPossibleCoordinate cell coordinate) 
+        |> Seq.filter(fun (_, nPosition) -> not (isLimitAt g coordinate nPosition))
+        |> Seq.map(fst)
+
+    let neighbor coordinate position =
+        (CellArray2D.neighborCoordinateAt coordinate position)
+
+    let updateConnectionState g connectionState coordinate otherCoordinate =
+        let currentCell = cell g coordinate
+        let otherCell = cell g otherCoordinate
+        
+        g.Cells.[coordinate.RIndex, coordinate.CIndex] <-
+            CellArray2D.cellWithStateAtPosition currentCell connectionState (CellArray2D.neighborPositionAt currentCell coordinate otherCoordinate)
+        
+        g.Cells.[otherCoordinate.RIndex, otherCoordinate.CIndex] <-
+            CellArray2D.cellWithStateAtPosition otherCell connectionState (CellArray2D.neighborPositionAt otherCell otherCoordinate coordinate)

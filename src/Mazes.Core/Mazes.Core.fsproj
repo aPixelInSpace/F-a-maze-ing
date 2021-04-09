@@ -71,7 +71,8 @@
         <Compile Include="Refac\Canvas\Shape\Hexagon.fs" />
         <Compile Include="Refac\Canvas\Shape\Pentagon.fs" />
         <Compile Include="Refac\Canvas\Shape\Disk.fs" />
-        <Compile Include="Refac\Structure\Connection.fs" />
+        <Compile Include="Refac\Structure\Orthogonal.fs" />
+        <Compile Include="Refac\Structure\CellArray2D.fs" />
         <Compile Include="Refac\Structure\GridArray2D.fs" />
         <Compile Include="Refac\Structure\NDimensionalStructure.fs" />
     </ItemGroup>

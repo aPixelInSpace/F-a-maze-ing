@@ -3,6 +3,7 @@
 module Mazes.Core.Refac.Utils
 
     open System
+    open Microsoft.FSharp.Reflection
 
     /// Returns a Key that is the same if the items are the same without considering the order
     let getKey (item1, item2) =
@@ -18,3 +19,13 @@ module Mazes.Core.Refac.Utils
             array.[i] <- temp
 
         array
+
+    // https://gist.github.com/curtnichols/67e370f21370430fcc54cf43f67273d3
+    // Let's enumerate the cases of a discriminated union.
+    // Assumes none of the cases have fields.
+    let seqOfUnionCases<'UnionType> () =
+
+        FSharpType.GetUnionCases typeof<'UnionType>
+        |> Seq.map (fun caseInfo -> FSharpValue.MakeUnion(caseInfo, [||]) :?> 'UnionType)
+
+    let arrayOfUnionCases<'UnionType> () = seqOfUnionCases<'UnionType> () |> Seq.toArray
