@@ -7,10 +7,9 @@ open Mazes.Core.Refac
 open Mazes.Core.Refac.Array2D
 
 type CanvasArray2D =
-    private
-        {
-            Zones : Zone[,]
-        }
+    {
+        Zones : Zone[,]
+    }
 
 module CanvasArray2D =
     
@@ -49,11 +48,11 @@ module CanvasArray2D =
                     yield (coordinate, position)
         }
 
-    let getFirstPartOfMazeZone c =
+    let firstPartOfMazeZone c =
         getZoneByZone c RowsAscendingColumnsAscending (fun zone _ -> zone.IsAPartOfMaze)
         |> Seq.head
 
-    let getLastPartOfMazeZone c =
+    let lastPartOfMazeZone c =
         getZoneByZone c RowsDescendingColumnsDescending (fun zone _ -> zone.IsAPartOfMaze)
         |> Seq.head
 

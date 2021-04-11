@@ -9,6 +9,7 @@ type GridArray2D =
     private
         {
             Canvas : Canvas.CanvasArray2D
+            Disposition : DispositionArray2D
             Cells : CellArray2D[,]
         }
 
@@ -26,14 +27,11 @@ module GridArray2D =
     let cIndexes g =
         g.Cells |> Array2D.getCIndexes
 
-    let dimension1Boundaries g _ =
+    let dimension1Boundaries g =
         (0, Canvas.CanvasArray2D.numberOfRows g.Canvas)
 
-    let dimension2Boundaries g _ =
+    let dimension2Boundaries g =
         (0, Canvas.CanvasArray2D.numberOfColumns g.Canvas)
-
-    let adjustedCoordinate _ coordinate =
-        coordinate
 
     let existAt g coordinate =
         Array2D.existAt g.Cells coordinate
@@ -51,7 +49,7 @@ module GridArray2D =
         Canvas.CanvasArray2D.isZonePartOfMaze g.Canvas coordinate
 
     let isCellConnected g coordinate =
-        CellArray2D.connectionsState (cell g coordinate)
+        CellArray2D.connectionsStates (cell g coordinate)
         |> Array.filter(fun c -> c = Open)
         |> Array.length > 0
 
@@ -68,13 +66,13 @@ module GridArray2D =
 
         unconnectedPartOfMazeCells.[rng.Next(unconnectedPartOfMazeCells.Length)]
 
-    let isLimitAt g coordinate position =
+    let isLimitAtPosition g coordinate position =
         let zone = Canvas.CanvasArray2D.zone g.Canvas coordinate
         let cell = cell g coordinate
 
         let neighborCondition =
             fun () ->
-                let neighborCoordinate = CellArray2D.neighborCoordinateAt coordinate position
+                let neighborCoordinate = CellArray2D.neighborCoordinateAt cell coordinate position
 
                 match neighborCoordinate with
                 | Some neighborCoordinate ->
@@ -86,29 +84,82 @@ module GridArray2D =
         (CellArray2D.connectionStateAtPosition cell position) = ClosePersistent ||
         neighborCondition()
 
+    let isLimitAtCoordinate g coordinate otherCoordinate =
+        isLimitAtPosition g coordinate (CellArray2D.neighborPositionAt (cell g coordinate) coordinate otherCoordinate)
+
     let areConnected g coordinate otherCoordinate =
         let cell = (cell g coordinate)
         let neighborPos = CellArray2D.neighborPositionAt cell coordinate otherCoordinate
 
-        not (isLimitAt g coordinate neighborPos) &&        
+        not (isLimitAtPosition g coordinate neighborPos) &&        
         (CellArray2D.connectionStateAtPosition cell neighborPos) = Open
 
     let neighbors g coordinate =
         let cell = cell g coordinate
 
         Canvas.CanvasArray2D.neighborsPartOfMazeOf g.Canvas (CellArray2D.listOfPossibleCoordinate cell coordinate) 
-        |> Seq.filter(fun (_, nPosition) -> not (isLimitAt g coordinate nPosition))
+        |> Seq.filter(fun (_, nPosition) -> not (isLimitAtPosition g coordinate nPosition))
         |> Seq.map(fst)
 
-    let neighbor coordinate position =
-        (CellArray2D.neighborCoordinateAt coordinate position)
+    let neighbor g coordinate position =
+        let cell = cell g coordinate
+        (CellArray2D.neighborCoordinateAt cell coordinate position)
 
     let updateConnectionState g connectionState coordinate otherCoordinate =
         let currentCell = cell g coordinate
         let otherCell = cell g otherCoordinate
         
         g.Cells.[coordinate.RIndex, coordinate.CIndex] <-
-            CellArray2D.cellWithStateAtPosition currentCell connectionState (CellArray2D.neighborPositionAt currentCell coordinate otherCoordinate)
+            CellArray2D.newCellWithStateAtPosition currentCell connectionState (CellArray2D.neighborPositionAt currentCell coordinate otherCoordinate)
         
         g.Cells.[otherCoordinate.RIndex, otherCoordinate.CIndex] <-
-            CellArray2D.cellWithStateAtPosition otherCell connectionState (CellArray2D.neighborPositionAt otherCell otherCoordinate coordinate)
+            CellArray2D.newCellWithStateAtPosition otherCell connectionState (CellArray2D.neighborPositionAt otherCell otherCoordinate coordinate)
+
+    let ifNotAtLimitUpdateConnectionState g connectionState coordinate otherCoordinate =
+        if not (isLimitAtCoordinate g coordinate otherCoordinate) then
+            updateConnectionState g connectionState coordinate otherCoordinate
+
+    let openCell g coordinate =
+        let cell = cell g coordinate
+        let candidatePosition =
+            (CellArray2D.listOfPossibleCoordinate cell coordinate)
+            |> Seq.tryFind(fun (c, _) -> (not (existAt g c)) || (not (isCellPartOfMaze g c)))
+
+        match candidatePosition with
+        | Some (_, position) ->
+            g.Cells.[coordinate.RIndex, coordinate.CIndex] <-
+                CellArray2D.newCellWithStateAtPosition cell Open position
+        | None -> ()
+
+    let weaveCoordinates g coordinates =
+        match g.Disposition with
+        | Orthogonal _ -> OrthoCell.weaveCoordinates coordinates
+
+    let firstCellPartOfMaze g =
+        Canvas.CanvasArray2D.firstPartOfMazeZone g.Canvas
+
+    let lastCellPartOfMaze g =
+        Canvas.CanvasArray2D.lastPartOfMazeZone g.Canvas
+
+    let private createInternal cellCreation internalConnectionType (canvas : Canvas.CanvasArray2D) disposition =
+        let cells =
+            canvas.Zones |>
+            Array2D.mapi(fun rowIndex columnIndex _ ->
+                cellCreation
+                    (Canvas.CanvasArray2D.numberOfRows canvas)
+                    (Canvas.CanvasArray2D.numberOfColumns canvas)
+                    internalConnectionType
+                    { RIndex = rowIndex; CIndex = columnIndex }
+                    (Canvas.CanvasArray2D.isZonePartOfMaze canvas))
+
+        {
+          Canvas = canvas
+          Disposition = disposition
+          Cells = cells
+        }
+
+    let createBaseGrid cellCreation canvas disposition =
+        createInternal cellCreation Close canvas disposition
+
+    let createEmptyBaseGrid cellCreation canvas disposition =
+        createInternal cellCreation Open canvas disposition
