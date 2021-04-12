@@ -18,6 +18,7 @@ type Options = {
 }
 
 let handleVerb canvas (options : Parsed<Options>) =
+    
     let nStruct =
         canvas
         |> match options.Value.empty with

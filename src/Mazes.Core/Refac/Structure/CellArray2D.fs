@@ -13,22 +13,27 @@ module CellArray2D =
     let listOfPossibleCoordinate c coordinate =
         match c with
         | OrthoCellChoice _ ->
-            OrthoCell.listOfPossiblePositionsCoordinates coordinate
+            OrthoCellM.listOfPossiblePositionsCoordinates coordinate
     
     let connectionsStates c =
         match c with
         | OrthoCellChoice c ->
-            OrthoCell.value c
+            OrthoCellM.value c
             |> Array.map(fun c -> c.State)
 
     let neighborCoordinateAt c coordinate position =
         match c with
         | OrthoCellChoice _ ->
-            OrthoCell.neighborCoordinateAt coordinate position
+            OrthoCellM.neighborCoordinateAt coordinate position
+
+    let create isCellPartOfMaze disposition numberOfRows numberOfColumns internalConnectionState coordinate =
+        match disposition with
+        | GridArray2DType.Orthogonal ->
+            OrthoCellM.create isCellPartOfMaze numberOfRows numberOfColumns internalConnectionState coordinate |> OrthoCellChoice
 
     let connectionStateAtPosition c position =
         match c, position with
-        | OrthoCellChoice c, DispositionArray2D.Orthogonal p -> OrthoCell.connectionStateAtPosition c p
+        | OrthoCellChoice c, DispositionArray2D.Orthogonal p -> OrthoCellM.connectionStateAtPosition c p
 
     let neighborPositionAt c coordinate otherCoordinate =
         snd
@@ -38,5 +43,5 @@ module CellArray2D =
     let newCellWithStateAtPosition cell connectionState position =
         match cell, position with
         | OrthoCellChoice cell, DispositionArray2D.Orthogonal p ->
-            OrthoCell.newCellWithStateAtPosition cell connectionState p
+            OrthoCellM.newCellWithStateAtPosition cell connectionState p
             |> OrthoCellChoice

@@ -9,7 +9,7 @@ open Mazes.Core.Refac.Array2D
 [<Struct>]
 type OrthoCell = OrthoCell of Connection<OrthogonalDisposition> array
 
-module OrthoCell =
+module OrthoCellM =
 
     let value (OrthoCell c) = c
 
@@ -26,7 +26,7 @@ module OrthoCell =
         |> Array.tryFind(fun pc -> (snd pc) = position)
         |> Option.map(fst)
 
-    let create numberOfRows numberOfColumns internalConnectionState (coordinate : Coordinate2D) isCellPartOfMaze =
+    let create isCellPartOfMaze numberOfRows numberOfColumns internalConnectionState (coordinate : Coordinate2D) =
         let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
 
         let getConnectionState isOnEdge position =

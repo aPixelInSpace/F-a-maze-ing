@@ -9,7 +9,7 @@ type GridArray2D =
     private
         {
             Canvas : Canvas.CanvasArray2D
-            Disposition : DispositionArray2D
+            Type : GridArray2DType
             Cells : CellArray2D[,]
         }
 
@@ -132,8 +132,8 @@ module GridArray2D =
         | None -> ()
 
     let weaveCoordinates g coordinates =
-        match g.Disposition with
-        | Orthogonal _ -> OrthoCell.weaveCoordinates coordinates
+        match g.Type with
+        | GridArray2DType.Orthogonal -> OrthoCellM.weaveCoordinates coordinates
 
     let firstCellPartOfMaze g =
         Canvas.CanvasArray2D.firstPartOfMazeZone g.Canvas
@@ -141,25 +141,26 @@ module GridArray2D =
     let lastCellPartOfMaze g =
         Canvas.CanvasArray2D.lastPartOfMazeZone g.Canvas
 
-    let private createInternal cellCreation internalConnectionType (canvas : Canvas.CanvasArray2D) disposition =
+    let private createInternal internalConnectionType (canvas : Canvas.CanvasArray2D) gridType =
         let cells =
             canvas.Zones |>
             Array2D.mapi(fun rowIndex columnIndex _ ->
-                cellCreation
+                CellArray2D.create
+                    (Canvas.CanvasArray2D.isZonePartOfMaze canvas)
+                    gridType
                     (Canvas.CanvasArray2D.numberOfRows canvas)
                     (Canvas.CanvasArray2D.numberOfColumns canvas)
                     internalConnectionType
-                    { RIndex = rowIndex; CIndex = columnIndex }
-                    (Canvas.CanvasArray2D.isZonePartOfMaze canvas))
+                    { RIndex = rowIndex; CIndex = columnIndex })
 
         {
           Canvas = canvas
-          Disposition = disposition
+          Type = gridType
           Cells = cells
         }
 
-    let createBaseGrid cellCreation canvas disposition =
-        createInternal cellCreation Close canvas disposition
+    let createBaseGrid canvas disposition =
+        createInternal Close canvas disposition
 
-    let createEmptyBaseGrid cellCreation canvas disposition =
-        createInternal cellCreation Open canvas disposition
+    let createEmptyBaseGrid canvas disposition =
+        createInternal Open canvas disposition

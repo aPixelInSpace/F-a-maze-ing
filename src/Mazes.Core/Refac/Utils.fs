@@ -21,11 +21,13 @@ module Mazes.Core.Refac.Utils
         array
 
     // https://gist.github.com/curtnichols/67e370f21370430fcc54cf43f67273d3
-    // Let's enumerate the cases of a discriminated union.
-    // Assumes none of the cases have fields.
+    /// Let's enumerate the cases of a discriminated union.
+    /// Assumes none of the cases have fields.
     let seqOfUnionCases<'UnionType> () =
 
         FSharpType.GetUnionCases typeof<'UnionType>
         |> Seq.map (fun caseInfo -> FSharpValue.MakeUnion(caseInfo, [||]) :?> 'UnionType)
 
+    /// Let's enumerate the cases of a discriminated union.
+    /// Assumes none of the cases have fields.
     let arrayOfUnionCases<'UnionType> () = seqOfUnionCases<'UnionType> () |> Seq.toArray
