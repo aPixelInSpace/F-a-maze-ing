@@ -2,12 +2,7 @@
 
 namespace Mazes.Core.Refac.Structure
 
-type GridArray2DType =
-    | Orthogonal
-    | Hexagonal
-    | Triangular
-    | OctagonalSquare
-    | PentagonalCairo
+open Mazes.Core.Refac
 
-type GridArrayOfAType =
-    | Polar
+[<Struct>]
+type PolarCell = PolarCell of Connection<OrthogonalDisposition> array

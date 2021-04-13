@@ -2,13 +2,13 @@
 
 namespace Mazes.Core.Refac.Structure
 
-open System.Collections.Generic
+open System
 open Mazes.Core.Refac
 
-type NDimensionalStructure =
+type GridArrayOfA =
     private
         {
-            Structure : Dictionary<Dimension, Grid>
-            CoordinateConnections : CoordinateConnections
-            Obstacles : Obstacles
+            Canvas : Canvas.CanvasArrayOfA
+            Type : GridArrayOfAType
+            Cells : CellArrayOfA[][]
         }

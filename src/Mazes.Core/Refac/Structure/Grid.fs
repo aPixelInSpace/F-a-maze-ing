@@ -2,12 +2,7 @@
 
 namespace Mazes.Core.Refac.Structure
 
-type GridArray2DType =
-    | Orthogonal
-    | Hexagonal
-    | Triangular
-    | OctagonalSquare
-    | PentagonalCairo
-
-type GridArrayOfAType =
-    | Polar
+type Grid =
+    | GridArray2DChoice of GridArray2D
+    | GridArrayOfAChoice of GridArrayOfA
+    

@@ -73,8 +73,12 @@
         <Compile Include="Refac\Canvas\Shape\Disk.fs" />
         <Compile Include="Refac\Structure\GridType.fs" />
         <Compile Include="Refac\Structure\Orthogonal.fs" />
+        <Compile Include="Refac\Structure\Polar.fs" />
         <Compile Include="Refac\Structure\CellArray2D.fs" />
+        <Compile Include="Refac\Structure\CellArrayOfA.fs" />
         <Compile Include="Refac\Structure\GridArray2D.fs" />
+        <Compile Include="Refac\Structure\GridArrayOfA.fs" />
+        <Compile Include="Refac\Structure\Grid.fs" />
         <Compile Include="Refac\Structure\NDimensionalStructure.fs" />
     </ItemGroup>
 
