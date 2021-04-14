@@ -24,6 +24,17 @@ module ConnectionState =
     let isConnected connectionType =
         connectionType = Open
 
+    let getConnectionState isCellPartOfMaze neighborCoordinateAt internalConnectionState coordinate isOnEdge position =
+        let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
+        if isOnEdge then
+            getConnectionTypeForEdge isCurrentCellPartOfMaze
+        else
+            match (neighborCoordinateAt coordinate position) with
+            | Some neighborCoordinate ->
+                let isNeighborPartOfMaze = isCellPartOfMaze neighborCoordinate
+                getConnectionTypeForInternal internalConnectionState isCurrentCellPartOfMaze isNeighborPartOfMaze
+            | None -> failwith $"Could not find a connection type for the neighbor {coordinate} at {position}"
+
 [<Struct>]
 type Connection<'Position> = {
     State : ConnectionState

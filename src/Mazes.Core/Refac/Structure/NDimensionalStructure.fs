@@ -12,3 +12,27 @@ type NDimensionalStructure =
             CoordinateConnections : CoordinateConnections
             Obstacles : Obstacles
         }
+
+module NDimensionalStructure =
+
+    let slice2D n dimension =
+        n.Structure.Item(dimension)
+
+    let firstSlice2D n =
+        let firstDimension =
+            n.Structure.Keys
+            |> Seq.sort
+            |> Seq.head
+
+        (firstDimension, slice2D n firstDimension)
+
+    let totalOfMazeCells n =
+        n.Structure
+        |> Seq.sumBy(fun kv -> Grid.totalOfMazeCells kv.Value)
+
+    let existAt n (nCoordinate : NCoordinate) =
+        let dimension = nCoordinate.Dimension
+        if n.Structure.ContainsKey(dimension) then
+            Grid.existAt (slice2D n dimension) nCoordinate.Coordinate2D
+        else
+            false

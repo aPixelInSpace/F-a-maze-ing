@@ -5,4 +5,13 @@ namespace Mazes.Core.Refac.Structure
 type Grid =
     | GridArray2DChoice of GridArray2D
     | GridArrayOfAChoice of GridArrayOfA
-    
+
+module Grid =
+
+    let totalOfMazeCells g =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.totalOfMazeCells g
+
+    let existAt g =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.existAt g

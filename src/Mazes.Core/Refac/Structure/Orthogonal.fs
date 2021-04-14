@@ -27,17 +27,8 @@ module OrthoCellM =
         |> Option.map(fst)
 
     let create isCellPartOfMaze numberOfRows numberOfColumns internalConnectionState (coordinate : Coordinate2D) =
-        let isCurrentCellPartOfMaze = isCellPartOfMaze coordinate
-
-        let getConnectionState isOnEdge position =
-            if isOnEdge then
-                ConnectionState.getConnectionTypeForEdge isCurrentCellPartOfMaze
-            else
-                match (neighborCoordinateAt coordinate position) with
-                | Some neighborCoordinate ->
-                    let isNeighborPartOfMaze = isCellPartOfMaze neighborCoordinate
-                    ConnectionState.getConnectionTypeForInternal internalConnectionState isCurrentCellPartOfMaze isNeighborPartOfMaze
-                | None -> failwith $"Could not find a connection type for the neighbor {coordinate} at {position}"
+        let getConnectionState =
+            ConnectionState.getConnectionState isCellPartOfMaze neighborCoordinateAt internalConnectionState coordinate
 
         let connectionState pos =
             match pos with
@@ -46,8 +37,10 @@ module OrthoCellM =
             | OrthogonalDisposition.Bottom -> getConnectionState (isLastRow coordinate.RIndex numberOfRows) (Orthogonal OrthogonalDisposition.Bottom)
             | OrthogonalDisposition.Left -> getConnectionState (isFirstColumn coordinate.CIndex) (Orthogonal OrthogonalDisposition.Left)
 
-        [| for pos in seqOfUnionCases<OrthogonalDisposition>() do
-               { State = (connectionState pos); Position = pos } |]
+        [|
+           for pos in seqOfUnionCases<OrthogonalDisposition>() do
+               { State = (connectionState pos); Position = pos }
+        |]
         |> OrthoCell
 
     let newCellWithStateAtPosition cell connectionState position =
