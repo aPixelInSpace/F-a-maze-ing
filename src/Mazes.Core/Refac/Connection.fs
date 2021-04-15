@@ -49,7 +49,7 @@ module CoordinateConnections =
     
     let private value (CoordinateConnections cc) = cc
 
-    let updateConnection cc connectionState fromCoordinate toCoordinate =
+    let updateConnectionState cc connectionState fromCoordinate toCoordinate =
         let cc = value cc
         let addUpdate fromCoordinate toCoordinate wallType =
             if cc.ContainsKey(fromCoordinate) then

@@ -97,7 +97,7 @@ type NDimensionalStructure<'Grid, 'Position> =
             let isConnectedNonAdjacent2d = this.NonAdjacent2DConnections.IsCellConnected neighbor
 
             if isConnected then isConnectedAdjacent2d || isConnectedNonAdjacent2d
-            else not (isConnectedAdjacent2d) && not (isConnectedNonAdjacent2d))
+            else not isConnectedAdjacent2d && not isConnectedNonAdjacent2d)
         |> Seq.distinct
 
     /// Returns the neighbors coordinates that are or not connected WITH the coordinate
@@ -122,9 +122,6 @@ type NDimensionalStructure<'Grid, 'Position> =
 
             this.UpdateConnection connectionType nCoordinate otherNCoordinate
 
-    member this.UpdateConnectionNonAdjacent2DNeighbor connectionType nCoordinate otherNCoordinate =
-         this.NonAdjacent2DConnections.UpdateConnection connectionType nCoordinate otherNCoordinate
-
     member this.Weave (rng : Random) weight =
         if weight > 0.0 then
             for slice2D in this.Structure do
@@ -132,7 +129,7 @@ type NDimensionalStructure<'Grid, 'Position> =
                 let adjStruct = slice2D.Value
 
                 let weaveCoordinates = adjStruct.WeaveCoordinates adjStruct.CoordinatesPartOfMaze
-                for (fromCoordinate, toCoordinate) in weaveCoordinates do
+                for fromCoordinate, toCoordinate in weaveCoordinates do
                     if (toCoordinate.RIndex >= fst (adjStruct.Dimension1Boundaries toCoordinate.CIndex)) &&
                        (toCoordinate.RIndex < snd (adjStruct.Dimension1Boundaries toCoordinate.CIndex)) &&
                        (toCoordinate.CIndex >= fst (adjStruct.Dimension2Boundaries toCoordinate.RIndex)) &&
@@ -171,11 +168,11 @@ type NDimensionalStructure<'Grid, 'Position> =
 type ArrayEqualityComparer() =
     interface IEqualityComparer<int[]> with
         member this.Equals (a,b) = (Array.forall2 (=) a b)
-        member this.GetHashCode (a) = hash (a |> Array.map hash)
+        member this.GetHashCode a = hash (a |> Array.map hash)
 
 module NDimensionalStructure =
 
-    let create (dimensions : Dimension) (newAdjacentStructureInstance : (unit -> IAdjacentStructure<_, _>)) =
+    let create (dimensions : Dimension) (newAdjacentStructureInstance : unit -> IAdjacentStructure<_, _>) =
         let baseAdjStruct = newAdjacentStructureInstance()
         let coordinates2D = baseAdjStruct.CoordinatesPartOfMaze
 
