@@ -6,6 +6,10 @@ open System.Collections.Generic
 
 type Cost = Cost of int
 
+type Cost with
+    static member (+) (Cost c1, Cost c2) =
+        Cost (c1 + c2)
+
 module Cost =
     
     let value (Cost c) = c
@@ -32,5 +36,5 @@ module Obstacles =
         else
             0 |> Cost
 
-    let createEmpty =
+    let createEmpty() =
         Dictionary<NCoordinate, Cost>() |> Obstacles

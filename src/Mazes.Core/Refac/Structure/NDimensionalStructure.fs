@@ -124,3 +124,108 @@ module NDimensionalStructure =
             not (Grid.isLimitAtCoordinate (slice2D n nCoordinate.Dimension) nCoordinate.Coordinate2D otherNCoordinate.Coordinate2D)) then
 
             updateConnection n connectionType nCoordinate otherNCoordinate
+
+    let weave n (rng : Random) weight =
+        if weight > 0.0 then
+            for slice2D in n.Structure do
+                let dimension = slice2D.Key
+                let adjStruct = slice2D.Value
+
+                let weaveCoordinates = Grid.weaveCoordinates adjStruct (Grid.coordinatesPartOfMaze adjStruct)
+                for fromCoordinate, toCoordinate in weaveCoordinates do
+                    if (toCoordinate.RIndex >= fst (Grid.dimension1Boundaries adjStruct toCoordinate.CIndex)) &&
+                       (toCoordinate.RIndex < snd (Grid.dimension1Boundaries adjStruct toCoordinate.CIndex)) &&
+                       (toCoordinate.CIndex >= fst (Grid.dimension2Boundaries adjStruct toCoordinate.RIndex)) &&
+                       (toCoordinate.CIndex < snd (Grid.dimension2Boundaries adjStruct toCoordinate.RIndex)) &&
+                       Grid.isCellPartOfMaze adjStruct toCoordinate &&
+                       rng.NextDouble() < weight
+                       then
+
+                        CoordinateConnections.updateConnectionState n.CoordinateConnections 
+                            Close (NCoordinate.create dimension fromCoordinate) (NCoordinate.create dimension toCoordinate)
+
+    let openCell n (nCoordinate : NCoordinate) =
+        Grid.openCell (slice2D n nCoordinate.Dimension) nCoordinate.Coordinate2D
+
+    let costOfCoordinate n nCoordinate =
+        (Obstacles.cost n.Obstacles nCoordinate) + (Cost 1)
+
+    /// Returns the first (arbitrary) coordinate that is part of the maze
+    let firstCellPartOfMaze n =
+        let dimension =
+            n.Structure.Keys
+            |> Seq.sort
+            |> Seq.find(fun d -> Grid.totalOfMazeCells (slice2D n d) > 0)
+
+        NCoordinate.create dimension (Grid.firstCellPartOfMaze (slice2D n dimension))
+
+    /// Returns the last (arbitrary) coordinate that is part of the maze
+    let lastCellPartOfMaze n =
+        let dimension =
+            n.Structure.Keys
+            |> Seq.sortDescending
+            |> Seq.find(fun d -> Grid.totalOfMazeCells (slice2D n d) > 0)
+
+        NCoordinate.create dimension (Grid.lastCellPartOfMaze (slice2D n dimension))
+
+    let create (dimensions : Dimension) (newGridInstance : unit -> Grid) =
+        let baseAdjStruct = newGridInstance()
+        let coordinates2D = Grid.coordinatesPartOfMaze baseAdjStruct
+
+        let dimensionsSeq =
+            let nextDimension (dimension : Dimension) =
+                let newDimension = Dimension.copy dimension
+                let mutable isFound = false 
+                for d in 0 .. Dimension.length newDimension - 1 do
+                    if not isFound && (newDimension |> Dimension.valueAt d) < (dimensions |> Dimension.valueAt d) then
+                        (Dimension.value newDimension).[d] <- (Dimension.value newDimension).[d] + 1
+                        isFound <- true
+                    elif not isFound then
+                        (Dimension.value newDimension).[d] <- 0
+
+                newDimension
+
+            let countSlices2D = (1, Dimension.value dimensions) ||> Array.fold(fun count d -> (d + 1) * count)
+
+            let mutable currentDimension = Dimension (Array.create (Dimension.value dimensions).Length 0)
+            seq {
+                yield currentDimension
+                for _ in 1 .. countSlices2D - 1 do
+                    currentDimension <- nextDimension currentDimension
+                    yield currentDimension
+            }
+
+        let structure = Dictionary<Dimension, Grid>()
+        for dimension in dimensionsSeq do
+            structure.Add(dimension, newGridInstance())
+
+        // orthogonally connect every slice 2d to the next one
+        let coordinateConnections = CoordinateConnections.createEmpty()
+        for d in 0 .. (Dimension.value dimensions).Length - 1 do
+            let startDimensions = dimensionsSeq |> Seq.filter(fun dimension -> (Dimension.value dimension).[d] = 0)
+            for startDimension in startDimensions do
+
+                let currentDimensionIndex = ref 0
+                let mutable currentDimension = startDimension
+                while currentDimensionIndex.Value < (dimensions |> Dimension.valueAt d) do                    
+                    incr currentDimensionIndex
+                    let newDimension = Dimension.copy currentDimension
+                    (Dimension.value newDimension).[d] <- (Dimension.value newDimension).[d] + 1
+
+                    for coordinate2D in coordinates2D do
+                        let nCoordinate = NCoordinate.create currentDimension coordinate2D
+                        let nOtherCoordinate = NCoordinate.create newDimension coordinate2D
+                        CoordinateConnections.updateConnectionState coordinateConnections Close nCoordinate nOtherCoordinate
+
+                    currentDimension <- newDimension
+        {
+            Structure = structure
+            CoordinateConnections = coordinateConnections
+            Obstacles = Obstacles.createEmpty()
+        }
+
+    let create2D adjStruct =
+        create (Dimension [| 0 |]) (fun () -> adjStruct)
+
+    let create3D numberOfLevels adjStruct =
+        create (Dimension [| numberOfLevels - 1 |]) adjStruct

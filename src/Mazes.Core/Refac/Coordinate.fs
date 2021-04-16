@@ -18,6 +18,12 @@ type Dimension = Dimension of int array
 module Dimension =
     
     let value (Dimension d) = d
+    
+    let copy (Dimension d) = Dimension (d |> Array.copy)
+    
+    let length (Dimension d) = d.Length
+    
+    let valueAt d (Dimension dimension) = dimension.[d]
 
 /// N dimensions coordinate
 [<Struct>]

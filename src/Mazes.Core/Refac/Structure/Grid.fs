@@ -20,6 +20,10 @@ module Grid =
         match g with
         | GridArray2DChoice g -> GridArray2D.coordinatesPartOfMaze g
 
+    let isCellPartOfMaze g =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.isCellPartOfMaze g
+
     let isCellConnected g =
         match g with
         | GridArray2DChoice g -> GridArray2D.isCellConnected g
@@ -39,3 +43,27 @@ module Grid =
     let isLimitAtCoordinate g =
         match g with
         | GridArray2DChoice g -> GridArray2D.isLimitAtCoordinate g
+
+    let openCell g =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.openCell g
+
+    let weaveCoordinates g =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.weaveCoordinates g
+
+    let dimension1Boundaries g _ =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.dimension1Boundaries g
+
+    let dimension2Boundaries g _ =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.dimension2Boundaries g
+
+    let firstCellPartOfMaze g =
+        match g with
+        | GridArray2DChoice g -> snd (GridArray2D.firstCellPartOfMaze g)
+
+    let lastCellPartOfMaze g =
+        match g with
+        | GridArray2DChoice g -> snd (GridArray2D.lastCellPartOfMaze g)
