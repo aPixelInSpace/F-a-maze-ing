@@ -1,4 +1,4 @@
-﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+﻿// Copyright 2020-Present Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
 namespace Mazes.Core.Refac.Structure
 
@@ -29,18 +29,18 @@ module NDimensionalStructure =
 
     let totalOfMazeCells n =
         n.Structure
-        |> Seq.sumBy(fun kv -> Grid.totalOfMazeCells kv.Value)
+        |> Seq.sumBy(fun kv -> GridM.totalOfMazeCells kv.Value)
 
     let existAt n (nCoordinate : NCoordinate) =
         let dimension = nCoordinate.Dimension
         if n.Structure.ContainsKey(dimension) then
-            Grid.existAt (slice2D n dimension) nCoordinate.Coordinate2D
+            GridM.existAt (slice2D n dimension) nCoordinate.Coordinate2D
         else
             false
 
     let coordinatesPartOfMaze n =
         let cells dimension grid =
-            Grid.coordinatesPartOfMaze grid
+            GridM.coordinatesPartOfMaze grid
             |> Seq.map(NCoordinate.create dimension)
 
         n.Structure
@@ -51,7 +51,7 @@ module NDimensionalStructure =
             coordinatesPartOfMaze n
             |> Seq.filter(fun c ->
                     let slice2d = slice2D n c.Dimension
-                    not (Grid.isCellConnected slice2d c.Coordinate2D || CoordinateConnections.isCellConnected n.CoordinateConnections c))
+                    not (GridM.isCellConnected slice2d c.Coordinate2D || CoordinateConnections.isCellConnected n.CoordinateConnections c))
             |> Seq.toArray
 
         unconnectedPartOfMazeCells.[rng.Next(unconnectedPartOfMazeCells.Length)]
@@ -61,7 +61,7 @@ module NDimensionalStructure =
         let slice2d = slice2D n dimension
 
         let neighbors2d =
-            Grid.neighbors slice2d nCoordinate.Coordinate2D
+            GridM.neighbors slice2d nCoordinate.Coordinate2D
             |> Seq.map(NCoordinate.create dimension)
 
         let neighbors =
@@ -73,7 +73,7 @@ module NDimensionalStructure =
     /// Given a coordinate, returns true if the cell has at least one connection open, false otherwise
     let isCellConnected n nCoordinate =
         CoordinateConnections.isCellConnected n.CoordinateConnections nCoordinate ||
-        Grid.isCellConnected (slice2D n nCoordinate.Dimension) nCoordinate.Coordinate2D
+        GridM.isCellConnected (slice2D n nCoordinate.Dimension) nCoordinate.Coordinate2D
 
     /// Given two coordinates, returns true if they have their connection open, false otherwise
     let areConnected n nCoordinate otherNCoordinate =
@@ -88,7 +88,7 @@ module NDimensionalStructure =
         let adjacent2DCondition =
             not existNonAdjacentNeighbor &&
             (NCoordinate.isSame2DDimension nCoordinate otherNCoordinate) &&
-            Grid.areConnected (slice2D n nCoordinate.Dimension) nCoordinate.Coordinate2D otherNCoordinate.Coordinate2D
+            GridM.areConnected (slice2D n nCoordinate.Dimension) nCoordinate.Coordinate2D otherNCoordinate.Coordinate2D
 
         nonAdjacent2DCondition || adjacent2DCondition
 
@@ -96,7 +96,7 @@ module NDimensionalStructure =
     let connectedNeighbors n isConnected (nCoordinate : NCoordinate) =
         neighbors n nCoordinate
         |> Seq.filter(fun neighbor ->
-            let isConnectedAdjacent2d = Grid.isCellConnected (slice2D n neighbor.Dimension) neighbor.Coordinate2D
+            let isConnectedAdjacent2d = GridM.isCellConnected (slice2D n neighbor.Dimension) neighbor.Coordinate2D
             let isConnectedNonAdjacent2d = CoordinateConnections.isCellConnected n.CoordinateConnections neighbor
 
             if isConnected then isConnectedAdjacent2d || isConnectedNonAdjacent2d
@@ -112,18 +112,18 @@ module NDimensionalStructure =
                     yield neighborCoordinate
         }
 
-    let updateConnection n connectionType nCoordinate otherNCoordinate =
+    let updateConnectionState n connectionState nCoordinate otherNCoordinate =
         if CoordinateConnections.existNeighbor n.CoordinateConnections nCoordinate otherNCoordinate then
-            CoordinateConnections.updateConnectionState n.CoordinateConnections connectionType nCoordinate otherNCoordinate
+            CoordinateConnections.updateConnectionState n.CoordinateConnections connectionState nCoordinate otherNCoordinate
         elif NCoordinate.isSame2DDimension nCoordinate otherNCoordinate then
-            Grid.updateConnectionState (slice2D n nCoordinate.Dimension) connectionType nCoordinate.Coordinate2D otherNCoordinate.Coordinate2D
+            GridM.updateConnectionState (slice2D n nCoordinate.Dimension) connectionState nCoordinate.Coordinate2D otherNCoordinate.Coordinate2D
 
-    let ifNotAtLimitUpdateConnection n connectionType nCoordinate otherNCoordinate =
+    let ifNotAtLimitUpdateConnectionState n connectionState nCoordinate otherNCoordinate =
         if (CoordinateConnections.existNeighbor n.CoordinateConnections nCoordinate otherNCoordinate) ||
            ((NCoordinate.isSame2DDimension nCoordinate otherNCoordinate) &&
-            not (Grid.isLimitAtCoordinate (slice2D n nCoordinate.Dimension) nCoordinate.Coordinate2D otherNCoordinate.Coordinate2D)) then
+            not (GridM.isLimitAtCoordinate (slice2D n nCoordinate.Dimension) nCoordinate.Coordinate2D otherNCoordinate.Coordinate2D)) then
 
-            updateConnection n connectionType nCoordinate otherNCoordinate
+            updateConnectionState n connectionState nCoordinate otherNCoordinate
 
     let weave n (rng : Random) weight =
         if weight > 0.0 then
@@ -131,13 +131,13 @@ module NDimensionalStructure =
                 let dimension = slice2D.Key
                 let adjStruct = slice2D.Value
 
-                let weaveCoordinates = Grid.weaveCoordinates adjStruct (Grid.coordinatesPartOfMaze adjStruct)
+                let weaveCoordinates = GridM.weaveCoordinates adjStruct (GridM.coordinatesPartOfMaze adjStruct)
                 for fromCoordinate, toCoordinate in weaveCoordinates do
-                    if (toCoordinate.RIndex >= fst (Grid.dimension1Boundaries adjStruct toCoordinate.CIndex)) &&
-                       (toCoordinate.RIndex < snd (Grid.dimension1Boundaries adjStruct toCoordinate.CIndex)) &&
-                       (toCoordinate.CIndex >= fst (Grid.dimension2Boundaries adjStruct toCoordinate.RIndex)) &&
-                       (toCoordinate.CIndex < snd (Grid.dimension2Boundaries adjStruct toCoordinate.RIndex)) &&
-                       Grid.isCellPartOfMaze adjStruct toCoordinate &&
+                    if (toCoordinate.RIndex >= fst (GridM.dimension1Boundaries adjStruct toCoordinate.CIndex)) &&
+                       (toCoordinate.RIndex < snd (GridM.dimension1Boundaries adjStruct toCoordinate.CIndex)) &&
+                       (toCoordinate.CIndex >= fst (GridM.dimension2Boundaries adjStruct toCoordinate.RIndex)) &&
+                       (toCoordinate.CIndex < snd (GridM.dimension2Boundaries adjStruct toCoordinate.RIndex)) &&
+                       GridM.isCellPartOfMaze adjStruct toCoordinate &&
                        rng.NextDouble() < weight
                        then
 
@@ -145,7 +145,7 @@ module NDimensionalStructure =
                             Close (NCoordinate.create dimension fromCoordinate) (NCoordinate.create dimension toCoordinate)
 
     let openCell n (nCoordinate : NCoordinate) =
-        Grid.openCell (slice2D n nCoordinate.Dimension) nCoordinate.Coordinate2D
+        GridM.openCell (slice2D n nCoordinate.Dimension) nCoordinate.Coordinate2D
 
     let costOfCoordinate n nCoordinate =
         (Obstacles.cost n.Obstacles nCoordinate) + (Cost 1)
@@ -155,22 +155,22 @@ module NDimensionalStructure =
         let dimension =
             n.Structure.Keys
             |> Seq.sort
-            |> Seq.find(fun d -> Grid.totalOfMazeCells (slice2D n d) > 0)
+            |> Seq.find(fun d -> GridM.totalOfMazeCells (slice2D n d) > 0)
 
-        NCoordinate.create dimension (Grid.firstCellPartOfMaze (slice2D n dimension))
+        NCoordinate.create dimension (GridM.firstCellPartOfMaze (slice2D n dimension))
 
     /// Returns the last (arbitrary) coordinate that is part of the maze
     let lastCellPartOfMaze n =
         let dimension =
             n.Structure.Keys
             |> Seq.sortDescending
-            |> Seq.find(fun d -> Grid.totalOfMazeCells (slice2D n d) > 0)
+            |> Seq.find(fun d -> GridM.totalOfMazeCells (slice2D n d) > 0)
 
-        NCoordinate.create dimension (Grid.lastCellPartOfMaze (slice2D n dimension))
+        NCoordinate.create dimension (GridM.lastCellPartOfMaze (slice2D n dimension))
 
     let create (dimensions : Dimension) (newGridInstance : unit -> Grid) =
         let baseAdjStruct = newGridInstance()
-        let coordinates2D = Grid.coordinatesPartOfMaze baseAdjStruct
+        let coordinates2D = GridM.coordinatesPartOfMaze baseAdjStruct
 
         let dimensionsSeq =
             let nextDimension (dimension : Dimension) =

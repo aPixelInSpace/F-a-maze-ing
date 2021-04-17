@@ -1,13 +1,11 @@
-﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+﻿// Copyright 2020-Present Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
 namespace Mazes.Core.Refac.Structure
 
+open System.Text
 open Mazes.Core.Refac
 open Mazes.Core.Refac.Utils
 open Mazes.Core.Refac.Array2D
-
-[<Struct>]
-type OrthoCell = OrthoCell of Connection<OrthogonalDisposition> array
 
 module OrthoCellM =
 
@@ -67,3 +65,57 @@ module OrthoCellM =
 
         vertical
         |> Seq.append horizontal
+
+//module OrthogonalM =
+
+//    let toString orthoCells =
+//        let sBuilder = StringBuilder()
+//        let cells = orthoCells
+//        let connectionTypeAtPosition = maze.ToSpecializedStructure.ConnectionTypeAtPosition
+//
+//        let appendHorizontalWall wallType =
+//            match wallType with
+//                | Close | ClosePersistent -> sBuilder.Append("_") |> ignore
+//                | Open -> sBuilder.Append(" ") |> ignore
+//
+//        let appendVerticalWall wallType =
+//            match wallType with
+//                | Close | ClosePersistent -> sBuilder.Append("|") |> ignore
+//                | Open -> sBuilder.Append(" ") |> ignore
+//
+//        // first row
+//        let lastColumnIndex = cells |> maxColumnIndex
+//        sBuilder.Append(" ") |> ignore
+//        for columnIndex in 0 .. lastColumnIndex do
+//            let cell =  get cells { RIndex = 0; CIndex = columnIndex }
+//            appendHorizontalWall (connectionTypeAtPosition cell Top)
+//            sBuilder.Append(" ") |> ignore
+//        sBuilder.Append("\n") |> ignore
+//
+//        // every row
+//        for rowIndex in 0 .. cells |> maxRowIndex do
+//            for columnIndex in 0 .. lastColumnIndex do
+//                let cell = get cells { RIndex = rowIndex; CIndex = columnIndex }
+//                appendVerticalWall (connectionTypeAtPosition cell Left)
+//                appendHorizontalWall (connectionTypeAtPosition cell Bottom)
+//                
+//                if columnIndex = lastColumnIndex then
+//                    appendVerticalWall (connectionTypeAtPosition cell Right)
+//
+//            sBuilder.Append("\n") |> ignore
+//
+//        sBuilder.ToString()
+//
+//    let createBaseGrid canvas =
+//        GridArray2D.createBaseGrid
+//            OrthoCell.Create
+//            OrthoPositionHandler.Instance
+//            OrthoCoordinateHandler.Instance
+//            canvas
+//
+//    let createEmptyBaseGrid canvas =
+//        GridArray2D.createEmptyBaseGrid
+//            OrthoCell.Create
+//            OrthoPositionHandler.Instance
+//            OrthoCoordinateHandler.Instance
+//            canvas

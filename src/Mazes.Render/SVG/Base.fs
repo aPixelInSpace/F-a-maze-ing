@@ -1,4 +1,4 @@
-﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+﻿// Copyright 2020-Present Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
 module Mazes.Render.SVG.Base
 
@@ -137,7 +137,7 @@ let round (f : float) =
 
 let appendHeader width height (sBuilder : StringBuilder) =
     sBuilder.Append("<?xml version=\"1.0\" standalone=\"no\"?>\n")
-            .Append("<!-- Copyright 2020-2021 Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->\n")
+            .Append("<!-- Copyright 2020-Present Patrizio Amella. All rights reserved. See License at https://github.com/aPixelInSpace/F-a-maze-ing/blob/main/LICENSE for more information. -->\n")
             .Append("<svg width=\"" + width + "\" height=\"" + height + "\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">")
 
 let appendStyle (globalOptions : GlobalOptions.Parameters) (sBuilder : StringBuilder) =

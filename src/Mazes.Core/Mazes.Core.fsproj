@@ -71,7 +71,7 @@
         <Compile Include="Refac\Canvas\Shape\Hexagon.fs" />
         <Compile Include="Refac\Canvas\Shape\Pentagon.fs" />
         <Compile Include="Refac\Canvas\Shape\Disk.fs" />
-        <Compile Include="Refac\Structure\GridType.fs" />
+        <Compile Include="Refac\Structure\Types.fs" />
         <Compile Include="Refac\Structure\Orthogonal.fs" />
         <Compile Include="Refac\Structure\Polar.fs" />
         <Compile Include="Refac\Structure\CellArray2D.fs" />
@@ -80,6 +80,8 @@
         <Compile Include="Refac\Structure\GridArrayOfA.fs" />
         <Compile Include="Refac\Structure\Grid.fs" />
         <Compile Include="Refac\Structure\NDimensionalStructure.fs" />
+        <Compile Include="Refac\Maze\Maze.fs" />
+        <Compile Include="Refac\Maze\Generate\AldousBroder.fs" />
     </ItemGroup>
 
     <ItemGroup>

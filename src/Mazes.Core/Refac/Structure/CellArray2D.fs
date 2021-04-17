@@ -1,14 +1,10 @@
-﻿// Copyright 2020-2021 Patrizio Amella. All rights reserved. See License file in the project root for more information.
+﻿// Copyright 2020-Present Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
 namespace Mazes.Core.Refac.Structure
 
 open Mazes.Core.Refac
 
-[<Struct>]
-type CellArray2D =
-    | OrthoCellChoice of OrthoCell
-
-module CellArray2D =
+module CellArray2DM =
     
     let listOfPossibleCoordinate c coordinate =
         match c with

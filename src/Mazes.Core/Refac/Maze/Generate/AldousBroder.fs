@@ -1,10 +1,11 @@
 ﻿// Copyright 2020-Present Patrizio Amella. All rights reserved. See License file in the project root for more information.
 
-module Mazes.Core.Maze.Generate.AldousBroder
+module Mazes.Core.Refac.Maze.Generate.AldousBroder
 
 open System
-open Mazes.Core
-open Mazes.Core.Structure
+open Mazes.Core.Refac
+open Mazes.Core.Refac.Structure.NDimensionalStructure
+open Mazes.Core.Refac.Maze
 
 let transformIntoMaze
     randomCoordinatePartOfMazeAndNotConnected
@@ -29,16 +30,16 @@ let transformIntoMaze
 
         currentCoordinate <- nextCoordinate
 
-let createMaze rngSeed (ndStruct : NDimensionalStructure<_,_>) : Maze.Maze<_,_> =
+let createMaze rngSeed ndStruct =
 
     let rng = Random(rngSeed)
 
     transformIntoMaze
-        ndStruct.RandomCoordinatePartOfMazeAndNotConnected
-        ndStruct.Neighbors
-        ndStruct.IsCellConnected
-        (ndStruct.UpdateConnection ConnectionType.Open)
-        ndStruct.TotalOfMazeCells
+        (randomCoordinatePartOfMazeAndNotConnected ndStruct)
+        (neighbors ndStruct)
+        (isCellConnected ndStruct)
+        (updateConnectionState ndStruct ConnectionState.Open)
+        (totalOfMazeCells ndStruct)
         rng
 
     { NDStruct = ndStruct }
