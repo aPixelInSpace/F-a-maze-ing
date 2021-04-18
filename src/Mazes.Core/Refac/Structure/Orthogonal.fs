@@ -10,7 +10,7 @@ open Mazes.Core.Refac.Array2D
 module OrthoCellM =
 
     let value (OrthoCell c) = c
-
+    
     let listOfPossiblePositionsCoordinates coordinate =
         [|
             { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }, Orthogonal OrthogonalDisposition.Left
@@ -66,56 +66,48 @@ module OrthoCellM =
         vertical
         |> Seq.append horizontal
 
-//module OrthogonalM =
+module OrthogonalM =
 
-//    let toString orthoCells =
-//        let sBuilder = StringBuilder()
-//        let cells = orthoCells
-//        let connectionTypeAtPosition = maze.ToSpecializedStructure.ConnectionTypeAtPosition
-//
-//        let appendHorizontalWall wallType =
-//            match wallType with
-//                | Close | ClosePersistent -> sBuilder.Append("_") |> ignore
-//                | Open -> sBuilder.Append(" ") |> ignore
-//
-//        let appendVerticalWall wallType =
-//            match wallType with
-//                | Close | ClosePersistent -> sBuilder.Append("|") |> ignore
-//                | Open -> sBuilder.Append(" ") |> ignore
-//
-//        // first row
-//        let lastColumnIndex = cells |> maxColumnIndex
-//        sBuilder.Append(" ") |> ignore
-//        for columnIndex in 0 .. lastColumnIndex do
-//            let cell =  get cells { RIndex = 0; CIndex = columnIndex }
-//            appendHorizontalWall (connectionTypeAtPosition cell Top)
-//            sBuilder.Append(" ") |> ignore
-//        sBuilder.Append("\n") |> ignore
-//
-//        // every row
-//        for rowIndex in 0 .. cells |> maxRowIndex do
-//            for columnIndex in 0 .. lastColumnIndex do
-//                let cell = get cells { RIndex = rowIndex; CIndex = columnIndex }
-//                appendVerticalWall (connectionTypeAtPosition cell Left)
-//                appendHorizontalWall (connectionTypeAtPosition cell Bottom)
-//                
-//                if columnIndex = lastColumnIndex then
-//                    appendVerticalWall (connectionTypeAtPosition cell Right)
-//
-//            sBuilder.Append("\n") |> ignore
-//
-//        sBuilder.ToString()
-//
-//    let createBaseGrid canvas =
-//        GridArray2D.createBaseGrid
-//            OrthoCell.Create
-//            OrthoPositionHandler.Instance
-//            OrthoCoordinateHandler.Instance
-//            canvas
-//
-//    let createEmptyBaseGrid canvas =
-//        GridArray2D.createEmptyBaseGrid
-//            OrthoCell.Create
-//            OrthoPositionHandler.Instance
-//            OrthoCoordinateHandler.Instance
-//            canvas
+    let toString (orthoCells : CellArray2D[,]) =
+        let sBuilder = StringBuilder()
+        let cells = orthoCells
+        
+        let get coordinate =
+            match (get cells coordinate) with
+            | CellArray2D.OrthoCellChoice c -> c
+            | _ -> failwith "Incompatible cell"
+        
+        let connectionTypeAtPosition = OrthoCellM.connectionStateAtPosition
+
+        let appendHorizontalWall wallType =
+            match wallType with
+                | Close | ClosePersistent -> sBuilder.Append("_") |> ignore
+                | Open -> sBuilder.Append(" ") |> ignore
+
+        let appendVerticalWall wallType =
+            match wallType with
+                | Close | ClosePersistent -> sBuilder.Append("|") |> ignore
+                | Open -> sBuilder.Append(" ") |> ignore
+
+        // first row
+        let lastColumnIndex = cells |> maxColumnIndex
+        sBuilder.Append(" ") |> ignore
+        for columnIndex in 0 .. lastColumnIndex do
+            let cell =  get { RIndex = 0; CIndex = columnIndex }
+            appendHorizontalWall (connectionTypeAtPosition cell OrthogonalDisposition.Top)
+            sBuilder.Append(" ") |> ignore
+        sBuilder.Append("\n") |> ignore
+
+        // every row
+        for rowIndex in 0 .. cells |> maxRowIndex do
+            for columnIndex in 0 .. lastColumnIndex do
+                let cell = get { RIndex = rowIndex; CIndex = columnIndex }
+                appendVerticalWall (connectionTypeAtPosition cell OrthogonalDisposition.Left)
+                appendHorizontalWall (connectionTypeAtPosition cell OrthogonalDisposition.Bottom)
+                
+                if columnIndex = lastColumnIndex then
+                    appendVerticalWall (connectionTypeAtPosition cell OrthogonalDisposition.Right)
+
+            sBuilder.Append("\n") |> ignore
+
+        sBuilder.ToString()

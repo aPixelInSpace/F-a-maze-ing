@@ -63,3 +63,7 @@ module GridM =
     let lastCellPartOfMaze g =
         match g with
         | GridArray2DChoice g -> snd (GridArray2DM.lastCellPartOfMaze g)
+
+    let toString g =
+        match g with
+        | GridArray2DChoice g -> GridArray2DM.toString g

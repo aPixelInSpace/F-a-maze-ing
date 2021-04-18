@@ -55,9 +55,10 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Aldous-Broder algo
         "| |      _ _ _ _| | |\n" +
         "|_ _|_|_ _ _ _|_ _ _|\n"
 
-    //Mazes.Core.Refac.Structure.NDimensionalStructure.firstSlice2D maze.NDStruct |> Grid2D.Type.Ortho.Grid.toString |> should equal expectedMaze
+    snd (Mazes.Core.Refac.Structure.NDimensionalStructure.firstSlice2D maze.NDStruct)    
+    |> Mazes.Core.Refac.Structure.GridM.toString
+    |> should equal expectedMaze
 
-    ()
     //let map = maze.createMap maze.NDStruct.GetFirstCellPartOfMaze
     //map.ConnectedNodes |> should equal maze.NDStruct.TotalOfMazeCells
 

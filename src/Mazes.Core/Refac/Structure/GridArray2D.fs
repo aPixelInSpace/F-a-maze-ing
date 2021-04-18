@@ -156,3 +156,7 @@ module GridArray2DM =
 
     let createEmptyBaseGrid disposition canvas =
         createInternal Open disposition canvas
+
+    let toString g =
+        match g.TypeArray2D with
+        | GridArray2DType.Orthogonal -> OrthogonalM.toString g.CellsArray2D
