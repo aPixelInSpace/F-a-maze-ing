@@ -61,7 +61,7 @@
         <Compile Include="Refac\Obstacle.fs" />
         <Compile Include="Refac\Array2D.fs" />
         <Compile Include="Refac\ArrayOfA.fs" />
-        <Folder Include="Refac\Analysis" />
+        <Compile Include="Refac\Analysis\Dijkstra\ShortestPathGraph.fs" />
         <Compile Include="Refac\Canvas\Zone.fs" />
         <Compile Include="Refac\Canvas\CanvasArray2D.fs" />
         <Compile Include="Refac\Canvas\CanvasArrayOfA.fs" />
@@ -82,6 +82,7 @@
         <Compile Include="Refac\Structure\NDimensionalStructure.fs" />
         <Compile Include="Refac\Maze\Maze.fs" />
         <Compile Include="Refac\Maze\Generate\AldousBroder.fs" />
+        <Compile Include="Refac\Maze\Generate\Wilson.fs" />
     </ItemGroup>
 
     <ItemGroup>

@@ -153,9 +153,11 @@ module GridArray2DM =
 
     let createBaseGrid disposition canvas =
         createInternal Close disposition canvas
+        |> GridArray2DChoice
 
     let createEmptyBaseGrid disposition canvas =
         createInternal Open disposition canvas
+        |> GridArray2DChoice
 
     let toString g =
         match g.TypeArray2D with

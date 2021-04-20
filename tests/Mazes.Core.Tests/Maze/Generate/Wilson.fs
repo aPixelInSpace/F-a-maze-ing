@@ -13,12 +13,12 @@ open Mazes.Core.Maze.Generate
 let ``Given a ortho grid 5 by 10, when generating a maze with Wilson's algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let grid =
-        (Rectangle.create 5 10)
-        |> Grid2D.Type.Ortho.Grid.createBaseGrid
-        |> NDimensionalStructure.create2D
+        (Mazes.Core.Refac.Canvas.Array2D.Shape.Rectangle.create 5 10)
+        |> Mazes.Core.Refac.Structure.GridArray2DM.createBaseGrid Mazes.Core.Refac.Structure.GridArray2DType.Orthogonal
+        |> Mazes.Core.Refac.Structure.NDimensionalStructure.create2D
     
     // act
-    let maze = grid |> Wilson.createMaze 1
+    let maze = grid |> Mazes.Core.Refac.Maze.Generate.Wilson.createMaze 1
         
     // assert
     let expectedMaze =
@@ -29,10 +29,12 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Wilson's algorithm
         "| |    _|  _ _ _  | |\n" +
         "|_|_|_|_ _ _|_ _ _ _|\n"
 
-    snd maze.NDStruct.FirstSlice2D |> Grid2D.Type.Ortho.Grid.toString |> should equal expectedMaze
+    snd (Mazes.Core.Refac.Structure.NDimensionalStructure.firstSlice2D maze.NDStruct)    
+    |> Mazes.Core.Refac.Structure.GridM.toString
+    |> should equal expectedMaze
 
-    let map = maze.createMap maze.NDStruct.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.NDStruct.TotalOfMazeCells
+    //let map = maze.createMap maze.NDStruct.GetFirstCellPartOfMaze
+    //map.ConnectedNodes |> should equal maze.NDStruct.TotalOfMazeCells
 
 [<Fact>]
 let ``Given a polar disc grid with 5 rings, when generating a maze with the Wilson's algorithm (rng 1), then the output should be like the expected output`` () =
