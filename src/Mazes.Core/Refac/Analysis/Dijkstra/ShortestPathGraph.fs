@@ -7,6 +7,14 @@ open System.Text
 open QuikGraph
 
 type Distance = Distance of int
+
+type Distance with
+    static member (+) (Distance c1, Distance c2) =
+        Distance (c1 + c2)
+
+    static member (-) (Distance c1, Distance c2) =
+        Distance (c1 - c2)
+
 //    with
 //        override this.Equals o =
 //             match o with
@@ -20,7 +28,7 @@ type ShortestPathGraph<'Node> when 'Node : equality =
             Graph : UndirectedGraph<'Node, TaggedEdge<'Node, Distance>>
         }
 
-module ShortestPathGraphM =
+module ShortestPathGraph =
 
     let containsNode g node =
         g.Graph.ContainsVertex(node)

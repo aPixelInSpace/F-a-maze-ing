@@ -35,7 +35,7 @@ module Pentagon =
 
         let pentagonPoints = calculatePointsPentagon (numberOfColumns / 2.0, numberOfRows / 2.0) edgeSize 0.0 (0.0, 0.0)
 
-        CanvasArray2D.create ((int)numberOfRows) ((int)numberOfColumns) (fun rowIndex columnIndex ->  isInsideConvexPolygon pentagonPoints ((float)columnIndex) ((float)rowIndex))
+        CanvasArray2D.create (int numberOfRows) (int numberOfColumns) (fun rowIndex columnIndex ->  isInsideConvexPolygon pentagonPoints (float columnIndex) (float rowIndex))
 
 module PentagonStar =
 
@@ -62,5 +62,5 @@ module PentagonStar =
 
         let pentagonStarPolygons = pentagonStarPolygons greatPentagonPoints smallPentagonPoints
 
-        CanvasArray2D.create ((int)numberOfRows) ((int)numberOfColumns) (fun rowIndex columnIndex ->
-            isInsideMultipleConvexPolygons pentagonStarPolygons ((float)columnIndex) ((float)rowIndex))
+        CanvasArray2D.create (int numberOfRows) (int numberOfColumns) (fun rowIndex columnIndex ->
+            isInsideMultipleConvexPolygons pentagonStarPolygons (float columnIndex) (float rowIndex))

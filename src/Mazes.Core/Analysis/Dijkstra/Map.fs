@@ -87,7 +87,7 @@ type Map =
 
         while unvisitedTracker.HasItems do
 
-            let (coordinate, currentDistance) = unvisitedTracker.Pop
+            let coordinate, currentDistance = unvisitedTracker.Pop
 
             let neighbors = linkedNeighbors coordinate |> Seq.toArray
 

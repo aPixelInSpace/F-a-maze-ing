@@ -6,9 +6,9 @@ open Mazes.Core.Refac
 
 module CellArray2DM =
     
-    let listOfPossibleCoordinate c coordinate =
-        match c with
-        | OrthoCellChoice _ ->
+    let listOfPossibleCoordinate disposition coordinate =
+        match disposition with
+        | GridArray2DType.Orthogonal ->
             OrthoCellM.listOfPossiblePositionsCoordinates coordinate
     
     let connectionsStates c =
@@ -17,27 +17,36 @@ module CellArray2DM =
             OrthoCellM.value c
             |> Array.map(fun c -> c.State)
 
-    let neighborCoordinateAt c coordinate position =
-        match c with
-        | OrthoCellChoice _ ->
-            OrthoCellM.neighborCoordinateAt coordinate position
+    let neighborCoordinateAt disposition coordinate position =
+        listOfPossibleCoordinate disposition coordinate
+        |> Array.tryFind(fun pc -> (snd pc) = position)
+        |> Option.map(fst)
 
-    let create isCellPartOfMaze disposition numberOfRows numberOfColumns internalConnectionState coordinate =
+    let initialize isCellPartOfMaze disposition numberOfRows numberOfColumns internalConnectionState coordinate =
+        let param = (isCellPartOfMaze, (neighborCoordinateAt disposition), numberOfRows, numberOfColumns, internalConnectionState, coordinate)
         match disposition with
         | GridArray2DType.Orthogonal ->
-            OrthoCellM.create isCellPartOfMaze numberOfRows numberOfColumns internalConnectionState coordinate |> OrthoCellChoice
+            OrthoCellM.initialize param |> OrthoCellChoice
+
+    let connectionStateAtPositionGeneric<'Position when 'Position : equality> (connections : Connection<'Position> seq) (position : 'Position) =
+        (connections
+        |> Seq.find(fun c ->  c.Position = position)).State
 
     let connectionStateAtPosition c position =
         match c, position with
-        | OrthoCellChoice c, DispositionArray2D.Orthogonal p -> OrthoCellM.connectionStateAtPosition c p
+        | OrthoCellChoice c, DispositionArray2D.Orthogonal p -> connectionStateAtPositionGeneric<OrthogonalDisposition> (OrthoCellM.value c) p
 
     let neighborPositionAt c coordinate otherCoordinate =
         snd
             ((listOfPossibleCoordinate c coordinate)
             |> Array.find(fun pc -> (fst pc) = otherCoordinate))
 
+    let newCellWithStateAtPositionGeneric<'Position when 'Position : equality> (connections : Connection<'Position> seq) connectionState (position : 'Position) =
+         connections
+         |> Seq.map(fun c -> if c.Position = position then { State = connectionState; Position = position } else c)
+
     let newCellWithStateAtPosition cell connectionState position =
         match cell, position with
         | OrthoCellChoice cell, DispositionArray2D.Orthogonal p ->
-            OrthoCellM.newCellWithStateAtPosition cell connectionState p
-            |> OrthoCellChoice
+            newCellWithStateAtPositionGeneric<OrthogonalDisposition> (OrthoCellM.value cell) connectionState p
+            |> Seq.toArray |> OrthoCell |> OrthoCellChoice

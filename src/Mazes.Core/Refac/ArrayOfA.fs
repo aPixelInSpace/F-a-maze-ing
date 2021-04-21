@@ -81,7 +81,7 @@ module ArrayOfA =
         coordinate.RIndex <= maxD1Index arrayOfA && coordinate.CIndex <= maxD2Index arrayOfA coordinate.RIndex
 
     let createPolar numberOfRings widthHeightRatio numberOfCellsForCenterRing (constructor : int -> int -> 'T) =
-        let ringHeight = widthHeightRatio / (float)numberOfRings 
+        let ringHeight = widthHeightRatio / float numberOfRings 
 
         let createRingCells ringNumber numberOfCellsForTheRing =
             [|
@@ -97,10 +97,10 @@ module ArrayOfA =
                     if ringNumber = 1 then
                         currentNumberOfCellsForTheRing <- numberOfCellsForCenterRing
                     else
-                        let radius = ((float)ringNumber - 1.0) / (float)numberOfRings
+                        let radius = (float ringNumber - 1.0) / float numberOfRings
                         let circumference = 2.0 * Math.PI * radius
-                        let estimatedCellWidth = circumference / (float)currentNumberOfCellsForTheRing
-                        let ratio = (int)(Math.Round(estimatedCellWidth / ringHeight, 0))
+                        let estimatedCellWidth = circumference / float currentNumberOfCellsForTheRing
+                        let ratio = int (Math.Round(estimatedCellWidth / ringHeight, 0))
                         currentNumberOfCellsForTheRing <- currentNumberOfCellsForTheRing * ratio
 
                     createRingCells ringNumber currentNumberOfCellsForTheRing

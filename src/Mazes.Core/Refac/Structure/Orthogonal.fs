@@ -19,12 +19,7 @@ module OrthoCellM =
             { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }, Orthogonal OrthogonalDisposition.Bottom
         |]
 
-    let neighborCoordinateAt coordinate position =
-        listOfPossiblePositionsCoordinates coordinate
-        |> Array.tryFind(fun pc -> (snd pc) = position)
-        |> Option.map(fst)
-
-    let create isCellPartOfMaze numberOfRows numberOfColumns internalConnectionState (coordinate : Coordinate2D) =
+    let initialize (isCellPartOfMaze, neighborCoordinateAt, numberOfRows, numberOfColumns, internalConnectionState, coordinate) =
         let getConnectionState =
             ConnectionState.getConnectionState isCellPartOfMaze neighborCoordinateAt internalConnectionState coordinate
 
@@ -41,14 +36,7 @@ module OrthoCellM =
         |]
         |> OrthoCell
 
-    let newCellWithStateAtPosition cell connectionState position =
-         (value cell)
-         |> Array.map(fun c -> if c.Position = position then { State = connectionState; Position = position } else c)
-         |> OrthoCell
-
-    let connectionStateAtPosition c position =
-         (value c
-         |> Array.find(fun c ->  c.Position = position)).State
+module OrthogonalM =
 
     let weaveCoordinates coordinates =
         let filtered =
@@ -66,9 +54,7 @@ module OrthoCellM =
         vertical
         |> Seq.append horizontal
 
-module OrthogonalM =
-
-    let toString (orthoCells : CellArray2D[,]) =
+    let toString connectionStateAtPosition (orthoCells : CellArray2D[,]) =
         let sBuilder = StringBuilder()
         let cells = orthoCells
         
@@ -76,8 +62,6 @@ module OrthogonalM =
             match (get cells coordinate) with
             | CellArray2D.OrthoCellChoice c -> c
             | _ -> failwith "Incompatible cell"
-        
-        let connectionTypeAtPosition = OrthoCellM.connectionStateAtPosition
 
         let appendHorizontalWall wallType =
             match wallType with
@@ -93,20 +77,20 @@ module OrthogonalM =
         let lastColumnIndex = cells |> maxColumnIndex
         sBuilder.Append(" ") |> ignore
         for columnIndex in 0 .. lastColumnIndex do
-            let cell =  get { RIndex = 0; CIndex = columnIndex }
-            appendHorizontalWall (connectionTypeAtPosition cell OrthogonalDisposition.Top)
+            let cell = OrthoCellM.value (get { RIndex = 0; CIndex = columnIndex })
+            appendHorizontalWall (connectionStateAtPosition cell OrthogonalDisposition.Top)
             sBuilder.Append(" ") |> ignore
         sBuilder.Append("\n") |> ignore
 
         // every row
         for rowIndex in 0 .. cells |> maxRowIndex do
             for columnIndex in 0 .. lastColumnIndex do
-                let cell = get { RIndex = rowIndex; CIndex = columnIndex }
-                appendVerticalWall (connectionTypeAtPosition cell OrthogonalDisposition.Left)
-                appendHorizontalWall (connectionTypeAtPosition cell OrthogonalDisposition.Bottom)
+                let cell = OrthoCellM.value (get { RIndex = rowIndex; CIndex = columnIndex })
+                appendVerticalWall (connectionStateAtPosition cell OrthogonalDisposition.Left)
+                appendHorizontalWall (connectionStateAtPosition cell OrthogonalDisposition.Bottom)
                 
                 if columnIndex = lastColumnIndex then
-                    appendVerticalWall (connectionTypeAtPosition cell OrthogonalDisposition.Right)
+                    appendVerticalWall (connectionStateAtPosition cell OrthogonalDisposition.Right)
 
             sBuilder.Append("\n") |> ignore
 

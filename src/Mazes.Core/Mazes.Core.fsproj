@@ -62,6 +62,8 @@
         <Compile Include="Refac\Array2D.fs" />
         <Compile Include="Refac\ArrayOfA.fs" />
         <Compile Include="Refac\Analysis\Dijkstra\ShortestPathGraph.fs" />
+        <Compile Include="Refac\Analysis\Dijkstra\Tracker.fs" />
+        <Compile Include="Refac\Analysis\Dijkstra\Map.fs" />
         <Compile Include="Refac\Canvas\Zone.fs" />
         <Compile Include="Refac\Canvas\CanvasArray2D.fs" />
         <Compile Include="Refac\Canvas\CanvasArrayOfA.fs" />

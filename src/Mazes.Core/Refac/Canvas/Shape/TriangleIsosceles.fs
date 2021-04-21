@@ -16,7 +16,7 @@ let private isCellPartOfTriangleIsosceles baseAt baseDecrement heightIncrement n
     let triangleIsoscelesCondition index indexLength numberOfEmptyStartingCell =
         index >= numberOfEmptyStartingCell && index < (indexLength - numberOfEmptyStartingCell)
 
-    let (index, indexLength, numberOfEmptyStartingCell) =
+    let index, indexLength, numberOfEmptyStartingCell =
         match baseAt with
         | BaseAt.Top ->
             let currentFloorIndex = rowIndex / heightIncrement

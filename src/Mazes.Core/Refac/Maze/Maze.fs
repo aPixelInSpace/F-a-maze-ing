@@ -4,8 +4,8 @@ namespace Mazes.Core.Refac.Maze
 
 open System
 open Mazes.Core.Refac
+open Mazes.Core.Refac.Analysis.Dijkstra
 open Mazes.Core.Refac.Structure
-
 type Maze =
     {
         NDStruct : NDimensionalStructure
@@ -13,14 +13,20 @@ type Maze =
 
 module Maze =
 
-    let openMaze m (entrance, exit) =
+    let createMap rootCoordinate m =
+        Map.create
+            (NDimensionalStructure.connectedWithNeighbors m.NDStruct true)
+            (NDimensionalStructure.costOfCoordinate m.NDStruct)
+            PriorityQueueTracker.createEmpty rootCoordinate
+
+    let openMaze (entrance, exit) m =
         NDimensionalStructure.openCell m.NDStruct entrance
         NDimensionalStructure.openCell m.NDStruct exit
 
     let toMaze nDStruct =
         { NDStruct = nDStruct }
 
-    let braid (rngSeed : int) (ratio : float) (deadEnds : NCoordinate seq) (maze : Maze) =
+    let braid rngSeed ratio deadEnds maze =
         let rng = Random(rngSeed)
 
         let linkToNotAlreadyLinkedNeighbor deadEndCoordinate =

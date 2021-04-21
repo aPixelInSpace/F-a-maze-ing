@@ -33,8 +33,8 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Wilson's algorithm
     |> Mazes.Core.Refac.Structure.GridM.toString
     |> should equal expectedMaze
 
-    //let map = maze.createMap maze.NDStruct.GetFirstCellPartOfMaze
-    //map.ConnectedNodes |> should equal maze.NDStruct.TotalOfMazeCells
+    let map = maze |> Mazes.Core.Refac.Maze.Maze.createMap (Mazes.Core.Refac.Structure.NDimensionalStructure.firstCellPartOfMaze maze.NDStruct)
+    map.ConnectedNodes |> should equal (Mazes.Core.Refac.Structure.NDimensionalStructure.totalOfMazeCells maze.NDStruct)
 
 [<Fact>]
 let ``Given a polar disc grid with 5 rings, when generating a maze with the Wilson's algorithm (rng 1), then the output should be like the expected output`` () =
