@@ -6,6 +6,7 @@ open System
 open Mazes.Core.Refac
 open Mazes.Core.Refac.Analysis.Dijkstra
 open Mazes.Core.Refac.Structure
+
 type Maze =
     {
         NDStruct : NDimensionalStructure

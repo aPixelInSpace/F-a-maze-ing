@@ -60,3 +60,7 @@ type DispositionArray2D =
 
 type DispositionArrayOfA =
     | Polar of PolarDisposition
+
+type Disposition =
+    | DispositionArray2DChoice of DispositionArray2D
+    | DispositionArrayOfAChoice of DispositionArrayOfA

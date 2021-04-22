@@ -14,7 +14,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Wilson's algorithm
     // arrange
     let grid =
         (Mazes.Core.Refac.Canvas.Array2D.Shape.Rectangle.create 5 10)
-        |> Mazes.Core.Refac.Structure.GridArray2DM.createBaseGrid Mazes.Core.Refac.Structure.GridArray2DType.Orthogonal
+        |> Mazes.Core.Refac.Structure.Grid.createBaseGrid (Mazes.Core.Refac.Structure.GridType.GridArray2DTypeChoice Mazes.Core.Refac.Structure.GridArray2DType.Orthogonal)
         |> Mazes.Core.Refac.Structure.NDimensionalStructure.create2D
     
     // act
@@ -30,7 +30,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with Wilson's algorithm
         "|_|_|_|_ _ _|_ _ _ _|\n"
 
     snd (Mazes.Core.Refac.Structure.NDimensionalStructure.firstSlice2D maze.NDStruct)    
-    |> Mazes.Core.Refac.Structure.GridM.toString
+    |> Mazes.Core.Refac.Structure.Grid.toString
     |> should equal expectedMaze
 
     let map = maze |> Mazes.Core.Refac.Maze.Maze.createMap (Mazes.Core.Refac.Structure.NDimensionalStructure.firstCellPartOfMaze maze.NDStruct)

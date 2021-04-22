@@ -24,11 +24,12 @@ module CellArray2DM =
 
     let initialize isCellPartOfMaze disposition numberOfRows numberOfColumns internalConnectionState coordinate =
         let param = (isCellPartOfMaze, (neighborCoordinateAt disposition), numberOfRows, numberOfColumns, internalConnectionState, coordinate)
+
         match disposition with
         | GridArray2DType.Orthogonal ->
             OrthoCellM.initialize param |> OrthoCellChoice
 
-    let connectionStateAtPositionGeneric<'Position when 'Position : equality> (connections : Connection<'Position> seq) (position : 'Position) =
+    let connectionStateAtPositionGeneric<'Position when 'Position : equality> connections position =
         (connections
         |> Seq.find(fun c ->  c.Position = position)).State
 
@@ -41,7 +42,7 @@ module CellArray2DM =
             ((listOfPossibleCoordinate c coordinate)
             |> Array.find(fun pc -> (fst pc) = otherCoordinate))
 
-    let newCellWithStateAtPositionGeneric<'Position when 'Position : equality> (connections : Connection<'Position> seq) connectionState (position : 'Position) =
+    let newCellWithStateAtPositionGeneric<'Position when 'Position : equality> connections connectionState position =
          connections
          |> Seq.map(fun c -> if c.Position = position then { State = connectionState; Position = position } else c)
 

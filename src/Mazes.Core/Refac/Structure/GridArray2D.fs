@@ -5,8 +5,19 @@ namespace Mazes.Core.Refac.Structure
 open System
 open Mazes.Core.Refac
 
-module GridArray2DM =
+type GridArray2D =
+    private
+        {
+            CanvasArray2D : Canvas.CanvasArray2D
+            TypeArray2D : GridArray2DType
+            CellsArray2D : CellArray2D[,]
+        }
+
+module GridArray2D =
     
+    let gridType g =
+        g.TypeArray2D
+
     let totalOfCells g =
         g.CellsArray2D.Length
 
@@ -150,11 +161,9 @@ module GridArray2DM =
 
     let createBaseGrid disposition canvas =
         createInternal Close disposition canvas
-        |> GridArray2DChoice
 
     let createEmptyBaseGrid disposition canvas =
         createInternal Open disposition canvas
-        |> GridArray2DChoice
 
     let toString g =
         match g.TypeArray2D with

@@ -4,3 +4,11 @@ namespace Mazes.Core.Refac.Structure
 
 open System
 open Mazes.Core.Refac
+
+type GridArrayOfA =
+    private
+        {
+            CanvasArrayOfA : Canvas.CanvasArrayOfA
+            TypeArrayOfA : GridArrayOfAType
+            CellsArrayOfA : CellArrayOfA[][]
+        }
