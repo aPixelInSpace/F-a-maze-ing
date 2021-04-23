@@ -15,6 +15,14 @@ module Grid =
         match g with
         | GridArray2DChoice g -> GridArray2D.gridType g |> GridArray2DTypeChoice
 
+    let rIndexes g =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.rIndexes g
+
+    let cIndexes g =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.cIndexes g
+
     let totalOfMazeCells g =
         match g with
         | GridArray2DChoice g -> GridArray2D.totalOfMazeCells g
@@ -50,6 +58,10 @@ module Grid =
     let updateConnectionState g =
         match g with
         | GridArray2DChoice g -> GridArray2D.updateConnectionState g
+
+    let ifNotAtLimitUpdateConnectionState g =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.ifNotAtLimitUpdateConnectionState g
 
     let isLimitAtCoordinate g =
         match g with

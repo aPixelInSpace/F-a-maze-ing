@@ -213,12 +213,12 @@ let ``Given a polar disc grid with 5 rings, when generating a maze with the grow
 let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree spiral algorithm (rng 1), then the output should be like the expected output`` () =
     // arrange
     let grid =
-        (Rectangle.create 5 10)
-        |> Grid2D.Type.Ortho.Grid.createBaseGrid
-        |> NDimensionalStructure.create2D
+        (Mazes.Core.Refac.Canvas.Array2D.Shape.Rectangle.create 5 10)
+        |> Mazes.Core.Refac.Structure.Grid.createBaseGrid (Mazes.Core.Refac.Structure.GridType.GridArray2DTypeChoice Mazes.Core.Refac.Structure.GridArray2DType.Orthogonal)
+        |> Mazes.Core.Refac.Structure.NDimensionalStructure.create2D
     
     // act
-    let maze = grid |> GrowingTreeSpiral.createMaze 1 0.9 0.9 3 0.5
+    let maze = grid |> Mazes.Core.Refac.Maze.Generate.GrowingTreeSpiral.createMaze 1 0.9 0.9 3 0.5
         
     // assert
     let expectedMaze =
@@ -229,10 +229,12 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree s
         "| | |  _ _| |_ _| | |\n" +
         "|_ _|_ _ _ _ _ _ _|_|\n"
 
-    snd maze.NDStruct.FirstSlice2D |> Grid2D.Type.Ortho.Grid.toString |> should equal expectedMaze
+    snd (Mazes.Core.Refac.Structure.NDimensionalStructure.firstSlice2D maze.NDStruct)    
+    |> Mazes.Core.Refac.Structure.Grid.toString
+    |> should equal expectedMaze
 
-    let map = maze.createMap maze.NDStruct.GetFirstCellPartOfMaze
-    map.ConnectedNodes |> should equal maze.NDStruct.TotalOfMazeCells
+    let map = maze |> Mazes.Core.Refac.Maze.Maze.createMap (Mazes.Core.Refac.Structure.NDimensionalStructure.firstCellPartOfMaze maze.NDStruct)
+    map.ConnectedNodes |> should equal (Mazes.Core.Refac.Structure.NDimensionalStructure.totalOfMazeCells maze.NDStruct)
 
 [<Fact>]
 let ``Given a polar disc grid with 5 rings, when generating a maze with the growing tree spiral algorithm (rng 1), then the output should be like the expected output`` () =

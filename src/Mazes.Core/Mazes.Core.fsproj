@@ -87,6 +87,11 @@
         <Compile Include="Refac\Maze\Generate\AldousBroder.fs" />
         <Compile Include="Refac\Maze\Generate\Wilson.fs" />
         <Compile Include="Refac\Maze\Generate\HuntAndKill.fs" />
+        <Compile Include="Refac\Maze\Generate\RecursiveBacktracker.fs" />
+        <Compile Include="Refac\Maze\Generate\Kruskal.fs" />
+        <Compile Include="Refac\Maze\Generate\Prim.fs" />
+        <Compile Include="Refac\Maze\Generate\Eller.fs" />
+        <Compile Include="Refac\Maze\Generate\RecursiveDivision.fs" />
     </ItemGroup>
 
     <ItemGroup>
