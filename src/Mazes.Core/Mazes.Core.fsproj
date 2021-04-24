@@ -84,6 +84,8 @@
         <Compile Include="Refac\Structure\NDimensionalStructure.fs" />
         <Compile Include="Refac\Maze\Maze.fs" />
         <Compile Include="Refac\Maze\Generate\GrowingTree.fs" />
+        <Compile Include="Refac\Maze\Generate\BinaryTree.fs" />
+        <Compile Include="Refac\Maze\Generate\Sidewinder.fs" />
         <Compile Include="Refac\Maze\Generate\AldousBroder.fs" />
         <Compile Include="Refac\Maze\Generate\Wilson.fs" />
         <Compile Include="Refac\Maze\Generate\HuntAndKill.fs" />

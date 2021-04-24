@@ -12,3 +12,23 @@ type GridArrayOfA =
             TypeArrayOfA : GridArrayOfAType
             CellsArrayOfA : CellArrayOfA[][]
         }
+
+module GridArrayOfA =
+
+    let ratio g coordinate =
+        let maxCellsInLastRing = g.CellsArrayOfA.[ArrayOfA.maxD1Index g.CellsArrayOfA].Length
+        let ringLength = g.CellsArrayOfA.[coordinate.RIndex].Length
+
+        maxCellsInLastRing / ringLength
+
+    let adjustedCoordinate g coordinate =
+        { coordinate with CIndex = coordinate.CIndex / (ratio g coordinate) }
+
+    let adjustedExistAt g coordinate =
+        coordinate.CIndex % (ratio g coordinate) = 0
+
+    let virtualNeighbor g coordinate disposition =
+        Some
+            (CellArrayOfAM.listOfPossibleCoordinate g.TypeArrayOfA coordinate
+            |> Array.find(fun (_,d) -> d = disposition)
+            |> fst)

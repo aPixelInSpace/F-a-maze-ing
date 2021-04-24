@@ -39,9 +39,6 @@ module GridArray2D =
     let existAt g coordinate =
         Array2D.existAt g.CellsArray2D coordinate
 
-    let adjustedExistAt g coordinate =
-        Array2D.existAt g.CellsArray2D coordinate
-
     let cell g coordinate =
         Array2D.get g.CellsArray2D coordinate
 

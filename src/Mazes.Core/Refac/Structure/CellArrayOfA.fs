@@ -2,3 +2,11 @@
 
 namespace Mazes.Core.Refac.Structure
 
+open Mazes.Core.Refac
+
+module CellArrayOfAM =
+
+    let listOfPossibleCoordinate gridArrayOfAType coordinate =
+        match gridArrayOfAType with
+        | GridArrayOfAType.Polar ->
+            PolarCellM.listOfPossiblePositionsCoordinates coordinate

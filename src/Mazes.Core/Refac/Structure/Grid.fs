@@ -31,6 +31,11 @@ module Grid =
         match g with
         | GridArray2DChoice g -> GridArray2D.existAt g
 
+    let adjustedExistAt g =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.existAt g
+        | GridArrayOfAChoice g -> GridArrayOfA.adjustedExistAt g
+
     let coordinatesPartOfMaze g =
         match g with
         | GridArray2DChoice g -> GridArray2D.coordinatesPartOfMaze g
@@ -74,6 +79,16 @@ module Grid =
     let weaveCoordinates g =
         match g with
         | GridArray2DChoice g -> GridArray2D.weaveCoordinates g
+
+    let adjustedCoordinate g coordinate =
+        match g with
+        | GridArray2DChoice _ -> coordinate
+        | GridArrayOfAChoice g -> GridArrayOfA.adjustedCoordinate g coordinate
+
+    let virtualNeighbor g coordinate disposition =
+        match g, disposition with
+        | GridArray2DChoice g, DispositionArray2DChoice d -> GridArray2D.neighbor g coordinate d
+        | GridArrayOfAChoice g, DispositionArrayOfAChoice d -> GridArrayOfA.virtualNeighbor g coordinate d
 
     let dimension1Boundaries g _ =
         match g with
