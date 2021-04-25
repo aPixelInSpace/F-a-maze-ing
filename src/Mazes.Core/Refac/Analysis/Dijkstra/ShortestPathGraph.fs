@@ -15,6 +15,10 @@ type Distance with
     static member (-) (Distance c1, Distance c2) =
         Distance (c1 - c2)
 
+module Distance =
+
+    let value (Distance d) = d
+
 //    with
 //        override this.Equals o =
 //             match o with
@@ -29,6 +33,9 @@ type ShortestPathGraph<'Node> when 'Node : equality =
         }
 
 module ShortestPathGraph =
+
+    let nodes g =
+        g.Graph.Vertices
 
     let containsNode g node =
         g.Graph.ContainsVertex(node)

@@ -17,6 +17,11 @@
       <Compile Include="SVG\OctaSquareGrid.fs" />
       <Compile Include="SVG\PentaCairoGrid.fs" />
       <Compile Include="SVG\BrickGrid.fs" />
+      <Compile Include="Refac\SVG\Color.fs" />
+      <Compile Include="Refac\SVG\GlobalOptions.fs" />
+      <Compile Include="Refac\SVG\Base.fs" />
+      <Compile Include="Refac\SVG\OrthoGrid.fs" />
+      <Compile Include="Refac\SVG\Creation.fs" />
     </ItemGroup>
 
     <ItemGroup>
