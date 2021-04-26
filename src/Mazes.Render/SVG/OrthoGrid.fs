@@ -171,7 +171,7 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
     let calculateWidth numberOfColumns =
         parameters.MarginWidth + (numberOfColumns * parameters.Width)
 
-    let (dimension, slice2D) = grid.FirstSlice2D
+    let dimension, slice2D = grid.FirstSlice2D
 
     let width = calculateWidth slice2D.ToSpecializedStructure.NumberOfColumns + parameters.MarginWidth
     let height = calculateHeight slice2D.ToSpecializedStructure.NumberOfRows + parameters.MarginHeight

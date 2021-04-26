@@ -8,6 +8,12 @@ type WallRenderType =
     | Line
     | Inset
 
+type LineType =
+    | Straight
+    | Circle
+    | FixedCurve of int * int
+    | RandomCurve of float
+
 type BackgroundColoration =
     | NoColoration
     | Plain
@@ -20,6 +26,7 @@ type BackgroundColoration =
 type Parameters =
     {
         WallRenderType : WallRenderType
+        LineType : LineType
         BackgroundColoration : BackgroundColoration
         Color1 : string
         Color2 : string
@@ -30,6 +37,7 @@ type Parameters =
     static member Default =
         {
             WallRenderType = Line
+            LineType = Straight
             BackgroundColoration = NoColoration
             Color1 = "#FFFFFF"
             Color2 = "#12A4B5"

@@ -3,12 +3,7 @@
 module Mazes.Render.Refac.SVG.OrthoGrid
 
 open Mazes.Core.Refac
-
-type LineType =
-    | Straight
-    | Circle
-    | FixedCurve of int * int
-    | RandomCurve of float
+open Mazes.Core.Refac.Structure
 
 type Parameters =
     {
@@ -18,16 +13,13 @@ type Parameters =
         BridgeDistanceFromCenter : float
         MarginWidth : int
         MarginHeight : int
-        Line : LineType
     }
 
-let calculateHeight marginHeight height numberOfRows =
+let calculateVerticalOffset marginHeight height numberOfRows =
     marginHeight + (numberOfRows * height)
 
-let calculateWidth marginWidth width numberOfColumns =
+let calculateHorizontalOffset marginWidth width numberOfColumns =
     marginWidth + (numberOfColumns * width)
-
-let orientation coordinate = if (coordinate.Coordinate2D.RIndex + coordinate.Coordinate2D.CIndex) % 2 = 0 then "0" else "1"
 
 let calculatePoints calculateVerticalOffset calculateHorizontalOffset height width coordinate =
     let coordinate2D = coordinate.Coordinate2D
@@ -39,7 +31,7 @@ let calculatePoints calculateVerticalOffset calculateHorizontalOffset height wid
 
     (leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)
 
-let lineParam calculatePoints coordinate position lineType =
+let cellPoints calculatePoints coordinate position =
     let (leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY) =
         calculatePoints coordinate
 
@@ -50,4 +42,17 @@ let lineParam calculatePoints coordinate position lineType =
         | OrthogonalDisposition.Right -> rightTopX, rightTopY, rightBottomX, rightBottomY
         | OrthogonalDisposition.Bottom -> rightBottomX, rightBottomY, leftBottomX, leftBottomY
 
-    points 
+    points
+
+let getParam parameters grid =
+
+    let calculateVerticalOffset = calculateVerticalOffset parameters.MarginHeight parameters.Height
+    let calculateHorizontalOffset = calculateHorizontalOffset parameters.MarginWidth parameters.Width
+
+    let totalHeight = calculateVerticalOffset (GridArray2D.numberOfRows grid)
+    let totalWidth = calculateHorizontalOffset (GridArray2D.numberOfColumns grid)
+
+    let calculatePoints = calculatePoints calculateVerticalOffset calculateHorizontalOffset parameters.Height parameters.Width
+    let cellPoints = cellPoints calculatePoints
+
+    cellPoints, totalHeight, totalWidth

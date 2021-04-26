@@ -36,6 +36,12 @@ module GridArray2D =
     let dimension2Boundaries g =
         (0, Canvas.CanvasArray2D.numberOfColumns g.CanvasArray2D)
 
+    let numberOfRows g =
+        Canvas.CanvasArray2D.numberOfRows g.CanvasArray2D
+
+    let numberOfColumns g =
+        Canvas.CanvasArray2D.numberOfColumns g.CanvasArray2D
+
     let existAt g coordinate =
         Array2D.existAt g.CellsArray2D coordinate
 
