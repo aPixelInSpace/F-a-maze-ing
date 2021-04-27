@@ -16,10 +16,10 @@ type private RDDirection =
     | Bottom
 
 let private toDisposition g rdDirection =
-    match gridType g with
-    | GridArray2DTypeChoice gridType ->
-        match gridType with
-        | Orthogonal ->
+    match gridStructure g with
+    | GridStructureArray2D gridStructure ->
+        match gridStructure with
+        | GridArray2DOrthogonal _ ->
             match rdDirection with
             | Right -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Right)
             | Bottom -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Bottom)

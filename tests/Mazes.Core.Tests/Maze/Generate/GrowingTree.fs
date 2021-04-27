@@ -214,7 +214,7 @@ let ``Given a ortho grid 5 by 10, when generating a maze with the growing tree s
     // arrange
     let grid =
         (Mazes.Core.Refac.Canvas.Array2D.Shape.Rectangle.create 5 10)
-        |> Mazes.Core.Refac.Structure.Grid.createBaseGrid (Mazes.Core.Refac.Structure.GridType.GridArray2DTypeChoice Mazes.Core.Refac.Structure.GridArray2DType.Orthogonal)
+        |> Mazes.Core.Refac.Structure.Grid.createBaseGrid (Mazes.Core.Refac.Structure.GridStructure.createArray2DOrthogonal())
         |> Mazes.Core.Refac.Structure.NDimensionalStructure.create2D
     
     // act

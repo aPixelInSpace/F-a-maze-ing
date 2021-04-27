@@ -11,9 +11,9 @@ type Grid =
 
 module Grid =
 
-    let gridType g =
+    let gridStructure g =
         match g with
-        | GridArray2DChoice g -> GridArray2D.gridType g |> GridArray2DTypeChoice
+        | GridArray2DChoice g -> GridArray2D.gridStructure g |> GridStructureArray2D
 
     let rIndexes g =
         match g with
@@ -117,11 +117,11 @@ module Grid =
 
     let createBaseGrid gridType canvas =
         match gridType with
-        | GridArray2DTypeChoice g -> GridArray2D.createBaseGrid g canvas |> GridArray2DChoice
+        | GridStructureArray2D g -> GridArray2D.createBaseGrid g canvas |> GridArray2DChoice
 
     let createEmptyBaseGrid gridType canvas =
         match gridType with
-        | GridArray2DTypeChoice g -> GridArray2D.createEmptyBaseGrid g canvas |> GridArray2DChoice
+        | GridStructureArray2D g -> GridArray2D.createEmptyBaseGrid g canvas |> GridArray2DChoice
 
     let toString g =
         match g with

@@ -18,8 +18,8 @@ let cellPoints g parameters coordinate p =
 let heightWidth g parameters =
     match g with
     | GridArray2DChoice g ->
-        match GridArray2D.gridType g with
-        | GridArray2DType.Orthogonal ->
+        match GridArray2D.gridStructure g with
+        | GridArray2DOrthogonal _ ->
             let _,height,width = OrthoGrid.getParam parameters g
             height, width
 

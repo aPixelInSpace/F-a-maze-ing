@@ -8,5 +8,5 @@ module CellArrayOfAM =
 
     let listOfPossibleCoordinate gridArrayOfAType coordinate =
         match gridArrayOfAType with
-        | GridArrayOfAType.Polar ->
+        | GridArrayOfAPolar _ ->
             PolarCellM.listOfPossiblePositionsCoordinates coordinate

@@ -8,7 +8,7 @@ module CellArray2DM =
     
     let listOfPossibleCoordinate disposition coordinate =
         match disposition with
-        | GridArray2DType.Orthogonal ->
+        | GridArray2DOrthogonal _ ->
             OrthoCellM.listOfPossiblePositionsCoordinates coordinate
     
     let connectionsStates c =
@@ -26,7 +26,7 @@ module CellArray2DM =
         let param = (isCellPartOfMaze, (neighborCoordinateAt disposition), numberOfRows, numberOfColumns, internalConnectionState, coordinate)
 
         match disposition with
-        | GridArray2DType.Orthogonal ->
+        | GridArray2DOrthogonal _ ->
             OrthoCellM.initialize param |> OrthoCellChoice
 
     let connectionStateAtPositionGeneric<'Position when 'Position : equality> connections position =

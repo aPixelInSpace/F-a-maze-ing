@@ -225,10 +225,10 @@ module GrowingTreeSpiral =
         | CounterClockwise
 
     let toDisposition g spiralDirection =
-        match Grid.gridType g with
-        | GridArray2DTypeChoice gridType ->
-            match gridType with
-            | Orthogonal ->
+        match Grid.gridStructure g with
+        | GridStructureArray2D gridStructure ->
+            match gridStructure with
+            | GridArray2DOrthogonal _ ->
                 match spiralDirection with
                 | Right -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Right)
                 | Bottom -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Bottom)

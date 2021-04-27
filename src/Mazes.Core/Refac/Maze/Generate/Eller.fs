@@ -15,10 +15,10 @@ type private EllerDirection =
     | Bottom
 
 let private toDisposition g ellerDirection =
-    match gridType g with
-    | GridArray2DTypeChoice gridType ->
-        match gridType with
-        | Orthogonal ->
+    match gridStructure g with
+    | GridStructureArray2D gridStructure ->
+        match gridStructure with
+        | GridArray2DOrthogonal _ ->
             match ellerDirection with
             | Right -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Right)
             | Bottom -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Bottom)

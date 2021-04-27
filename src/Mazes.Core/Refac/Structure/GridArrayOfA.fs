@@ -9,15 +9,19 @@ type GridArrayOfA =
     private
         {
             CanvasArrayOfA : Canvas.CanvasArrayOfA
-            TypeArrayOfA : GridArrayOfAType
-            CellsArrayOfA : CellArrayOfA[][]
+            GridStructureArrayOfA : GridStructureArrayOfA
         }
 
 module GridArrayOfA =
 
+    let cellsArrayOfA g =
+        match g.GridStructureArrayOfA with
+        | GridArrayOfAPolar g -> g
+
     let ratio g coordinate =
-        let maxCellsInLastRing = g.CellsArrayOfA.[ArrayOfA.maxD1Index g.CellsArrayOfA].Length
-        let ringLength = g.CellsArrayOfA.[coordinate.RIndex].Length
+        let c = (cellsArrayOfA g)
+        let maxCellsInLastRing = c.[ArrayOfA.maxD1Index c].Length
+        let ringLength = c.[coordinate.RIndex].Length
 
         maxCellsInLastRing / ringLength
 
@@ -29,6 +33,6 @@ module GridArrayOfA =
 
     let virtualNeighbor g coordinate disposition =
         Some
-            (CellArrayOfAM.listOfPossibleCoordinate g.TypeArrayOfA coordinate
+            (CellArrayOfAM.listOfPossibleCoordinate g.GridStructureArrayOfA coordinate
             |> Array.find(fun (_,d) -> d = disposition)
             |> fst)

@@ -18,16 +18,17 @@ type CellArrayOfA =
 
 //
 
-type GridArray2DType =
-    | Orthogonal
-    | Hexagonal
-    | Triangular
-    | OctagonalSquare
-    | PentagonalCairo
+type GridStructureArray2D =
+    | GridArray2DOrthogonal of CellArray2D[,]
 
-type GridArrayOfAType =
-    | Polar
+type GridStructureArrayOfA =
+    | GridArrayOfAPolar of CellArrayOfA[][]
 
-type GridType =
-    | GridArray2DTypeChoice of GridArray2DType
-    | GridArrayOfATypeChoice of GridArrayOfAType
+type GridStructure =
+    | GridStructureArray2D of GridStructureArray2D
+    | GridStructureArrayOfA of GridStructureArrayOfA
+
+module GridStructure =
+
+    let createArray2DOrthogonal() =
+        Array2D.zeroCreate 0 0 |> GridArray2DOrthogonal |> GridStructureArray2D
