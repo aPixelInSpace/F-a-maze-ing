@@ -446,3 +446,36 @@ let textCell center coordinate text (sBuilder : StringBuilder) =
         sBuilder.Append($"<text x=\"{round (x - 10.0)}\" y=\"{round y}\" style=\"font: bold 10px sans-serif;\">{text}</text>")
     | None ->
         sBuilder
+
+let wholeCellLines (globalOptions : GlobalOptions.Parameters) calculatePoints getRadius (coordinate : NCoordinate) =
+    ()
+    
+
+//let renderBackgroundColoration (globalOptions : GlobalOptions.Parameters) sBuilder =
+//    match globalOptions.BackgroundColoration with
+//    | GlobalOptions.NoColoration ->
+//        sBuilder
+//    | GlobalOptions.Plain ->
+//        sBuilder
+//        |> appendMazeColoration coordinatesPartOfMaze wholeCellLines color1
+//    | GlobalOptions.Distance ->
+//        sBuilder
+//        |> appendMazeDistanceColoration map wholeCellLines
+//    | GlobalOptions.GradientV ->
+//        let rowDistance = Color.rowDistance (slice2D.ToSpecializedStructure.NumberOfRows - 1)
+//        sBuilder
+//        |> appendMazeColoration coordinatesPartOfMaze wholeCellLines (colorPicker rowDistance)
+//    | GlobalOptions.GradientH ->
+//        let columnDistance = Color.columnDistance (slice2D.ToSpecializedStructure.NumberOfColumns - 1)
+//        sBuilder
+//        |> appendMazeColoration coordinatesPartOfMaze wholeCellLines (colorPicker columnDistance)
+//    | GlobalOptions.GradientC ->
+//        let center = ((float)((slice2D.ToSpecializedStructure.NumberOfRows - 1) / 2), (float)((slice2D.ToSpecializedStructure.NumberOfColumns - 1) / 2))
+//        let maxDistance = (calculateDistance (0.0, 0.0) center) + 1.5
+//        let centerDistance = Color.centerDistance center maxDistance
+//        sBuilder
+//        |> appendMazeColoration coordinatesPartOfMaze wholeCellLines (colorPicker centerDistance)
+//    | GlobalOptions.RandomColor (rng, color1, color2) ->
+//        let randomColor coordinate = Color.toHtmlHexColor (Color.random rng color1 color2 coordinate)
+//        sBuilder
+//        |> appendMazeColoration coordinatesPartOfMaze wholeCellLines randomColor

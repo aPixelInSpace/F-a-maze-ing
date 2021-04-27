@@ -13,10 +13,10 @@ module OrthoCellM =
     
     let listOfPossiblePositionsCoordinates coordinate =
         [|
-            { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }, Orthogonal OrthogonalDisposition.Left
-            { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }, Orthogonal OrthogonalDisposition.Top
-            { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }, Orthogonal OrthogonalDisposition.Right
-            { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }, Orthogonal OrthogonalDisposition.Bottom
+            { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }, OrthogonalDisposition OrthogonalDisposition.Left
+            { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }, OrthogonalDisposition OrthogonalDisposition.Top
+            { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }, OrthogonalDisposition OrthogonalDisposition.Right
+            { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }, OrthogonalDisposition OrthogonalDisposition.Bottom
         |]
 
     let initialize (isCellPartOfMaze, neighborCoordinateAt, numberOfRows, numberOfColumns, internalConnectionState, coordinate) =
@@ -25,10 +25,10 @@ module OrthoCellM =
 
         let connectionState pos =
             match pos with
-            | OrthogonalDisposition.Top -> getConnectionState (isFirstRow coordinate.RIndex) (Orthogonal OrthogonalDisposition.Top)
-            | OrthogonalDisposition.Right -> getConnectionState (isLastColumn coordinate.CIndex numberOfColumns) (Orthogonal OrthogonalDisposition.Right)
-            | OrthogonalDisposition.Bottom -> getConnectionState (isLastRow coordinate.RIndex numberOfRows) (Orthogonal OrthogonalDisposition.Bottom)
-            | OrthogonalDisposition.Left -> getConnectionState (isFirstColumn coordinate.CIndex) (Orthogonal OrthogonalDisposition.Left)
+            | OrthogonalDisposition.Top -> getConnectionState (isFirstRow coordinate.RIndex) (OrthogonalDisposition OrthogonalDisposition.Top)
+            | OrthogonalDisposition.Right -> getConnectionState (isLastColumn coordinate.CIndex numberOfColumns) (OrthogonalDisposition OrthogonalDisposition.Right)
+            | OrthogonalDisposition.Bottom -> getConnectionState (isLastRow coordinate.RIndex numberOfRows) (OrthogonalDisposition OrthogonalDisposition.Bottom)
+            | OrthogonalDisposition.Left -> getConnectionState (isFirstColumn coordinate.CIndex) (OrthogonalDisposition OrthogonalDisposition.Left)
 
         [|
            for pos in seqOfUnionCases<OrthogonalDisposition>() do

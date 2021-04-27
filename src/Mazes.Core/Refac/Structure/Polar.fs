@@ -10,8 +10,8 @@ module PolarCellM =
     
     let listOfPossiblePositionsCoordinates coordinate =
         [|
-            { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }, Polar PolarDisposition.Ccw
-            { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }, Polar PolarDisposition.Inward
-            { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }, Polar PolarDisposition.Cw
-            { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }, Polar PolarDisposition.Outward
+            { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex - 1 }, PolarDisposition PolarDisposition.Ccw
+            { RIndex = coordinate.RIndex - 1; CIndex = coordinate.CIndex }, PolarDisposition PolarDisposition.Inward
+            { RIndex = coordinate.RIndex; CIndex = coordinate.CIndex + 1 }, PolarDisposition PolarDisposition.Cw
+            { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }, PolarDisposition PolarDisposition.Outward
         |]

@@ -52,15 +52,15 @@ type PentagonalCairoDisposition =
     | D
 
 type DispositionArray2D =
-    | Orthogonal of OrthogonalDisposition
-    | Hexagonal of HexagonalDisposition
-    | Triangular of TriangularDisposition
-    | OctagonalSquare of OctagonalSquareDisposition
-    | PentagonalCairo of PentagonalCairoDisposition
+    | OrthogonalDisposition of OrthogonalDisposition
+    | HexagonalDisposition of HexagonalDisposition
+    | TriangularDisposition of TriangularDisposition
+    | OctagonalSquareDisposition of OctagonalSquareDisposition
+    | PentagonalCairoDisposition of PentagonalCairoDisposition
 
 type DispositionArrayOfA =
-    | Polar of PolarDisposition
+    | PolarDisposition of PolarDisposition
 
 type Disposition =
-    | DispositionArray2DChoice of DispositionArray2D
-    | DispositionArrayOfAChoice of DispositionArrayOfA
+    | DispositionArray2D of DispositionArray2D
+    | DispositionArrayOfA of DispositionArrayOfA

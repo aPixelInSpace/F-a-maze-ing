@@ -28,10 +28,10 @@ let toDisposition g spiralDirection =
         match gridStructure with
         | GridArray2DOrthogonal _ ->
             match spiralDirection with
-            | Right -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Right)
-            | Bottom -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Bottom)
-            | Left -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Left)
-            | Top -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Top)
+            | Right -> DispositionArray2D (DispositionArray2D.OrthogonalDisposition OrthogonalDisposition.Right)
+            | Bottom -> DispositionArray2D (DispositionArray2D.OrthogonalDisposition OrthogonalDisposition.Bottom)
+            | Left -> DispositionArray2D (DispositionArray2D.OrthogonalDisposition OrthogonalDisposition.Left)
+            | Top -> DispositionArray2D (DispositionArray2D.OrthogonalDisposition OrthogonalDisposition.Top)
 
 let private carveRow
     // params

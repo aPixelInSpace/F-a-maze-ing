@@ -20,8 +20,8 @@ let private toDisposition g ellerDirection =
         match gridStructure with
         | GridArray2DOrthogonal _ ->
             match ellerDirection with
-            | Right -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Right)
-            | Bottom -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Bottom)
+            | Right -> DispositionArray2D (DispositionArray2D.OrthogonalDisposition OrthogonalDisposition.Right)
+            | Bottom -> DispositionArray2D (DispositionArray2D.OrthogonalDisposition OrthogonalDisposition.Bottom)
 
 // todo : refactor this
 // It has the same fundamentals problems as Sidewinder

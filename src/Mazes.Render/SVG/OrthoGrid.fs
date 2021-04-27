@@ -260,7 +260,6 @@ let render (globalOptionsParameters : SVG.GlobalOptions.Parameters) (parameters 
             let randomColor coordinate = Color.toHtmlHexColor (Color.random rng color1 color2 coordinate)
             sBuilder
             |> appendMazeColoration coordinatesPartOfMaze wholeCellLines randomColor
-            
 
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())

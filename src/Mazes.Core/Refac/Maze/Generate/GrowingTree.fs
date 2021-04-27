@@ -230,16 +230,16 @@ module GrowingTreeSpiral =
             match gridStructure with
             | GridArray2DOrthogonal _ ->
                 match spiralDirection with
-                | Right -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Right)
-                | Bottom -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Bottom)
-                | Left -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Left)
-                | Top -> DispositionArray2DChoice (DispositionArray2D.Orthogonal OrthogonalDisposition.Top)
+                | Right -> DispositionArray2D (DispositionArray2D.OrthogonalDisposition OrthogonalDisposition.Right)
+                | Bottom -> DispositionArray2D (DispositionArray2D.OrthogonalDisposition OrthogonalDisposition.Bottom)
+                | Left -> DispositionArray2D (DispositionArray2D.OrthogonalDisposition OrthogonalDisposition.Left)
+                | Top -> DispositionArray2D (DispositionArray2D.OrthogonalDisposition OrthogonalDisposition.Top)
 
     let toSpiralDirection pos =
         match pos with
-        | DispositionArray2DChoice pos ->
+        | DispositionArray2D pos ->
             match pos with
-            | DispositionArray2D.Orthogonal pos ->
+            | DispositionArray2D.OrthogonalDisposition pos ->
                 match pos with
                 | OrthogonalDisposition.Right -> Right
                 | OrthogonalDisposition.Bottom -> Bottom

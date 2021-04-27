@@ -50,7 +50,7 @@ module Grid =
 
     let neighbor g coordinate pos =
         match g, pos with
-        | GridArray2DChoice g, DispositionArray2DChoice pos -> GridArray2D.neighbor g coordinate pos
+        | GridArray2DChoice g, DispositionArray2D pos -> GridArray2D.neighbor g coordinate pos
 
     let neighbors g =
         match g with
@@ -87,8 +87,8 @@ module Grid =
 
     let virtualNeighbor g coordinate disposition =
         match g, disposition with
-        | GridArray2DChoice g, DispositionArray2DChoice d -> GridArray2D.neighbor g coordinate d
-        | GridArrayOfAChoice g, DispositionArrayOfAChoice d -> GridArrayOfA.virtualNeighbor g coordinate d
+        | GridArray2DChoice g, DispositionArray2D d -> GridArray2D.neighbor g coordinate d
+        | GridArrayOfAChoice g, DispositionArrayOfA d -> GridArrayOfA.virtualNeighbor g coordinate d
 
     let dimension1Boundaries g _ =
         match g with

@@ -9,9 +9,9 @@ open Mazes.Render.Refac.SVG.Base
 
 let cellPoints g parameters coordinate p =
     match g, p with
-    | GridArray2DChoice g, DispositionArray2DChoice p ->
+    | GridArray2DChoice g, DispositionArray2D p ->
         match p with
-        | DispositionArray2D.Orthogonal p ->
+        | DispositionArray2D.OrthogonalDisposition p ->
             let cellPoints,_,_ = OrthoGrid.getParam parameters g
             cellPoints coordinate p
 

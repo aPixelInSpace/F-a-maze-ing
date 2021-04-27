@@ -35,7 +35,7 @@ module CellArray2DM =
 
     let connectionStateAtPosition c position =
         match c, position with
-        | OrthoCellChoice c, DispositionArray2D.Orthogonal p -> connectionStateAtPositionGeneric<OrthogonalDisposition> (OrthoCellM.value c) p
+        | OrthoCellChoice c, DispositionArray2D.OrthogonalDisposition p -> connectionStateAtPositionGeneric<OrthogonalDisposition> (OrthoCellM.value c) p
 
     let neighborPositionAt c coordinate otherCoordinate =
         snd
@@ -48,6 +48,6 @@ module CellArray2DM =
 
     let newCellWithStateAtPosition cell connectionState position =
         match cell, position with
-        | OrthoCellChoice cell, DispositionArray2D.Orthogonal p ->
+        | OrthoCellChoice cell, DispositionArray2D.OrthogonalDisposition p ->
             newCellWithStateAtPositionGeneric<OrthogonalDisposition> (OrthoCellM.value cell) connectionState p
             |> Seq.toArray |> OrthoCell |> OrthoCellChoice
