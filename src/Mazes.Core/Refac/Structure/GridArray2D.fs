@@ -55,6 +55,10 @@ module GridArray2D =
     let cell g coordinate =
         Array2D.get (cellsArray2D g) coordinate
 
+    let dispositions g coordinate =
+        CellArray2DM.dispositions (cell g coordinate) coordinate
+        |> Seq.map(DispositionArray2D)
+
     let cellsSeq g =
         cellsArray2D g |> Array2D.getItemByItem Array2D.RowsAscendingColumnsAscending (fun _ _ -> true)
 

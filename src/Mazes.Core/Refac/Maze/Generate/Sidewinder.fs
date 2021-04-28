@@ -193,7 +193,7 @@ let createMaze (direction1 : SidewinderDirection) (direction2 : SidewinderDirect
             | true -> existAt slice2D
             | false -> adjustedExistAt slice2D
 
-        match (virtualNeighbor slice2D coordinate (toDisposition slice2D direction)) with
+        match (rawNeighborCoordinate slice2D coordinate (toDisposition slice2D direction)) with
         | Some neighbor -> existAt neighbor
         | None -> false
 

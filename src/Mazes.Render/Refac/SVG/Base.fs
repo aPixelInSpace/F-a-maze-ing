@@ -447,10 +447,6 @@ let textCell center coordinate text (sBuilder : StringBuilder) =
     | None ->
         sBuilder
 
-let wholeCellLines (globalOptions : GlobalOptions.Parameters) calculatePoints getRadius (coordinate : NCoordinate) =
-    ()
-    
-
 //let renderBackgroundColoration (globalOptions : GlobalOptions.Parameters) sBuilder =
 //    match globalOptions.BackgroundColoration with
 //    | GlobalOptions.NoColoration ->

@@ -50,7 +50,7 @@ module CoordinatesByDistance =
     let farthest c =
         { Distance = (maxDistance c) - (Distance 1); Coordinates = coordinatesWithDistance c (maxDistance c) }
 
-    let createEmpty =
+    let createEmpty() =
         { Container = Dictionary<Distance, HashSet<_>>() }
 
 type Map =
@@ -70,7 +70,7 @@ module Map =
         (trackerAdd, trackerHasItems, trackerPop)
         rootCoordinate =
 
-        let coordinatesByDistance = CoordinatesByDistance.createEmpty
+        let coordinatesByDistance = CoordinatesByDistance.createEmpty()
 
         let leaves = HashSet<_>()
 

@@ -5,6 +5,7 @@ module Mazes.Render.Refac.SVG.Creation
 open System.Text
 open Mazes.Core.Refac
 open Mazes.Core.Refac.Structure
+open Mazes.Render.Refac.SVG.GlobalOptions
 open Mazes.Render.Refac.SVG.Base
 
 let cellPoints g parameters coordinate p =
@@ -23,7 +24,33 @@ let heightWidth g parameters =
             let _,height,width = OrthoGrid.getParam parameters g
             height, width
 
-let render globalOptionsParameters parameters ndStruct =
+let wholeCellLines g parameters line coordinate =
+
+    let straightLine t ((x,y), _) = $"{t} {round x} {round y} "
+
+    let sweepFlag = if (coordinate.Coordinate2D.RIndex + coordinate.Coordinate2D.CIndex) % 2 = 0 then "0" else "1"
+
+    let arcLineHead (rx, ry) ((x1,y1), x2, y2) =
+        $"M {round x1} {round y1} A {round rx} {round ry}, 0, 0, {sweepFlag}, {round x2} {round y2} "
+    let arcLineTail (rx, ry) ((x1,y1), x2, y2) =
+        $"A {round rx} {round ry}, 0, 0, {sweepFlag}, {round x2} {round y2} "
+
+    let drawLineHead, drawLineTail =
+        match line with
+        | Straight -> straightLine "M", straightLine "L"
+
+    let dispositions =
+        Grid.dispositions g coordinate.Coordinate2D
+        |> Seq.map(cellPoints g parameters coordinate)
+
+    let head =
+        dispositions |> Seq.head
+    let tail =
+        dispositions |> Seq.tail
+
+    ((drawLineHead head), tail)||> Seq.fold(fun s d -> s + (drawLineTail d))
+
+let render globalOptions parameters ndStruct =
 
     let sBuilder = StringBuilder()
 
@@ -33,7 +60,7 @@ let render globalOptionsParameters parameters ndStruct =
 
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
-    |> appendStyle globalOptionsParameters
+    |> appendStyle globalOptions
     |> appendBackground "transparent"
 
     |> appendFooter

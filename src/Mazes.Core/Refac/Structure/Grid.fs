@@ -48,6 +48,10 @@ module Grid =
         match g with
         | GridArray2DChoice g -> GridArray2D.isCellConnected g
 
+    let dispositions g coordinate =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.dispositions g coordinate
+
     let neighbor g coordinate pos =
         match g, pos with
         | GridArray2DChoice g, DispositionArray2D pos -> GridArray2D.neighbor g coordinate pos
@@ -85,7 +89,7 @@ module Grid =
         | GridArray2DChoice _ -> coordinate
         | GridArrayOfAChoice g -> GridArrayOfA.adjustedCoordinate g coordinate
 
-    let virtualNeighbor g coordinate disposition =
+    let rawNeighborCoordinate g coordinate disposition =
         match g, disposition with
         | GridArray2DChoice g, DispositionArray2D d -> GridArray2D.neighbor g coordinate d
         | GridArrayOfAChoice g, DispositionArrayOfA d -> GridArrayOfA.virtualNeighbor g coordinate d

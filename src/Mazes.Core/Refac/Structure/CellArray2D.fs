@@ -10,7 +10,11 @@ module CellArray2DM =
         match disposition with
         | GridArray2DOrthogonal _ ->
             OrthoCellM.listOfPossiblePositionsCoordinates coordinate
-    
+
+    let dispositions c coordinate =
+        match c with
+        | OrthoCellChoice _ -> OrthoCellM.dispositions |> Seq.map(OrthogonalDisposition)
+
     let connectionsStates c =
         match c with
         | OrthoCellChoice c ->

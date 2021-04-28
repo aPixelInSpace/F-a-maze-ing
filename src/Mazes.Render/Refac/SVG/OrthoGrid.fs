@@ -37,10 +37,10 @@ let cellPoints calculatePoints coordinate position =
 
     let points =
         match position with
-        | OrthogonalDisposition.Left -> leftBottomX, leftBottomY, leftTopX, leftTopY
-        | OrthogonalDisposition.Top -> leftTopX, leftTopY, rightTopX, rightTopY
-        | OrthogonalDisposition.Right -> rightTopX, rightTopY, rightBottomX, rightBottomY
-        | OrthogonalDisposition.Bottom -> rightBottomX, rightBottomY, leftBottomX, leftBottomY
+        | OrthogonalDisposition.Left -> (leftBottomX, leftBottomY), (leftTopX, leftTopY)
+        | OrthogonalDisposition.Top -> (leftTopX, leftTopY), (rightTopX, rightTopY)
+        | OrthogonalDisposition.Right -> (rightTopX, rightTopY), (rightBottomX, rightBottomY)
+        | OrthogonalDisposition.Bottom -> (rightBottomX, rightBottomY), (leftBottomX, leftBottomY)
 
     points
 

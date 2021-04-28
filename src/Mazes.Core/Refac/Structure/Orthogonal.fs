@@ -19,6 +19,9 @@ module OrthoCellM =
             { RIndex = coordinate.RIndex + 1; CIndex = coordinate.CIndex }, OrthogonalDisposition OrthogonalDisposition.Bottom
         |]
 
+    let dispositions =
+        seqOfUnionCases<OrthogonalDisposition>()
+
     let initialize (isCellPartOfMaze, neighborCoordinateAt, numberOfRows, numberOfColumns, internalConnectionState, coordinate) =
         let getConnectionState =
             ConnectionState.getConnectionState isCellPartOfMaze neighborCoordinateAt internalConnectionState coordinate
@@ -30,10 +33,9 @@ module OrthoCellM =
             | OrthogonalDisposition.Bottom -> getConnectionState (isLastRow coordinate.RIndex numberOfRows) (OrthogonalDisposition OrthogonalDisposition.Bottom)
             | OrthogonalDisposition.Left -> getConnectionState (isFirstColumn coordinate.CIndex) (OrthogonalDisposition OrthogonalDisposition.Left)
 
-        [|
-           for pos in seqOfUnionCases<OrthogonalDisposition>() do
-               { State = (connectionState pos); Position = pos }
-        |]
+        dispositions
+        |> Seq.map(fun pos -> { State = (connectionState pos); Position = pos })
+        |> Seq.toArray
         |> OrthoCell
 
 module OrthogonalM =
