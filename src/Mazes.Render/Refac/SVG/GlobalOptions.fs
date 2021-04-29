@@ -10,9 +10,11 @@ type WallRenderType =
 
 type LineType =
     | Straight
+    | Arc of ArcType
+and ArcType =
     | Circle
     | FixedCurve of int * int
-    | RandomCurve of float
+    | RandomCurve of (System.Random * float)
 
 type BackgroundColoration =
     | NoColoration

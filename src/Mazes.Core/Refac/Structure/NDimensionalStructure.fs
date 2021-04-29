@@ -38,13 +38,16 @@ module NDimensionalStructure =
         else
             false
 
-    let coordinatesPartOfMaze n =
-        let cells dimension grid =
-            Grid.coordinatesPartOfMaze grid
-            |> Seq.map(NCoordinate.create dimension)
+    let cells dimension grid =
+        Grid.coordinatesPartOfMaze grid
+        |> Seq.map(NCoordinate.create dimension)
 
+    let coordinatesPartOfMaze n =
         n.Structure
         |> Seq.collect(fun kv -> cells kv.Key kv.Value)
+
+    let coordinatesPartOfMazeOfDimension d n =
+        cells d (n.Structure.Item(d))
 
     let randomCoordinatePartOfMazeAndNotConnected n (rng : Random) =
         let unconnectedPartOfMazeCells =

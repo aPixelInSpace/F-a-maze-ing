@@ -280,8 +280,8 @@ let main argv =
 
         match result with
         | Some _ -> printSuccess "Maze generated !"
-        | None -> printError "Something went wrong, some chosen actions are not compatible."
+        | None -> printError "Something went wrong, some chosen actions are not compatible, please visit https://github.com/aPixelInSpace/F-a-maze-ing/wiki for the documentation."
 
-    | _ -> printError "Number of verbs not supported"
+    | _ -> printError "The number of arguments/parameters are invalid, please visit https://github.com/aPixelInSpace/F-a-maze-ing/wiki for the documentation."
     
     0 // return an integer exit code
