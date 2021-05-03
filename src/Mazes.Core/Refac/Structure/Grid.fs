@@ -102,6 +102,14 @@ module Grid =
         match g with
         | GridArray2DChoice g -> GridArray2D.dimension2Boundaries g
 
+    let numberOfRows g =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.numberOfRows g
+
+    let numberOfColumns g =
+        match g with
+        | GridArray2DChoice g -> GridArray2D.numberOfColumns g
+
     let firstCellPartOfMaze g =
         match g with
         | GridArray2DChoice g -> snd (GridArray2D.firstCellPartOfMaze g)

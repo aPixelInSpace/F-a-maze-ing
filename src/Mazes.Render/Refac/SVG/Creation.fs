@@ -12,7 +12,7 @@ open Mazes.Render.Refac.SVG.Base
 type GridParameters =
     | OrthoParameters of OrthoGrid.Parameters
 
-let cellPoints g gridParameters coordinate p =
+let linePoints g gridParameters coordinate p =
     match g, gridParameters, p with
     | GridArray2DChoice g, OrthoParameters parameters, DispositionArray2D p ->
         match p with
@@ -62,7 +62,7 @@ let wholeCellLines g gridParameters line coordinate =
 
     let dispositions =
         Grid.dispositions g coordinate.Coordinate2D
-        |> Seq.map(cellPoints g gridParameters coordinate)
+        |> Seq.map(linePoints g gridParameters coordinate)
 
     let head =
         dispositions |> Seq.head
@@ -71,40 +71,42 @@ let wholeCellLines g gridParameters line coordinate =
 
     ((drawLineHead head), tail)||> Seq.fold(fun s d -> s + (drawLineTail d))
 
-//let renderBackgroundColoration n d g globalOptions gridParameters sBuilder =
-//    let coord = lazy (NDimensionalStructure.coordinatesPartOfMazeOfDimension d n)
-//    let wholeCellLines = wholeCellLines g gridParameters globalOptions.LineType
-//    
-//    match globalOptions.BackgroundColoration with
-//    | NoColoration ->
-//        sBuilder
-//    | Plain ->
-//        let color1 _ = Some globalOptions.Color1
-//        sBuilder
-//        |> appendMazeColoration coord.Value wholeCellLines color1
-//    | Distance ->
-//        sBuilder
-//        |> appendMazeDistanceColoration map wholeCellLines
-//    | GradientV ->
-//        let rowDistance = Color.rowDistance (slice2D.ToSpecializedStructure.NumberOfRows - 1)
-//        sBuilder
-//        |> appendMazeColoration coordinatesPartOfMaze wholeCellLines (colorPicker rowDistance)
-//    | GradientH ->
-//        let columnDistance = Color.columnDistance (slice2D.ToSpecializedStructure.NumberOfColumns - 1)
-//        sBuilder
-//        |> appendMazeColoration coordinatesPartOfMaze wholeCellLines (colorPicker columnDistance)
-//    | GradientC ->
-//        let center = ((float)((slice2D.ToSpecializedStructure.NumberOfRows - 1) / 2), (float)((slice2D.ToSpecializedStructure.NumberOfColumns - 1) / 2))
-//        let maxDistance = (calculateDistance (0.0, 0.0) center) + 1.5
-//        let centerDistance = Color.centerDistance center maxDistance
-//        sBuilder
-//        |> appendMazeColoration coordinatesPartOfMaze wholeCellLines (colorPicker centerDistance)
-//    | RandomColor (rng, color1, color2) ->
-//        let randomColor coordinate = Color.toHtmlHexColor (Color.random rng color1 color2 coordinate)
-//        sBuilder
-//        |> appendMazeColoration coordinatesPartOfMaze wholeCellLines randomColor
+let renderBackgroundColoration n map d g globalOptions gridParameters sBuilder =
+    let coord = NDimensionalStructure.coordinatesPartOfMazeOfDimension d n
+    let wholeCellLines = wholeCellLines g gridParameters globalOptions.LineType
+    let colorPicker distancePicker coordinate =
+        Color.linearGradient (Color.toRGB globalOptions.Color1) (Color.toRGB globalOptions.Color2) (distancePicker coordinate)        
+        |> Color.toHtmlHexColor
+    
+    match globalOptions.BackgroundColoration with
+    | NoColoration ->
+        sBuilder
+    | Plain ->
+        sBuilder
+        |> appendMazeColoration coord wholeCellLines (fun _ -> Some globalOptions.Color1)
+    | Distance ->
+        sBuilder
+        |> appendMazeDistanceColoration map wholeCellLines
+    | GradientV ->
+        let rowDistance = Color.rowDistance (Grid.numberOfRows g - 1)
+        sBuilder
+        |> appendMazeColoration coord wholeCellLines (colorPicker rowDistance)
+    | GradientH ->
+        let columnDistance = Color.columnDistance (Grid.numberOfColumns g - 1)
+        sBuilder
+        |> appendMazeColoration coord wholeCellLines (colorPicker columnDistance)
+    | GradientC ->
+        let center = (float ((Grid.numberOfRows g - 1) / 2), float ((Grid.numberOfColumns g - 1) / 2))
+        let maxDistance = (calculateDistance (0.0, 0.0) center) + 1.5
+        let centerDistance = Color.centerDistance center maxDistance
+        sBuilder
+        |> appendMazeColoration coord wholeCellLines (colorPicker centerDistance)
+    | RandomColor (rng, color1, color2) ->
+        let randomColor coordinate = Color.toHtmlHexColor (Color.random rng color1 color2 coordinate)
+        sBuilder
+        |> appendMazeColoration coord wholeCellLines randomColor
 
-let render globalOptions gridParameters ndStruct =
+let render globalOptions gridParameters ndStruct map =
 
     let sBuilder = StringBuilder()
 
@@ -116,6 +118,8 @@ let render globalOptions gridParameters ndStruct =
     |> appendHeader (width.ToString()) (height.ToString())
     |> appendStyle globalOptions
     |> appendBackground "transparent"
+    
+    |> renderBackgroundColoration ndStruct map dimension grid globalOptions gridParameters
 
     |> appendFooter
     |> ignore

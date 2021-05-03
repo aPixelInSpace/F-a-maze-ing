@@ -18,10 +18,6 @@ module GridArray2D =
         match g.GridStructureArray2D with
         | GridArray2DOrthogonal g -> g
 
-    let gridStructureArray2D g c =
-        match g with
-        | GridArray2DOrthogonal g -> c |> GridArray2DOrthogonal
-    
     let gridStructure g =
         g.GridStructureArray2D
 
@@ -156,6 +152,10 @@ module GridArray2D =
         Canvas.CanvasArray2D.lastPartOfMazeZone g.CanvasArray2D
 
     let private createInternal internalConnectionType gridStructure (canvas : Canvas.CanvasArray2D) =
+        let gridStructureArray2D g c =
+            match g with
+            | GridArray2DOrthogonal _ -> c |> GridArray2DOrthogonal
+
         let cells =
             canvas.Zones |>
             Array2D.mapi(fun rowIndex columnIndex _ ->
