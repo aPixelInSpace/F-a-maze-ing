@@ -72,6 +72,10 @@ module Grid =
         match g with
         | GridArray2DChoice g -> GridArray2D.ifNotAtLimitUpdateConnectionState g
 
+    let connectionStateAtPosition g coordinate position =
+        match g, position with
+        | GridArray2DChoice g, DispositionArray2D position -> GridArray2D.connectionStateAtPosition g coordinate position
+
     let isLimitAtCoordinate g =
         match g with
         | GridArray2DChoice g -> GridArray2D.isLimitAtCoordinate g

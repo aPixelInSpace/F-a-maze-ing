@@ -28,37 +28,40 @@ let frameSize g gridParameters =
             let _, height, width = OrthoGrid.getParam parameters g
             height, width
 
-let getRadius gridParameters arcLine =
-    match gridParameters with
-    | OrthoParameters parameters ->
-        let perfectRadius = lazy (pythagorasHypotenuse ((float)parameters.Width) ((float)parameters.Height) / 2.0)
-        match arcLine with
-        | Circle -> (perfectRadius.Value, perfectRadius.Value)
-        | FixedCurve (rx, ry) -> (float rx, float ry)
-        | RandomCurve (rng, mult) ->
-            let min = perfectRadius.Value
-            let max = min * mult
-            let nextFloat =
-                rng.NextDouble() * (max - min) + min
-            (nextFloat, nextFloat)
 
-let wholeCellLines g gridParameters line coordinate =
+let drawLine gridParameters line coordinate =
+    let getRadius gridParameters arcLine =
+        match gridParameters with
+        | OrthoParameters parameters ->
+            let perfectRadius = lazy (pythagorasHypotenuse ((float)parameters.Width) ((float)parameters.Height) / 2.0)
+            match arcLine with
+            | Circle -> (perfectRadius.Value, perfectRadius.Value)
+            | FixedCurve (rx, ry) -> (float rx, float ry)
+            | RandomCurve (rng, mult) ->
+                let min = perfectRadius.Value
+                let max = min * mult
+                let nextFloat =
+                    rng.NextDouble() * (max - min) + min
+                (nextFloat, nextFloat)
 
     let straightLine t ((x,y), (_,_)) = $"{t} {round x} {round y} "
 
-    let sweepFlag = if (coordinate.Coordinate2D.RIndex + coordinate.Coordinate2D.CIndex) % 2 = 0 then "0" else "1"
+    let sweepFlag coordinate = if (coordinate.Coordinate2D.RIndex + coordinate.Coordinate2D.CIndex) % 2 = 0 then "0" else "1"
 
-    let arcLineHead (rx, ry) ((x1,y1), (x2, y2)) =
+    let arcLineHead sweepFlag (rx, ry) ((x1,y1), (x2, y2)) =
         $"M {round x1} {round y1} A {round rx} {round ry}, 0, 0, {sweepFlag}, {round x2} {round y2} "
-    let arcLineTail (rx, ry) ((_,_), (x2, y2)) =
+    let arcLineTail sweepFlag (rx, ry) ((_,_), (x2, y2)) =
         $"A {round rx} {round ry}, 0, 0, {sweepFlag}, {round x2} {round y2} "
 
-    let drawLineHead, drawLineTail =
-        match line with
-        | Straight -> straightLine "M", straightLine "L"
-        | Arc a ->
-            let radius = getRadius gridParameters a
-            arcLineHead radius, arcLineTail radius
+    match line with
+    | Straight -> straightLine "M", straightLine "L"
+    | Arc a ->
+        let radius = getRadius gridParameters a
+        let sweepFlag = sweepFlag coordinate
+        arcLineHead sweepFlag radius, arcLineTail sweepFlag radius
+
+let wholeCellLines g gridParameters line coordinate =
+    let drawLineHead, drawLineTail = drawLine gridParameters line coordinate
 
     let dispositions =
         Grid.dispositions g coordinate.Coordinate2D
@@ -71,8 +74,25 @@ let wholeCellLines g gridParameters line coordinate =
 
     ((drawLineHead head), tail)||> Seq.fold(fun s d -> s + (drawLineTail d))
 
-let renderBackgroundColoration n map d g globalOptions gridParameters sBuilder =
-    let coord = NDimensionalStructure.coordinatesPartOfMazeOfDimension d n
+let appendWall (closeClass, closePersistentClass) g gridParameters line coordinate p (sBuilder : StringBuilder) =
+    let connectionState = Grid.connectionStateAtPosition g coordinate.Coordinate2D p
+
+    let appendPathElement wallClass =
+        let drawLine, _ = drawLine gridParameters line coordinate
+        let points = linePoints g gridParameters coordinate
+        let line = drawLine (points p)
+        appendPathElement sBuilder None wallClass line coordinate
+
+    match connectionState with
+    | ClosePersistent -> appendPathElement closePersistentClass 
+    | Close -> appendPathElement closeClass
+    | _ -> sBuilder
+
+let appendWallLine = appendWall (normalWallClass, borderWallClass)
+let appendWallInsetBackground = appendWall (normalWallInsetBackClass, borderWallInsetBackClass)
+let appendWallInsetForeground = appendWall (normalWallInsetForeClass, borderWallInsetForeClass)
+
+let renderBackgroundColoration g globalOptions gridParameters coord map sBuilder =
     let wholeCellLines = wholeCellLines g gridParameters globalOptions.LineType
     let colorPicker distancePicker coordinate =
         Color.linearGradient (Color.toRGB globalOptions.Color1) (Color.toRGB globalOptions.Color2) (distancePicker coordinate)        
@@ -106,6 +126,23 @@ let renderBackgroundColoration n map d g globalOptions gridParameters sBuilder =
         sBuilder
         |> appendMazeColoration coord wholeCellLines randomColor
 
+let renderWalls g globalOptions gridParameters coord sBuilder =
+    let appendsWall =
+        match globalOptions.WallRenderType with
+        | Line -> [ appendWallLine ]
+        | Inset -> [ appendWallInsetBackground; appendWallInsetForeground ]
+
+    let render appendWall =
+        coord
+        |> Seq.iter(fun c ->
+            let dispositions = Grid.dispositions g c.Coordinate2D
+            dispositions |> Seq.iter(fun d -> appendWall c d sBuilder |> ignore))
+
+    appendsWall
+    |> List.iter(fun appendWall -> render (appendWall g gridParameters globalOptions.LineType))
+
+    sBuilder
+
 let render globalOptions gridParameters ndStruct map =
 
     let sBuilder = StringBuilder()
@@ -114,12 +151,18 @@ let render globalOptions gridParameters ndStruct map =
 
     let height, width = frameSize grid gridParameters
 
+    let coord = NDimensionalStructure.coordinatesPartOfMazeOfDimension dimension ndStruct
+
+    let withParams f = f grid globalOptions gridParameters
+
     sBuilder
     |> appendHeader (width.ToString()) (height.ToString())
     |> appendStyle globalOptions
     |> appendBackground "transparent"
     
-    |> renderBackgroundColoration ndStruct map dimension grid globalOptions gridParameters
+    |> withParams renderBackgroundColoration coord map
+
+    |> withParams renderWalls coord
 
     |> appendFooter
     |> ignore

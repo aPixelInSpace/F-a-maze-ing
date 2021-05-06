@@ -79,6 +79,10 @@ module GridArray2D =
 
         unconnectedPartOfMazeCells.[rng.Next(unconnectedPartOfMazeCells.Length)]
 
+    let connectionStateAtPosition g coordinate position =
+        let cell = cell g coordinate
+        CellArray2DM.connectionStateAtPosition cell position
+
     let isLimitAtPosition g coordinate position =
         let zone = Canvas.CanvasArray2D.zone g.CanvasArray2D coordinate
         let cell = cell g coordinate
