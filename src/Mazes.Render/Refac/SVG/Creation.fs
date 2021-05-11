@@ -17,23 +17,30 @@ let linePoints g gridParameters coordinate p =
     | GridArray2DChoice g, OrthoParameters parameters, DispositionArray2D p ->
         match p with
         | DispositionArray2D.OrthogonalDisposition p ->
-            let cellPoints, _, _ = OrthoGrid.getParam parameters g
-            cellPoints coordinate p
+            let orthoParam = OrthoGrid.getConfig parameters g
+            orthoParam.LinePoints coordinate p
 
 let frameSize g gridParameters =
     match g, gridParameters with
     | GridArray2DChoice g, OrthoParameters parameters ->
         match GridArray2D.gridStructure g with
         | GridArray2DOrthogonal _ ->
-            let _, height, width = OrthoGrid.getParam parameters g
-            height, width
+            let orthoParam = OrthoGrid.getConfig parameters g
+            orthoParam.Height, orthoParam.Width
 
+let bridgePoints g gridParameters =
+    match g, gridParameters with
+    | GridArray2DChoice g, OrthoParameters parameters ->
+        match GridArray2D.gridStructure g with
+        | GridArray2DOrthogonal _ ->
+            let orthoParam = OrthoGrid.getConfig parameters g
+            orthoParam.BridgePoints
 
 let drawLine gridParameters line coordinate =
     let getRadius gridParameters arcLine =
         match gridParameters with
         | OrthoParameters parameters ->
-            let perfectRadius = lazy (pythagorasHypotenuse ((float)parameters.Width) ((float)parameters.Height) / 2.0)
+            let perfectRadius = lazy (pythagorasHypotenuse (float parameters.Width) (float parameters.Height) / 2.0)
             match arcLine with
             | Circle -> (perfectRadius.Value, perfectRadius.Value)
             | FixedCurve (rx, ry) -> (float rx, float ry)

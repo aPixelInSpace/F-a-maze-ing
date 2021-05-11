@@ -3,7 +3,9 @@
 module Mazes.Render.Refac.SVG.OrthoGrid
 
 open Mazes.Core.Refac
+open Mazes.Core.Refac.Trigonometry
 open Mazes.Core.Refac.Structure
+open Mazes.Render.Refac.SVG.GlobalOptions
 
 type Parameters =
     {
@@ -31,7 +33,7 @@ let calculatePoints calculateVerticalOffset calculateHorizontalOffset height wid
 
     (leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY)
 
-let cellPoints calculatePoints coordinate position =
+let linePoints calculatePoints coordinate position =
     let (leftTopX, leftTopY), (rightTopX, rightTopY), (leftBottomX, leftBottomY), (rightBottomX, rightBottomY) =
         calculatePoints coordinate
 
@@ -44,7 +46,11 @@ let cellPoints calculatePoints coordinate position =
 
     points
 
-let getParam parameters grid =
+let centerPoint calculatePoints height width coordinate =
+    let leftTopPoint = match calculatePoints coordinate with | f, _, _, _ -> f
+    leftTopPoint |> translatePoint (float (width / 2), float (height / 2))
+
+let getConfig parameters grid =
 
     let calculateVerticalOffset = calculateVerticalOffset parameters.MarginHeight parameters.Height
     let calculateHorizontalOffset = calculateHorizontalOffset parameters.MarginWidth parameters.Width
@@ -53,6 +59,14 @@ let getParam parameters grid =
     let totalWidth = calculateHorizontalOffset (GridArray2D.numberOfColumns grid)
 
     let calculatePoints = calculatePoints calculateVerticalOffset calculateHorizontalOffset parameters.Height parameters.Width
-    let cellPoints = cellPoints calculatePoints
+    let linePoints = linePoints calculatePoints
 
-    cellPoints, totalHeight, totalWidth
+    let centerPoint = centerPoint calculatePoints parameters.Height parameters.Width
+    let calculatePointsBridge = Base.calculatePointsBridge centerPoint (parameters.BridgeWidth / 2.0) parameters.BridgeDistanceFromCenter
+
+    {
+        LinePoints = linePoints
+        BridgePoints = calculatePointsBridge
+        Height = totalHeight
+        Width = totalWidth        
+    }

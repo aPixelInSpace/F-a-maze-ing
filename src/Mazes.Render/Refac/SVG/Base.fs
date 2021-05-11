@@ -401,7 +401,7 @@ let calculatePointsBridge center bridgeHalfWidth bridgeDistanceFromCenter fromCo
     let leftToBridge = calculatePoint centerTo angleMin bridgeHalfWidth
     let rightToBridge = calculatePoint centerTo angleMax bridgeHalfWidth
 
-    (leftFromBridge, rightFromBridge, leftToBridge, rightToBridge)
+    (leftFromBridge, leftToBridge), (rightFromBridge, rightToBridge)
 
 let wholeBridgeLines calculatePointsBridge fromCoordinate toCoordinate =
     let (leftFromX, leftFromY), (rightFromX, rightFromY), (leftToX, leftToY), (rightToX, rightToY) =

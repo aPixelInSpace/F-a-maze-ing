@@ -2,6 +2,7 @@
 
 namespace Mazes.Render.Refac.SVG.GlobalOptions
 
+open Mazes.Core.Refac
 open Mazes.Render.Refac.SVG
 
 type WallRenderType =
@@ -46,3 +47,11 @@ type Parameters =
             SolutionColor = "purple"
             NormalWallColor = "#333333"
         }
+
+type SvgGrid<'Disposition> =
+    {
+        LinePoints : NCoordinate -> 'Disposition -> (float * float) * (float * float)
+        BridgePoints : NCoordinate -> NCoordinate -> ((float * float) * (float * float)) * ((float * float) * (float * float))
+        Height : int
+        Width : int
+    }
