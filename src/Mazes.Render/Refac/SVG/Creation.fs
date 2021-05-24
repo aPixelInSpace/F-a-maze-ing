@@ -51,7 +51,7 @@ let drawLine gridParameters line coordinate =
                     rng.NextDouble() * (max - min) + min
                 (nextFloat, nextFloat)
 
-    let straightLine t ((x,y), (_,_)) = $"{t} {round x} {round y} "
+    let straightLine ((x1,y1), (x2,y2)) = $"M {round x1} {round y1} L {round x2} {round y2}"
 
     let sweepFlag coordinate = if (coordinate.Coordinate2D.RIndex + coordinate.Coordinate2D.CIndex) % 2 = 0 then "0" else "1"
 
@@ -61,7 +61,7 @@ let drawLine gridParameters line coordinate =
         $"A {round rx} {round ry}, 0, 0, {sweepFlag}, {round x2} {round y2} "
 
     match line with
-    | Straight -> straightLine "M", straightLine "L"
+    | Straight -> straightLine, straightLine
     | Arc a ->
         let radius = getRadius gridParameters a
         let sweepFlag = sweepFlag coordinate
@@ -81,8 +81,9 @@ let wholeCellLines g gridParameters line coordinate =
 
     ((drawLineHead head), tail)||> Seq.fold(fun s d -> s + (drawLineTail d))
 
-let appendWall (closeClass, closePersistentClass) g gridParameters line coordinate p (sBuilder : StringBuilder) =
+let appendWall (closeClass, closePersistentClass) filter g gridParameters line coordinate p (sBuilder : StringBuilder) =
     let connectionState = Grid.connectionStateAtPosition g coordinate.Coordinate2D p
+    let filterConnectionState = filter connectionState
 
     let appendPathElement wallClass =
         let drawLine, _ = drawLine gridParameters line coordinate
@@ -90,14 +91,29 @@ let appendWall (closeClass, closePersistentClass) g gridParameters line coordina
         let line = drawLine (points p)
         appendPathElement sBuilder None wallClass line coordinate
 
-    match connectionState with
-    | ClosePersistent -> appendPathElement closePersistentClass 
-    | Close -> appendPathElement closeClass
+    match connectionState, filterConnectionState with
+    | ClosePersistent, true -> appendPathElement closePersistentClass 
+    | Close, true -> appendPathElement closeClass
     | _ -> sBuilder
 
-let appendWallLine = appendWall (normalWallClass, borderWallClass)
-let appendWallInsetBackground = appendWall (normalWallInsetBackClass, borderWallInsetBackClass)
-let appendWallInsetForeground = appendWall (normalWallInsetForeClass, borderWallInsetForeClass)
+let appendWallLine = appendWall (normalWallClass, borderWallClass) (fun _ -> true)
+
+let appendWallInsetBackClass = appendWall (normalWallInsetBackClass, borderWallInsetBackClass)
+let appendWallInsetForeClass = appendWall (normalWallInsetForeClass, borderWallInsetForeClass)
+let appendWallInsetClosePersistentBack g gridParameters lineType coord disposition sBuilder =
+    appendWallInsetBackClass (fun s -> s = ClosePersistent) g gridParameters lineType coord disposition sBuilder
+let appendWallInsetClosePersistentFore g gridParameters lineType coord disposition sBuilder =
+    appendWallInsetForeClass (fun s -> s = ClosePersistent) g gridParameters lineType coord disposition sBuilder
+let appendWallInsetCloseBack g gridParameters lineType coord disposition sBuilder =
+    appendWallInsetBackClass (fun s -> s = Close) g gridParameters lineType coord disposition sBuilder
+let appendWallInsetCloseFore g gridParameters lineType coord disposition sBuilder =
+    appendWallInsetForeClass (fun s -> s = Close) g gridParameters lineType coord disposition sBuilder
+let appendWallInsetClosePersistent g gridParameters lineType coord disposition sBuilder =
+    appendWallInsetClosePersistentBack g gridParameters lineType coord disposition sBuilder
+    |> appendWallInsetClosePersistentFore g gridParameters lineType coord disposition
+let appendWallInsetClose g gridParameters lineType coord disposition sBuilder =
+    appendWallInsetCloseBack g gridParameters lineType coord disposition sBuilder
+    |> appendWallInsetCloseFore g gridParameters lineType coord disposition
 
 let renderBackgroundColoration g globalOptions gridParameters coord map sBuilder =
     let wholeCellLines = wholeCellLines g gridParameters globalOptions.LineType
@@ -137,7 +153,8 @@ let renderWalls g globalOptions gridParameters coord sBuilder =
     let appendsWall =
         match globalOptions.WallRenderType with
         | Line -> [ appendWallLine ]
-        | Inset -> [ appendWallInsetBackground; appendWallInsetForeground ]
+        | Inset -> [ appendWallInsetCloseBack; appendWallInsetCloseFore; appendWallInsetClosePersistentBack; appendWallInsetClosePersistentFore; ]
+        //| Inset -> [ appendWallInsetClose; appendWallInsetClosePersistent; ]
 
     let render appendWall =
         coord

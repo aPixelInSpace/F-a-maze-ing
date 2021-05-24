@@ -16,6 +16,16 @@ type Parameters =
         MarginWidth : int
         MarginHeight : int
     }
+    
+    static member CreateDefaultSquare =
+        {
+            Width = 30
+            Height = 30
+            BridgeWidth = 10.0
+            BridgeDistanceFromCenter = 12.0
+            MarginWidth = 20
+            MarginHeight = 20
+        }
 
 let calculateVerticalOffset marginHeight height numberOfRows =
     marginHeight + (numberOfRows * height)
@@ -55,8 +65,8 @@ let getConfig parameters grid =
     let calculateVerticalOffset = calculateVerticalOffset parameters.MarginHeight parameters.Height
     let calculateHorizontalOffset = calculateHorizontalOffset parameters.MarginWidth parameters.Width
 
-    let totalHeight = calculateVerticalOffset (GridArray2D.numberOfRows grid)
-    let totalWidth = calculateHorizontalOffset (GridArray2D.numberOfColumns grid)
+    let totalHeight = (calculateVerticalOffset (GridArray2D.numberOfRows grid)) + parameters.MarginHeight
+    let totalWidth = (calculateHorizontalOffset (GridArray2D.numberOfColumns grid)) + parameters.MarginWidth
 
     let calculatePoints = calculatePoints calculateVerticalOffset calculateHorizontalOffset parameters.Height parameters.Width
     let linePoints = linePoints calculatePoints

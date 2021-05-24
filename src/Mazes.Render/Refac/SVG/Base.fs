@@ -124,6 +124,7 @@ let svgStyle =
                     ." + colorDistanceClass + " {
                         stroke: none;
                         fill: #4287f5;
+                        shape-rendering: crispEdges;
                     }
                     ." + colorClass + " {
                         stroke: none;
