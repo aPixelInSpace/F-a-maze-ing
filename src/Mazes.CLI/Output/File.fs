@@ -17,7 +17,7 @@ let handleVerb data (options : Parsed<Options>) =
     
     // todo : delete this, it is for testing purpose only
     let grid =
-        (Mazes.Core.Refac.Canvas.Array2D.Shape.Rectangle.create 7 10)
+        (Mazes.Core.Refac.Canvas.Array2D.Shape.Rectangle.create 7 11)
         |> Mazes.Core.Refac.Structure.Grid.createBaseGrid (Mazes.Core.Refac.Structure.GridStructure.createArray2DOrthogonal())
         |> Mazes.Core.Refac.Structure.NDimensionalStructure.create2D
 
