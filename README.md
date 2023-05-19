@@ -2,7 +2,7 @@
 [![Build Status](https://apat21.visualstudio.com/aPixelInSpace/_apis/build/status/aPixelInSpace.F-a-maze-ing?branchName=main)](https://apat21.visualstudio.com/aPixelInSpace/_build/latest?definitionId=1&branchName=main)
 [![Main](https://codecov.io/gh/apixelinspace/f-a-maze-ing/branch/main/graph/badge.svg)](https://codecov.io/gh/apixelinspace/f-a-maze-ing)
 
-# <img src="vpdocs/src/.vuepress/public/f-a-maze-ing-logo.png" width="70"> F-a-maze-ing
+# <img src="docs/resources/Logo/f-a-maze-ing-logo.png" width="70"> F-a-maze-ing
 
 An easy-to-use, composable and configurable maze generator and solver. Several types of grid tiles with multiple possible shapes.
 
